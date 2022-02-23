@@ -1,14 +1,15 @@
-import logo from './logo.svg';
+import logo from './logo.png';
 import './App.css';
+import Link from './Link.js'
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Worther, coming soon
-        </p>
+        <td onClick={() => <Link/>} className="App-text">
+          Worther, coming soon!
+        </td>
       </header>
     </div>
   );
