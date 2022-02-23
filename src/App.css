@@ -15,6 +15,13 @@
   color: white;
 }
 
+.App-text-about {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 60px;
+  color: white;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 10s linear;

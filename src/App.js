@@ -7,9 +7,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <td onClick={() => <Link/>} className="App-text">
+        <p className="App-text">
           Worther, coming soon!
-        </td>
+        </p>
+        <a href="Link.js" className="App-text-about">
+          About
+        </a>
       </header>
     </div>
   );
