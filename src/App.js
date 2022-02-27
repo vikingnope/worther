@@ -1,20 +1,16 @@
-import logo from './logo.png';
-import './App.css';
-import Link from './Link.js'
+import Home from './Home.js';
+import * as React from "react";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import About from './About.js';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className="App-text">
-          Worther, coming soon!
-        </p>
-        <a href="Link.js" className="App-text-about">
-          About
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/about" element={<About />} />
+      </Routes>
+    </Router>
   );
 }
 
