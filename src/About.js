@@ -1,13 +1,14 @@
 import React from 'react';
+import './About.css';
 
 const About = () => {
   return (
     <div>
       <header className="App-header">
             <p className="App-text">
-                Welcome to Worther!
+              Welcome to Worther!
             </p>
-            <a href="/" className="App-text-about">
+            <a href="/" className="About-text">
               Home
             </a>
         </header>
