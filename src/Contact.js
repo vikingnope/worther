@@ -8,6 +8,7 @@ const Contact = () => {
             <p className="App-text">
                 Contact Us
             </p>
+            <input className="App-input-name" placeholder="Name"></input>
         </header>
     </div>
   );

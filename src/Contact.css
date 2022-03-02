@@ -1,0 +1,14 @@
+.App-text {
+    margin-top: -40%;
+}
+.App-input-name{
+    background-color:white;
+    border-style: solid;
+    border-radius: 3%;
+    font-size: 25px;
+    outline: none;
+    border-color: blue;
+}
+::placeholder{
+    color: #000000;
+}
