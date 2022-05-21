@@ -8,7 +8,7 @@ const Home = () => {
     <div className="App">
         <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <p className="underline text-white">
+            <p className="App-text">
                 Worther, coming soon!
             </p>
             <a href="/about" className="App-text-about">
