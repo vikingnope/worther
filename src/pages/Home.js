@@ -1,5 +1,5 @@
-import './Home.css';
-import logo from './logo.png';
+import '../styles/Home.css';
+import logo from '../resources/logo.png';
 import React from 'react';
 
 
