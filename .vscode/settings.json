@@ -3,5 +3,5 @@
     "editor.cursorSmoothCaretAnimation": true,
     "window.zoomLevel": 0.2,
     "terminal.integrated.gpuAcceleration": "off",
-    "css.lint.unknownAtRules": "ignore"
+    "css.lint.unknownAtRules": "ignore",
 }
