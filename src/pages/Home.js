@@ -11,7 +11,7 @@ const Home = () => {
             <p className="App-text">
                 Worther, coming soon!
             </p>
-            <a href="/about" className="App-text-about">
+            <a href="/about" className="App-text-about underline">
                 About
             </a>
         </header>
