@@ -7,11 +7,11 @@ const Home = () => {
   return (
     <div className="App">
         <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p className="App-text">
+            <img src={logo} className="m-20 App-logo" alt="logo" />
+            <p className="uppercase font-bold text-5xl">
                 Worther, coming soon!
             </p>
-            <a href="/about" className="App-text-about underline">
+            <a href="/about" className="uppercase font-bold text-4xl underline">
                 About
             </a>
         </header>
