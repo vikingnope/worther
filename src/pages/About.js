@@ -1,14 +1,13 @@
 import React from 'react';
-import '../styles/About.css';
 
 const About = () => {
   return (
     <div>
-      <header className="App-header">
-            <p className="App-text">
+      <header className="bg-black min-h-screen flex flex-col items-center justify-center text-white">
+            <p className="uppercase font-bold text-7xl mt-px">
               Welcome to Worther!
             </p>
-            <a href="/" className="About-text">
+            <a href="/" className="text-4xl uppercase font-bold text-white underline">
               Home
             </a>
         </header>
