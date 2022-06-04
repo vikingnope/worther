@@ -7,7 +7,10 @@ const About = () => {
             <p className="uppercase font-bold text-7xl mt-px">
               Welcome to Worther!
             </p>
-            <a href="/" className="text-4xl uppercase font-bold text-white underline">
+            <p className="uppercase text-4xl mt-5">
+              The weather app with the map of the world and wind direction.
+            </p>
+            <a href="/" className="text-4xl uppercase font-bold text-white underline m-5">
               Home
             </a>
         </header>
