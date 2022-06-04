@@ -22,9 +22,9 @@ const Map = () => {
         iconSize: [30, 55],
     });
 
-    const coordinatesMap = (coordinatesLatitude, coordinatesLongitude) => {
+    const coordinatesMap = (coordinatesLatitude, coordinatesLongitude, zoomLevel) => {
         return(
-            <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={10} >
+            <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={zoomLevel} >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -32,7 +32,7 @@ const Map = () => {
                 {isGeolocationEnabled ? (
                     <Marker icon = {markerIconConst} position={[coordinatesLatitude, coordinatesLongitude]}>
                         <Popup>
-                            A pretty CSS3 popup. <br /> Easily customizable.
+                            Location: 
                         </Popup>
                     </Marker>
                 ) : (
@@ -43,9 +43,9 @@ const Map = () => {
     }
 
     return coords ? (
-        coordinatesMap(coords.latitude, coords.longitude)
+        coordinatesMap(coords.latitude, coords.longitude, 10)
     ) : !isGeolocationAvailable || !isGeolocationEnabled ? (
-        coordinatesMap(50, 30)
+        coordinatesMap(45, 10, 5)
     ) : (
         console.log()
     )
