@@ -1,4 +1,4 @@
-import '../styles/Home.css';
+import '../styles/home.css';
 import logo from '../resources/logo.png';
 import React from 'react';
 
@@ -11,6 +11,9 @@ const Home = () => {
             <p className="uppercase font-bold text-5xl">
                 Worther, coming soon!
             </p>
+            <a href="/map" className="uppercase font-bold text-4xl underline m-3 text-blue-400">
+                Map
+            </a>
             <a href="/about" className="uppercase font-bold text-4xl underline">
                 About
             </a>
