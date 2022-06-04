@@ -19,7 +19,7 @@ const Map = () => {
         iconRetinaUrl: markerIcon,
         iconAnchor: [5, 55],
         popupAnchor: [10, -44],
-        iconSize: [30, 55],
+        iconSize: [35, 50],
     });
 
     const coordinatesMap = (coordinatesLatitude, coordinatesLongitude, zoomLevel) => {
