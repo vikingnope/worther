@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './pages/App.js';
+import App from './pages/app.js';
+import 'leaflet/dist/leaflet.css';
 
 ReactDOM.render(
   <React.StrictMode>
