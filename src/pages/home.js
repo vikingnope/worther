@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div className="text-center select-none">
         <header className="bg-black min-h-screen flex flex-col items-center justify-center text-white">
-            <img src={logo} className="m-20 App-logo" alt="logo" />
+            <img src={logo} className="m-5 App-logo rounded-full" alt="logo" />
             <p className="uppercase font-bold text-5xl">
                 Worther, coming soon!
             </p>
