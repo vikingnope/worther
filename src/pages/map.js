@@ -1,6 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useGeolocated } from "react-geolocated";
-import '../styles/map.css';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L, { divIcon } from 'leaflet';
 
@@ -24,7 +23,7 @@ const Map = () => {
 
     const coordinatesMap = (coordinatesLatitude, coordinatesLongitude, zoomLevel) => {
         return(
-            <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={zoomLevel} minZoom={3}>
+            <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={zoomLevel} minZoom={3} style={{ height: '100vh', width: '100%'}}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
