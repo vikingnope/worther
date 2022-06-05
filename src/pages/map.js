@@ -24,7 +24,7 @@ const Map = () => {
 
     const coordinatesMap = (coordinatesLatitude, coordinatesLongitude, zoomLevel) => {
         return(
-            <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={zoomLevel} >
+            <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={zoomLevel} minZoom={3}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
