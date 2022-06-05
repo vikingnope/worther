@@ -11,9 +11,9 @@ const Home = () => {
             <p className="uppercase font-bold text-5xl">
                 Worther, coming soon!
             </p>
-            <a href="/map" className="uppercase font-bold text-4xl underline m-3 text-blue-400">
+            {/*<a href="/map" className="uppercase font-bold text-4xl underline m-3 text-blue-400">
                 Map
-            </a>
+             </a>*/}
             <a href="/about" className="uppercase font-bold text-4xl underline">
                 About
             </a>
