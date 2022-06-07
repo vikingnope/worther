@@ -1,8 +1,9 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Pane } from 'react-leaflet';
 import { useGeolocated } from "react-geolocated";
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L, { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+
 
 const Map = () => {
 
@@ -25,9 +26,12 @@ const Map = () => {
     const coordinatesMap = (coordinatesLatitude, coordinatesLongitude, zoomLevel) => {
         return(
             <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={zoomLevel} minZoom={3} style={{ height: '100vh', width: '100%'}}>
-                <TileLayer
+                <TileLayer zIndex={1}
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <TileLayer zIndex={2} opacity={.8} maxNativeZoom={0.5}
+                    url="https://view.eumetsat.int/geoserver/ows?acc10ss_token=30d87bed-a83e-38ec-96d1-5a0a4a9f601c&service=WMS&request=GetMap&version=1.3.0&layers=mumi:wideareacoverage_rgb_natural&styles=&format=image/png&crs=EPSG:4326&bbox=-89.9999008178711,-180,89.9999008178711,180&width=1920&height=1080"
                 />
                 {isGeolocationEnabled ? (
                     <Marker icon = {markerIconConst} position={[coordinatesLatitude, coordinatesLongitude]}>
@@ -38,7 +42,7 @@ const Map = () => {
                 ) : (
                     console.log()
                 )}
-            </MapContainer> 
+            </MapContainer>
         );
     }
 
