@@ -30,7 +30,7 @@ const Map = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <TileLayer zIndex={2} opacity={0.1}
+                <TileLayer zIndex={2} opacity={0.1} maxNativeZoom={5}
                     url="https://view.eumetsat.int/geoserver/ows?acc10ss_token=30d87bed-a83e-38ec-96d1-5a0a4a9f601c&service=WMS&request=GetMap&version=1.3.0&layers=mumi:wideareacoverage_rgb_natural&styles=&format=image/png&crs=EPSG:4326&bbox=-89.9999008178711,-180,89.9999008178711,180&width=1920&height=1080"
                 />
                 <TileLayer zIndex={3} opacity={1}
