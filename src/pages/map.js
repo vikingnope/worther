@@ -5,7 +5,7 @@ import L, { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from "axios";
 import { useState, useEffect } from 'react';
-import { getRainViewerData } from '../components/rainViewer';
+import { getRainViewerData } from '../components/rainViewerData';
 
 
 export const Map = () => {
