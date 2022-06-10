@@ -11,7 +11,7 @@ const About = () => {
               The weather app with the map of the world and wind direction.
             </p>
             <p className="text-3xl mt-5">
-              It is built using React, Leaflet, Axios.
+              It is built using React, Leaflet & Axios.
             </p>
             <p className="text-3xl mt-5">
               APIs used: OpenStreetMap API, Rainviewer API, EUMETSAT API
