@@ -3,6 +3,8 @@ import { useGeolocated } from "react-geolocated";
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L, { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import axios from "axios";
+import { useState, useEffect } from 'react';
 
 
 const Map = () => {
