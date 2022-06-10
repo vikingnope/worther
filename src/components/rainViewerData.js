@@ -1,14 +1,12 @@
 import axios from 'axios';
+import { useEffect } from 'react';
 
-export const getRainViewerData = () => {
+const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
-    const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
-
-    const data = axios.get(baseURL);
-
-    console.log(data)
-
-    return(
-        console.log(data)
-    )
+export const GetRainViewerData = () => {
+    useEffect(() => {
+        axios.get(baseURL).then(response => {
+            console.log(response.data)
+        })
+    })
 }

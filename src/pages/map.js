@@ -5,10 +5,13 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 //import axios from "axios";
 //import { useState, useEffect } from 'react';
-//import { getRainViewerData } from '../components/rainViewerData';
+import { GetRainViewerData } from '../components/rainViewerData';
+
+
 
 
 export const Map = () => {
+    const NewData = GetRainViewerData();
     
     const { coords, isGeolocationAvailable, isGeolocationEnabled } =
         useGeolocated({
