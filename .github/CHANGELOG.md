@@ -5,6 +5,7 @@
 1. Changed logo
 1. Added radar layer - although not fully functional
 1. Added rain radar layer - although not fully functional
+1. Added Axios to call APIs
 
 ## 0.1.0
 
