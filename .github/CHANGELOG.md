@@ -10,6 +10,7 @@
 1. Added more information in about page
 1. Reduced lines of code for more efficiency
 1. Changed index.html description
+1. Added discord to readme file
 
 ## 0.1.0
 
