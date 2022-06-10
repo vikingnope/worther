@@ -9,6 +9,7 @@
 1. Updated to react version #18.1.0
 1. Added more information in about page
 1. Reduced lines of code for more efficiency
+1. Changed index.html description
 
 ## 0.1.0
 
