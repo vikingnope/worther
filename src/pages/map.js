@@ -1,11 +1,11 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useGeolocated } from "react-geolocated";
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import L, { divIcon } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import axios from "axios";
-import { useState, useEffect } from 'react';
-import { getRainViewerData } from '../components/rainViewerData';
+//import axios from "axios";
+//import { useState, useEffect } from 'react';
+//import { getRainViewerData } from '../components/rainViewerData';
 
 
 export const Map = () => {

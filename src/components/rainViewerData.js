@@ -4,5 +4,11 @@ export const getRainViewerData = () => {
 
     const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
-    axios.get(baseURL);
+    const data = axios.get(baseURL);
+
+    console.log(data)
+
+    return(
+        console.log(data)
+    )
 }
