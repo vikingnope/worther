@@ -5,10 +5,11 @@ import L, { divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from "axios";
 import { useState, useEffect } from 'react';
+import { getRainViewerData } from '../components/rainViewer';
 
 
-const Map = () => {
-
+export const Map = () => {
+    
     const { coords, isGeolocationAvailable, isGeolocationEnabled } =
         useGeolocated({
             positionOptions: {
@@ -59,5 +60,3 @@ const Map = () => {
         console.log()
     )
 }
-
-export default Map;

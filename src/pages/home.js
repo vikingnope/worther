@@ -3,7 +3,7 @@ import logo from '../resources/logo.png';
 import React from 'react';
 
 
-const Home = () => {
+export const Home = () => {
   return (
     <div className="text-center select-none">
         <header className="bg-black min-h-screen flex flex-col items-center justify-center text-white">
@@ -21,5 +21,3 @@ const Home = () => {
     </div>
   );
 }
-
-export default Home;

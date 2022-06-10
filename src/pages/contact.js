@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Contact = () => {
+export const Contact = () => {
   return (
     <div className="text-center">
         <header className="bg-black min-h-screen flex flex-col items-center justify-center text-white">
@@ -11,6 +11,4 @@ const Contact = () => {
         </header>
     </div>
   );
-}
-
-export default Contact;
+  }

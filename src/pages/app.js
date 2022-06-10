@@ -1,13 +1,13 @@
-import Home from './home.js';
+import {Home} from './home.js';
 import * as React from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import About from './about.js';
-import Contact from './contact.js';
-import Map from './map.js';
+import {About} from './about.js';
+import {Contact} from './contact.js';
+import {Map} from './map.js';
 import '../styles/main.css';
 
 
-function App() {
+export default function App() {
   return (
     <Router>
       <Routes>
@@ -19,5 +19,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;
