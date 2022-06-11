@@ -37,8 +37,6 @@ export default class Map extends Component {
             popupAnchor: [10, -44],
             iconSize: [35, 50],
         });
-
-        const outerBounds = MapContainer
         
         return(
             <MapContainer center={[this.state.latitude, this.state.longitude]} zoom={6} minZoom={3} style={{ height: '100vh', width: '100%'}}>
