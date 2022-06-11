@@ -36,7 +36,7 @@ export const Map = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <TileLayer zIndex={2} opacity={1}
+                <TileLayer zIndex={2} opacity={0.1}
                     url="https://view.eumetsat.int/geoserver/ows?service=WMS&request=GetMap&version=1.3.0&layers=mumi:wideareacoverage_rgb_natural&height=1080&width=1920&crs=EPSG:4326&format=image/png&access_token=96441f96-86c0-3285-a906-d39abb322f20&bbox=-180,-180,180,180"
                 />
                 <TileLayer zIndex={3} opacity={1}
