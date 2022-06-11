@@ -3,15 +3,10 @@ import { useGeolocated } from "react-geolocated";
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-//import axios from "axios";
-//import { useState, useEffect } from 'react';
 import { GetRainViewerData } from '../components/rainViewerData';
 
-
-
-
 export const Map = () => {
-    GetRainViewerData();
+    const RainViewerLayerReturn = GetRainViewerData();
     
     const { coords, isGeolocationAvailable, isGeolocationEnabled } =
         useGeolocated({
@@ -29,6 +24,11 @@ export const Map = () => {
         iconSize: [35, 50],
     });
 
+    const RainViewerLayer = L.tileLayer({
+        url: '',
+        styles: { height: '100vh', width: '100%'}
+    })
+    
     const coordinatesMap = (coordinatesLatitude, coordinatesLongitude, zoomLevel) => {
         return(
             <MapContainer center={[coordinatesLatitude, coordinatesLongitude]} zoom={zoomLevel} minZoom={3} style={{ height: '100vh', width: '100%'}}>
@@ -40,9 +40,9 @@ export const Map = () => {
                     url="https://view.eumetsat.int/geoserver/ows?acc10ss_token=30d87bed-a83e-38ec-96d1-5a0a4a9f601c&service=WMS&request=GetMap&version=1.3.0&layers=mumi:wideareacoverage_rgb_natural&styles=&format=image/png&crs=EPSG:4326&bbox=-89.9999008178711,-180,89.9999008178711,180&width=1920&height=1080"
                 />
                 <TileLayer zIndex={3} opacity={1}
-                    attribution='<a href="https://www.rainviewer.com/api.html">Rainviewer</a>'
-                    url="https://tilecache.rainviewer.com/v2/radar/1654882200/8000/2/0_1.png"
+                    url = {RainViewerLayerReturn}
                 />
+                {console.log(RainViewerLayerReturn)};
                 {isGeolocationEnabled ? (
                     <Marker icon = {markerIconConst} position={[coordinatesLatitude, coordinatesLongitude]}>
                         <Popup>
@@ -50,7 +50,7 @@ export const Map = () => {
                         </Popup>
                     </Marker>
                 ) : (
-                    console.log()
+                    console.log('Failed')
                 )}
             </MapContainer>
         );

@@ -4,7 +4,7 @@
 
 1. Changed logo
 1. Added radar layer - although not fully functional
-1. Added rain radar layer - although not fully functional
+1. Added rain radar layer
 1. Added Axios to call APIs
 1. Updated to react version #18.1.0
 1. Added more information in about page
