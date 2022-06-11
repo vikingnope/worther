@@ -42,7 +42,6 @@ export const Map = () => {
                 <TileLayer zIndex={3} opacity={1}
                     url = {RainViewerLayerReturn}
                 />
-                {console.log(RainViewerLayerReturn)};
                 {isGeolocationEnabled ? (
                     <Marker icon = {markerIconConst} position={[coordinatesLatitude, coordinatesLongitude]}>
                         <Popup>
