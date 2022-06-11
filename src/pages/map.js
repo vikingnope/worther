@@ -4,11 +4,9 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { GetRainViewerData } from '../components/rainViewerData';
-import { ImageRadar } from '../components/imageRadar';
 
 export const Map = () => {
     const RainViewerLayerReturn = GetRainViewerData();
-    ImageRadar();
     
     const { coords, isGeolocationAvailable, isGeolocationEnabled } =
         useGeolocated({
