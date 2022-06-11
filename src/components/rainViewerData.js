@@ -7,8 +7,6 @@ let path = '';
 
 let fullURL = '';
 
-
-
 export const GetRainViewerData = () => {
 
   axios.get(baseURL)
