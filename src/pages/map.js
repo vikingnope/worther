@@ -11,7 +11,7 @@ import { GetRainViewerData } from '../components/rainViewerData';
 
 
 export const Map = () => {
-    const NewData = GetRainViewerData();
+    GetRainViewerData();
     
     const { coords, isGeolocationAvailable, isGeolocationEnabled } =
         useGeolocated({
