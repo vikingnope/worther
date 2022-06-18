@@ -11,7 +11,7 @@
 1. Reduced lines of code for more efficiency
 1. Changed index.html description
 1. Added discord to readme file
-1. Changed structure of code
+1. Changed structure of code to make code more efficient
 
 ## 0.1.0
 

@@ -3,21 +3,19 @@ import * as React from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import About from './about.js';
 import Contact from './contact.js';
-import Map from './map.js';
+import {Map} from './map.js';
 import '../styles/main.css';
 
 
-export default class App extends React.Component {
-  render(){
-    return (
-      <Router>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/about" element={<About />} />
-          <Route exact path="/contact" element={<Contact />} />
-          <Route exact path="/map" element={<Map />} />
-        </Routes>
-      </Router>
-    );
-  }
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/about" element={<About />} />
+        <Route exact path="/contact" element={<Contact />} />
+        <Route exact path="/map" element={<Map />} />
+      </Routes>
+    </Router>
+  );
 }
