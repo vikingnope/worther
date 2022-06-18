@@ -1,15 +1,21 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L from 'leaflet';
-import React, {useEffect, state, setState} from 'react';
+import React, {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import { GetRainViewerData }  from '../components/rainViewerData';
 
 export const Map = () => {
-    state = {
-        longitude: 14,
-        latitude: 35,
-    };
+
+    const [state, setState] = useState({
+        longitude: "14",
+        latitude: "35"
+      });
+
+    // state = {
+    //     longitude: 14,
+    //     latitude: 35,
+    // };
 
     useEffect(() =>{
         if (navigator.geolocation) {
@@ -23,7 +29,7 @@ export const Map = () => {
                 }))
             });
         }
-    })
+    }, []);
 
 
     const markerIconConst = L.icon({
