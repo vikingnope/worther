@@ -7,7 +7,7 @@ import { GetRainViewerData }  from '../components/rainViewerData';
 
 export function Map() {
 
-    const [userPos, setUserPos] = useState({latitude: "35", longitude: "10"});
+    const [userPos, setUserPos] = useState({latitude: "45", longitude: "10"});
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((pos) =>{
@@ -15,9 +15,7 @@ export function Map() {
                   latitude: pos.coords.latitude,
                   longitude: pos.coords.longitude,
              };
-            setUserPos(newUserPos) // store data in usestate
-       }, (err) => {
-            console.log(err);
+            setUserPos(newUserPos)
        })
     })
 
