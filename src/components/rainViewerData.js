@@ -37,6 +37,7 @@ export const GetRainViewerData = () => {
     console.log(fullURL),
     <TileLayer 
       url = {fullURL}
+      opacity={1}
       tileSize = {256}
     />
   )

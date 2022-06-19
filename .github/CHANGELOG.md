@@ -6,12 +6,13 @@
 1. Added radar layer
 1. Added rain radar layer
 1. Added Axios to call APIs
-1. Updated to react version #18.1.0
+1. Updated to react version 18.2.0
 1. Added more information in about page
 1. Reduced lines of code for more efficiency
 1. Changed index.html description
 1. Added discord to readme file
 1. Changed structure of code to make code more efficient
+1. Made marker more efficient to be faster and it is always updating the position
 
 ## 0.1.0
 
