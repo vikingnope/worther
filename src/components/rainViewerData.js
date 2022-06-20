@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
-export const GetRainViewerData = () => {
+export const RainViewerData = () => {
   const [path, setPath] = useState('');
 
   useEffect(() => {

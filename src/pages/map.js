@@ -3,7 +3,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L from 'leaflet';
 import React, {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
-import { GetRainViewerData }  from '../components/rainViewerData';
+import { RainViewerData }  from '../components/rainViewerData';
 import { SatelliteData } from '../components/satelliteData';
 
 export function Map() {
@@ -36,7 +36,7 @@ export function Map() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <SatelliteData />
-            <GetRainViewerData />
+            <RainViewerData />
             {userPos.latitude !== 45 && userPos.longitude !== 10 ? (
                 <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                     <Popup>
