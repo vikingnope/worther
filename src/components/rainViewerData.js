@@ -1,42 +1,31 @@
 import axios from "axios";
 import { TileLayer } from 'react-leaflet';
-import {useEffect} from "react"
+import { useEffect, useState } from "react"
 
-const baseURL = "https://api.rainviewer.com/public/weather-maps.json";
-
-let url = '';
-let path = '';
-
-let fullURL = '';
+const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
 export const GetRainViewerData = () => {
+  const [path, setPath] = useState('');
 
   useEffect(() => {
-    console.log(getURL())
-    getURL();
+    getPath();
   }, []);
 
-  async function getURL(){
+  async function getPath(){
     return await axios.get(baseURL)
-      .then(function (response) {
-        const lastFrame = response.data.radar.past.length-1;
-        url = response.data.host;
-        path = response.data.radar.past[lastFrame].path;
-        fullURL = url + path + '/8000/2/0_1.png';
-        return fullURL;
+      .then((response) => {
+        const lastPath = response.data.radar.past.length-1;
+        setPath(response.data.radar.past[lastPath].path);
+        console.log(path);
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error);
-      })
-      .then(function () {
-        return fullURL;
       })
   }
 
   return (
-    console.log(fullURL),
     <TileLayer 
-      url = {fullURL}
+      url = {'https://tilecache.rainviewer.com' + path + '/256/{z}/{x}/{y}/2/1_1.png'}
       opacity={1}
       tileSize = {256}
     />

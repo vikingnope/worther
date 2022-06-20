@@ -4,6 +4,7 @@ import L from 'leaflet';
 import React, {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import { GetRainViewerData }  from '../components/rainViewerData';
+import { SatelliteData } from '../components/satelliteData';
 
 export function Map() {
 
@@ -34,9 +35,7 @@ export function Map() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <TileLayer zIndex={2} opacity={0.1} tileSize={1920} updateInterval={5000}
-                url={"https://view.eumetsat.int/geoserver/ows?service=WMS&request=GetMap&version=1.3.0&layers=mumi:wideareacoverage_rgb_natural&height=1920&width=1920&crs=EPSG:4326&format=image/png&access_token=96441f96-86c0-3285-a906-d39abb322f20&bbox=-180,-89,180,89"}
-            />
+            <SatelliteData />
             <GetRainViewerData />
             {userPos.latitude !== 45 && userPos.longitude !== 10 ? (
                 <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
@@ -45,7 +44,7 @@ export function Map() {
                     </Popup>
                 </Marker>
             ) : (
-                console.log('Failed')
+                console.log('Marker failed to load.')
             )}
         </MapContainer>
     );
