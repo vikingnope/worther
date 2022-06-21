@@ -16,9 +16,9 @@ export function Map() {
                   latitude: pos.coords.latitude,
                   longitude: pos.coords.longitude,
              };
-            setUserPos(newUserPos)
+            setUserPos(newUserPos);
        })
-    })
+    }, []);
 
 
     const markerIconConst = L.icon({
