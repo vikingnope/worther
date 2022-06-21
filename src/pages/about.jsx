@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function About() {
   return (
-    <div>
+    <div className="select-none">
       <header className="bg-black min-h-screen flex flex-col items-center justify-center text-white">
             <p className="uppercase font-bold text-7xl mt-px">
               Welcome to Worther!
