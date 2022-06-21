@@ -29,6 +29,7 @@ export const RainViewerData = () => {
           <TileLayer
             url={'https://tilecache.rainviewer.com' + path + '/256/{z}/{x}/{y}/2/1_1.png'}
             tileSize={256}
+            zIndex = {3}
             opacity = {1} /> : <></>
       }
     </>
