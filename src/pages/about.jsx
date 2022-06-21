@@ -19,6 +19,9 @@ export default function About() {
             <a href="/" className="text-4xl uppercase font-bold text-white underline m-5">
               Home
             </a>
+            <p className="absolute text-base bottom-1.5 right-2">
+              Version 0.1.1
+            </p>
         </header>
     </div>
   )
