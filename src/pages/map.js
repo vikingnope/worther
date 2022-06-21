@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { RainViewerData }  from '../components/rainViewerData';
 import { SatelliteData } from '../components/satelliteData';
 
-export function Map() {
+export default function Map() {
 
     const [userPos, setUserPos] = useState({latitude: "45", longitude: "10"});
 
