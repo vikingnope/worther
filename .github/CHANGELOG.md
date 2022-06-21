@@ -14,6 +14,7 @@
 1. Changed structure of code to make code more efficient
 1. Made marker more efficient to be faster and it is always updating the position
 1. Organised files
+1. Changed all react files to .jsx
 
 ## 0.1.0
 

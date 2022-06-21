@@ -1,9 +1,9 @@
-import Home from './home.js';
+import Home from './home.jsx';
 import * as React from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import About from './about.js';
-import Contact from './contact.js';
-import Map from './map.js';
+import About from './about.jsx';
+import Contact from './contact.jsx';
+import Map from './map.jsx';
 import '../styles/main.css';
 
 
