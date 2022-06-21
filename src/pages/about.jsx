@@ -16,7 +16,7 @@ export default function About() {
             <p className="text-3xl mt-5">
               APIs used: OpenStreetMap API, Rainviewer API, EUMETSAT API
             </p>
-            <a href="/" className="text-4xl uppercase font-bold text-white underline m-5">
+            <a href="/" className="text-3xl uppercase font-bold text-white underline m-5">
               Home
             </a>
             <p className="absolute text-base underline bottom-1.5 right-2">
