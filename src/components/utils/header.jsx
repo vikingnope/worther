@@ -7,10 +7,10 @@ export const Header = () => {
                 <img src={logo} className="-mt-2.5 ml-1.5 scale-75 rounded-full" alt="logo" />
             </div>
             <div className="fixed top-3 right-0">
-                <a href="/map" className="relative uppercase text-2xl mr-10 hover:text-green-300">
+                <a href="/map" className="relative uppercase text-2xl mr-7 hover:text-green-300">
                     Map
                 </a>
-                <a href="/about" className="relative uppercase text-2xl mr-40 hover:text-green-300">
+                <a href="/about" className="relative uppercase text-2xl mr-12 hover:text-green-300">
                     About
                 </a>
             </div>
