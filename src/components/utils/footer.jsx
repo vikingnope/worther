@@ -4,7 +4,7 @@ import { BsGithub } from 'react-icons/bs';
 export const Footer = () => {
     return(
         <div className="absolute inset-x-0 bottom-0 bg-zinc-800 h-10 w-full">
-            <div className="fixed bottom-1 right-32 flex gap-x-4">
+            <div className="relative -bottom-1 flex gap-x-4 justify-center">
                 <a className="hover:text-green-300" href="https://discord.gg/n6xr3ZWM8J" target="_blank">
                     <FaDiscord size="30"/>
                 </a>
