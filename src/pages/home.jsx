@@ -2,6 +2,7 @@ import '../styles/home.css';
 import logo from '../resources/logo.png';
 import React from 'react';
 import { Header } from '../components/utils/header';
+import { Footer } from '../components/utils/footer';
 
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
                 <p className="uppercase text-3xl mt-7">
                     The new weather app
                 </p>
+                <Footer />
             </header>
         </div>
     );
