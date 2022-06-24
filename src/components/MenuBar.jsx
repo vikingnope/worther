@@ -17,6 +17,5 @@ export const MenuBar = (props) => {
                 />
             </div>
         </div>
-        
     )
 };
