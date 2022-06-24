@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
-export const RainViewerData = () => {
+export const RainViewerData = (props) => {
   const [path, setPath] = useState();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export const RainViewerData = () => {
             url={'https://tilecache.rainviewer.com' + path + '/256/{z}/{x}/{y}/2/1_1.png'}
             tileSize={256}
             zIndex = {3}
-            opacity = {1} /> : <></>
+            opacity = {props.opacity} /> : <></>
       }
     </>
   )

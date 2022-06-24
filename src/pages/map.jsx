@@ -5,10 +5,11 @@ import React, {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import { RainViewerData }  from '../components/rainViewerData';
 import { SatelliteData } from '../components/satelliteData';
+import {MenuBar} from '../components/MenuBar';
 
-export default function Map() {
-    
+export default function Map(props) {   
     const [userPos, setUserPos] = useState({latitude: "45", longitude: "10"});
+    const [weatherOpacity, setWeatherOpacity] = useState(props.weatherOpacity || 0.5);
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((pos) =>{
@@ -36,7 +37,8 @@ export default function Map() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <SatelliteData />
-            <RainViewerData />
+            <RainViewerData opacity={weatherOpacity}/>
+            <MenuBar weatherOpacity={weatherOpacity} onWeatherOpacityChange={setWeatherOpacity}/>
             {userPos.latitude !== 45 && userPos.longitude !== 10 ? (
                 <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                     <Popup>
