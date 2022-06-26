@@ -27,7 +27,7 @@ export const RainViewerData = (props) => {
       {
         (path !== undefined) ?
           <TileLayer
-            url={'https://tilecache.rainviewer.com' + path + '/256/{z}/{x}/{y}/2/1_1.png'}
+            url={`https://tilecache.rainviewer.com${path}/256/{z}/{x}/{y}/2/1_1.png`}
             tileSize={256}
             zIndex = {3}
             opacity = {props.opacity} /> : <></>
