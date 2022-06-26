@@ -31,7 +31,7 @@ export default function Map(props) {
     });
 
     return(
-        <MapContainer center={[userPos.latitude, userPos.longitude]} zoom={6} minZoom={3} style={{ height: '100vh', width: '100%'}}>
+        <MapContainer center={[userPos.latitude, userPos.longitude]} zoom={6} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75}>
             <TileLayer zIndex={1}
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
