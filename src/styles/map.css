@@ -5,8 +5,7 @@
   
   #opacityBar {
       z-index: 1000;
-      pointer-events: auto;
-      pointer-events: visiblePainted;
+      pointer-events: all !important;
   }
 
   @media (prefers-reduced-motion: no-preference) {
