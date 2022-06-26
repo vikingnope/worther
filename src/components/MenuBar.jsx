@@ -8,7 +8,7 @@ export const MenuBar = (props) => {
                     Weather opacity (only click):
                 </p>
                 <input 
-                    className="accent-green-600 w-44 cursor-pointer"
+                    className="accent-green-600 w-44 cursor-pointer draggable"
                     type = "range"
                     value={100 * props.weatherOpacity}
                     min={0}

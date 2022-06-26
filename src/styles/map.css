@@ -4,7 +4,6 @@
   }  
   
   #opacityBar {
-      z-index: 1000;
       pointer-events: all !important;
   }
 
