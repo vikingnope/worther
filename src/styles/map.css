@@ -1,8 +1,14 @@
 .App-logo {
     height: 40vmin;
     pointer-events: none;
-  }
+  }  
   
+  #opacityBar {
+      z-index: 1000;
+      pointer-events: auto;
+      pointer-events: visiblePainted;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .App-logo {
       animation: App-logo-spin infinite 10s linear;
