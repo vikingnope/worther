@@ -54,7 +54,7 @@ export default function Map(props) {
                         </Popup> 
                     </Marker>
                 ) : (
-                    console.log('Marker failed to load.')
+                    <></>
                 )}
             </MapContainer>
         )
