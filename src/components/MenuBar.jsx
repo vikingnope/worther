@@ -5,10 +5,10 @@ export const MenuBar = (props) => {
         <div className="relative leaflet-top leaflet-left">
             <div className="absolute ml-3 mt-24 w-52 h-15 z-50 bg-white border-2 border-neutral-800 rounded-lg cursor-default" id="opacityBar">
                 <input
-                    className="border-b-2 border-sky-900 w-48 h-7 text-base font-bold indent-0.5 border-dashed outline-none"
+                    className="ml-1 border-b-2 border-sky-900 w-48 h-7 text-base font-bold indent-0.5 border-dashed outline-none"
                     type="text"
                     placeholder="Location"
-                    
+
                 />
                 <p className="font-bold text-sm ml-0.5">
                     Weather opacity (only click):
