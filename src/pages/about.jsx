@@ -14,7 +14,7 @@ export default function About() {
               It is built using React, Leaflet, Axios, Material UI & Tailwind CSS.
             </p>
             <p className="text-3xl mt-5">
-              APIs used: OpenStreetMap API, Rainviewer API, EUMETSAT API
+              APIs used: OpenStreetMap API, Rainviewer API, EUMETSAT API, OpenWeatherMap API
             </p>
             <a href="/" className="text-3xl uppercase font-bold text-white underline m-5">
               Home
