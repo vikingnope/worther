@@ -13,6 +13,8 @@ export default function Map(props) {
 
     let declinedGeolocation = false;
 
+    document.title = "Worther - Map";
+
     useEffect(() => {
         if(navigator.geolocation){
             navigator.geolocation.getCurrentPosition((pos) =>{

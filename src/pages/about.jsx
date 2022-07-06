@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default function About() {
+  document.title = "Worther - About";
+  
   return (
     <div className="select-none">
       <header className="bg-black min-h-screen flex flex-col items-center justify-center text-white">
