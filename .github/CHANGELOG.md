@@ -15,6 +15,7 @@
 1. Made marker more efficient to be faster and it is always updating the position
 1. Organised files
 1. Changed all react files to .jsx
+1. Different titles to different pages
 
 ## 0.1.0
 
