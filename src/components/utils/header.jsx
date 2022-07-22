@@ -6,14 +6,14 @@ export const Header = () => {
             <section className="fixed top-2 left-0">
                 <img src={logo} className="-mt-2.5 ml-2.5 scale-75 rounded-full" alt="logo" />
             </section>
-            <section className="fixed top-3 right-0">
+            <nav className="fixed top-3 right-0">
                 <a href="/map" className="relative uppercase text-2xl mr-7 hover:text-green-300">
                     Map
                 </a>
                 <a href="/about" className="relative uppercase text-2xl mr-12 hover:text-green-300">
                     About
                 </a>
-            </section>
+            </nav>
         </header>
     )
 };
