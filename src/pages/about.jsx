@@ -1,5 +1,6 @@
 import React from 'react';
 import { Header } from '../components/utils/header';
+import { Footer } from '../components/utils/footer';
 
 export default function About() {
   document.title = "Worther - About";
@@ -7,7 +8,7 @@ export default function About() {
   return (
     <div className="select-none text-white">
       <Header choice={'about'}/>
-      <main className=" bg-black min-h-screen flex flex-col items-center justify-center">
+      <main className="bg-black flex flex-col items-center justify-center h-screen">
           <p className="uppercase font-bold text-7xl mt-px">
             Welcome to Worther!
           </p>
@@ -20,10 +21,11 @@ export default function About() {
           <p className="text-3xl mt-5">
             APIs used: OpenStreetMap API, Rainviewer API, EUMETSAT API, OpenWeatherMap API
           </p>
-          <p className="absolute text-base underline bottom-1.5 right-2">
+          <p className="absolute text-base underline bottom-11 right-1">
             Version 1.0.1
           </p>
       </main>
+      <Footer />
     </div>
   )
 }
