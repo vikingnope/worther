@@ -9,8 +9,8 @@ export default function Home() {
     return (
         <main className="text-center select-none bg-black min-h-screen flex flex-col items-center justify-center text-white">
             <Header />
-            <img src={logo} className="m-5 App-logo rounded-full" alt="logo" />
             <section>
+                <img src={logo} className="m-5 App-logo rounded-full" alt="logo" />
                 <p className="uppercase font-bold text-7xl">
                     Worther
                 </p>
