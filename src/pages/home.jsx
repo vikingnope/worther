@@ -1,4 +1,4 @@
-import '../styles/map.css';
+import '../styles/map.scss';
 import logo from '../resources/logo.png';
 import React from 'react';
 import { Header } from '../components/utils/header';

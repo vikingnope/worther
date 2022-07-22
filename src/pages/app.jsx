@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import About from './about.jsx';
 import Contact from './contact.jsx';
 import Map from './map.jsx';
-import '../styles/main.css';
+import '../styles/main.scss';
 
 
 export default function App() {
