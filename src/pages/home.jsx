@@ -8,7 +8,7 @@ import { Footer } from '../components/utils/footer';
 export default function Home() {
     return (
         <div className="text-center select-none bg-black min-h-screen flex flex-col items-center justify-center text-white">
-            <Header />
+            <Header choice={'home'}/>
             <main>
                 <img src={logo} className="m-5 App-logo rounded-full" alt="logo" />
                 <p className="uppercase font-bold text-7xl">
