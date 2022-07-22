@@ -7,9 +7,9 @@ import { Footer } from '../components/utils/footer';
 
 export default function Home() {
     return (
-        <main className="text-center select-none bg-black min-h-screen flex flex-col items-center justify-center text-white">
+        <div className="text-center select-none bg-black min-h-screen flex flex-col items-center justify-center text-white">
             <Header />
-            <section>
+            <main>
                 <img src={logo} className="m-5 App-logo rounded-full" alt="logo" />
                 <p className="uppercase font-bold text-7xl">
                     Worther
@@ -17,8 +17,8 @@ export default function Home() {
                 <p className="uppercase text-3xl mt-7">
                     The new weather app
                 </p>
-            </section>
+            </main>
             <Footer />
-        </main>
+        </div>
     );
 }
