@@ -17,6 +17,7 @@
 1. Changed all react files to .jsx
 1. Different titles to different pages
 1. Changed .css files to .scss
+1. Added header and footer to about page
 
 ## 1.0.0
 
