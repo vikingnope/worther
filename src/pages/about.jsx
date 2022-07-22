@@ -4,8 +4,7 @@ export default function About() {
   document.title = "Worther - About";
   
   return (
-    <div className="select-none bg-black min-h-screen flex flex-col items-center justify-center text-white">
-      <main>
+    <main className="select-none bg-black min-h-screen flex flex-col items-center justify-center text-white">
         <p className="uppercase font-bold text-7xl mt-px">
           Welcome to Worther!
         </p>
@@ -24,7 +23,6 @@ export default function About() {
         <p className="absolute text-base underline bottom-1.5 right-2">
           Version 1.0.1
         </p>
-      </main>
-    </div>
+    </main>
   )
 }
