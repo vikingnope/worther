@@ -4,7 +4,7 @@ import L from 'leaflet';
 import React, {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import { RainViewerData }  from '../components/rainViewerData';
-import { SatelliteData } from '../components/satelliteData';
+// import { SatelliteData } from '../components/satelliteData';
 import {MenuBar} from '../components/MenuBar';
 
 export default function Map(props) {   
@@ -47,7 +47,7 @@ export default function Map(props) {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <SatelliteData />
+                {/* <SatelliteData /> */}
                 <RainViewerData opacity={weatherOpacity}/>
                 <MenuBar weatherOpacity={weatherOpacity} onWeatherOpacityChange={setWeatherOpacity}/>
                 {(!markerShow) ? (
