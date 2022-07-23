@@ -16,9 +16,9 @@ export const MenuBar = (props) => {
                         placeholder="Location"
                     />
                 </form>
-                <p className="font-bold text-sm ml-0.5">
+                <label className="font-bold text-sm ml-0.5">
                     Weather opacity (only click):
-                </p>
+                </label>
                 <input 
                     className="accent-green-600 w-48 cursor-pointer draggable"
                     type = "range"
