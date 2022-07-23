@@ -16,7 +16,13 @@ const homeCall = (
     <a href="/" className="relative uppercase text-2xl mr-8 hover:text-green-300">
         Home
     </a>
-)
+);
+
+const contactCall = (
+    <a href="/contact" className="relative uppercase text-2xl mr-8 hover:text-green-300">
+        Contact
+    </a>
+);
 
 export const Header = ({choice}) => {
     return (
