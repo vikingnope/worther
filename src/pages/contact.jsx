@@ -7,10 +7,12 @@ export default function Contact() {
         <p className="-mt-96 text-6xl">
             Contact Us
         </p>
-        <input 
-          className="bg-white border-solid rounded-md text-2xl outline-none border-blue-700 text-black mt-5" 
-          placeholder="Name">
-        </input>
+        <form>
+          <input 
+            className="bg-white border-solid rounded-md text-2xl outline-none border-blue-700 text-black mt-5" 
+            placeholder="Name">
+          </input>
+        </form>
       </main>
     </div>
   );
