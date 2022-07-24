@@ -1,28 +1,12 @@
 import logo from '../../resources/logoSmall.png'
 
-const mapCall = (
-    <a href="/map" className="relative uppercase text-2xl mr-7 hover:text-green-300 hover:font-bold">
-        Map
-    </a>
-);
-
-const aboutCall = (
-    <a href="/about" className="relative uppercase text-2xl mr-12 hover:text-green-300 hover:font-bold">
-        About
-    </a>
-);
-
-const homeCall = (
-    <a href="/" className="relative uppercase text-2xl mr-8 hover:text-green-300 hover:font-bold">
-        Home
-    </a>
-);
-
-const contactCall = (
-    <a href="/contact" className="relative uppercase text-2xl mr-8 hover:text-green-300 hover:font-bold">
-        Contact
-    </a>
-);
+const Navigations = (text, path) => {
+    return(
+        <a href={path} className="relative uppercase text-2xl mr-7 hover:text-green-300 hover:font-bold">
+            {text}
+        </a>
+    )
+};
 
 export const Header = ({choice}) => {
     return (
@@ -33,9 +17,9 @@ export const Header = ({choice}) => {
             <nav className="fixed top-3 right-0">
                 {
                 (choice === 'about') ? 
-                    [homeCall, mapCall]
+                    [Navigations('Home', '/'), Navigations('Map', '/map')]
                 : (choice === 'home') ?
-                    [mapCall, aboutCall] :
+                    [Navigations('Map', '/map'), Navigations('About', '/about')] :
                 <></>
                 }
             </nav>
