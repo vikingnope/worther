@@ -4,7 +4,7 @@ import {AiOutlineClose} from 'react-icons/ai';
 export const MenuBar = (props) => {
     return(
         <section className="relative leaflet-top leaflet-left">
-            <div className="absolute ml-3 mt-24 w-52 h-15 z-50 bg-white border-2 border-neutral-800 rounded-lg cursor-default" id="opacityBar">
+            <div className="absolute ml-3 mt-24 w-52 h-15 z-50 bg-white border-2 border-neutral-800 rounded-lg cursor-default p-px" id="opacityBar">
                 <div className="absolute ml-44 mt-px">
                     <AiOutlineSearch size="23" />
                     {/* {search.length === 0 ? <AiOutlineSearch size="23"/> : <AiOutlineClose size="23"/>} */}
