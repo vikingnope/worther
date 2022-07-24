@@ -2,11 +2,12 @@ import logo from '../../resources/logoSmall.png'
 
 const Navigations = (text, path) => {
     return(
-        <a href={path} className="relative uppercase text-2xl mr-7 hover:text-green-300 hover:font-bold">
+        <a href={path} className="relative uppercase text-2xl mr-5 hover:text-green-300">
             {text}
         </a>
     )
 };
+
 
 export const Header = ({choice}) => {
     return (
