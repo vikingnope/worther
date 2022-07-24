@@ -1,25 +1,25 @@
 import logo from '../../resources/logoSmall.png'
 
 const mapCall = (
-    <a href="/map" className="relative uppercase text-2xl mr-7 hover:text-green-300">
+    <a href="/map" className="relative uppercase text-2xl mr-7 hover:text-green-300 hover:font-bold">
         Map
     </a>
 );
 
 const aboutCall = (
-    <a href="/about" className="relative uppercase text-2xl mr-12 hover:text-green-300">
+    <a href="/about" className="relative uppercase text-2xl mr-12 hover:text-green-300 hover:font-bold">
         About
     </a>
 );
 
 const homeCall = (
-    <a href="/" className="relative uppercase text-2xl mr-8 hover:text-green-300">
+    <a href="/" className="relative uppercase text-2xl mr-8 hover:text-green-300 hover:font-bold">
         Home
     </a>
 );
 
 const contactCall = (
-    <a href="/contact" className="relative uppercase text-2xl mr-8 hover:text-green-300">
+    <a href="/contact" className="relative uppercase text-2xl mr-8 hover:text-green-300 hover:font-bold">
         Contact
     </a>
 );
