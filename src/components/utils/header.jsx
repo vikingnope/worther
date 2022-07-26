@@ -2,7 +2,7 @@ import logo from '../../resources/logoSmall.png'
 
 const Navigations = (text, path) => {
     return(
-        <a href={path} className="relative uppercase text-2xl mr-5 hover:text-green-300">
+        <a href={path} className="relative uppercase text-2xl mr-5 hover:text-green-300 hover:font-bold duration-150">
             {text}
         </a>
     )
