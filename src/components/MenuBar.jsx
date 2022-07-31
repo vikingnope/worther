@@ -1,7 +1,16 @@
-import {AiOutlineSearch} from 'react-icons/ai';
-import {AiOutlineClose} from 'react-icons/ai';
+import { useState } from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
+import { OpenWeatherMapData } from './openWeatherMapData';
 
 export const MenuBar = (props) => {
+
+    const[city, setCity] = useState();
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        OpenWeatherMapData(city);
+    };
+
     return(
         <section className="relative leaflet-top leaflet-left">
             <div className="absolute ml-3 mt-24 w-52 h-15 z-50 bg-white border-2 border-neutral-800 rounded-lg cursor-default p-px" id="opacityBar">
@@ -9,14 +18,16 @@ export const MenuBar = (props) => {
                     <AiOutlineSearch size="23" />
                     {/* {search.length === 0 ? <AiOutlineSearch size="23"/> : <AiOutlineClose size="23"/>} */}
                 </div>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <input
                         className="ml-0.5 border-b-2 border-sky-900 w-44 h-7 text-base font-bold indent-0.5 border-dashed outline-none"
                         type="text"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
                         placeholder="Location"
                     />
                 </form>
-                <label for="weather" className="font-bold text-sm ml-0.5">
+                <label htmlFor="weather" className="font-bold text-sm ml-0.5">
                     Weather opacity (only click):
                 </label>
                 <input 
