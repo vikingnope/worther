@@ -5,11 +5,11 @@ import React, {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import { RainViewerData }  from '../components/rainViewerData';
 // import { SatelliteData } from '../components/satelliteData';
-import {MenuBar} from '../components/MenuBar';
+import { MenuBar } from '../components/MenuBar';
 
 export default function Map(props) {   
     const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
-    const [weatherOpacity, setWeatherOpacity] = useState(props.weatherOpacity || 0.5);
+    const [weatherOpacity, setWeatherOpacity] = useState(props.weatherOpacity || 0.7);
 
     let declinedGeolocation = false;
 
