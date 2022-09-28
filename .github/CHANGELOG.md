@@ -21,6 +21,7 @@
 1. Added forums page
 1. Fixed alignment of elements on pages
 1. Header now has custom custom buttons for each page
+1. Added options
 
 ## 1.0.0
 
