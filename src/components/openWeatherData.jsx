@@ -22,4 +22,10 @@ export const GetOpenWeatherData = (city) => {
         setName(response.data.main.name);
         console.log(name);
       });
+
+    return(
+      <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
+
+      </div>
+    )  
   };
