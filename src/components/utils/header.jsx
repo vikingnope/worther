@@ -18,11 +18,14 @@ export const Header = ({choice}) => {
             <nav className="fixed top-3 right-0">
                 {
                 (choice === 'about') ? 
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Forums', '/forums')]
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Forums', '/forums')]
                 : (choice === 'home') ?
-                    [Navigations('Map', '/map'),Navigations('Forums', '/forums'), Navigations('About', '/about')] :
+                    [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
                     (choice === 'forums') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('About', '/about')] :
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                    (choice === 'weather') ?
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
+
                 <></>
                 }
             </nav>

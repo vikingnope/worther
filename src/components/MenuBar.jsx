@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { OpenWeatherMapData } from './openWeatherMapData';
+import Weather from '../pages/weather.jsx';
 
 export const MenuBar = (props) => {
 
@@ -8,7 +8,7 @@ export const MenuBar = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        OpenWeatherMapData(city);
+        Weather(city);
     };
 
     return(

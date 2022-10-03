@@ -6,6 +6,7 @@ import Contact from './contact.jsx';
 import Map from './map.jsx';
 import Forums from './forums.jsx';
 import '../styles/main.scss';
+import Weather from './weather.jsx';
 
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route exact path="/contact" element={<Contact />} />
         <Route exact path="/map" element={<Map />} />
         <Route exact path="/forums" element={<Forums />} />
+        <Route exact path="/weather" element={<Weather />} />
       </Routes>
     </Router>
   );
