@@ -3,7 +3,6 @@
 ## 1.0.1
 
 1. Changed logo
-1. Added radar layer
 1. Added rain radar layer
 1. Added Axios to call APIs
 1. Updated to react version 18.2.0
@@ -22,6 +21,7 @@
 1. Fixed alignment of elements on pages
 1. Header now has custom custom buttons for each page
 1. Added options
+1. Added weather page
 
 ## 1.0.0
 
