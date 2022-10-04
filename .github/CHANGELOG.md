@@ -19,7 +19,7 @@
 1. Added header and footer to about page
 1. Added forums page
 1. Fixed alignment of elements on pages
-1. Header now has custom custom buttons for each page
+1. Header now has custom buttons for each page
 1. Added options
 1. Added weather page
 
