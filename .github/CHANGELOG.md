@@ -1,6 +1,6 @@
-# Development Changelog
+# Changelog
 
-## 1.0.1
+## 1.1.0
 
 1. Changed logo
 1. Added rain radar layer

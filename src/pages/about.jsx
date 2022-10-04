@@ -22,7 +22,7 @@ export default function About() {
             APIs used: OpenStreetMap API, Rainviewer API, EUMETSAT API, OpenWeatherMap API
           </p>
           <p className="absolute text-base underline bottom-11 right-1">
-            Version 1.0.1
+            Version 1.1.0
           </p>
       </main>
       <Footer />
