@@ -3,12 +3,12 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
-import {BsFillSunFill} from 'react-icons/bs'; // sunny
-import {AiFillCloud} from 'react-icons/ai'; // cloudy
-import {BsFillCloudRainFill} from 'react-icons/bs'; // rain
-import {BsFillCloudLightningRainFill} from 'react-icons/bs'; // thunder and rain
-import {BsFillCloudSnowFill} from 'react-icons/bs'; // snow
-import {BsCloudFog} from 'react-icons/bs'; // fog
+import { BsFillSunFill } from 'react-icons/bs'; // sunny
+import { AiFillCloud } from 'react-icons/ai'; // cloudy
+import { BsFillCloudRainFill } from 'react-icons/bs'; // rain
+import { BsFillCloudLightningRainFill } from 'react-icons/bs'; // thunder and rain
+import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
+import { BsCloudFog } from 'react-icons/bs'; // fog
 
 
 export const GetOpenWeatherData = () => {
