@@ -55,7 +55,7 @@ export default function Map(props) {
                     {/* <SatelliteData /> */}
                     <RainViewerData opacity={weatherOpacity}/>
                     <MenuBar weatherOpacity={weatherOpacity} onWeatherOpacityChange={setWeatherOpacity}/>
-                    <Options/>
+                    {/* <Options/> */}
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
