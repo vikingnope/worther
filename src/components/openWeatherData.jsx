@@ -13,7 +13,7 @@ import { BsCloudFog } from 'react-icons/bs'; // fog
 
 export const GetOpenWeatherData = () => {
 
-    const {city} = useParams() // Gets city from the url
+    const { city } = useParams() // Gets city from the url
 
     const [ name, setName ] = useState();
     const [ country, setCountry ] = useState();
