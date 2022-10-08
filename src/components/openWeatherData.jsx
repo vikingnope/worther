@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
 import {BsFillSunFill} from 'react-icons/bs'; // sunny
-import {BsFillCloudSunFill} from 'react-icons/bs'; // scattered clouds
 import {AiFillCloud} from 'react-icons/ai'; // cloudy
 import {BsFillCloudRainFill} from 'react-icons/bs'; // rain
 import {BsFillCloudLightningRainFill} from 'react-icons/bs'; // thunder and rain
