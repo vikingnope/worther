@@ -29,7 +29,7 @@ export default function Weather () {
             className="rounded w-44 h-7 text-black text-base font-bold indent-0.5 border-dashed outline-none"
             type="text"
             value={city}
-            onChange={(e) => setCity(e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1))}
+            onChange={(e) => setCity(e.target.value.toUpperCase())}
             placeholder="Location"
         />
       </form>
