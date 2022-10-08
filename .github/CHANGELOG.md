@@ -21,7 +21,7 @@
 1. Fixed alignment of elements on pages
 1. Header now has custom buttons for each page
 1. Added options
-1. Added weather page
+1. Added weather page including dynamic weather page to run api according to city input
 
 ## 1.0.0
 

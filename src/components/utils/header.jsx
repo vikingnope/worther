@@ -25,6 +25,8 @@ export const Header = ({choice}) => {
                     [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                     (choice === 'weather') ?
                     [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
+                    (choice === 'weather_city') ?
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
 
                 <></>
                 }
