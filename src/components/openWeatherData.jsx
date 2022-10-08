@@ -139,7 +139,13 @@ export const GetOpenWeatherData = () => {
         (sunriseTime.getTimezoneOffset() === -600) ?
           setTimeZone('GMT+10') :
         (sunriseTime.getTimezoneOffset() === -660) ?
-          setTimeZone('GMT+11') :                  
+          setTimeZone('GMT+11') :   
+        (sunriseTime.getTimezoneOffset() === -720) ?
+          setTimeZone('GMT+12') :
+        (sunriseTime.getTimezoneOffset() === -780) ?
+          setTimeZone('GMT+13') : 
+        (sunriseTime.getTimezoneOffset() === -840) ?
+          setTimeZone('GMT+14') :                 
         <></> 
         );
         
