@@ -34,6 +34,10 @@ export const GetOpenWeatherData = () => {
     const [ sunriseMinute, setSunriseMinute ] = useState();
     const [ sunsetHour, setSunsetHour ] = useState();
     const [ sunsetMinute, setSunsetMinute ] = useState();
+    const [ timeZone, setTimeZone ] = useState();
+
+    var sunriseTime = new Date(sunrise * 1000);
+    var sunsetTime = new Date(sunset * 1000);
 
     document.title = "Worther - Weather - " + city;
   
@@ -88,11 +92,59 @@ export const GetOpenWeatherData = () => {
           setWindDirection('NNW') :                          
         <> </>);
 
-        var sunriseTime = new Date(sunrise * 1000);
-        var sunsetTime = new Date(sunset * 1000);
+        ((sunriseTime.getTimezoneOffset() === 0) ?
+          setTimeZone('GMT') :
+        (sunriseTime.getTimezoneOffset() === 60) ?
+          setTimeZone('GMT-1') :
+        (sunriseTime.getTimezoneOffset() === 120) ?
+          setTimeZone('GMT-2') :
+        (sunriseTime.getTimezoneOffset() === 180) ?
+          setTimeZone('GMT-3') :
+        (sunriseTime.getTimezoneOffset() === 240) ?
+          setTimeZone('GMT-4') :
+        (sunriseTime.getTimezoneOffset() === 300) ?
+          setTimeZone('GMT-5') :
+        (sunriseTime.getTimezoneOffset() === 360) ?
+          setTimeZone('GMT-6') :
+        (sunriseTime.getTimezoneOffset() === 420) ?
+          setTimeZone('GMT-7') :
+        (sunriseTime.getTimezoneOffset() === 480) ?
+          setTimeZone('GMT-8') :
+        (sunriseTime.getTimezoneOffset() === 540) ?
+          setTimeZone('GMT-9') :
+        (sunriseTime.getTimezoneOffset() === 600) ?
+          setTimeZone('GMT-10') :
+        (sunriseTime.getTimezoneOffset() === 660) ?
+          setTimeZone('GMT-11') :
+        (sunriseTime.getTimezoneOffset() === 720) ?
+          setTimeZone('GMT-12') :
+        (sunriseTime.getTimezoneOffset() === -60) ?
+          setTimeZone('GMT+1') :
+        (sunriseTime.getTimezoneOffset() === -120) ?
+          setTimeZone('GMT+2') :
+        (sunriseTime.getTimezoneOffset() === -180) ?
+          setTimeZone('GMT+3') :
+        (sunriseTime.getTimezoneOffset() === -240) ?
+          setTimeZone('GMT+4') :
+        (sunriseTime.getTimezoneOffset() === -300) ?
+          setTimeZone('GMT+5') :
+        (sunriseTime.getTimezoneOffset() === -360) ?
+          setTimeZone('GMT+6') :
+        (sunriseTime.getTimezoneOffset() === -420) ?
+          setTimeZone('GMT+7') :
+        (sunriseTime.getTimezoneOffset() === -480) ?
+          setTimeZone('GMT+8') :
+        (sunriseTime.getTimezoneOffset() === -540) ?
+          setTimeZone('GMT+9') :
+        (sunriseTime.getTimezoneOffset() === -600) ?
+          setTimeZone('GMT+10') :
+        (sunriseTime.getTimezoneOffset() === -660) ?
+          setTimeZone('GMT+11') :                  
+        <></> 
+        );
+        
         
         setSunriseHour(String(sunriseTime.getHours()).padStart(2, '0'));
-
         setSunriseMinute(String(sunriseTime.getMinutes()).padStart(2, '0')); // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
         setSunsetHour(String(sunsetTime.getHours()).padStart(2, '0'));
         setSunsetMinute(String(sunsetTime.getMinutes()).padStart(2, '0'));
@@ -126,7 +178,7 @@ export const GetOpenWeatherData = () => {
           <p>Humidity: {humidity}%</p>
           <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @ {windDegrees}°</p>
           <p>Pressure: {pressure} hPa</p>
-          <p>Sunrise: {sunriseHour}:{sunriseMinute} GMT &emsp; Sunset: {sunsetHour}:{sunsetMinute} GMT</p>
+          <p>Sunrise: {sunriseHour}:{sunriseMinute} {timeZone} &emsp; Sunset: {sunsetHour}:{sunsetMinute} {timeZone}</p>
         </section>
         <Footer />
       </div>
