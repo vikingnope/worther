@@ -7,6 +7,8 @@ import { RainViewerData }  from '../components/rainViewerData';
 // import { SatelliteData } from '../components/satelliteData';
 import { MenuBar } from '../components/MenuBar';
 import { Options } from '../components/options';
+import { Header } from '../components/utils/header';
+import { Footer } from '../components/utils/footer';
 
 export default function Map(props) {   
     const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
@@ -41,27 +43,31 @@ export default function Map(props) {
 
     const map = (markerShow, zoomLevel) => {
         return( 
-            <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
-                <ScaleControl />
-                {/* For dark mode map: https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png */}
-                <TileLayer zIndex={1}
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {/* <SatelliteData /> */}
-                <RainViewerData opacity={weatherOpacity}/>
-                <MenuBar weatherOpacity={weatherOpacity} onWeatherOpacityChange={setWeatherOpacity}/>
-                <Options/>
-                {(!markerShow) ? (
-                    <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
-                        <Popup>
-                            Location: 
-                        </Popup> 
-                    </Marker>
-                ) : (
-                    <></>
-                )}
-            </MapContainer>
+            <div>
+                <Header/>
+                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
+                    <ScaleControl />
+                    {/* For dark mode map: https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png */}
+                    <TileLayer zIndex={1}
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {/* <SatelliteData /> */}
+                    <RainViewerData opacity={weatherOpacity}/>
+                    <MenuBar weatherOpacity={weatherOpacity} onWeatherOpacityChange={setWeatherOpacity}/>
+                    <Options/>
+                    {(!markerShow) ? (
+                        <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
+                            <Popup>
+                                Location: 
+                            </Popup> 
+                        </Marker>
+                    ) : (
+                        <></>
+                    )}
+                </MapContainer>
+                <Footer/>
+            </div>
         )
     }
 
