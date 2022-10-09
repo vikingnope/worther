@@ -34,6 +34,8 @@ export const GetOpenWeatherData = () => {
     const [ sunriseMinute, setSunriseMinute ] = useState();
     const [ sunsetHour, setSunsetHour ] = useState();
     const [ sunsetMinute, setSunsetMinute ] = useState();
+    const [ visibility, setVisibility ] = useState();
+    const [ visibilityDescription, setVisibilityDescription ] = useState();
     const [ timeZone, setTimeZone ] = useState();
 
     var sunriseTime = new Date(sunrise * 1000);
@@ -45,6 +47,7 @@ export const GetOpenWeatherData = () => {
       `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric` :
       `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
       .then(response => {
+        console.log(response.data);
         setName(response.data.name);
         setCountry(response.data.sys.country);
         setHumidity(response.data.main.humidity);
@@ -59,6 +62,26 @@ export const GetOpenWeatherData = () => {
         setWindDegrees(response.data.wind.deg);
         setSunrise(response.data.sys.sunrise);
         setSunset(response.data.sys.sunset);
+        setVisibility(response.data.visibility);
+
+        ((visibility < 50) ?
+          setVisibilityDescription('Dense Fog') :
+        (visibility >= 50 && visibility < 200) ?
+          setVisibilityDescription('Thick Fog') :
+        (visibility >= 200 && visibility < 500) ?
+          setVisibilityDescription('Moderate Fog') :
+        (visibility >= 500 && visibility < 1000) ?
+          setVisibilityDescription('Light Fog') :
+        (visibility >= 1000 && visibility < 2000) ?
+          setVisibilityDescription('Thin Fog') :
+        (visibility >= 2000 && visibility < 4000) ?
+          setVisibilityDescription('Haze') :
+        (visibility >= 4000 && visibility < 10000) ?
+          setVisibilityDescription('Light Haze') :
+        (visibility === 10000) ?
+          setVisibilityDescription('Clear') :
+          <></>
+        );
 
         (((windDegrees >= 0 && windDegrees <= 11.25) || (windDegrees  > 348.75)) ? 
           setWindDirection('N')  : 
@@ -151,7 +174,6 @@ export const GetOpenWeatherData = () => {
         <></> 
         );
         
-        
         setSunriseHour(String(sunriseTime.getHours()).padStart(2, '0'));
         setSunriseMinute(String(sunriseTime.getMinutes()).padStart(2, '0')); // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
         setSunsetHour(String(sunsetTime.getHours()).padStart(2, '0'));
@@ -186,6 +208,10 @@ export const GetOpenWeatherData = () => {
           <p>Humidity: {humidity}%</p>
           <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @ {windDegrees}°</p>
           <p>Pressure: {pressure} hPa</p>
+          <p>Visibility: {(visibility >= 1000)?
+            (visibility/1000) + 'km' :
+            (visibility) + 'm'} ({visibilityDescription})
+          </p>
           <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
         </section>
         <Footer />
