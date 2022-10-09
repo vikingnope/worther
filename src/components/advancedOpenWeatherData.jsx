@@ -159,18 +159,18 @@ export const GetAdvancedOpenWeatherData = () => {
     return(
       <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
         <Header choice={'weather_city'}/>
-        <section className="mx-auto mb-8">
+        <section className="mx-auto">
           { 
             (mainWeather === "Clear") ?
-              <BsFillSunFill size = {'150'} color = {'white'} /> :
+              <BsFillSunFill size = {'200'} color = {'white'} /> :
             (mainWeather === "Clouds") ?
-              <AiFillCloud size = {'150'} color = {'white'} /> :
+              <AiFillCloud size = {'200'} color = {'white'} /> :
             (mainWeather === "Rain") ?
-              <BsFillCloudRainFill size = {'150'} color = {'white'} /> :  
+              <BsFillCloudRainFill size = {'200'} color = {'white'} /> :  
             (mainWeather === "Fog") ?
-              <BsCloudFog size = {'150'} color = {'white'} /> :  
+              <BsCloudFog size = {'200'} color = {'white'} /> :  
             (mainWeather === "Snow") ?
-              <BsFillCloudSnowFill size = {'150'} color = {'white'} /> :  
+              <BsFillCloudSnowFill size = {'200'} color = {'white'} /> :  
             <> </>
           }
           
