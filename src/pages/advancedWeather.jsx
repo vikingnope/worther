@@ -25,7 +25,7 @@ export default function AdvancedWeather () {
     <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
       <Header choice={'weather'}/>
       <p className='text-7xl mb-9 font-bold'>
-        Current Weather
+        Advanced Current Weather
       </p>
       <form onSubmit={handleSubmit}>
         <Select 
