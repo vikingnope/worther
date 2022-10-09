@@ -6,6 +6,7 @@ import { Footer } from "./utils/footer";
 import { BsFillSunFill } from 'react-icons/bs'; // sunny
 import { AiFillCloud } from 'react-icons/ai'; // cloudy
 import { BsFillCloudRainFill } from 'react-icons/bs'; // rain
+import { BsFillCloudDrizzleFill } from 'react-icons/bs' // drizzle
 import { BsFillCloudLightningRainFill } from 'react-icons/bs'; // thunder and rain
 import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
 import { BsCloudFog } from 'react-icons/bs'; // fog
@@ -191,6 +192,8 @@ export const GetOpenWeatherData = () => {
               <AiFillCloud size = {'200'} color = {'white'} className="mb-0"/> :
             (mainWeather === "Rain") ?
               <BsFillCloudRainFill size = {'200'} color = {'white'} /> :  
+            (mainWeather === "Drizzle") ?
+              <BsFillCloudDrizzleFill size = {'200'} color = {'white'} /> :
             (mainWeather === "Fog") ?
               <BsCloudFog size = {'200'} color = {'white'} /> :  
             (mainWeather === "Snow") ?
