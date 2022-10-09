@@ -183,12 +183,12 @@ export const GetOpenWeatherData = () => {
     return(
       <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
         <Header choice={'weather_city'}/>
-        <section className="mx-auto mb-2">
+        <section className="mx-auto mb-4">
           { 
             (mainWeather === "Clear") ?
               <BsFillSunFill size = {'200'} color = {'white'} /> :
             (mainWeather === "Clouds") ?
-              <AiFillCloud size = {'200'} color = {'white'} /> :
+              <AiFillCloud size = {'200'} color = {'white'} className="mb-0"/> :
             (mainWeather === "Rain") ?
               <BsFillCloudRainFill size = {'200'} color = {'white'} /> :  
             (mainWeather === "Fog") ?
@@ -199,9 +199,9 @@ export const GetOpenWeatherData = () => {
           }
           
         </section>
-        <section className="text-base">
-          <p className="text-2xl font-bold">{city}, {country}</p>
-          <p>{mainWeather}</p>
+        <section className="text-lg">
+          <p className="underline text-3xl font-bold">{city}, {country}</p>
+          <p className="font-bold text-3xl mt-4">{mainWeather}</p>
           <p>Temperature: {Math.round(temperature)}°C</p>
           <p>Feels like: {Math.round(tempFeel)}°C</p>
           <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
