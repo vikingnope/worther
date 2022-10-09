@@ -184,7 +184,7 @@ export const GetOpenWeatherData = () => {
           <p>Humidity: {humidity}%</p>
           <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @ {windDegrees}°</p>
           <p>Pressure: {pressure} hPa</p>
-          <p>Sunrise: {sunriseHour}:{sunriseMinute} {timeZone} &emsp; Sunset: {sunsetHour}:{sunsetMinute} {timeZone}</p>
+          <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
         </section>
         <Footer />
       </div>
