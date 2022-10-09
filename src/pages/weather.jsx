@@ -34,7 +34,7 @@ export default function Weather () {
             Search
         </button>
       </form>
-      <a href='/advancedWeather' className='mt-3 underline'>Advanced Options</a>
+      <a href='/advancedWeather' className='mt-3 underline'>Advanced Search</a>
       <Footer />
     </div>
   )
