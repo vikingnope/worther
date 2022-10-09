@@ -31,7 +31,7 @@ export default function Weather () {
             placeholder="City"
         />
         <button type="submit" className='rounded block w-16 h-6 bg-white text-black mx-auto mt-3'>
-            Submit
+            Search
         </button>
       </form>
       <a href='/advancedWeather' className='mt-3 underline'>Advanced Options</a>
