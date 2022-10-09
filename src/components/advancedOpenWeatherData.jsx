@@ -11,9 +11,9 @@ import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
 import { BsCloudFog } from 'react-icons/bs'; // fog
 
 
-export const GetOpenWeatherData = () => {
+export const GetAdvancedOpenWeatherData = () => {
 
-    const { city } = useParams(); // Gets city from the url
+    const { countryCode, city } = useParams(); // Gets city from the url
 
     const [ name, setName ] = useState();
     const [ country, setCountry ] = useState();
@@ -41,7 +41,7 @@ export const GetOpenWeatherData = () => {
 
     document.title = "Worther - Weather - " + city;
   
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)
       .then(response => {
         setName(response.data.name);
         setCountry(response.data.sys.country);

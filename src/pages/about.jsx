@@ -16,10 +16,10 @@ export default function About() {
             The weather app with the map of the world and wind direction.
           </p>
           <p className="text-3xl mt-5">
-            It is built using React, Leaflet, Axios, Material UI & Tailwind CSS.
+            It is built using React, React Icons, Leaflet, Axios & Tailwind CSS.
           </p>
           <p className="text-3xl mt-5">
-            APIs used: OpenStreetMap API, Rainviewer API, EUMETSAT API, OpenWeatherMap API
+            APIs used: OpenStreetMap API, Rainviewer API, OpenWeatherMap API
           </p>
           <p className="absolute text-base underline bottom-11 right-1">
             Version 1.1.0

@@ -1,30 +1,42 @@
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
  
-export default function Weather () {
-  document.title = "Worther - Weather";
+export default function AdvancedWeather () {
+  document.title = "Worther - Advanced Weather";
 
   const[ city, setCity ] = useState();
+  const [ country, setCountry ] = useState();
+  const options = useMemo(() => countryList().getData(), []);
+  const [ countryCode, setCountryCode ] = useState('');
 
   const history = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    history('/weather/' + city);
+    history('/advancedWeather/' + countryCode +'/'+ city);
   }
 
   return(
     <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
-      <Header choice={'weather'}/>
+      <Header choice={'weather_city'}/>
       <p className='text-7xl mb-9 font-bold'>
         Current Weather
       </p>
       <form onSubmit={handleSubmit}>
+        <Select 
+            value = {country}
+            onChange = {(val) => [setCountry(val), setCountryCode(val.value)]}
+            options={options}
+            className="rounded w-48 h-8 mx-auto mb-5 text-black"
+            placeholder='Country'
+        />
         <input
-            className="rounded w-48 h-7 text-black text-base font-bold indent-0.5 outline-none"
+            className="rounded w-48 h-8 text-black text-base font-bold indent-0.5 outline-none"
             type="text"
             value={city}
             onChange={(e) => setCity(e.target.value.toUpperCase())}
@@ -34,7 +46,6 @@ export default function Weather () {
             Submit
         </button>
       </form>
-      <a href='/advancedWeather' className='mt-3 underline'>Advanced Options</a>
       <Footer />
     </div>
   )
