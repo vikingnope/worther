@@ -5,8 +5,8 @@ import React, {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
 import { RainViewerData }  from '../components/rainViewerData';
 // import { SatelliteData } from '../components/satelliteData';
-import { MenuBar } from '../components/MenuBar';
-import { Options } from '../components/options';
+import { MenuBar } from '../components/menuBar';
+//import { Options } from '../components/options';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 

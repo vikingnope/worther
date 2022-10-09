@@ -13,7 +13,7 @@ import { BsCloudFog } from 'react-icons/bs'; // fog
 
 export const GetOpenWeatherData = () => {
 
-    const { city } = useParams(); // Gets city from the url
+    const { countryCode, city } = useParams(); // Gets city from the url
 
     const [ name, setName ] = useState();
     const [ country, setCountry ] = useState();
@@ -40,8 +40,10 @@ export const GetOpenWeatherData = () => {
     var sunsetTime = new Date(sunset * 1000);
 
     document.title = "Worther - Weather - " + city;
-  
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)
+
+    axios.get((countryCode === undefined) ?
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric` :
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
       .then(response => {
         setName(response.data.name);
         setCountry(response.data.sys.country);
@@ -159,7 +161,7 @@ export const GetOpenWeatherData = () => {
     return(
       <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
         <Header choice={'weather_city'}/>
-        <section className="mx-auto">
+        <section className="mx-auto mb-2">
           { 
             (mainWeather === "Clear") ?
               <BsFillSunFill size = {'200'} color = {'white'} /> :

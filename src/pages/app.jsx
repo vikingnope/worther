@@ -9,7 +9,6 @@ import '../styles/main.scss';
 import Weather from './weather.jsx';
 import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
 import AdvancedWeather from './advancedWeather.jsx';
-import { GetAdvancedOpenWeatherData } from '../components/advancedOpenWeatherData.jsx';
 
 
 export default function App() {
@@ -23,8 +22,8 @@ export default function App() {
         <Route exact path="/forums" element={<Forums />} />
         <Route exact path="/weather" element={<Weather />} />
         <Route exact path="/advancedWeather" element={<AdvancedWeather />} />
-        <Route path="/weather/:city" element={<GetOpenWeatherData />} /> // changes url according to city
-        <Route path="/advancedWeather/:countryCode/:city" element={<GetAdvancedOpenWeatherData />} />
+        <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> // changes url according to city
+        <Route exact path="/weather/:countryCode/:city" element={<GetOpenWeatherData />} />
       </Routes>
     </Router>
   );

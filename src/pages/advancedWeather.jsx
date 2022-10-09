@@ -18,7 +18,7 @@ export default function AdvancedWeather () {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    history('/advancedWeather/' + countryCode +'/'+ city);
+    history('/weather/' + countryCode +'/'+ city);
   }
 
   return(
