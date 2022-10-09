@@ -1,3 +1,4 @@
+import '../styles/main.scss';
 import Home from './home.jsx';
 import * as React from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -5,11 +6,9 @@ import About from './about.jsx';
 import Contact from './contact.jsx';
 import Map from './map.jsx';
 import Forums from './forums.jsx';
-import '../styles/main.scss';
 import Weather from './weather.jsx';
-import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
 import AdvancedWeather from './advancedWeather.jsx';
-
+import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
 
 export default function App() {
   return (

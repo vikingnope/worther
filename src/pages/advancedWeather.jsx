@@ -1,6 +1,6 @@
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
