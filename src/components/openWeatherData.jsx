@@ -69,7 +69,7 @@ export const GetOpenWeatherData = () => {
         setHumidity(response.data.main.humidity);
         setTemperature(response.data.main.temp);
         setTempMax(response.data.main.temp_max);
-        setTempMin(response.data.main.temp_max);
+        setTempMin(response.data.main.temp_min);
         setTempFeel(response.data.main.feels_like);
         setPressure(response.data.main.pressure);
         setMainWeather(response.data.weather[0].main);
