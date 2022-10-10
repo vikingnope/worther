@@ -42,7 +42,7 @@ export default function AdvancedWeather () {
             onChange={(e) => setCity(e.target.value.toUpperCase())}
             placeholder="City"
         />
-        <button type="submit" className='rounded block w-16 h-6 bg-white text-black mx-auto mt-3'>
+        <button disabled={!country || !city} type="submit" className='rounded block w-16 h-6 bg-white text-black mx-auto mt-3'>
             Search
         </button>
       </form>

@@ -36,7 +36,7 @@ export const GetOpenWeatherData = () => {
     const [ tempFeel, setTempFeel ] = useState();
     const [ pressure, setPressure ] = useState();
     const [ mainWeather, setMainWeather ] = useState();
-    const [ description, setDescription ] = useState();
+    const [ description, setDescription ] = useState('');
     const [ windSpeed, setWindSpeed ] = useState();
     const [ windDegrees, setWindDegrees ] = useState();
     const [ sunrise, setSunrise ] = useState();
@@ -196,42 +196,47 @@ export const GetOpenWeatherData = () => {
     return(
       <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
         <Header choice={'weather_city'}/>
-        <section className="mx-auto mb-4">
-          { 
-            (mainWeather === "Clear") ?
-              <BsFillSunFill size = {'200'} color = {'white'} /> :
-            (mainWeather === "Clouds") ?
-              <AiFillCloud size = {'200'} color = {'white'} className="mb-0"/> :
-            (mainWeather === "Rain") ?
-              <BsFillCloudRainHeavyFill size = {'200'} color = {'white'} /> :  
-            (mainWeather === "Drizzle") ?
-              <BsFillCloudDrizzleFill size = {'200'} color = {'white'} /> :
-            (mainWeather === "Fog") ?
-              <BsCloudFog size = {'200'} color = {'white'} /> :  
-            (mainWeather === "Snow") ?
-              <BsFillCloudSnowFill size = {'200'} color = {'white'} /> :  
-            <> </>
+          { (mainWeather != undefined) ?
+              <>
+                <section className="mx-auto mb-4">
+                  {(mainWeather === "Clear") ?
+                    <BsFillSunFill size={'200'} color={'white'} /> :
+                  (mainWeather === "Clouds") ?
+                    <AiFillCloud size={'200'} color={'white'} className="mb-0" /> :
+                  (mainWeather === "Rain") ?
+                    <BsFillCloudRainHeavyFill size={'200'} color={'white'} /> :
+                  (mainWeather === "Drizzle") ?
+                    <BsFillCloudDrizzleFill size={'200'} color={'white'} /> :
+                  (mainWeather === "Fog") ?
+                    <BsCloudFog size={'200'} color={'white'} /> :
+                  (mainWeather === "Snow") ?
+                    <BsFillCloudSnowFill size={'200'} color={'white'} /> :
+                  <> </>}
+
+                </section>
+                <section className="text-lg">
+                  <p className="underline text-3xl font-bold">{name}, {country}</p>
+                  <p className="font-bold text-3xl mt-4">{description.toUpperCase()}</p>
+                  <p>Temperature: {Math.round(temperature)}°C</p>
+                  <p>Feels like: {Math.round(tempFeel)}°C</p>
+                  <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
+                  <p>Humidity: {humidity}%</p>
+                  <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @{windDegrees}°</p>
+                  <p>Pressure: {pressure} hPa</p>
+                  <p>Visibility: {(visibility >= 1000) ?
+                    (visibility / 1000) + 'km' :
+                    (visibility) + 'm'} ({visibilityDescription})
+                  </p>
+                  <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
+                </section><form onSubmit={handleSubmit}>
+                  <button type='submit' className="text-lg underline mt-5">Show 5 day weather</button>
+                </form>
+            </> :
+            <>
+              <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
+              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+            </>
           }
-          
-        </section>
-        <section className="text-lg">
-          <p className="underline text-3xl font-bold">{name}, {country}</p>
-          <p className="font-bold text-3xl mt-4">{mainWeather}</p>
-          <p>Temperature: {Math.round(temperature)}°C</p>
-          <p>Feels like: {Math.round(tempFeel)}°C</p>
-          <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
-          <p>Humidity: {humidity}%</p>
-          <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @ {windDegrees}°</p>
-          <p>Pressure: {pressure} hPa</p>
-          <p>Visibility: {(visibility >= 1000)?
-            (visibility/1000) + 'km' :
-            (visibility) + 'm'} ({visibilityDescription})
-          </p>
-          <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
-        </section>
-        <form onSubmit={handleSubmit}>
-          <button type='submit' className="text-lg underline mt-5">Show 5 day weather</button>
-        </form>
         <Footer />
       </div>
     )  
