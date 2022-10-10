@@ -2,7 +2,7 @@ import {useState} from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 
-export const MultipleWeather = () => {
+export const MultipleWeatherData = () => {
   const { city, lat, lon } = useParams();
 
     const [ name, setName ] = useState();
