@@ -43,7 +43,7 @@ export default function Map(props) {
 
     const map = (markerShow, zoomLevel) => {
         return( 
-            <div>
+            <div className="text-white">
                 <Header choice={'map'}/>
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
                     <ScaleControl />
