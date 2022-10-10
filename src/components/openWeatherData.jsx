@@ -210,9 +210,7 @@ export const GetOpenWeatherData = () => {
               <section className="mx-auto mb-4">
                 {(mainWeather === "Clear") ?
                   <BsFillSunFill size={'200'} color={'white'} /> :
-                (description === "scattered clouds") ?
-                  <BsFillCloudSunFill size={'200'} color={'white'} className="mb-0" /> :
-                (description === "broken clouds") ?
+                (description === "scattered clouds" || description === "broken clouds") ?
                   <BsFillCloudSunFill size={'200'} color={'white'} className="mb-0" /> :
                 (description === "light clouds") ?
                   <AiFillCloud size={'200'} color={'white'} className="mb-0" /> :
