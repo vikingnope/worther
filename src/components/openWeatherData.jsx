@@ -248,6 +248,7 @@ export const GetOpenWeatherData = () => {
               </section><form onSubmit={handleSubmit}>
                 <button type='submit' className="text-lg underline mt-5 font-bold">Show 5 day weather</button>
               </form>
+              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
           </> :
           <>
             <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
