@@ -24,6 +24,7 @@
 1. Added weather page including dynamic weather page to run api according to city input
 1. Added advanced weather page to search with country as well as city
 1. Added loading screen in weather
+1. Updated about page with hyperlinks for APIs and tools
 
 ## 1.0.0
 
