@@ -5,12 +5,15 @@ import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
 import { BsFillSunFill } from 'react-icons/bs'; // sunny
 import { AiFillCloud } from 'react-icons/ai'; // cloudy
-import { BsFillCloudRainHeavyFill } from 'react-icons/bs'; // rain
+import { BsFillCloudRainHeavyFill } from 'react-icons/bs'; // heavy intensity rain
 import { BsFillCloudDrizzleFill } from 'react-icons/bs' // drizzle
 import { BsFillCloudLightningRainFill } from 'react-icons/bs'; // thunder and rain
 import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
 import { BsCloudFog } from 'react-icons/bs'; // fog
 import { useNavigate } from 'react-router-dom';
+import { BsFillCloudRainFill } from 'react-icons/bs'; // light rain
+import { BsFillCloudsFill } from 'react-icons/bs'; // overcast clouds
+import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
 
 
 export const GetOpenWeatherData = () => {
@@ -201,9 +204,15 @@ export const GetOpenWeatherData = () => {
                 <section className="mx-auto mb-4">
                   {(mainWeather === "Clear") ?
                     <BsFillSunFill size={'200'} color={'white'} /> :
-                  (mainWeather === "Clouds") ?
+                  (description === "scattered clouds") ?
+                    <BsFillCloudSunFill size={'200'} color={'white'} className="mb-0" /> :
+                  (description === "clouds") ?
                     <AiFillCloud size={'200'} color={'white'} className="mb-0" /> :
-                  (mainWeather === "Rain") ?
+                  (description === "overcast clouds") ?
+                    <BsFillCloudsFill size={'200'} color={'white'} className="mb-0" /> :
+                  (description === "light rain") ?
+                    <BsFillCloudRainFill size={'200'} color={'white'} /> :
+                  (description === "heavy intensity rain" || description === "moderate rain") ?
                     <BsFillCloudRainHeavyFill size={'200'} color={'white'} /> :
                   (mainWeather === "Drizzle") ?
                     <BsFillCloudDrizzleFill size={'200'} color={'white'} /> :
