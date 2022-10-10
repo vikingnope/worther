@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
 import { BsFillSunFill } from 'react-icons/bs'; // sunny
@@ -10,11 +11,9 @@ import { BsFillCloudDrizzleFill } from 'react-icons/bs' // drizzle
 import { BsFillCloudLightningRainFill } from 'react-icons/bs'; // thunder and rain
 import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
 import { BsCloudFog } from 'react-icons/bs'; // fog
-import { useNavigate } from 'react-router-dom';
 import { BsFillCloudRainFill } from 'react-icons/bs'; // light rain
 import { BsFillCloudsFill } from 'react-icons/bs'; // overcast clouds
 import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
-
 
 export const GetOpenWeatherData = () => {
 
@@ -52,6 +51,7 @@ export const GetOpenWeatherData = () => {
     const [ visibility, setVisibility ] = useState();
     const [ visibilityDescription, setVisibilityDescription ] = useState();
     const [ timeZone, setTimeZone ] = useState();
+    const [ loaded, setLoaded ] = useState();
 
     var sunriseTime = new Date(sunrise * 1000);
     var sunsetTime = new Date(sunset * 1000);
@@ -194,60 +194,74 @@ export const GetOpenWeatherData = () => {
         setSunriseMinute(String(sunriseTime.getMinutes()).padStart(2, '0')); // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
         setSunsetHour(String(sunsetTime.getHours()).padStart(2, '0'));
         setSunsetMinute(String(sunsetTime.getMinutes()).padStart(2, '0'));
-      });
+        setLoaded(true);
+      })
+      .catch(error => {
+        setLoaded(false);
+      })
 
     return(
     <div className="text-white">
       <Header choice={'weather_city'}/>
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+        {(loaded) ?
+          ((mainWeather) ?
+            <>
+              <section className="mx-auto mb-4">
+                {(mainWeather === "Clear") ?
+                  <BsFillSunFill size={'200'} color={'white'} /> :
+                (description === "scattered clouds") ?
+                  <BsFillCloudSunFill size={'200'} color={'white'} className="mb-0" /> :
+                (description === "light clouds") ?
+                  <AiFillCloud size={'200'} color={'white'} className="mb-0" /> :
+                (description === "overcast clouds") ?
+                  <BsFillCloudsFill size={'200'} color={'white'} className="mb-0" /> :
+                (description === "light rain") ?
+                  <BsFillCloudRainFill size={'200'} color={'white'} /> :
+                (description === "heavy intensity rain" || description === "moderate rain") ?
+                  <BsFillCloudRainHeavyFill size={'200'} color={'white'} /> :
+                (mainWeather === "Drizzle") ?
+                  <BsFillCloudDrizzleFill size={'200'} color={'white'} /> :
+                (description === "thunderstorm with light rain") ?
+                  <BsFillCloudLightningRainFill  size={'200'} color={'white'} className="mb-0" /> :
+                (mainWeather === "Fog") ?
+                  <BsCloudFog size={'200'} color={'white'} /> :
+                (mainWeather === "Snow") ?
+                  <BsFillCloudSnowFill size={'200'} color={'white'} /> :
+                <> </>}
 
-          { (mainWeather !== undefined) ?
-              <>
-                <section className="mx-auto mb-4">
-                  {(mainWeather === "Clear") ?
-                    <BsFillSunFill size={'200'} color={'white'} /> :
-                  (description === "scattered clouds") ?
-                    <BsFillCloudSunFill size={'200'} color={'white'} className="mb-0" /> :
-                  (description === "clouds") ?
-                    <AiFillCloud size={'200'} color={'white'} className="mb-0" /> :
-                  (description === "overcast clouds") ?
-                    <BsFillCloudsFill size={'200'} color={'white'} className="mb-0" /> :
-                  (description === "light rain") ?
-                    <BsFillCloudRainFill size={'200'} color={'white'} /> :
-                  (description === "heavy intensity rain" || description === "moderate rain") ?
-                    <BsFillCloudRainHeavyFill size={'200'} color={'white'} /> :
-                  (mainWeather === "Drizzle") ?
-                    <BsFillCloudDrizzleFill size={'200'} color={'white'} /> :
-                  (mainWeather === "Fog") ?
-                    <BsCloudFog size={'200'} color={'white'} /> :
-                  (mainWeather === "Snow") ?
-                    <BsFillCloudSnowFill size={'200'} color={'white'} /> :
-                  <> </>}
-
-                </section>
-                <section className="text-lg">
-                  <p className="underline text-3xl font-bold">{name}, {country}</p>
-                  <p className="font-bold text-3xl mt-4">{description.toUpperCase()}</p>
-                  <p>Temperature: {Math.round(temperature)}°C</p>
-                  <p>Feels like: {Math.round(tempFeel)}°C</p>
-                  <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
-                  <p>Humidity: {humidity}%</p>
-                  <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @{windDegrees}°</p>
-                  <p>Pressure: {pressure} hPa</p>
-                  <p>Visibility: {(visibility >= 1000) ?
-                    (visibility / 1000) + 'km' :
-                    (visibility) + 'm'} ({visibilityDescription})
-                  </p>
-                  <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
-                </section><form onSubmit={handleSubmit}>
-                  <button type='submit' className="text-lg underline mt-5">Show 5 day weather</button>
-                </form>
-            </> :
+              </section>
+              <section className="text-lg">
+                <p className="underline text-3xl font-bold">{name}, {country}</p>
+                <p className="font-bold text-3xl mt-4">{description.toUpperCase()}</p>
+                <p>Temperature: {Math.round(temperature)}°C</p>
+                <p>Feels like: {Math.round(tempFeel)}°C</p>
+                <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
+                <p>Humidity: {humidity}%</p>
+                <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @{windDegrees}°</p>
+                <p>Pressure: {pressure} hPa</p>
+                <p>Visibility: {(visibility >= 1000) ?
+                  (visibility / 1000) + 'km' :
+                  (visibility) + 'm'} ({visibilityDescription})
+                </p>
+                <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
+              </section><form onSubmit={handleSubmit}>
+                <button type='submit' className="text-lg underline mt-5">Show 5 day weather</button>
+              </form>
+          </> :
+          <>
+            <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
+            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+          </>
+          ) :
+          (loaded === false && !mainWeather) ?
             <>
               <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
               <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
             </>
-          }
+          :
+          <p className="font-bold text-2xl">Loading...</p>
+        }  
       </div>
       <Footer />
     </div>
