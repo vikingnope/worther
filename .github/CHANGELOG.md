@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0
+## 1.0.0 (Major)
 
 1. Changed logo
 1. Added rain radar layer
@@ -26,6 +26,6 @@
 1. Added loading screen in weather
 1. Updated about page with hyperlinks for APIs and tools
 
-## 1.0.0
+## 0.0.1 (Minor)
 
 This is the first release of the website which shows only the about page and the main page, will have new uploads in the future.
