@@ -1,33 +1,11 @@
-import { useState } from "react";
+import {useState} from 'react';
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { Header } from "./utils/header";
-import { Footer } from "./utils/footer";
-import { BsFillSunFill } from 'react-icons/bs'; // sunny
-import { AiFillCloud } from 'react-icons/ai'; // cloudy
-import { BsFillCloudRainHeavyFill } from 'react-icons/bs'; // rain
-import { BsFillCloudDrizzleFill } from 'react-icons/bs' // drizzle
-import { BsFillCloudLightningRainFill } from 'react-icons/bs'; // thunder and rain
-import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
-import { BsCloudFog } from 'react-icons/bs'; // fog
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-
-export const GetOpenWeatherData = () => {
-
-    const { countryCode, city } = useParams(); // Gets city from the url
-
-    const history = useNavigate();
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-  
-      history('/weather/' + city + '/' + lat + '/' + lon);
-    }
+export const MultipleWeather = () => {
+  const { city, lat, lon } = useParams();
 
     const [ name, setName ] = useState();
-    const [ lat, setLat ] = useState();
-    const [ lon, setLon ] = useState();
     const [ country, setCountry ] = useState();
     const [ humidity, setHumidity ] = useState();
     const [ temperature, setTemperature ] = useState();
@@ -55,13 +33,10 @@ export const GetOpenWeatherData = () => {
 
     document.title = "Worther - Weather - " + city;
 
-    axios.get((countryCode === undefined) ?
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric` :
-      `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
+    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01`)    
       .then(response => {
-        setName(response.data.name);
-        setLat(response.data.coord.lat);
-        setLon(response.data.coord.lon);
+        console.log(response.data);
+        setName(response.data.city.name);
         setCountry(response.data.sys.country);
         setHumidity(response.data.main.humidity);
         setTemperature(response.data.main.temp);
@@ -193,46 +168,11 @@ export const GetOpenWeatherData = () => {
         setSunsetMinute(String(sunsetTime.getMinutes()).padStart(2, '0'));
       });
 
-    return(
-      <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
-        <Header choice={'weather_city'}/>
-        <section className="mx-auto mb-4">
-          { 
-            (mainWeather === "Clear") ?
-              <BsFillSunFill size = {'200'} color = {'white'} /> :
-            (mainWeather === "Clouds") ?
-              <AiFillCloud size = {'200'} color = {'white'} className="mb-0"/> :
-            (mainWeather === "Rain") ?
-              <BsFillCloudRainHeavyFill size = {'200'} color = {'white'} /> :  
-            (mainWeather === "Drizzle") ?
-              <BsFillCloudDrizzleFill size = {'200'} color = {'white'} /> :
-            (mainWeather === "Fog") ?
-              <BsCloudFog size = {'200'} color = {'white'} /> :  
-            (mainWeather === "Snow") ?
-              <BsFillCloudSnowFill size = {'200'} color = {'white'} /> :  
-            <> </>
-          }
-          
-        </section>
-        <section className="text-lg">
-          <p className="underline text-3xl font-bold">{name}, {country}</p>
-          <p className="font-bold text-3xl mt-4">{mainWeather}</p>
-          <p>Temperature: {Math.round(temperature)}°C</p>
-          <p>Feels like: {Math.round(tempFeel)}°C</p>
-          <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
-          <p>Humidity: {humidity}%</p>
-          <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @ {windDegrees}°</p>
-          <p>Pressure: {pressure} hPa</p>
-          <p>Visibility: {(visibility >= 1000)?
-            (visibility/1000) + 'km' :
-            (visibility) + 'm'} ({visibilityDescription})
-          </p>
-          <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
-        </section>
-        <form onSubmit={handleSubmit}>
-          <button type='submit' className="text-lg underline mt-5">Show 5 day weather</button>
-        </form>
-        <Footer />
-      </div>
-    )  
-  };
+
+
+  return (
+    <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
+        <p>5 Day Weather Data</p>
+    </div>
+  )
+}
