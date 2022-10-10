@@ -22,7 +22,7 @@ export default function About() {
             APIs used: <a href="https://wiki.openstreetmap.org/wiki/API" className="underline font-bold">OpenStreetMap API</a>, <a href="https://www.rainviewer.com/api.html" className="underline font-bold">Rainviewer API</a>, <a href="https://openweathermap.org/api" className="underline font-bold">OpenWeatherMap API</a>
           </p>
           <p className="absolute text-base underline bottom-11 right-1">
-            Version 1.1.0
+            Version 1.0.0
           </p>
       </main>
       <Footer />
