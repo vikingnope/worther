@@ -13,7 +13,7 @@ export default function About() {
             Welcome to Worther!
           </p>
           <p className="uppercase text-3xl mt-5">
-            The weather app with the map of the world and wind direction.
+            The weather app with the map of the world and current real time weather.
           </p>
           <p className="text-3xl mt-5">
             It is built using React, React Icons, Leaflet, Axios & Tailwind CSS.
