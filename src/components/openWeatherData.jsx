@@ -197,9 +197,11 @@ export const GetOpenWeatherData = () => {
       });
 
     return(
-      <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
-        <Header choice={'weather_city'}/>
-          { (mainWeather != undefined) ?
+    <div className="text-white">
+      <Header choice={'weather_city'}/>
+      <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+
+          { (mainWeather !== undefined) ?
               <>
                 <section className="mx-auto mb-4">
                   {(mainWeather === "Clear") ?
@@ -246,7 +248,8 @@ export const GetOpenWeatherData = () => {
               <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
             </>
           }
-        <Footer />
       </div>
+      <Footer />
+    </div>
     )  
   };
