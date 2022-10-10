@@ -12,13 +12,13 @@ export default function About() {
           <p className="uppercase font-bold text-7xl mt-px">
             Welcome to Worther!
           </p>
-          <p className="uppercase text-3xl mt-5">
+          <p className="uppercase text-3xl mt-8">
             The weather app with the map of the world and current real time weather.
           </p>
-          <p className="text-3xl mt-5">
+          <p className="text-3xl mt-8">
             It is built using React, React Icons, Leaflet, Axios & Tailwind CSS.
           </p>
-          <p className="text-3xl mt-5">
+          <p className="text-3xl mt-8">
             APIs used: OpenStreetMap API, Rainviewer API, OpenWeatherMap API
           </p>
           <p className="absolute text-base underline bottom-11 right-1">
