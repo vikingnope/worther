@@ -234,7 +234,7 @@ export const GetOpenWeatherData = () => {
               <section className="text-lg">
                 <p className="underline text-3xl font-bold">{name}, {country}</p>
                 <p className="font-bold text-3xl mt-4">{description.toUpperCase()}</p>
-                <p>Temperature: {Math.round(temperature)}°C</p>
+                <p className="mt-1">Temperature: {Math.round(temperature)}°C</p>
                 <p>Feels like: {Math.round(tempFeel)}°C</p>
                 <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
                 <p>Humidity: {humidity}%</p>
@@ -246,7 +246,7 @@ export const GetOpenWeatherData = () => {
                 </p>
                 <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
               </section><form onSubmit={handleSubmit}>
-                <button type='submit' className="text-lg underline mt-5">Show 5 day weather</button>
+                <button type='submit' className="text-lg underline mt-5 font-bold">Show 5 day weather</button>
               </form>
           </> :
           <>

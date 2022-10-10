@@ -22,7 +22,7 @@ export default function App() {
         <Route exact path="/forums" element={<Forums />} />
         <Route exact path="/weather" element={<Weather />} />
         <Route exact path="/advancedWeather" element={<AdvancedWeather />} />
-        <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> // changes url according to city
+        <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> (// changes url according to city)
         <Route exact path="/weather/:countryCode/:city" element={<GetOpenWeatherData />} />
         <Route exact path="/weather/:city/:lat/:lon" element={<MultipleWeather />} />
       </Routes>
