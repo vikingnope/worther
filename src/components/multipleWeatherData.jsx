@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 
@@ -37,7 +37,8 @@ export const MultipleWeatherData = () => {
 
   document.title = "Worther - 5 Day Weather - " + city;
 
-  axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
+  useEffect(() => {
+    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
     .then(response => {
       console.log(response.data);
       setName(response.data.city.name);
@@ -178,8 +179,7 @@ export const MultipleWeatherData = () => {
       // setSunsetHour(String(sunsetTime.getHours()).padStart(2, '0'));
       // setSunsetMinute(String(sunsetTime.getMinutes()).padStart(2, '0'));
     });
-
-
+  }, []);
 
   return (
     console.log(day + '/' + month + '/' + year),

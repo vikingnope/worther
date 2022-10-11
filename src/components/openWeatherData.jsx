@@ -222,9 +222,7 @@ export const GetOpenWeatherData = () => {
       .catch(error => {
         setLoaded(false);
       })
-    }, [])
-
-    
+    }, []);
 
     return(
     <div className="text-white">
