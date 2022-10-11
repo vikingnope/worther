@@ -46,22 +46,18 @@ export const GetOpenWeatherData = () => {
     const [ sunrise, setSunrise ] = useState();
     const [ sunset, setSunset ] = useState();
     const [ windDirection, setWindDirection ] = useState();
-    const [ sunriseHour, setSunriseHour ] = useState();
-    const [ sunriseMinute, setSunriseMinute ] = useState();
-    const [ sunsetHour, setSunsetHour ] = useState();
-    const [ sunsetMinute, setSunsetMinute ] = useState();
+    const [ sunriseTime, setSunriseTime ] = useState({hour: undefined, minute: undefined});
+    const [ sunsetTime, setSunsetTime ] = useState({hour: undefined, minute: undefined});
     const [ visibility, setVisibility ] = useState();
     const [ visibilityDescription, setVisibilityDescription ] = useState();
     const [ timeZone, setTimeZone ] = useState();
     const [ loaded, setLoaded ] = useState();
     const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
-    const [ timeUpdatedHour, setTimeUpdatedHour ] = useState('');
-    const [ timeUpdatedMinute, setTimeUpdatedMinute ] = useState('');
+    const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
 
-
-    var sunriseTime = new Date(sunrise * 1000);
-    var sunsetTime = new Date(sunset * 1000);
-    var timeUpdated = new Date(timeUpdatedUNIX * 1000);
+    var sunriseTimeConversion = new Date(sunrise * 1000);
+    var sunsetTimeConversion = new Date(sunset * 1000);
+    var timeUpdatedConversion = new Date(timeUpdatedUNIX * 1000);
 
     document.title = "Worther - Weather - " + city;
 
@@ -142,70 +138,81 @@ export const GetOpenWeatherData = () => {
         (windDegrees >= 326.25 && windDegrees < 348.75) ?
           setWindDirection('NNW') :                          
         <> </>);
-
-        ((sunriseTime.getTimezoneOffset() === 0) ?
+        
+        ((sunriseTimeConversion.getTimezoneOffset() === 0) ?
           setTimeZone('GMT') :
-        (sunriseTime.getTimezoneOffset() === 60) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 60) ?
           setTimeZone('GMT-1') :
-        (sunriseTime.getTimezoneOffset() === 120) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 120) ?
           setTimeZone('GMT-2') :
-        (sunriseTime.getTimezoneOffset() === 180) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 180) ?
           setTimeZone('GMT-3') :
-        (sunriseTime.getTimezoneOffset() === 240) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 240) ?
           setTimeZone('GMT-4') :
-        (sunriseTime.getTimezoneOffset() === 300) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 300) ?
           setTimeZone('GMT-5') :
-        (sunriseTime.getTimezoneOffset() === 360) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 360) ?
           setTimeZone('GMT-6') :
-        (sunriseTime.getTimezoneOffset() === 420) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 420) ?
           setTimeZone('GMT-7') :
-        (sunriseTime.getTimezoneOffset() === 480) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 480) ?
           setTimeZone('GMT-8') :
-        (sunriseTime.getTimezoneOffset() === 540) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 540) ?
           setTimeZone('GMT-9') :
-        (sunriseTime.getTimezoneOffset() === 600) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 600) ?
           setTimeZone('GMT-10') :
-        (sunriseTime.getTimezoneOffset() === 660) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 660) ?
           setTimeZone('GMT-11') :
-        (sunriseTime.getTimezoneOffset() === 720) ?
+        (sunriseTimeConversion.getTimezoneOffset() === 720) ?
           setTimeZone('GMT-12') :
-        (sunriseTime.getTimezoneOffset() === -60) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -60) ?
           setTimeZone('GMT+1') :
-        (sunriseTime.getTimezoneOffset() === -120) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -120) ?
           setTimeZone('GMT+2') :
-        (sunriseTime.getTimezoneOffset() === -180) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -180) ?
           setTimeZone('GMT+3') :
-        (sunriseTime.getTimezoneOffset() === -240) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -240) ?
           setTimeZone('GMT+4') :
-        (sunriseTime.getTimezoneOffset() === -300) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -300) ?
           setTimeZone('GMT+5') :
-        (sunriseTime.getTimezoneOffset() === -360) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -360) ?
           setTimeZone('GMT+6') :
-        (sunriseTime.getTimezoneOffset() === -420) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -420) ?
           setTimeZone('GMT+7') :
-        (sunriseTime.getTimezoneOffset() === -480) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -480) ?
           setTimeZone('GMT+8') :
-        (sunriseTime.getTimezoneOffset() === -540) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -540) ?
           setTimeZone('GMT+9') :
-        (sunriseTime.getTimezoneOffset() === -600) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -600) ?
           setTimeZone('GMT+10') :
-        (sunriseTime.getTimezoneOffset() === -660) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -660) ?
           setTimeZone('GMT+11') :   
-        (sunriseTime.getTimezoneOffset() === -720) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -720) ?
           setTimeZone('GMT+12') :
-        (sunriseTime.getTimezoneOffset() === -780) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -780) ?
           setTimeZone('GMT+13') : 
-        (sunriseTime.getTimezoneOffset() === -840) ?
+        (sunriseTimeConversion.getTimezoneOffset() === -840) ?
           setTimeZone('GMT+14') :                 
         <></> 
         );
 
-        setSunriseHour(String(sunriseTime.getHours()).padStart(2, '0'));
-        setSunriseMinute(String(sunriseTime.getMinutes()).padStart(2, '0')); // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-        setSunsetHour(String(sunsetTime.getHours()).padStart(2, '0'));
-        setSunsetMinute(String(sunsetTime.getMinutes()).padStart(2, '0'));
-        setTimeUpdatedHour(String(timeUpdated.getHours()).padStart(2, '0'));
-        setTimeUpdatedMinute(String(timeUpdated.getMinutes()).padStart(2, '0'));
+        const newSunriseTime = { 
+          hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+          minute: String(sunriseTimeConversion.getMinutes()).padStart(2, '0')
+        };
+        setSunriseTime(newSunriseTime);
+
+        const newSunsetTime = { 
+          hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+          minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
+        };
+        setSunsetTime(newSunsetTime);
+
+        const newUpdatedTime = { 
+          hour: String(timeUpdatedConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+          minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
+        };
+        setTimeUpdated(newUpdatedTime);
         setLoaded(true);
       })
       .catch(error => {
@@ -256,12 +263,12 @@ export const GetOpenWeatherData = () => {
                   (visibility / 1000) + 'km' :
                   (visibility) + 'm'} ({visibilityDescription})
                 </p>
-                <p>Sunrise: {sunriseHour}:{sunriseMinute} ({timeZone}) &emsp; Sunset: {sunsetHour}:{sunsetMinute} ({timeZone})</p>
+                <p>Sunrise: {sunriseTime.hour}:{sunriseTime.minute} ({timeZone}) &emsp; Sunset: {sunsetTime.hour}:{sunsetTime.minute} ({timeZone})</p>
               </section><form onSubmit={handleSubmit}>
                 <button type='submit' className="text-lg underline mt-5 font-bold">Show 5 day weather</button>
               </form>
               <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-              <p className="fixed bottom-11 right-1.5 underline">Last Updated: {timeUpdatedHour}:{timeUpdatedMinute}</p>
+              <p className="fixed bottom-11 right-1.5 underline">Last Updated: {timeUpdated.hour}:{timeUpdated.minute}</p>
           </> :
           <>
             <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
