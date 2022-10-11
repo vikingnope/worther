@@ -250,7 +250,7 @@ export const GetOpenWeatherData = () => {
                 <p>Feels like: {Math.round(tempFeel)}°C</p>
                 <p>Max: {Math.round(tempMax)}°C &emsp; Min: {Math.round(tempMin)}°C</p>
                 <p>Humidity: {humidity}%</p>
-                <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @{windDegrees}°</p>
+                <p>Wind Speed: {windSpeed} m/s &emsp; Wind Direction: {windDirection} @ {windDegrees}°</p>
                 <p>Pressure: {pressure} hPa</p>
                 <p>Visibility: {(visibility >= 1000) ?
                   (visibility / 1000) + 'km' :
