@@ -6,7 +6,6 @@
 1. Added rain radar layer
 1. Added Axios to call APIs
 1. Updated to react version 18.2.0
-1. Added more information in about page
 1. Reduced lines of code for more efficiency
 1. Changed index.html description
 1. Added Discord to readme file
@@ -16,7 +15,6 @@
 1. Changed all javascript react files to .jsx
 1. Different titles to different pages
 1. Changed .css files to .scss
-1. Added header and footer to about page
 1. Added forums page
 1. Fixed alignment of elements on pages
 1. Header now has custom buttons for each page
@@ -24,7 +22,7 @@
 1. Added weather page including dynamic weather page to run api according to city input
 1. Added advanced weather page to search with country as well as city
 1. Added loading screen in weather
-1. Updated about page with hyperlinks for APIs and tools
+1. Updated about page with more information and hyperlinks for APIs and tools
 
 ## 0.0.1 (Minor)
 
