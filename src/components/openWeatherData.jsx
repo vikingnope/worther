@@ -212,7 +212,7 @@ export const GetOpenWeatherData = () => {
                   <BsFillSunFill size={'200'} color={'white'} /> :
                 (description === "scattered clouds" || description === "broken clouds") ?
                   <BsFillCloudSunFill size={'200'} color={'white'} className="mb-0" /> :
-                (description === "light clouds") ?
+                (description === "few clouds") ?
                   <AiFillCloud size={'200'} color={'white'} className="mb-0" /> :
                 (description === "overcast clouds") ?
                   <BsFillCloudsFill size={'200'} color={'white'} className="mb-0" /> :
