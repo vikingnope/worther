@@ -43,20 +43,21 @@ export default function Weather () {
       </p>
       <form onSubmit={handleSubmit}>
         <input
-            className="rounded w-48 h-7 text-black text-base font-bold indent-0.5 outline-none"
+            className="rounded-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
             type="text"
+            id="weatherButtons"
             value={city}
             onChange={(e) => setCity(e.target.value.toUpperCase())}
             placeholder="City"
         />
-        <button disabled={!city} type="submit" className='rounded block w-16 h-6 bg-white text-black mx-auto mt-3'>
+        <button disabled={!city} type="submit" className='rounded-md block w-16 h-6 mx-auto mt-3' id="weatherButtons">
             Search
         </button>
       </form>
       {
         (userPos.latitude !== undefined && userPos.longitude !== undefined) ?
           <form onSubmit={handleSubmitLocation}>
-            <button type="submit" className='rounded block w-44 h-6 bg-white text-black mx-auto mt-3'>
+            <button type="submit" className='rounded-md block w-48 h-6 mx-auto mt-3' id="weatherButtons">
                 Search with my location
             </button>
           </form> :

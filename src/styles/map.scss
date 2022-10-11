@@ -7,6 +7,10 @@
       pointer-events: all !important;
   }
 
+  #weatherButtons {
+    background-color: #2f3037;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .App-logo {
       animation: App-logo-spin infinite 10s linear;
