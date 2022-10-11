@@ -5,7 +5,7 @@ export const MenuBar = (props) => {
     return(
         <section className="leaflet-top leaflet-left">
             <div className="absolute ml-3 mt-24 w-52 h-15 bg-white border-2 border-neutral-800 rounded-lg cursor-default p-px" id="opacityBar">
-                <label htmlFor="weather" className="font-bold text-sm ml-0.5">
+                <label htmlFor="weather" className="text-black font-bold text-sm ml-0.5">
                     Weather opacity (only click):
                 </label>
                 <input 
