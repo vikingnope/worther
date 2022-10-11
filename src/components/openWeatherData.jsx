@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +54,7 @@ export const GetOpenWeatherData = () => {
     const [ loaded, setLoaded ] = useState();
     const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
     const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
+    const [ calls, setCalls ] = useState(0);
 
     var sunriseTimeConversion = new Date(sunrise * 1000);
     var sunsetTimeConversion = new Date(sunset * 1000);
@@ -61,7 +62,8 @@ export const GetOpenWeatherData = () => {
 
     document.title = "Worther - Weather - " + city;
 
-    axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
+    useEffect(() => {
+      axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
       (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIkey}&units=metric`) :
       (latitude === undefined && longitude === undefined) ?
       (`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=${APIkey}&units=metric`) :
@@ -85,6 +87,8 @@ export const GetOpenWeatherData = () => {
         setSunset(response.data.sys.sunset);
         setVisibility(response.data.visibility);
         setTimeUpdatedUNIX(response.data.dt);
+
+        setCalls(calls+1);
 
         ((visibility < 50) ?
           setVisibilityDescription('Dense Fog') :
@@ -218,10 +222,14 @@ export const GetOpenWeatherData = () => {
       .catch(error => {
         setLoaded(false);
       })
+    }, [])
+
+    
 
     return(
     <div className="text-white">
       <Header choice={'weather_city'}/>
+      {console.log(calls)}
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
           ((mainWeather) ?
