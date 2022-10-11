@@ -54,9 +54,14 @@ export const GetOpenWeatherData = () => {
     const [ visibilityDescription, setVisibilityDescription ] = useState();
     const [ timeZone, setTimeZone ] = useState();
     const [ loaded, setLoaded ] = useState();
+    const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
+    const [ timeUpdatedHour, setTimeUpdatedHour ] = useState('');
+    const [ timeUpdatedMinute, setTimeUpdatedMinute ] = useState('');
+
 
     var sunriseTime = new Date(sunrise * 1000);
     var sunsetTime = new Date(sunset * 1000);
+    var timeUpdated = new Date(timeUpdatedUNIX * 1000);
 
     document.title = "Worther - Weather - " + city;
 
@@ -83,6 +88,7 @@ export const GetOpenWeatherData = () => {
         setSunrise(response.data.sys.sunrise);
         setSunset(response.data.sys.sunset);
         setVisibility(response.data.visibility);
+        setTimeUpdatedUNIX(response.data.dt);
 
         ((visibility < 50) ?
           setVisibilityDescription('Dense Fog') :
@@ -193,11 +199,13 @@ export const GetOpenWeatherData = () => {
           setTimeZone('GMT+14') :                 
         <></> 
         );
-        
+
         setSunriseHour(String(sunriseTime.getHours()).padStart(2, '0'));
         setSunriseMinute(String(sunriseTime.getMinutes()).padStart(2, '0')); // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
         setSunsetHour(String(sunsetTime.getHours()).padStart(2, '0'));
         setSunsetMinute(String(sunsetTime.getMinutes()).padStart(2, '0'));
+        setTimeUpdatedHour(String(timeUpdated.getHours()).padStart(2, '0'));
+        setTimeUpdatedMinute(String(timeUpdated.getMinutes()).padStart(2, '0'));
         setLoaded(true);
       })
       .catch(error => {
@@ -253,6 +261,7 @@ export const GetOpenWeatherData = () => {
                 <button type='submit' className="text-lg underline mt-5 font-bold">Show 5 day weather</button>
               </form>
               <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+              <p className="fixed bottom-11 right-1.5 underline">Last Updated: {timeUpdatedHour}:{timeUpdatedMinute}</p>
           </> :
           <>
             <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
