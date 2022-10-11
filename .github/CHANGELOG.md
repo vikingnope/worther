@@ -23,6 +23,7 @@
 1. Added advanced weather page to search with country as well as city
 1. Added loading screen in weather
 1. Updated about page with more information and hyperlinks for APIs and tools
+1. Added 5 Day Weather
 
 ## 0.0.1 (Minor)
 
