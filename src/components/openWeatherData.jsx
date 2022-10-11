@@ -17,9 +17,11 @@ import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
 
 export const GetOpenWeatherData = () => {
 
-    const { countryCode, city } = useParams(); // Gets city from the url
+    const { countryCode, city, latitude, longitude } = useParams(); // Gets city from the url
 
     const history = useNavigate();
+
+    const APIkey = '45245b26fa062bdd9ca60efac28d1c01';
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -58,9 +60,11 @@ export const GetOpenWeatherData = () => {
 
     document.title = "Worther - Weather - " + city;
 
-    axios.get((countryCode === undefined) ?
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric` :
-      `https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
+    axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
+      (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIkey}&units=metric`) :
+      (latitude === undefined && longitude === undefined) ?
+      (`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=${APIkey}&units=metric`) :
+      (`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${APIkey}&units=metric`))
       .then(response => {
         setName(response.data.name);
         setLat(response.data.coord.lat);

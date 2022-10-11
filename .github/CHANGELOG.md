@@ -24,6 +24,7 @@
 1. Added loading screen in weather
 1. Updated about page with more information and hyperlinks for APIs and tools
 1. Added 5 Day Weather
+1. Added search with location on weather
 
 ## 0.0.1 (Minor)
 

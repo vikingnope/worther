@@ -14,8 +14,6 @@ export default function Map(props) {
     const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
     const [weatherOpacity, setWeatherOpacity] = useState(props.weatherOpacity || 0.7);
 
-    let declinedGeolocation = false;
-
     document.title = "Worther - Map";
 
     useEffect(() => {
@@ -27,11 +25,8 @@ export default function Map(props) {
                  };
                 setUserPos(newUserPos);
            })
-        } else {
-            declinedGeolocation = true;
-        }    
+        }  
     }, []);
-
 
     const markerIconConst = L.icon({
         iconUrl: markerIcon,
@@ -75,8 +70,7 @@ export default function Map(props) {
         <div>
             {
                 (userPos.latitude && userPos.longitude) ? 
-                    (!declinedGeolocation) ? map(false, 6) : map(true, 3)
-                : map(true, 3)
+                 map(false, 6) : map(true, 3)
             }
         </div>
     );
