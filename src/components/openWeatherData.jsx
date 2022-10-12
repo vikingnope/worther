@@ -15,7 +15,9 @@ import { BsFillCloudRainFill } from 'react-icons/bs'; // light rain
 import { BsFillCloudsFill } from 'react-icons/bs'; // overcast clouds
 import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
 
-
+var sunriseTimeConversion;
+var sunsetTimeConversion;
+var timeUpdatedConversion;
 
 export const GetOpenWeatherData = () => {
 
@@ -56,12 +58,10 @@ export const GetOpenWeatherData = () => {
     const [ loaded, setLoaded ] = useState();
     const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
     const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
-    const [ calls, setCalls ] = useState(0);
 
-    var sunriseTimeConversion = new Date(sunrise * 1000);
-    var sunsetTimeConversion = new Date(sunset * 1000);
-    var timeUpdatedConversion = new Date(timeUpdatedUNIX * 1000);
-
+    sunriseTimeConversion = new Date(sunrise * 1000);
+    sunsetTimeConversion = new Date(sunset * 1000);
+    timeUpdatedConversion = new Date(timeUpdatedUNIX * 1000);
 
     document.title = "Worther - Weather - " + city;
 
@@ -90,14 +90,8 @@ export const GetOpenWeatherData = () => {
         setSunset(response.data.sys.sunset);
         setVisibility(response.data.visibility);
         setTimeUpdatedUNIX(response.data.dt);
-      })
-      .catch(error => {
-        setLoaded(false);
-      })
-    }, []);
 
-    useEffect(() => {
-      ((visibility < 50) ?
+        ((visibility < 50) ?
           setVisibilityDescription('Dense Fog') :
         (visibility >= 50 && visibility < 200) ?
           setVisibilityDescription('Thick Fog') :
@@ -206,35 +200,35 @@ export const GetOpenWeatherData = () => {
           setTimeZone('GMT+14') :                 
         <></> 
         );
+        
+        const newSunriseTime = { 
+          hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+          minute: String(sunriseTimeConversion.getMinutes()).padStart(2, '0')
+        };
+        setSunriseTime(newSunriseTime);
 
-        setCalls(calls+1);
-      
-      const newSunriseTime = { 
-        hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-        minute: String(sunriseTimeConversion.getMinutes()).padStart(2, '0')
-      };
-      setSunriseTime(newSunriseTime);
+        const newSunsetTime = { 
+          hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+          minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
+        };
+        setSunsetTime(newSunsetTime);
 
-      console.log(sunriseTimeConversion)
-
-      const newSunsetTime = { 
-        hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-        minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
-      };
-      setSunsetTime(newSunsetTime);
-
-      const newUpdatedTime = { 
-        hour: String(timeUpdatedConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-        minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
-      };
-      setTimeUpdated(newUpdatedTime);
-      setLoaded(true);
-    }, [])
+        const newUpdatedTime = { 
+          hour: String(timeUpdatedConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+          minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
+        };
+        setTimeUpdated(newUpdatedTime);
+        setLoaded(true);
+      })
+      .catch(error => {
+        console.log(error);
+        setLoaded(false);
+      })
+    }, []);
 
     return(
     <div className="text-white">
       <Header choice={'weather_city'}/>
-      {console.log(calls)}
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
           ((mainWeather) ?
