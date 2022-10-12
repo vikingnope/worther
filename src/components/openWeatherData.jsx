@@ -56,6 +56,7 @@ export const GetOpenWeatherData = () => {
     const [ loaded, setLoaded ] = useState();
     const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
     const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
+    const [ calls, setCalls ] = useState(0);
 
     var sunriseTimeConversion = new Date(sunrise * 1000);
     var sunsetTimeConversion = new Date(sunset * 1000);
@@ -89,9 +90,14 @@ export const GetOpenWeatherData = () => {
         setSunset(response.data.sys.sunset);
         setVisibility(response.data.visibility);
         setTimeUpdatedUNIX(response.data.dt);
+      })
+      .catch(error => {
+        setLoaded(false);
+      })
+    }, []);
 
-
-        ((visibility < 50) ?
+    useEffect(() => {
+      ((visibility < 50) ?
           setVisibilityDescription('Dense Fog') :
         (visibility >= 50 && visibility < 200) ?
           setVisibilityDescription('Thick Fog') :
@@ -201,35 +207,34 @@ export const GetOpenWeatherData = () => {
         <></> 
         );
 
-        const newSunriseTime = { 
-          hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-          minute: String(sunriseTimeConversion.getMinutes()).padStart(2, '0')
-        };
-        setSunriseTime(newSunriseTime);
+        setCalls(calls+1);
+      
+      const newSunriseTime = { 
+        hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+        minute: String(sunriseTimeConversion.getMinutes()).padStart(2, '0')
+      };
+      setSunriseTime(newSunriseTime);
 
-        console.log(sunriseTimeConversion)
+      console.log(sunriseTimeConversion)
 
-        const newSunsetTime = { 
-          hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-          minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
-        };
-        setSunsetTime(newSunsetTime);
+      const newSunsetTime = { 
+        hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+        minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
+      };
+      setSunsetTime(newSunsetTime);
 
-        const newUpdatedTime = { 
-          hour: String(timeUpdatedConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-          minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
-        };
-        setTimeUpdated(newUpdatedTime);
-        setLoaded(true);
-      })
-      .catch(error => {
-        setLoaded(false);
-      })
-    }, []);
+      const newUpdatedTime = { 
+        hour: String(timeUpdatedConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+        minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
+      };
+      setTimeUpdated(newUpdatedTime);
+      setLoaded(true);
+    }, [])
 
     return(
     <div className="text-white">
       <Header choice={'weather_city'}/>
+      {console.log(calls)}
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
           ((mainWeather) ?
