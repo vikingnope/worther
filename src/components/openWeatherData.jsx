@@ -220,6 +220,7 @@ export const GetOpenWeatherData = () => {
           minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
         };
         setTimeUpdated(newUpdatedTime);
+        console.log('you are here')
         setLoaded(true);
       })
       .catch(error => {
@@ -231,6 +232,8 @@ export const GetOpenWeatherData = () => {
     return(
     <div className="text-white">
       <Header choice={'weather_city'}/>
+      {console.log(timeUpdatedConversion)}
+      {console.log(timeUpdated)}
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
           ((mainWeather) ?
