@@ -63,7 +63,9 @@ export const GetOpenWeatherData = () => {
     sunsetTimeConversion = new Date(sunset * 1000);
     timeUpdatedConversion = new Date(timeUpdatedUNIX * 1000);
 
-    document.title = "Worther - Weather - " + city;
+    ((name) ?
+    document.title = "Worther - Weather - " + name :
+    document.title = "Worther - Weather");
 
     useEffect(() => {
       axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
