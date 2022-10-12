@@ -58,6 +58,7 @@ export const GetOpenWeatherData = () => {
     const [ loaded, setLoaded ] = useState();
     const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
     const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
+    const [ count, setCount ] = useState(0);
 
     sunriseTimeConversion = new Date(sunrise * 1000);
     sunsetTimeConversion = new Date(sunset * 1000);
@@ -202,38 +203,38 @@ export const GetOpenWeatherData = () => {
           setTimeZone('GMT+14') :                 
         <></> 
         );
-        
+
+        setCount(count + 1);
+
         const newSunriseTime = { 
           hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
           minute: String(sunriseTimeConversion.getMinutes()).padStart(2, '0')
         };
         setSunriseTime(newSunriseTime);
-
+  
         const newSunsetTime = { 
           hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
           minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
         };
         setSunsetTime(newSunsetTime);
-
+  
         const newUpdatedTime = { 
           hour: String(timeUpdatedConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
           minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
         };
         setTimeUpdated(newUpdatedTime);
-        console.log('you are here')
         setLoaded(true);
       })
       .catch(error => {
         console.log(error);
         setLoaded(false);
       })
-    }, [!timeUpdated.hour]);
+    }, []);
 
     return(
     <div className="text-white">
-      <Header choice={'weather_city'}/>
-      {console.log(timeUpdatedConversion)}
-      {console.log(timeUpdated)}
+      <Header choice={'weather_city'}/> 
+      {console.log(count)}
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
           ((mainWeather) ?
