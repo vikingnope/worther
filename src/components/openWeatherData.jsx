@@ -229,12 +229,11 @@ export const GetOpenWeatherData = () => {
         console.log(error);
         setLoaded(false);
       })
-    }, [!timeUpdated.hour]);
+    }, [!timeUpdated.hour]); // Calls API twice (needs fixing)
 
     return(
     <div className="text-white">
       <Header choice={'weather_city'}/> 
-      {console.log(count)}
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
           ((mainWeather) ?
