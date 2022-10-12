@@ -18,17 +18,15 @@ export const Header = ({choice}) => {
             <nav className="absolute right-0 top-3">
                 {
                 (choice === 'about') ? 
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Forums', '/forums')]
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather')]
                 : (choice === 'home') ?
-                    [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
-                (choice === 'forums') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                    [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 (choice === 'weather') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('About', '/about')] :
                 (choice === 'weather_city') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 (choice === 'map') ?
-                    [Navigations('Home', '/'), Navigations('Weather', '/weather'), Navigations('Forums', '/forums'), Navigations('About', '/about')] :
+                    [Navigations('Home', '/'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 <></>
                 }
             </nav>
