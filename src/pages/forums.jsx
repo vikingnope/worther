@@ -6,9 +6,11 @@ export default function Forums () {
     document.title = "Worther - Forums";
 
     return (
-        <div className="relative text-center select-none bg-black min-h-screen flex flex-col items-center text-white">
+        <div className='select-none text-white'>
             <Header choice="forums"/>
-            <p className='mt-16 font-bold text-4xl'>Forums</p>
+            <div className="relative text-center bg-black min-h-screen flex flex-col items-center">
+                <p className='mt-16 font-bold text-4xl'>Forums</p>
+            </div>
             <Footer />
         </div>
     );

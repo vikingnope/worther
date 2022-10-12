@@ -36,34 +36,36 @@ export default function Weather () {
   }, []);
 
   return(
-    <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
+    <div className='select-none text-white'>
       <Header choice={'weather'}/>
-      <p className='text-7xl mb-9 font-bold'>
-        Current Weather
-      </p>
-      <form onSubmit={handleSubmit}>
-        <input
-            className="rounded-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
-            type="text"
-            id="weatherButtons"
-            value={city}
-            onChange={(e) => setCity(e.target.value.toUpperCase())}
-            placeholder="City"
-        />
-        <button disabled={!city} type="submit" className='rounded-md block w-16 h-6 mx-auto mt-3' id="weatherButtons">
-            Search
-        </button>
-      </form>
-      {
-        (userPos.latitude !== undefined && userPos.longitude !== undefined) ?
-          <form onSubmit={handleSubmitLocation}>
-            <button type="submit" className='rounded-md block w-48 h-6 mx-auto mt-3' id="weatherButtons">
-                Search with my location
-            </button>
-          </form> :
-          <></>
-      }
-      <a href='/advancedWeather' className='mt-3 underline'>Advanced Search</a>
+      <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+        <p className='text-7xl mb-9 font-bold'>
+          Current Weather
+        </p>
+        <form onSubmit={handleSubmit}>
+          <input
+              className="rounded-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
+              type="text"
+              id="weatherButtons"
+              value={city}
+              onChange={(e) => setCity(e.target.value.toUpperCase())}
+              placeholder="City"
+          />
+          <button disabled={!city} type="submit" className='rounded-md block w-16 h-6 mx-auto mt-3' id="weatherButtons">
+              Search
+          </button>
+        </form>
+        {
+          (userPos.latitude !== undefined && userPos.longitude !== undefined) ?
+            <form onSubmit={handleSubmitLocation}>
+              <button type="submit" className='rounded-md block w-48 h-6 mx-auto mt-3' id="weatherButtons">
+                  Search with my location
+              </button>
+            </form> :
+            <></>
+        }
+        <a href='/advancedWeather' className='mt-3 underline'>Advanced Search</a>
+      </div>
       <Footer />
     </div>
   )
