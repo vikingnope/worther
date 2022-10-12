@@ -15,6 +15,8 @@ import { BsFillCloudRainFill } from 'react-icons/bs'; // light rain
 import { BsFillCloudsFill } from 'react-icons/bs'; // overcast clouds
 import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
 
+
+
 export const GetOpenWeatherData = () => {
 
     const { countryCode, city, latitude, longitude } = useParams(); // Gets city from the url
@@ -54,11 +56,11 @@ export const GetOpenWeatherData = () => {
     const [ loaded, setLoaded ] = useState();
     const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
     const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
-    const [ calls, setCalls ] = useState(0);
 
     var sunriseTimeConversion = new Date(sunrise * 1000);
     var sunsetTimeConversion = new Date(sunset * 1000);
     var timeUpdatedConversion = new Date(timeUpdatedUNIX * 1000);
+
 
     document.title = "Worther - Weather - " + city;
 
@@ -88,7 +90,6 @@ export const GetOpenWeatherData = () => {
         setVisibility(response.data.visibility);
         setTimeUpdatedUNIX(response.data.dt);
 
-        setCalls(calls+1);
 
         ((visibility < 50) ?
           setVisibilityDescription('Dense Fog') :
@@ -206,6 +207,8 @@ export const GetOpenWeatherData = () => {
         };
         setSunriseTime(newSunriseTime);
 
+        console.log(sunriseTimeConversion)
+
         const newSunsetTime = { 
           hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
           minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
@@ -227,7 +230,6 @@ export const GetOpenWeatherData = () => {
     return(
     <div className="text-white">
       <Header choice={'weather_city'}/>
-      {console.log(calls)}
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
           ((mainWeather) ?
