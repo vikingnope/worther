@@ -227,7 +227,7 @@ export const GetOpenWeatherData = () => {
         console.log(error);
         setLoaded(false);
       })
-    }, []);
+    }, [!timeUpdated.hour]);
 
     return(
     <div className="text-white">
