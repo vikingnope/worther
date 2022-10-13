@@ -50,15 +50,14 @@ export const GetOpenWeatherData = () => {
     const [ sunrise, setSunrise ] = useState();
     const [ sunset, setSunset ] = useState();
     const [ windDirection, setWindDirection ] = useState();
-    const [ sunriseTime, setSunriseTime ] = useState({hour: undefined, minute: undefined});
-    const [ sunsetTime, setSunsetTime ] = useState({hour: undefined, minute: undefined});
     const [ visibility, setVisibility ] = useState();
     const [ visibilityDescription, setVisibilityDescription ] = useState();
     const [ timeZone, setTimeZone ] = useState();
     const [ loaded, setLoaded ] = useState();
     const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
+    const [ sunriseTime, setSunriseTime ] = useState({hour: undefined, minute: undefined});
+    const [ sunsetTime, setSunsetTime ] = useState({hour: undefined, minute: undefined});
     const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
-    const [ count, setCount ] = useState(0);
 
     sunriseTimeConversion = new Date(sunrise * 1000);
     sunsetTimeConversion = new Date(sunset * 1000);
@@ -203,8 +202,6 @@ export const GetOpenWeatherData = () => {
           setTimeZone('GMT+14') :                 
         <></> 
         );
-
-        setCount(count + 1);
 
         const newSunriseTime = { 
           hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front

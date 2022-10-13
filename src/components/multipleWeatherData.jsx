@@ -2,6 +2,10 @@ import {useEffect, useState} from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 
+var sunriseTimeConversion;
+var sunsetTimeConversion;
+var timeUpdatedConversion; 
+
 export const MultipleWeatherData = () => {
   const { city, lat, lon } = useParams();
 
@@ -24,16 +28,18 @@ export const MultipleWeatherData = () => {
   const [ sunrise, setSunrise ] = useState();
   const [ sunset, setSunset ] = useState();
   const [ windDirection, setWindDirection ] = useState();
-  const [ sunriseHour, setSunriseHour ] = useState();
-  const [ sunriseMinute, setSunriseMinute ] = useState();
-  const [ sunsetHour, setSunsetHour ] = useState();
-  const [ sunsetMinute, setSunsetMinute ] = useState();
   const [ visibility, setVisibility ] = useState();
   const [ visibilityDescription, setVisibilityDescription ] = useState();
   const [ timeZone, setTimeZone ] = useState();
+  const [ loaded, setLoaded ] = useState();
+  const [ timeUpdatedUNIX, setTimeUpdatedUNIX ] = useState();
+  const [ sunriseTime, setSunriseTime ] = useState({hour: undefined, minute: undefined});
+  const [ sunsetTime, setSunsetTime ] = useState({hour: undefined, minute: undefined});
+  const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
 
-  var sunriseTime = new Date(sunrise * 1000);
-  var sunsetTime = new Date(sunset * 1000);
+  // sunriseTimeConversion = new Date(sunrise * 1000);
+  // sunsetTimeConversion = new Date(sunset * 1000);
+  // timeUpdatedConversion = new Date(timeUpdatedUNIX * 1000);
 
   document.title = "Worther - 5 Day Weather - " + city;
 
@@ -57,6 +63,7 @@ export const MultipleWeatherData = () => {
       setSunrise(response.data.city.sunrise);
       setSunset(response.data.city.sunset);
       setVisibility(response.data.list[0].visibility);
+      // setTimeUpdatedUNIX(response.data.dt);
 
       ((visibility < 50) ?
         setVisibilityDescription('Dense Fog') :
@@ -173,16 +180,33 @@ export const MultipleWeatherData = () => {
       setDay(String(date.getDay()).padStart(2, '0'));
       setMonth(String(date.getMonth()).padStart(2, '0'));
       setYear(String(date.getFullYear()));
-      
-      // setSunriseHour(String(sunriseTime.getHours()).padStart(2, '0'));
-      // setSunriseMinute(String(sunriseTime.getMinutes()).padStart(2, '0')); // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-      // setSunsetHour(String(sunsetTime.getHours()).padStart(2, '0'));
-      // setSunsetMinute(String(sunsetTime.getMinutes()).padStart(2, '0'));
-    });
-  }, []);
+
+      // const newSunriseTime = { 
+      //   hour: String(sunriseTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+      //   minute: String(sunriseTimeConversion.getMinutes()).padStart(2, '0')
+      // };
+      // setSunriseTime(newSunriseTime);
+
+      // const newSunsetTime = { 
+      //   hour: String(sunsetTimeConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+      //   minute: String(sunsetTimeConversion.getMinutes()).padStart(2, '0')
+      // };
+      // setSunsetTime(newSunsetTime);
+
+      // const newUpdatedTime = { 
+      //   hour: String(timeUpdatedConversion.getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+      //   minute: String(timeUpdatedConversion.getMinutes()).padStart(2, '0')
+      // };
+      // setTimeUpdated(newUpdatedTime);
+      setLoaded(true);
+    })
+    .catch(error => {
+      console.log(error);
+      setLoaded(false);
+    })
+  }, [!timeUpdated.hour]);
 
   return (
-    console.log(day + '/' + month + '/' + year),
     <div className="text-center select-none bg-black text-white min-h-screen flex flex-col justify-center">
         <p>5 Day Weather Data</p>
     </div>
