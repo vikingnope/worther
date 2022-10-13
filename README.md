@@ -1,4 +1,4 @@
-![Worther](./src/resources/logo.png)
+![Worther](./src/resources/logoSmall.png)
 
 # Worther the new weather app
 
