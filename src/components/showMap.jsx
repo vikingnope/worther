@@ -41,7 +41,7 @@ export default function ShowMap(props) {
     const map = (markerShow, zoomLevel) => {
         return( 
             <div className="text-white">
-                <Header choice={'map'}/>
+                <Header choice={'showMap'}/>
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
                     <ScaleControl />
                     {/* For dark mode map: https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png */}

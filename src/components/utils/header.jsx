@@ -23,10 +23,12 @@ export const Header = ({choice}) => {
                     [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 (choice === 'weather') ?
                     [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('About', '/about')] :
-                (choice === 'weather_city') ?
+                (choice === 'showWeather') ?
                     [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 (choice === 'map') ?
                     [Navigations('Home', '/'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                (choice === 'showMap') ?
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 <></>
                 }
             </nav>
