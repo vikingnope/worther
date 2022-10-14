@@ -1,6 +1,7 @@
 ![Worther](./src/resources/logoSmall.png)
 
-# Worther the new weather app
+# Worther
+### Getting weather closer to you
 
 [![Discord](https://img.shields.io/discord/984443866969149491?color=7389D8&label=%20&logo=discord&logoColor=ffffff&labelColor=6A7EC2)](https://discord.gg/n6xr3ZWM8J)
 
