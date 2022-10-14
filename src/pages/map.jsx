@@ -28,13 +28,13 @@ export default function Home() {
                 <form onSubmit={handleSubmitLight}>
                     <button className='underline inline' type='submit'>
                         Light Mode Map
-                        <img src={lightModeImage} className="mx-auto mt-5 rounded-md max-w-xl border-2 border-zinc-600"></img>
+                        <img src={lightModeImage} className="mx-auto mt-5 rounded-md max-w-xl border-2 border-zinc-600" />
                     </button>   
                 </form>
                 <form onSubmit={handleSubmitDark}>
                     <button className='underline inline mt-12' type='submit'>
                         Dark Mode Map
-                        <img src={darkModeImage} className="mx-auto mt-5 mb-5 rounded-md max-w-xl border-2 border-zinc-600"></img>
+                        <img src={darkModeImage} className="mx-auto mt-5 mb-5 rounded-md max-w-xl border-2 border-zinc-600" />
                     </button>
                 </form>
             </div>
