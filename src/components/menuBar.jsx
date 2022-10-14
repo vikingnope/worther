@@ -5,7 +5,7 @@ export const MenuBar = (props) => {
             <div className="absolute ml-3 mt-24 w-max h-min bg-black border-2 border-white rounded cursor-default p-px text-white" id="opacityBar">
                 <div>
                     <label htmlFor="weather" className="text-base ml-1">
-                        Layers opacity (only click):
+                        Layers opacity (only click | does not work with Night):
                     </label>
                     <input 
                         className="block accent-green-600 w-48 ml-1 mt-px cursor-pointer draggable"
@@ -32,6 +32,9 @@ export const MenuBar = (props) => {
                     </button>
                     <button onClick={e => props.onShowRainChange && props.onShowRainChange(!props.showRain)} className={(!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold"}>
                         Rain
+                    </button>
+                    <button onClick={e => props.onShowNightChange && props.onShowNightChange(!props.showNight)} className={(!props.showNight)? "block mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "block mr-2 w-14 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold"}>
+                        Night
                     </button>
                 </div>
             </div>

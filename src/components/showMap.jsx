@@ -8,6 +8,7 @@ import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData } from './layers';
+import { NightRegion } from 'react-leaflet-night-region';
 
 export default function ShowMap(props) {   
     const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
@@ -16,6 +17,7 @@ export default function ShowMap(props) {
     const [ temperatureLayerChoice, setTemperatureLayerChoice ] = useState(false);
     const [ windLayerChoice, setWindLayerChoice ] = useState(false);
     const [ rainLayerChoice, setRainLayerChoice ] = useState(false);
+    const [ nightLayerChoice, setNightLayerChoice ] = useState(false);
 
     const { mapType } = useParams();
 
@@ -54,11 +56,20 @@ export default function ShowMap(props) {
                         "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"}
                     />
                     {/* <SatelliteData /> */}
+                    {
+                    (nightLayerChoice) ?
+                        <NightRegion
+                            fillColor='#000000'
+                            color='#001a2e'
+                            refreshInterval={1000}
+                        /> :
+                        <></>
+                    }
                     <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
                     <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity}/>
                     <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity}/>
                     <CloudLayer show={cloudLayerChoice} opacity={layerOpacity}/>
-                    <MenuBar showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
+                    <MenuBar showNight={nightLayerChoice} onShowNightChange={setNightLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
