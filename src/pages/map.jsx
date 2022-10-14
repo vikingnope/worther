@@ -1,76 +1,44 @@
-import { MapContainer, TileLayer, Marker, Popup , ScaleControl} from 'react-leaflet';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import L from 'leaflet';
-import React, {useEffect, useState} from 'react';
-import 'leaflet/dist/leaflet.css';
-import { RainViewerData }  from '../components/rainViewerData';
-// import { SatelliteData } from '../components/satelliteData';
-import { MenuBar } from '../components/menuBar';
+import React, {useState} from 'react';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
+import { useNavigate } from 'react-router-dom';
+import lightModeImage from '../resources/lightMode.png'
+import darkModeImage from '../resources/darkMode.png'
 
-export default function Map(props) {   
-    const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
-    const [weatherOpacity, setWeatherOpacity] = useState(props.weatherOpacity || 0.7);
+export default function Home() {
 
-    document.title = "Worther - Map";
+    const history = useNavigate();
 
-    useEffect(() => {
-        if(navigator.geolocation){
-            navigator.geolocation.getCurrentPosition((pos) =>{
-                const newUserPos = { 
-                      latitude: pos.coords.latitude,
-                      longitude: pos.coords.longitude,
-                 };
-                setUserPos(newUserPos);
-           })
-        }  
-    }, []);
+    const handleSubmitDark = (e) => {
+        e.preventDefault();
 
-    const markerIconConst = L.icon({
-        iconUrl: markerIcon,
-        iconRetinaUrl: markerIcon,
-        iconAnchor: [5, 55],
-        popupAnchor: [10, -44],
-        iconSize: [35, 50],
-    });
-
-    const map = (markerShow, zoomLevel) => {
-        return( 
-            <div className="text-white">
-                <Header choice={'map'}/>
-                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
-                    <ScaleControl />
-                    {/* For dark mode map: https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png */}
-                    <TileLayer zIndex={1}
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    {/* <SatelliteData /> */}
-                    <RainViewerData opacity={weatherOpacity}/>
-                    <MenuBar weatherOpacity={weatherOpacity} onWeatherOpacityChange={setWeatherOpacity}/>
-                    {/* <Options/> */}
-                    {(!markerShow) ? (
-                        <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
-                            <Popup>
-                                Location: 
-                            </Popup> 
-                        </Marker>
-                    ) : (
-                        <></>
-                    )}
-                </MapContainer>
-                <Footer/>
-            </div>
-        )
+        history('/map/' + 'dark');
     }
 
-    return(
-        <div>
-            {
-                (userPos.latitude && userPos.longitude) ? 
-                 map(false, 6) : map(true, 3)
-            }
+    const handleSubmitLight = (e) => {
+        e.preventDefault();
+
+        history('/map/' + 'light');
+    }
+
+    return (
+        <div className='select-none text-white'>
+            <Header choice={'map'}/>
+            <div className="text-center bg-black flex min-h-screen flex-col items-center underline justify-center text-3xl font-bold">
+                <form onSubmit={handleSubmitLight}>
+                    <button className='underline inline' type='submit'>
+                        Light Mode Map
+                        <img src={lightModeImage} className="mx-auto mt-5 rounded-md max-w-xl border-2 border-zinc-600"></img>
+                    </button>   
+                </form>
+                <form onSubmit={handleSubmitDark}>
+                    <button className='underline inline mt-12' type='submit'>
+                        Dark Mode Map
+                        <img src={darkModeImage} className="mx-auto mt-5 mb-5 rounded-md max-w-xl border-2 border-zinc-600"></img>
+                    </button>
+                </form>
+            </div>
+            <Footer />
         </div>
     );
 }
