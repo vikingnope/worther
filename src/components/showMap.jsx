@@ -9,10 +9,17 @@ import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
+import { WindSpeedLayer } from './windSpeedLayer';
+import { TemperatureLayer } from './temperatureLayer';
+import { CloudLayer } from './cloudLayer';
 
 export default function ShowMap(props) {   
-    const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
-    const [weatherOpacity, setWeatherOpacity] = useState(props.weatherOpacity || 0.7);
+    const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
+    const [ layerOpacity, setLayerOpacity ] = useState(props.layerOpacity || 0.7);
+    const [ cloudLayerChoice, setCloudLayerChoice ] = useState(false);
+    const [ temperatureLayerChoice, setTemperatureLayerChoice ] = useState(false);
+    const [ windLayerChoice, setWindLayerChoice ] = useState(false);
+    const [ rainLayerChoice, setRainLayerChoice ] = useState(false);
 
     const { mapType } = useParams();
 
@@ -44,7 +51,6 @@ export default function ShowMap(props) {
                 <Header choice={'showMap'}/>
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
                     <ScaleControl />
-                    {/* For dark mode map: https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png */}
                     <TileLayer zIndex={1}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url={(mapType === 'light') ?
@@ -52,9 +58,11 @@ export default function ShowMap(props) {
                         "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"}
                     />
                     {/* <SatelliteData /> */}
-                    <RainViewerData opacity={weatherOpacity}/>
-                    <MenuBar weatherOpacity={weatherOpacity} onWeatherOpacityChange={setWeatherOpacity}/>
-                    {/* <Options/> */}
+                    <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
+                    <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity}/>
+                    <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity}/>
+                    <CloudLayer show={cloudLayerChoice} opacity={layerOpacity}/>
+                    <MenuBar showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>

@@ -4,6 +4,10 @@
 
 1. Changed logo
 1. Added rain radar layer
+1. Added wind radar layer
+1. Added temperature radar layer
+1. Added cloud radar layer
+1. Layers can be toggled on and off
 1. Added Axios to call APIs
 1. Updated to react version 18.2.0
 1. Reduced lines of code for more efficiency

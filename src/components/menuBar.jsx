@@ -2,19 +2,38 @@ export const MenuBar = (props) => {
 
     return(
         <section className="leaflet-top leaflet-left">
-            <div className="absolute ml-3 mt-24 w-52 h-15 bg-white border-2 border-neutral-800 rounded-lg cursor-default p-px" id="opacityBar">
-                <label htmlFor="weather" className="text-black font-bold text-sm ml-0.5">
-                    Weather opacity (only click):
-                </label>
-                <input 
-                    className="accent-green-600 w-48 cursor-pointer draggable"
-                    type = "range"
-                    id="weather"
-                    value={100 * props.weatherOpacity}
-                    min={0}
-                    max={100}
-                    onChange={event => props.onWeatherOpacityChange && props.onWeatherOpacityChange(Number(event.target.value) / 100)}
-                />
+            <div className="absolute ml-3 mt-24 w-max h-min bg-black border-2 border-white rounded cursor-default p-px text-white" id="opacityBar">
+                <div>
+                    <label htmlFor="weather" className="text-base ml-1">
+                        Layers opacity (only click):
+                    </label>
+                    <input 
+                        className="block accent-green-600 w-48 ml-1 mt-px cursor-pointer draggable"
+                        type = "range"
+                        id="weather"
+                        value={100 * props.layerOpacity}
+                        min={0}
+                        max={100}
+                        onChange={e => props.onLayerOpacityChange && props.onLayerOpacityChange(Number(e.target.value) / 100)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="weather" className="ml-1 block text-base">
+                        Choose any layers:
+                    </label>
+                    <button onClick={e => props.onShowWindChange && props.onShowWindChange(!props.showWind)} className={(!props.showWind)? "mr-5 mt-1 mb-1 text-base ml-1 rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "mr-5 mb-1 mt-1 text-base ml-1 rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold w-14"}>
+                        Wind
+                    </button>
+                    <button onClick={e => props.onShowTemperatureChange && props.onShowTemperatureChange(!props.showTemperature)} className={(!props.showTemperature)? "mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-28": "w-28 mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold"}>
+                        Temperature
+                    </button>
+                    <button onClick={e => props.onShowCloudChange && props.onShowCloudChange(!props.showCloud)} className={(!props.showCloud)? "mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "mr-5 text-base w-14 rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold"}>
+                        Cloud
+                    </button>
+                    <button onClick={e => props.onShowRainChange && props.onShowRainChange(!props.showRain)} className={(!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold"}>
+                        Rain
+                    </button>
+                </div>
             </div>
         </section>
     )
