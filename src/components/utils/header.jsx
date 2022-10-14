@@ -14,7 +14,7 @@ export const Header = ({choice}) => {
 
     const Navigations = (text, path) => {
         return(
-            <a href={path}className="uppercase text-2xl mr-5 hover:text-green-300 hover:font-bold duration-150">
+            <a href={path} className="uppercase text-2xl mr-5 hover:text-green-300 hover:font-bold duration-150">
                 {text}
             </a>
         )
