@@ -21,10 +21,10 @@ export default function About() {
           <p className="text-3xl mt-8">
             APIs used: <a href="https://wiki.openstreetmap.org/wiki/API" className="underline font-bold">OpenStreetMap API</a>, <a href="https://www.rainviewer.com/api.html" className="underline font-bold">Rainviewer API</a>, <a href="https://openweathermap.org/api" className="underline font-bold">OpenWeatherMap API</a>
           </p>
-          <p className="text-2xl mt-8 font-bold underline">
+          <p className="absolute text-base underline -bottom-12 left-1.5">
             Disclaimer: Any location data used is only on client-side and is not sent to any server outside of client's network.
           </p>
-          <p className="text-2xl mt-8 underline font-bold">
+          <p className="absolute text-base underline -bottom-12 right-1.5">
             Version 1.0.0
           </p>
       </main>
