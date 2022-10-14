@@ -9,6 +9,7 @@ import Weather from './weather.jsx';
 import AdvancedWeather from './advancedWeather.jsx';
 import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
 import { MultipleWeatherData } from '../components/multipleWeatherData.jsx';
+import DarkMap from './darkMap';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route exact path="/about" element={<About />} />
         <Route exact path="/contact" element={<Contact />} />
         <Route exact path="/map" element={<Map />} />
+        <Route exact path="/darkMap" element={<DarkMap />} />
         <Route exact path="/weather" element={<Weather />} />
         <Route exact path="/advancedWeather" element={<AdvancedWeather />} />
         <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> (// changes url according to city)

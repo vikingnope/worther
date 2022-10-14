@@ -9,7 +9,7 @@ import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 
-export default function Map(props) {   
+export default function DarkMap(props) {   
     const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
     const [weatherOpacity, setWeatherOpacity] = useState(props.weatherOpacity || 0.7);
 
@@ -38,13 +38,13 @@ export default function Map(props) {
     const map = (markerShow, zoomLevel) => {
         return( 
             <div className="text-white">
-                <Header choice={'map'}/>
+                <Header choice={'darkMap'}/>
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
                     <ScaleControl />
-                    {/* For dark mode map: https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png */}
+                    {/* For dark mode map:  */}
                     <TileLayer zIndex={1}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
                     />
                     {/* <SatelliteData /> */}
                     <RainViewerData opacity={weatherOpacity}/>
