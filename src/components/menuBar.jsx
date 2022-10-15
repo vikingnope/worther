@@ -8,7 +8,7 @@ export const MenuBar = (props) => {
                         Layers opacity (only click | does not work with Night):
                     </label>
                     <input 
-                        className="block accent-green-600 w-48 ml-1 mt-px cursor-pointer draggable"
+                        className="block accent-white w-48 ml-1 mt-px cursor-pointer draggable"
                         type = "range"
                         id="weather"
                         value={100 * props.layerOpacity}

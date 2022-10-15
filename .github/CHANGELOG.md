@@ -8,6 +8,7 @@
 1. Added temperature radar layer
 1. Added cloud radar layer
 1. Layers can be toggled on and off
+1. Layers are controlled by one opacity bar
 1. Added Axios to call APIs
 1. Updated to react version 18.2.0
 1. Reduced lines of code for more efficiency
@@ -22,7 +23,6 @@
 1. Added forums page
 1. Fixed alignment of elements on pages
 1. Header now has custom buttons for each page
-1. Added options
 1. Added weather page including dynamic weather page to run api according to city input
 1. Added advanced weather page to search with country as well as city
 1. Added loading screen in weather
