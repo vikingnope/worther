@@ -60,8 +60,8 @@ export default function ShowMap(props) {
                     (nightLayerChoice) ?
                         <NightRegion
                             fillColor='#000000'
-                            color='#001a2e'
                             refreshInterval={1000}
+                            weight='0'
                         /> :
                         <></>
                     }
@@ -73,7 +73,7 @@ export default function ShowMap(props) {
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
-                                Location: 
+                                <a className='text-sm' href={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of location</a>
                             </Popup> 
                         </Marker>
                     ) : (
