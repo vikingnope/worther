@@ -289,7 +289,7 @@ export const GetOpenWeatherData = () => {
           ) :
           (loaded === false && blocked === true) ?
           <>
-            <p className="text-3xl uppercase font-bold">The API is currently blocked</p>
+            <p className="text-4xl uppercase font-bold">The API is currently blocked</p>
             <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
           </> :
           (loaded === false && !mainWeather) ?
