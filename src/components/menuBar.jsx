@@ -1,13 +1,33 @@
 import { isMobile, isDesktop } from 'react-device-detect';
 import { useState } from 'react';
+import { AiOutlineClose } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
 export const MenuBar = (props) => {
     const [ toggle, setToggle ] = useState(false);
+    const[ city, setCity ] = useState();
+
+    const history = useNavigate();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    
+        history('/weather/' + city);
+      }
 
     if (isDesktop) { 
         return(
             <section>
                 <div className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min z-50 bg-black border-2 border-white rounded-md cursor-default p-px text-white" : "absolute ml-3 z-50 mt-24 w-max h-min bg-white border-2 border-black rounded-md cursor-default p-px text-black"} id="opacityBar">
+                        <form onSubmit={handleSubmit}>
+                            <input
+                                className={(props.mode === 'dark') ? "border-b border-white bg-black h-7 text-base font-bold indent-1.5 outline-none w-full" : "border-b border-black bg-white h-7 text-base font-bold indent-1.5 outline-none w-full text-black"}
+                                type="text"
+                                value={city}
+                                onChange={(e) => setCity(e.target.value.toUpperCase())}
+                                placeholder="Enter City"
+                            />
+                        </form>
                     <div>
                         <label htmlFor="weather" className="text-base ml-1 mr-px">
                             Layers opacity (only click | does not work with Night):
@@ -65,10 +85,18 @@ export const MenuBar = (props) => {
                     (toggle) ?
                     <>
                         <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold right-3.5 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold right-3.5 top-16 rounded-md px-1 bg-white text-black'}>
-                            Close
+                            <AiOutlineClose size='28'/>
                         </button>
                         <div className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min z-40 bg-black border-2 border-white rounded-md cursor-default p-px text-white" : "absolute ml-3 z-40 mt-24 w-max h-min bg-white border-2 border-black rounded-md cursor-default p-px text-black"} id="opacityBar">
-                            
+                            <form onSubmit={handleSubmit}>
+                                <input
+                                    className={(props.mode === 'dark') ? "border-b border-white bg-black h-7 text-base font-bold indent-1.5 outline-none w-full" : "border-b border-black bg-white h-7 text-base font-bold indent-1.5 outline-none w-full text-black"}
+                                    type="text"
+                                    value={city}
+                                    onChange={(e) => setCity(e.target.value.toUpperCase())}
+                                    placeholder="Enter City"
+                                />
+                            </form>
                             <div>
                                 <label htmlFor="weather" className="text-base ml-1 mr-px">
                                     Layers opacity (only click | does not work with Night):
