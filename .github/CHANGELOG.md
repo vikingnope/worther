@@ -28,6 +28,7 @@
 1. Added 5 Day Weather
 1. Added search with location on weather
 1. Added menu in map, light mode and dark mode, including opacity bar, layer toggle
+1. Custom nav bar for mobile
 
 ## 0.0.1 (Minor)
 
