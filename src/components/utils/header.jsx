@@ -1,6 +1,7 @@
 import logo from '../../resources/logoSmall.png';
 import { useNavigate } from 'react-router-dom';
-
+import { isMobile, isDesktop } from 'react-device-detect';
+import { Dropdown } from './mobileDropdown';
 
 
 export const Header = ({choice}) => {
@@ -25,8 +26,10 @@ export const Header = ({choice}) => {
             <section className="absolute top-2 left-0">
                 <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
             </section>
+
             <nav className="absolute right-0 top-3">
-                {
+                {(isDesktop) ?
+                (
                 (choice === 'about') ? 
                     [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather')] :
                 (choice === 'home') ?
@@ -40,8 +43,11 @@ export const Header = ({choice}) => {
                 (choice === 'showMap') ?
                     [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 <></>
+                ) : (isMobile) ?
+                    <Dropdown choice={choice}/> :
+                    <></>
                 }
             </nav>
-        </header>
+        </header>          
     )
 };
