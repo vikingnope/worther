@@ -29,6 +29,7 @@
 1. Added search with location on weather
 1. Added menu in map, light mode and dark mode, including opacity bar, layer toggle
 1. Custom nav bar for mobile
+1. Added option to search for weather with map marker
 
 ## 0.0.1 (Minor)
 
