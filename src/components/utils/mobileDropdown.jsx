@@ -1,5 +1,6 @@
 import { MdOutlineSegment } from 'react-icons/md';
 import { useState } from 'react';
+import { MdArrowLeft, MdOutlineArrowDropDown } from 'react-icons/md';
 
 export const Dropdown = (props) => {
     const [toggle, setToggle ] = useState(false);
@@ -14,12 +15,20 @@ export const Dropdown = (props) => {
 
     return (
         <nav>
-            <button onClick={() => setToggle(!toggle)} className='mr-1 -mt-1'>
-                <MdOutlineSegment size='42' />
-            </button>
+            <div className='mr-1'>
+                <button onClick={() => setToggle(!toggle)} className='flex -mt-1'>
+                    <MdOutlineSegment size='42' />
+                    <div className='mt-1 -ml-2'>
+                    {(!toggle) ?
+                            <MdArrowLeft size='35' /> :
+                            <MdOutlineArrowDropDown size='35' />
+                    }
+                    </div>
+                </button>
+            </div>
 
             {(toggle) ?
-            (<ul className={'absolute right-1 z-50'}>
+            (<ul className={'absolute right-1 z-50 mt-1'}>
                 <li>
                     {
                         (props.choice === 'about') ? 

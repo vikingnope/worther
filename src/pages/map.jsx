@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useNavigate } from 'react-router-dom';
 import lightModeImage from '../resources/lightMode.png';
 import darkModeImage from '../resources/darkMode.png';
-import { isMobile, isDesktop } from 'react-device-detect';
+import { isDesktop } from 'react-device-detect';
 
 export default function Home() {
 

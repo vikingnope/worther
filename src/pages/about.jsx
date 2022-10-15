@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
-import { isMobile, isDesktop } from 'react-device-detect';
+import { isDesktop } from 'react-device-detect';
 
 export default function About() {
   document.title = "Worther - About";
