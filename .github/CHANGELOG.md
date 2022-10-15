@@ -7,8 +7,6 @@
 1. Added wind radar layer
 1. Added temperature radar layer
 1. Added cloud radar layer
-1. Layers can be toggled on and off
-1. Layers are controlled by one opacity bar
 1. Added Axios to call APIs
 1. Updated to react version 18.2.0
 1. Reduced lines of code for more efficiency
@@ -29,6 +27,7 @@
 1. Updated about page with more information and hyperlinks for APIs and tools
 1. Added 5 Day Weather
 1. Added search with location on weather
+1. Added menu in map, light mode and dark mode, including opacity bar, layer toggle
 
 ## 0.0.1 (Minor)
 
