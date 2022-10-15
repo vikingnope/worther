@@ -31,6 +31,7 @@
 1. Added option to search for weather with map marker
 1. Added icons in header
 1. Added API blocked page
+1. Updated favicon to be rounded
 
 ## 0.0.1 (Minor)
 
