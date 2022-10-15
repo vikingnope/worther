@@ -4,16 +4,16 @@ export const MenuBar = (props) => {
 
     if (isDesktop) { 
         return(
-            <section className="z-50">
-                <div className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min bg-black border-2 border-white rounded cursor-default p-px text-white" : "absolute ml-3 mt-24 w-max h-min bg-white border-2 border-black rounded cursor-default p-px text-black"} id="opacityBar">
+            <section>
+                <div className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min z-50 bg-black border-2 border-white rounded cursor-default p-px text-white" : "absolute ml-3 z-50 mt-24 w-max h-min bg-white border-2 border-black rounded cursor-default p-px text-black"} id="opacityBar">
                     <div>
                         <label htmlFor="weather" className="text-base ml-1 mr-px">
                             Layers opacity (only click | does not work with Night):
                         </label>
                         <input 
-                            className={(props.mode === 'dark') ? "block accent-white w-48 ml-1 mt-px cursor-pointer draggable" : "block accent-black w-48 ml-1 mt-px cursor-pointer draggable"}
+                            className={(props.mode === 'dark') ? "z-50 block accent-white w-48 ml-1 mt-px cursor-pointer" : "block accent-black w-48 ml-1 mt-px cursor-pointer z-50"}
                             type = "range"
-                            id="weather"
+                            id="opacityBar"
                             value={100 * props.layerOpacity}
                             min={0}
                             max={100}
