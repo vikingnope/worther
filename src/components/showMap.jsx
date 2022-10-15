@@ -69,7 +69,7 @@ export default function ShowMap(props) {
                     <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity}/>
                     <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity}/>
                     <CloudLayer show={cloudLayerChoice} opacity={layerOpacity}/>
-                    <MenuBar showNight={nightLayerChoice} onShowNightChange={setNightLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
+                    <MenuBar mode={mapType} showNight={nightLayerChoice} onShowNightChange={setNightLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
