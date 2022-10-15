@@ -4,7 +4,7 @@ export const MenuBar = (props) => {
 
     if (isDesktop) { 
         return(
-            <section className="leaflet-top leaflet-left">
+            <section className="z-50">
                 <div className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min bg-black border-2 border-white rounded cursor-default p-px text-white" : "absolute ml-3 mt-24 w-max h-min bg-white border-2 border-black rounded cursor-default p-px text-black"} id="opacityBar">
                     <div>
                         <label htmlFor="weather" className="text-base ml-1 mr-px">

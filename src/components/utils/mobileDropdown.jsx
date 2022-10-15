@@ -6,7 +6,7 @@ export const Dropdown = (props) => {
 
     const Navigations = (text, path) => {
         return(
-            <a href={path} className="w-44 h-14 flex justify-center uppercase text-2xl border-y-2 border-x-2 border-zinc-600 mr-1 bg-stone-900 indent-2">
+            <a href={path} className="w-44 h-14 flex justify-center uppercase text-2xl border-y-2 border-x-2 border-zinc-600 mr-1 bg-stone-900 indent-2 ">
                 {text}
             </a>
         )
@@ -19,7 +19,7 @@ export const Dropdown = (props) => {
             </button>
 
             {(toggle) ?
-            (<ul className='absolute right-1 z-auto'>
+            (<ul className={'absolute right-1 z-50'}>
                 <li>
                     {
                         (props.choice === 'about') ? 
