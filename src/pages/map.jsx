@@ -31,8 +31,8 @@ export default function Home() {
                         Light Mode Map
                         {
                         (isDesktop) ?
-                            <img src={lightModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-xl border-2 border-zinc-600" /> :
-                            <img src={lightModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-sm border-2 border-zinc-600" />
+                            <img src={lightModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-xl border-2 border-zinc-600" alt='light mode'/> :
+                            <img src={lightModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-sm border-2 border-zinc-600" alt='light mode'/>
                         }
                     </button>   
                 </form>
@@ -41,8 +41,8 @@ export default function Home() {
                         Dark Mode Map
                         {
                         (isDesktop) ?
-                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-xl border-2 border-zinc-600" /> :
-                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-sm border-2 border-zinc-600" />
+                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-xl border-2 border-zinc-600" alt='dark mode'/> :
+                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-sm border-2 border-zinc-600" alt='dark mode'/>
                         }
                     </button>
                 </form>
