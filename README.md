@@ -1,4 +1,4 @@
-![Worther](./src/resources/logoSmall.png)
+![Worther](./src/resources/logoSmallRounded.png)
 
 # Worther
 ### Getting weather closer to you
