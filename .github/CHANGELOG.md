@@ -30,6 +30,7 @@
 1. Custom nav bar for mobile
 1. Added option to search for weather with map marker
 1. Added icons in header
+1. Added API blocked page
 
 ## 0.0.1 (Minor)
 
