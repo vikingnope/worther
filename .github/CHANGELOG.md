@@ -18,7 +18,6 @@
 1. Changed all javascript react files to .jsx
 1. Different titles to different pages
 1. Changed .css files to .scss
-1. Added forums page
 1. Fixed alignment of elements on pages
 1. Header now has custom buttons for each page
 1. Added weather page including dynamic weather page to run api according to city input
