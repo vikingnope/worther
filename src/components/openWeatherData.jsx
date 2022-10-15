@@ -57,6 +57,7 @@ export const GetOpenWeatherData = () => {
     const [ sunriseTime, setSunriseTime ] = useState({hour: undefined, minute: undefined});
     const [ sunsetTime, setSunsetTime ] = useState({hour: undefined, minute: undefined});
     const [ timeUpdated, setTimeUpdated ] = useState({hour: undefined, minute: undefined});
+    const [ blocked, setBlocked ] = useState();
 
     sunriseTimeConversion = new Date(sunrise * 1000);
     sunsetTimeConversion = new Date(sunset * 1000);
@@ -222,7 +223,10 @@ export const GetOpenWeatherData = () => {
         setLoaded(true);
       })
       .catch(error => {
-        console.log(error);
+        ((error.response.data.cod === 429) ?
+          setBlocked(true) :
+          setBlocked(false)
+        )
         setLoaded(false);
       })
     }, [!timeUpdated.hour]); // Calls API twice (needs fixing)
@@ -283,12 +287,17 @@ export const GetOpenWeatherData = () => {
             <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
           </>
           ) :
+          (loaded === false && blocked === true) ?
+          <>
+            <p className="text-3xl uppercase font-bold">The API is currently blocked</p>
+            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+          </> :
           (loaded === false && !mainWeather) ?
             <>
               <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
               <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
             </>
-          :
+          :     
           <p className="font-bold text-2xl">Loading...</p>
         }  
       </div>
