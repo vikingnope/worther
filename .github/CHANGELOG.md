@@ -24,7 +24,7 @@
 1. Added advanced weather page to search with country as well as city
 1. Added loading screen in weather
 1. Updated about page with more information and hyperlinks for APIs and tools
-1. Added 5 Day Weather
+1. Added 3 Hour Weather Data
 1. Added search with location on weather
 1. Added menu in map, light mode and dark mode, including opacity bar, layer toggle
 1. Custom nav bar for mobile
