@@ -267,7 +267,7 @@ export const GetOpenWeatherData = () => {
                 <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
               </form>
               <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-              <p className="absolute -bottom-12 right-1.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute}</p>
+              <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute}</p>
           </> :
           <>
             <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
