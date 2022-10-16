@@ -47,12 +47,12 @@ export const Header = ({choice}) => {
     };
 
     return (
-        <header className="inset-x-0 top-0 bg-neutral-800 h-14 w-full border-y border-zinc-600">
-            <section className="absolute top-2 left-0">
-                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
+        <header className="inset-x-0 top-0 bg-neutral-800 h-min w-full border-y border-zinc-600">
+            <section className="relative mt-2.5">
+                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 hover:scale-90 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
             </section>
 
-            <nav className="absolute right-0 top-1 flex">
+            <nav className="absolute right-0 top-1.5 flex">
                 {(isDesktop) ?
                 (
                 (choice === 'about') ? 
