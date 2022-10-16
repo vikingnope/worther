@@ -3,19 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
-import { TimeZoneShow, VisibilityDesc, WindDirection } from "./utils/weatherVariables";
-import { BsFillSunFill } from 'react-icons/bs'; // sunny
-import { AiFillCloud } from 'react-icons/ai'; // cloudy
-import { BsFillCloudRainHeavyFill } from 'react-icons/bs'; // heavy intensity rain
-import { BsFillCloudDrizzleFill } from 'react-icons/bs' // drizzle
-import { BsFillCloudLightningRainFill } from 'react-icons/bs'; // thunder and rain
-import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
-import { BsCloudFog } from 'react-icons/bs'; // fog
-import { BsFillCloudRainFill } from 'react-icons/bs'; // light rain
-import { BsFillCloudsFill } from 'react-icons/bs'; // overcast clouds
-import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
-import { BsFillCloudHazeFill } from 'react-icons/bs'; // haze
-import { TbMist } from 'react-icons/tb'; // mist
+import { TimeZoneShow, VisibilityDesc, WindDirection, WeatherIcons } from "./utils/weatherVariables";
 
 export const GetOpenWeatherData = () => {
 
@@ -30,7 +18,7 @@ export const GetOpenWeatherData = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
   
-      history('/weather/' +  location.name + '/' + location.lat + '/' + location.lon);
+      history('/3HourWeather/' + location.lat + '/' + location.lon);
     }
 
     const [ location, setLocation ] = useState([]);
@@ -112,32 +100,7 @@ export const GetOpenWeatherData = () => {
           ((weather.mainWeather) ?
             <>
               <section className="mx-auto mb-4">
-                {(weather.mainWeather === "Clear") ?
-                  <BsFillSunFill size={'200'} color={'white'} /> :
-                (weather.description === "scattered clouds" || weather.description === "broken clouds") ?
-                  <BsFillCloudSunFill size={'200'} color={'white'} className="mb-0" /> :
-                (weather.description === "few clouds") ?
-                  <AiFillCloud size={'200'} color={'white'} className="mb-0" /> :
-                (weather.description === "overcast clouds") ?
-                  <BsFillCloudsFill size={'200'} color={'white'} className="mb-0" /> :
-                (weather.description === "light rain") ?
-                  <BsFillCloudRainFill size={'200'} color={'white'} /> :
-                (weather.description === "heavy intensity rain" || weather.description === "moderate rain") ?
-                  <BsFillCloudRainHeavyFill size={'200'} color={'white'} /> :
-                (weather.mainWeather === "Drizzle") ?
-                  <BsFillCloudDrizzleFill size={'200'} color={'white'} /> :
-                (weather.description === "thunderstorm with light rain") ?
-                  <BsFillCloudLightningRainFill  size={'200'} color={'white'} className="mb-0" /> :
-                (weather.mainWeather === "Fog") ?
-                  <BsCloudFog size={'200'} color={'white'} /> :
-                (weather.mainWeather === "Snow") ?
-                  <BsFillCloudSnowFill size={'200'} color={'white'} /> :
-                (weather.description === "haze") ?
-                  <BsFillCloudHazeFill size={'200'} color={'white'} /> :
-                (weather.description === "mist") ?
-                  <TbMist size={'200'} color={'white'} /> :
-                <> </>}
-
+                <WeatherIcons mainWeather={weather.mainWeather} description={weather.description} page={'single'}/>
               </section>
               <section className="text-lg">
                 <p className="underline text-3xl font-bold">{location.name}, {location.country}</p>
