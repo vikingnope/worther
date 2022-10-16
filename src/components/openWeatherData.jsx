@@ -218,7 +218,7 @@ export const GetOpenWeatherData = () => {
       <Header choice={'showWeather'}/>
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(loaded) ?
-          ((weather.mainWeather) ?
+          ((times.timeUpdatedMinute) ?
             <>
               <section className="mx-auto mb-4">
                 {(weather.mainWeather === "Clear") ?
