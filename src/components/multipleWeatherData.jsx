@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
+import { TimeZoneShow } from './utils/weatherVariables';
 import { BsFillSunFill } from 'react-icons/bs'; // sunny
 import { AiFillCloud } from 'react-icons/ai'; // cloudy
 import { BsFillCloudRainHeavyFill } from 'react-icons/bs'; // heavy intensity rain
@@ -69,7 +70,8 @@ export const MultipleWeatherData = () => {
         name: response.data.city.name,
         country: response.data.city.country,
         sunrise:response.data.city.sunrise,
-        sunset: response.data.city.sunset
+        sunset: response.data.city.sunset,
+        timeZone: response.data.city.timezone
       }
       setLocation(locationObj)
 
@@ -254,7 +256,7 @@ export const MultipleWeatherData = () => {
                     <> </>}
                   </section>
                   <p className='my-3.5 mr-7 font-bold text-xl'>{weather.day}</p>
-                  <p className='my-3.5 font-bold text-xl mr-10'>{weather.timeNormalHour}:{weather.timeNormalMinutes} (GMT+2)</p>
+                  <p className='my-3.5 font-bold text-xl mr-10'>{(weather.timeNormalHour) - 2}:{weather.timeNormalMinutes} (GMT)</p>
                   <p className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</p>
                 </div>
               ))
