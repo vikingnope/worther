@@ -13,9 +13,7 @@ import { BsCloudFog } from 'react-icons/bs'; // fog
 import { BsFillCloudRainFill } from 'react-icons/bs'; // light rain
 import { BsFillCloudsFill } from 'react-icons/bs'; // overcast clouds
 import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
-
-
-
+import { BsFillCloudHazeFill } from 'react-icons/bs'; // haze
 
 export const GetOpenWeatherData = () => {
 
@@ -245,6 +243,8 @@ export const GetOpenWeatherData = () => {
                   <BsCloudFog size={'200'} color={'white'} /> :
                 (weather.mainWeather === "Snow") ?
                   <BsFillCloudSnowFill size={'200'} color={'white'} /> :
+                (weather.mainWeather === "Haze") ?
+                  <BsFillCloudHazeFill size={'200'} color={'white'} /> :
                 <> </>}
 
               </section>
