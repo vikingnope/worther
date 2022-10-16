@@ -254,7 +254,7 @@ export const MultipleWeatherData = () => {
                     <> </>}
                   </section>
                   <p className='my-3.5 mr-7 font-bold text-xl'>{weather.day}</p>
-                  <p className='my-3.5 font-bold text-xl mr-10'>{weather.timeNormalHour} : {weather.timeNormalMinutes}</p>
+                  <p className='my-3.5 font-bold text-xl mr-10'>{weather.timeNormalHour} : {weather.timeNormalMinutes} (GMT+2)</p>
                   <p className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</p>
                 </div>
               ))
