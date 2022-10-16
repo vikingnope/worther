@@ -10,6 +10,7 @@ import AdvancedWeather from './advancedWeather.jsx';
 import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
 import { ThreeHourWeatherData } from '../components/3HourWeatherData.jsx';
 import ShowMap from '../components/showMap';
+import { SingleThreeHourWeatherData } from '../components/Single3HourWeatherData';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route exact path="/weatherCountry/:countryCode/:city" element={<GetOpenWeatherData />} />
         <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
         <Route exact path="/3HourWeather/:lat/:lon" element={<ThreeHourWeatherData />} />
+        <Route exact path="/Single3HourWeather/:lat/:lon" element={<SingleThreeHourWeatherData />} />
       </Routes>
     </Router>
   );
