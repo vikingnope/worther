@@ -29,7 +29,7 @@ export const GetOpenWeatherData = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
   
-      history('/weather/' + city + '/' + weather.lat + '/' + weather.lon);
+      history('/weather/' + city + '/' + location.lat + '/' + location.lon);
     }
 
     const [ location, setLocation ] = useState([]);
