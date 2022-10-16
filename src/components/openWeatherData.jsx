@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
+import { TimeZoneShow, VisibilityDesc, WindDirection } from "./utils/weatherVariables";
 import { BsFillSunFill } from 'react-icons/bs'; // sunny
 import { AiFillCloud } from 'react-icons/ai'; // cloudy
 import { BsFillCloudRainHeavyFill } from 'react-icons/bs'; // heavy intensity rain
@@ -18,9 +19,6 @@ import { BsFillCloudHazeFill } from 'react-icons/bs'; // haze
 export const GetOpenWeatherData = () => {
 
     var times = {};
-    var windDirection = '';
-    var timeZoneShown = '';
-    var visibilityDescription = '';
 
     const { countryCode, city, latitude, longitude } = useParams(); // Gets city from the url
 
@@ -86,41 +84,7 @@ export const GetOpenWeatherData = () => {
         )
         setLoaded(false);
       })
-    }, []);
-
-    (((weather.windDegrees >= 0 && weather.windDegrees <= 11.25) || (weather.windDegrees  > 348.75)) ? 
-          windDirection = 'N'  : 
-        (weather.windDegrees >= 11.26 && weather.windDegrees < 33.75) ?
-          windDirection = 'NNE' :
-        (weather.windDegrees >= 33.75 && weather.windDegrees < 56.25) ?
-          windDirection = 'NE' :
-        (weather.windDegrees >= 56.25 && weather.windDegrees < 78.75) ?
-          windDirection = 'ENE' :
-        (weather.windDegrees >= 78.75 && weather.windDegrees < 101.25) ?
-          windDirection = 'E' :
-        (weather.windDegrees >= 101.25 && weather.windDegrees < 123.75) ?
-          windDirection = 'ESE' :
-        (weather.windDegrees >= 123.75 && weather.windDegrees < 146.25) ?
-          windDirection = 'SE' :
-        (weather.windDegrees >= 146.25 && weather.windDegrees < 168.75) ?
-          windDirection = 'SSE' :
-        (weather.windDegrees >= 168.75 && weather.windDegrees < 191.25) ?
-          windDirection = 'S' : 
-        (weather.windDegrees >= 191.25 && weather.windDegrees < 213.75) ?
-          windDirection = 'SSW' :
-        (weather.windDegrees >= 213.75 && weather.windDegrees < 236.25) ?
-          windDirection = 'SW' :
-        (weather.windDegrees >= 236.25 && weather.windDegrees < 258.75) ?
-          windDirection = 'WSW' :
-        (weather.windDegrees >= 258.75 && weather.windDegrees < 281.25) ?
-          windDirection = 'W' :
-        (weather.windDegrees >= 281.25 && weather.windDegrees < 303.75) ?
-          windDirection = 'WNW' :
-        (weather.windDegrees >= 303.75 && weather.windDegrees < 326.25) ?
-          windDirection = 'NW' :
-        (weather.windDegrees >= 326.25 && weather.windDegrees < 348.75) ?
-          windDirection = 'NNW' :                          
-        <> </>);
+    }, []);   
 
     (times = {
       sunriseHour: String((new Date(weather.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
@@ -131,88 +95,12 @@ export const GetOpenWeatherData = () => {
       timeUpdatedMinute: String((new Date(weather.timeUpdatedUNIX * 1000)).getMinutes()).padStart(2, '0')
     });
 
-    ((location.timeZone === 0) ?
-      timeZoneShown = 'GMT' :
-    (location.timeZone === -3600) ?
-      timeZoneShown = 'GMT-1' :
-    (location.timeZone === -7200) ?
-      timeZoneShown = 'GMT-2' :
-    (location.timeZone === -10800) ?
-      timeZoneShown = 'GMT-3' :
-    (location.timeZone === -14400) ?
-      timeZoneShown = 'GMT-4' :
-    (location.timeZone === -18000) ?
-      timeZoneShown = 'GMT-5' :
-    (location.timeZone === -21600) ?
-      timeZoneShown = 'GMT-6' :
-    (location.timeZone === -25200) ?
-      timeZoneShown = 'GMT-7' :
-    (location.timeZone === -28800) ?
-      timeZoneShown = 'GMT-8' :
-    (location.timeZone === -32400) ?
-      timeZoneShown = 'GMT-9' :
-    (location.timeZone === -36000) ?
-      timeZoneShown = 'GMT-10' :
-    (location.timeZone === -39600) ?
-      timeZoneShown = 'GMT-11' :
-    (location.timeZone === -43200) ?
-      timeZoneShown = 'GMT-12' :
-    (location.timeZone === 3600) ?
-      timeZoneShown = 'GMT+1' :
-    (location.timeZone === 7200) ?
-      timeZoneShown = 'GMT+2' :
-    (location.timeZone === 108002) ?
-      timeZoneShown = 'GMT+3' :
-    (location.timeZone === 14400) ?
-      timeZoneShown = 'GMT+4' :
-    (location.timeZone === 18000) ?
-      timeZoneShown = 'GMT+5' :
-    (location.timeZone === 21600) ?
-      timeZoneShown = 'GMT+6' :
-    (location.timeZone === 25200) ?
-      timeZoneShown = 'GMT+7' :
-    (location.timeZone === 28800) ?
-      timeZoneShown = 'GMT+8' :
-    (location.timeZone === 32400) ?
-      timeZoneShown = 'GMT+9' :
-    (location.timeZone === 36000) ?
-      timeZoneShown = 'GMT+10' :
-    (location.timeZone === 39600) ?
-      timeZoneShown = 'GMT+11' :   
-    (location.timeZone === 43200) ?
-      timeZoneShown = 'GMT+12' :
-    (location.timeZone === 46800) ?
-      timeZoneShown = 'GMT+13' : 
-    (location.timeZone === 50400) ?
-      timeZoneShown = 'GMT+14' :                 
-    <></> 
-    );
-
-    ((weather.visibility < 50) ?
-      visibilityDescription = 'Dense Fog' :
-    (weather.visibility >= 50 && weather.visibility < 200) ?
-      visibilityDescription = 'Thick Fog' :
-    (weather.visibility >= 200 && weather.visibility < 500) ?
-      visibilityDescription = 'Moderate Fog' :
-    (weather.visibility >= 500 && weather.visibility < 1000) ?
-      visibilityDescription = 'Light Fog' :
-    (weather.visibility >= 1000 && weather.visibility < 2000) ?
-      visibilityDescription = 'Thin Fog' :
-    (weather.visibility >= 2000 && weather.visibility < 4000) ?
-      visibilityDescription = 'Haze' :
-    (weather.visibility >= 4000 && weather.visibility < 10000) ?
-      visibilityDescription = 'Light Haze' :
-    (weather.visibility === 10000) ?
-      visibilityDescription = 'Clear' :
-      <></>
-    );
-
     var sunriseHourConversion = (
-      String((location.timeZone <= 0) ? ((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600) : (Math.round((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600))).padStart(2, '0')
+      ((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
     );
 
     var sunsetHourConversion = (
-      (location.timeZone <= 0) ? ((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600) : (Math.round(((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
+      ((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
     );
 
     return(
@@ -255,14 +143,13 @@ export const GetOpenWeatherData = () => {
                 <p>Feels like: {Math.round(weather.tempFeel)}°C</p>
                 <p>Max: {Math.round(weather.tempMax)}°C &emsp; Min: {Math.round(weather.tempMin)}°C</p>
                 <p>Humidity: {weather.humidity}%</p>
-                <p>Wind Speed: {weather.windSpeed} m/s &emsp; Wind Direction: {windDirection} @ {weather.windDegrees}°</p>
+                <p>Wind Speed: {weather.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
                 <p>Pressure: {weather.pressure} hPa</p>
                 <p>Visibility: {(weather.visibility >= 1000) ?
                   (weather.visibility / 1000) + 'km' :
-                  (weather.visibility) + 'm'} ({visibilityDescription})
+                  (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
                 </p>
-                {console.log()}
-                <p>Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : sunriseHourConversion}:{times.sunriseMinute} ({timeZoneShown}) &emsp; Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({timeZoneShown})</p>
+                <p>Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={location.timeZone}/>}) &emsp; Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={location.timeZone}/>})</p>
               </section><form onSubmit={handleSubmit}>
                 <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
               </form>
