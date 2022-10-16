@@ -8,7 +8,7 @@ import Map from './map.jsx';
 import Weather from './weather.jsx';
 import AdvancedWeather from './advancedWeather.jsx';
 import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
-import { MultipleWeatherData } from '../components/multipleWeatherData.jsx';
+import { ThreeHourWeatherData } from '../components/3HourWeatherData.jsx';
 import ShowMap from '../components/showMap';
 
 export default function App() {
@@ -25,7 +25,7 @@ export default function App() {
         <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> (// changes url according to city)
         <Route exact path="/weatherCountry/:countryCode/:city" element={<GetOpenWeatherData />} />
         <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
-        <Route exact path="/weather/:city/:lat/:lon" element={<MultipleWeatherData />} />
+        <Route exact path="/3HourWeather/:lat/:lon" element={<ThreeHourWeatherData />} />
       </Routes>
     </Router>
   );
