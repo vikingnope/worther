@@ -96,11 +96,11 @@ export const GetOpenWeatherData = () => {
     });
 
     var sunriseHourConversion = (
-      ((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
+      Math.round((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
     );
 
     var sunsetHourConversion = (
-      ((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
+      Math.round((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
     );
 
     return(

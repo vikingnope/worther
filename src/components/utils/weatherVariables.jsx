@@ -39,6 +39,8 @@ export const TimeZoneShow = (props) => {
       timeZoneShown = 'GMT+4' :
     (props.timeZone === 18000) ?
       timeZoneShown = 'GMT+5' :
+    (props.timeZone === 19800) ?
+      timeZoneShown = 'GMT+5:30' :
     (props.timeZone === 21600) ?
       timeZoneShown = 'GMT+6' :
     (props.timeZone === 25200) ?
