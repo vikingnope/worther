@@ -243,7 +243,7 @@ export const GetOpenWeatherData = () => {
                   <BsCloudFog size={'200'} color={'white'} /> :
                 (weather.mainWeather === "Snow") ?
                   <BsFillCloudSnowFill size={'200'} color={'white'} /> :
-                (weather.mainWeather === "Haze") ?
+                (weather.description === "haze") ?
                   <BsFillCloudHazeFill size={'200'} color={'white'} /> :
                 <> </>}
 
