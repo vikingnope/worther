@@ -89,34 +89,7 @@ export const SingleThreeHourWeatherData = () => {
     <div className='select-none text-white'>
       <Header choice='showWeather'/>
       <div className="text-center select-none bg-black text-white min-h-screen flex flex-col">
-          <p className='text-4xl font-bold my-5'>3 Hour Weather Data</p>
-          {(weather.length > 0) ?
-            (
-              weather.map((weather, index) => ( // .map is used instead of loops
-                hourConversion = (
-                  Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-                ),
-                dayConversion = (
-                  new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
-                ),
-                <button key={index} onClick={handleSubmit} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white'>
-                  <section className="ml-10 my-auto mr-20">
-                    <WeatherIcons mainWeather={weather.mainWeather} description={weather.description} page={'multiple'}/>
-                  </section>
-                  <p className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</p>
-                  <p className='my-3.5 font-bold text-xl mr-10'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</p>
-                  <p className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</p>
-                  <p className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C &ensp; Max: {Math.round(weather.tempMax)}°C &ensp; Min {Math.round(weather.tempMin)}°C</p>
-                  <p className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s &ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
-                  <p className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
-                    (weather.visibility / 1000) + 'km' :
-                    (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                  </p>
-                </button>
-              ))
-            ) :
-            <></>
-          }
+          <p className='text-4xl font-bold my-5'>Single 3 Hour Weather Data (In Progress)</p>
       </div>
       <Footer />
     </div>
