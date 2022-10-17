@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Header } from "./utils/header";
-import { Footer } from "./utils/footer";
-import { TimeZoneShow, VisibilityDesc, WindDirection, WeatherIcons } from "./utils/weatherVariables";
+import { ShowWeather } from "./utils/weatherVariables";
 
 export const GetOpenWeatherData = () => {
-
-    var times = {};
 
     const { countryCode, city, latitude, longitude } = useParams(); // Gets city from the url
 
@@ -75,73 +71,7 @@ export const GetOpenWeatherData = () => {
       })
     }, []);   
 
-    (times = {
-      sunriseHour: String((new Date(weather.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-      sunriseMinute: String((new Date(weather.sunrise * 1000)).getMinutes()).padStart(2, '0'),
-      sunsetHour: String((new Date(weather.sunset * 1000)).getHours()).padStart(2, '0'),
-      sunsetMinute: String((new Date(weather.sunset * 1000)).getMinutes()).padStart(2, '0'),
-      timeUpdatedHour: String((new Date(weather.timeUpdatedUNIX * 1000)).getHours()).padStart(2, '0'),
-      timeUpdatedMinute: String((new Date(weather.timeUpdatedUNIX * 1000)).getMinutes()).padStart(2, '0')
-    });
-
-    var sunriseHourConversion = (
-      Math.round((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-    );
-
-    var sunsetHourConversion = (
-      Math.round((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-    );
-
     return(
-    <div className="text-white">
-      <Header choice={'showWeather'}/>
-      <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
-        {(loaded) ?
-          ((weather.mainWeather) ?
-            <>
-              <section className="mx-auto mb-4">
-                <WeatherIcons mainWeather={weather.mainWeather} description={weather.description} page={'single'}/>
-              </section>
-              <section className="text-lg">
-                <p className="underline text-3xl font-bold">{location.name}, {location.country}</p>
-                <p className="font-bold text-3xl mt-4">{weather.description.toUpperCase()}</p>
-                <p className="mt-1">Temperature: {Math.round(weather.temperature)}°C</p>
-                <p>Feels like: {Math.round(weather.tempFeel)}°C</p>
-                <p>Max: {Math.round(weather.tempMax)}°C &emsp; Min: {Math.round(weather.tempMin)}°C</p>
-                <p>Humidity: {weather.humidity}%</p>
-                <p>Wind Speed: {weather.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
-                <p>Pressure: {weather.pressure} hPa</p>
-                <p>Visibility: {(weather.visibility >= 1000) ?
-                  (weather.visibility / 1000) + 'km' :
-                  (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                </p>
-                <p>Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={location.timeZone}/>}) &emsp; Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={location.timeZone}/>})</p>
-              </section><form onSubmit={handleSubmit}>
-                <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
-              </form>
-              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-              <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute}</p>
-          </> :
-          <>
-            <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
-            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-          </>
-          ) :
-          (loaded === false && blocked === true) ?
-          <>
-            <p className="text-4xl uppercase font-bold">The API is currently blocked</p>
-            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-          </> :
-          (loaded === false && !weather.mainWeather) ?
-            <>
-              <p className="text-3xl uppercase font-bold">The city you have entered ('{city}') has not been found</p>
-              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-            </>
-          :     
-          <p className="font-bold text-2xl">Loading...</p>
-        }  
-      </div>
-      <Footer />
-    </div>
-    )  
+      <ShowWeather mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={city}/>
+    )
   };
