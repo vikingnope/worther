@@ -5,32 +5,19 @@ import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc } from './utils/weatherVariables';
 
-var sunriseTimeConversion;
-var sunsetTimeConversion;
-var timeUpdatedConversion; 
-
 export const ThreeHourWeatherData = () => {
-  const { city, lat, lon } = useParams();
+  const { lat, lon } = useParams();
 
   const [ location, setLocation ] = useState([]);
-  const [ date, setDate ] = useState([]);
   const [ weather, setWeather ] = useState([]);
-  const [ loaded, setLoaded ] = useState();
-  const [ sunriseTime, setSunriseTime ] = useState([]);
-  const [ sunsetTime, setSunsetTime ] = useState([]);
-  const [ timeUpdated, setTimeUpdated ] = useState([]);
 
   const history = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, index) => {
     e.preventDefault();
 
-    history('/Single3HourWeather/' + location.lat + '/' + location.lon);
+    history('/Single3HourWeather/' + index + '/' + location.lat + '/' + location.lon);
   }
-
-  var times = {};
-
-  // timeUpdatedConversion = new Date(timeUpdatedUNIX * 1000);
 
   document.title = "Worther - 5 Day Weather - " + location.name;
 
@@ -66,21 +53,9 @@ export const ThreeHourWeatherData = () => {
         timeZone: response.data.city.timezone
       }
       setLocation(locationObj)
-
-      var date = new Date(weather.timeUNIX * 1000);
-
-      const dateObj = {
-        day: String(date.getDay()).padStart(2, '0'),
-        month: String(date.getMonth()).padStart(2, '0'),
-        year: String(date.getFullYear())
-      }
-      setDate(dateObj);
-
-      setLoaded(true);
     })
     .catch(error => {
       console.log(error);
-      setLoaded(false);
     })
   }, []);
 
@@ -101,7 +76,7 @@ export const ThreeHourWeatherData = () => {
                 dayConversion = (
                   new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
                 ),
-                <button key={index} onClick={handleSubmit} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white'>
+                <button key={index} onClick={(e) => handleSubmit(e, index)} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white'>
                   <section className="ml-10 my-auto mr-20">
                     <WeatherIcons mainWeather={weather.mainWeather} description={weather.description} page={'multiple'}/>
                   </section>

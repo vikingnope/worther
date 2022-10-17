@@ -66,6 +66,7 @@ export const GetOpenWeatherData = () => {
         ((error.response.data.cod === 429) ?
           setBlocked(true) :
           setBlocked(false)
+          // response.data.code === 'ERR_NETWORK'
         )
         setLoaded(false);
       })

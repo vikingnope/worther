@@ -27,7 +27,7 @@ export default function App() {
         <Route exact path="/weatherCountry/:countryCode/:city" element={<GetOpenWeatherData />} />
         <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
         <Route exact path="/3HourWeather/:lat/:lon" element={<ThreeHourWeatherData />} />
-        <Route exact path="/Single3HourWeather/:lat/:lon" element={<SingleThreeHourWeatherData />} />
+        <Route exact path="/Single3HourWeather/:index/:lat/:lon" element={<SingleThreeHourWeatherData />} />
       </Routes>
     </Router>
   );
