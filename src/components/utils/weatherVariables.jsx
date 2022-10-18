@@ -240,29 +240,29 @@ export const ShowWeather = (props) => {
                 <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute}</p>
               </div> 
             :
-              <div className="text-center select-none bg-black min-h-screen flex flex-col">
+              <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
                 <section className='mb-32'>
-                  <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>{parseInt(props.index) + 1}.</p>
+                  <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>Index: {parseInt(props.index) + 1}</p>
                   <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>{props.dayConversion}</p>
                   <p className='font-bold text-4xl mr-10 underline inline-block'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
                 </section>
-                <section className="mx-auto mb-4">
-                  <WeatherIcons mainWeather={props.mainWeather} description={props.description} page={'single'}/>
-                </section>
-                <section className="text-lg">
-                  <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
-                  <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
-                  <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
-                  <p>Feels like: {Math.round(props.tempFeel)}°C</p>
-                  <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
-                  <p>Humidity: {props.humidity}%</p>
-                  <p>Wind Speed: {props.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
-                  <p>Pressure: {props.pressure} hPa</p>
-                  <p>Visibility: {(props.visibility >= 1000) ?
-                    (props.visibility / 1000) + 'km' :
-                    (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
-                  </p>
-                </section>
+                  <section className="mb-4 mx-auto">
+                    <WeatherIcons mainWeather={props.mainWeather} description={props.description} page={'single'}/>
+                  </section>
+                  <section className="text-lg">
+                    <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
+                    <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
+                    <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
+                    <p>Feels like: {Math.round(props.tempFeel)}°C</p>
+                    <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
+                    <p>Humidity: {props.humidity}%</p>
+                    <p>Wind Speed: {props.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                    <p>Pressure: {props.pressure} hPa</p>
+                    <p>Visibility: {(props.visibility >= 1000) ?
+                      (props.visibility / 1000) + 'km' :
+                      (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
+                    </p>
+                  </section>
                 <a className="text-xl mt-8  underline uppercase font-bold" href="/weather">Go Back</a>
               </div>
             )
