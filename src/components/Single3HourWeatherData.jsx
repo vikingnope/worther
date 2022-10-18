@@ -20,12 +20,11 @@ export const SingleThreeHourWeatherData = () => {
     history('/weather/' +  location.name + '/' + location.lat + '/' + location.lon);
   }
 
-  document.title = "Worther - 5 Day Weather - " + location.name;
+  document.title = "Worther - 3 Hour Weather - " + location.name;
 
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
     .then(response => {
-      console.log(response.data)
       for (let i = 0; i < response.data.list.length; i++){
         if (i == index) {
           const weatherObj = {

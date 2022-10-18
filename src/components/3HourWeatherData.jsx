@@ -20,7 +20,7 @@ export const ThreeHourWeatherData = () => {
     history('/Single3HourWeather/' + index + '/' + location.lat + '/' + location.lon);
   }
 
-  document.title = "Worther - 5 Day Weather - " + location.name;
+  document.title = "Worther - 3 Hour Weather - " + location.name;
 
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
