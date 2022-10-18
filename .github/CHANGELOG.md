@@ -32,6 +32,7 @@
 1. Added icons in header
 1. Added API blocked page
 1. Updated favicon to be rounded
+1. Added option to view each 3 hour weather data
 
 ## 0.0.1 (Minor)
 
