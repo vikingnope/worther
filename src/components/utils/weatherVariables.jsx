@@ -262,10 +262,6 @@ export const ShowWeather = (props) => {
                     (props.visibility / 1000) + 'km' :
                     (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                   </p>
-                  {(props.rain) ?
-                    <p>Rain: {props.rain} mm</p> :
-                    <></>
-                  }
                 </section>
                 <a className="text-xl mt-8  underline uppercase font-bold" href="/weather">Go Back</a>
               </div>
