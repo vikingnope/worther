@@ -21,6 +21,7 @@ export const GetOpenWeatherData = () => {
     const [ weather, setWeather ] = useState([]);
     const [ loaded, setLoaded ] = useState();
     const [ blocked, setBlocked ] = useState();
+    const [ connectionError, setConnectionError ] = useState();
 
     ((location.name) ?
     document.title = "Worther - Weather - " + location.name :
@@ -65,14 +66,15 @@ export const GetOpenWeatherData = () => {
       .catch(error => {
         ((error.response.data.cod === 429) ?
           setBlocked(true) :
+          (error.response.data.code === 'ERR_NETWORK') ?
+          setConnectionError(true) :
           setBlocked(false)
-          // response.data.code === 'ERR_NETWORK'
         )
         setLoaded(false);
       })
     }, []);   
 
     return(
-      <ShowWeather mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={city}/>
+      <ShowWeather connectionError = {connectionError} choice = {'normal'} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={city}/>
     )
   };

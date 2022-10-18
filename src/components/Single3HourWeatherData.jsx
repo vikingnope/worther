@@ -10,7 +10,7 @@ export const SingleThreeHourWeatherData = () => {
   const [ weather, setWeather ] = useState([]);
   const [ loaded, setLoaded ] = useState();
   const [ blocked, setBlocked ] = useState();
-
+  const [ connectionError, setConnectionError ] = useState();
 
   const history = useNavigate();
 
@@ -27,23 +27,44 @@ export const SingleThreeHourWeatherData = () => {
     .then(response => {
       console.log(response.data);
       for (let i = 0; i < response.data.list.length; i++){
-        const weatherObj = {
-          humidity: response.data.list[i].main.humidity,
-          temperature: response.data.list[i].main.temp,
-          tempMax: response.data.list[i].main.temp_max,
-          tempMin: response.data.list[i].main.temp_min,
-          tempFeel: response.data.list[i].main.feels_like,
-          pressure: response.data.list[i].main.pressure,
-          mainWeather: response.data.list[i].weather[0].main,
-          description: response.data.list[i].weather[0].description,
-          windSpeed: response.data.list[i].wind.speed,
-          windDegrees: response.data.list[i].wind.deg,
-          visibility: response.data.list[i].visibility,
-          dayUNIX: ((response.data.list[i].dt) * 1000),
-          timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-          timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
+        if (i == index && i < 4) {
+          const weatherObj = {
+            humidity: response.data.list[i].main.humidity,
+            temperature: response.data.list[i].main.temp,
+            tempMax: response.data.list[i].main.temp_max,
+            tempMin: response.data.list[i].main.temp_min,
+            tempFeel: response.data.list[i].main.feels_like,
+            pressure: response.data.list[i].main.pressure,
+            mainWeather: response.data.list[i].weather[0].main,
+            description: response.data.list[i].weather[0].description,
+            windSpeed: response.data.list[i].wind.speed,
+            windDegrees: response.data.list[i].wind.deg,
+            visibility: response.data.list[i].visibility,
+            dayUNIX: ((response.data.list[i].dt) * 1000),
+            rain: response.data.list[i].rain['3h'],
+            timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+            timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
+          }
+          setWeather(weatherObj)
+        } else if (i == index) {
+          const weatherObj = {
+            humidity: response.data.list[i].main.humidity,
+            temperature: response.data.list[i].main.temp,
+            tempMax: response.data.list[i].main.temp_max,
+            tempMin: response.data.list[i].main.temp_min,
+            tempFeel: response.data.list[i].main.feels_like,
+            pressure: response.data.list[i].main.pressure,
+            mainWeather: response.data.list[i].weather[0].main,
+            description: response.data.list[i].weather[0].description,
+            windSpeed: response.data.list[i].wind.speed,
+            windDegrees: response.data.list[i].wind.deg,
+            visibility: response.data.list[i].visibility,
+            dayUNIX: ((response.data.list[i].dt) * 1000),
+            timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+            timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
+          }
+          setWeather(weatherObj)
         }
-        setWeather(weather => [...weather, weatherObj])
       }
 
       const locationObj = {
@@ -58,14 +79,26 @@ export const SingleThreeHourWeatherData = () => {
     .catch(error => {
       ((error.response.data.cod === 429) ?
       setBlocked(true) :
+      (error.response.data.code === 'ERR_NETWORK') ?
+      setConnectionError(true) :
       setBlocked(false)
-      // response.data.code === 'ERR_NETWORK'
     )
     setLoaded(false);
     })
   }, []);
 
+  var hourConversion = '';
+  var dayConversion = '';
+
   return (
-    <ShowWeather mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={location.name}/>
+    console.log(weather.rain),
+    hourConversion = (
+      Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
+    ),
+    dayConversion = (
+      new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
+    ),
+
+    <ShowWeather rain = {weather.rain} index = {index} dayConversion= {dayConversion} hourConversion = {hourConversion} timeNormalMinutes = {weather.timeNormalMinutes} connectionError = {connectionError} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={location.name}/>  
   )
 }

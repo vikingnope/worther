@@ -211,52 +211,91 @@ export const ShowWeather = (props) => {
   return(
     <div className="text-white">
       <Header choice={'showWeather'}/>
-      <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         {(props.loaded) ?
           ((props.mainWeather) ?
-            <>
-              <section className="mx-auto mb-4">
-                <WeatherIcons mainWeather={props.mainWeather} description={props.description} page={'single'}/>
-              </section>
-              <section className="text-lg">
-                <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
-                <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
-                <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
-                <p>Feels like: {Math.round(props.tempFeel)}°C</p>
-                <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
-                <p>Humidity: {props.humidity}%</p>
-                <p>Wind Speed: {props.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
-                <p>Pressure: {props.pressure} hPa</p>
-                <p>Visibility: {(props.visibility >= 1000) ?
-                  (props.visibility / 1000) + 'km' :
-                  (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
-                </p>
-                <p>Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={props.timeZone}/>}) &emsp; Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
-              </section><form onSubmit={props.handleSubmit}>
-                <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
-              </form>
-              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-              <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute}</p>
-          </> :
-          <>
-            <p className="text-3xl uppercase font-bold">The city you have entered ('{props.city}') has not been found</p>
-            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-          </>
-          ) :
-          (props.loaded === false && props.blocked === true) ?
-          <>
-            <p className="text-4xl uppercase font-bold">The API is currently blocked</p>
-            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-          </> :
-          (props.loaded === false && !props.mainWeather) ?
-            <>
+            ((props.choice === 'normal') ?
+              <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+                <section className="mx-auto mb-4">
+                  <WeatherIcons mainWeather={props.mainWeather} description={props.description} page={'single'}/>
+                </section>
+                <section className="text-lg">
+                  <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
+                  <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
+                  <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
+                  <p>Feels like: {Math.round(props.tempFeel)}°C</p>
+                  <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
+                  <p>Humidity: {props.humidity}%</p>
+                  <p>Wind Speed: {props.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                  <p>Pressure: {props.pressure} hPa</p>
+                  <p>Visibility: {(props.visibility >= 1000) ?
+                    (props.visibility / 1000) + 'km' :
+                    (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
+                  </p>
+                  <p>Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={props.timeZone}/>}) &emsp; Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                </section>
+                <form onSubmit={props.handleSubmit}>
+                  <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
+                </form>
+                <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute}</p>
+              </div> 
+            :
+              <div className="text-center select-none bg-black min-h-screen flex flex-col">
+                <section className='mb-32'>
+                  <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>{props.index}.</p>
+                  <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>{props.dayConversion}</p>
+                  <p className='font-bold text-4xl mr-10 underline inline-block'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                </section>
+                <section className="mx-auto mb-4">
+                  <WeatherIcons mainWeather={props.mainWeather} description={props.description} page={'single'}/>
+                </section>
+                <section className="text-lg">
+                  <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
+                  <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
+                  <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
+                  <p>Feels like: {Math.round(props.tempFeel)}°C</p>
+                  <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
+                  <p>Humidity: {props.humidity}%</p>
+                  <p>Wind Speed: {props.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                  <p>Pressure: {props.pressure} hPa</p>
+                  <p>Visibility: {(props.visibility >= 1000) ?
+                    (props.visibility / 1000) + 'km' :
+                    (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
+                  </p>
+                  {(props.rain) ?
+                    <p>Rain: {props.rain} mm</p> :
+                    <></>
+                  }
+                </section>
+                <a className="text-xl mt-8  underline uppercase font-bold" href="/weather">Go Back</a>
+              </div>
+            )
+          :
+            <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
               <p className="text-3xl uppercase font-bold">The city you have entered ('{props.city}') has not been found</p>
               <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-            </>
-          :     
-          <p className="font-bold text-2xl">Loading...</p>
-        }  
-      </div>
+            </div>
+          ) :
+          (props.loaded === false && props.blocked === true) ?
+          <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+            <p className="text-4xl uppercase font-bold">The API is currently blocked</p>
+            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+          </div> :
+          (props.loaded === false && props.connectionError === true) ?
+          <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+            <p className="text-4xl uppercase font-bold">Please check your internet connection</p>
+            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+          </div> :
+          (props.loaded === false && !props.mainWeather) ?
+            <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+              <p className="text-3xl uppercase font-bold">The city you have entered ('{props.city}') has not been found</p>
+              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+            </div>
+          :
+          <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">    
+            <p className="font-bold text-2xl">Loading...</p>
+          </div>
+        }
       <Footer />
     </div>
   );

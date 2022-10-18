@@ -10,6 +10,7 @@ export const ThreeHourWeatherData = () => {
 
   const [ location, setLocation ] = useState([]);
   const [ weather, setWeather ] = useState([]);
+  const [count, setCount ] = useState(0);
 
   const history = useNavigate();
 
@@ -24,26 +25,29 @@ export const ThreeHourWeatherData = () => {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
     .then(response => {
-      console.log(response.data);
       for (let i = 0; i < response.data.list.length; i++){
-        const weatherObj = {
-          humidity: response.data.list[i].main.humidity,
-          temperature: response.data.list[i].main.temp,
-          tempMax: response.data.list[i].main.temp_max,
-          tempMin: response.data.list[i].main.temp_min,
-          tempFeel: response.data.list[i].main.feels_like,
-          pressure: response.data.list[i].main.pressure,
-          mainWeather: response.data.list[i].weather[0].main,
-          description: response.data.list[i].weather[0].description,
-          windSpeed: response.data.list[i].wind.speed,
-          windDegrees: response.data.list[i].wind.deg,
-          visibility: response.data.list[i].visibility,
-          dayUNIX: ((response.data.list[i].dt) * 1000),
-          timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-          timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
+        if(weather.length < 40) {
+          const weatherObj = {
+            humidity: response.data.list[i].main.humidity,
+            temperature: response.data.list[i].main.temp,
+            tempMax: response.data.list[i].main.temp_max,
+            tempMin: response.data.list[i].main.temp_min,
+            tempFeel: response.data.list[i].main.feels_like,
+            pressure: response.data.list[i].main.pressure,
+            mainWeather: response.data.list[i].weather[0].main,
+            description: response.data.list[i].weather[0].description,
+            windSpeed: response.data.list[i].wind.speed,
+            windDegrees: response.data.list[i].wind.deg,
+            visibility: response.data.list[i].visibility,
+            dayUNIX: ((response.data.list[i].dt) * 1000),
+            timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+            timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
+          }
+          setWeather(weather => [...weather, weatherObj])
         }
-        setWeather(weather => [...weather, weatherObj])
       }
+
+      setCount(count + 1);
 
       const locationObj = {
         name: response.data.city.name,
@@ -69,7 +73,7 @@ export const ThreeHourWeatherData = () => {
           <p className='text-4xl font-bold my-5'>3 Hour Weather Data</p>
           {(weather.length > 0) ?
             (
-              weather.map((weather, index) => ( // .map is used instead of loops
+              weather.slice(40).map((weather, index) => ( // .map is used instead of loops
                 hourConversion = (
                   Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
                 ),
