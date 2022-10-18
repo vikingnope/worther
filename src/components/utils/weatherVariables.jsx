@@ -242,7 +242,7 @@ export const ShowWeather = (props) => {
             :
               <div className="text-center select-none bg-black min-h-screen flex flex-col">
                 <section className='mb-32'>
-                  <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>{props.index + 1}.</p>
+                  <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>{parseInt(props.index) + 1}.</p>
                   <p className='mt-5 mr-10 font-bold text-4xl underline inline-block'>{props.dayConversion}</p>
                   <p className='font-bold text-4xl mr-10 underline inline-block'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
                 </section>
