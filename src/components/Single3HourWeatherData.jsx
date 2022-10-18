@@ -25,7 +25,6 @@ export const SingleThreeHourWeatherData = () => {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
     .then(response => {
-      console.log(response.data);
       for (let i = 0; i < response.data.list.length; i++){
         if (i == index && i < 4) {
           const weatherObj = {
@@ -91,14 +90,12 @@ export const SingleThreeHourWeatherData = () => {
   var dayConversion = '';
 
   return (
-    console.log(weather.rain),
     hourConversion = (
       Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
     ),
     dayConversion = (
       new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
     ),
-
     <ShowWeather rain = {weather.rain} index = {index} dayConversion= {dayConversion} hourConversion = {hourConversion} timeNormalMinutes = {weather.timeNormalMinutes} connectionError = {connectionError} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={location.name}/>  
   )
 }
