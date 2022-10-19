@@ -40,7 +40,7 @@ export default function ShowMap(props) {
         iconRetinaUrl: markerIcon,
         iconAnchor: [5, 55],
         popupAnchor: [10, -44],
-        iconSize: [35, 50],
+        iconSize: [35, 50]
     });
 
     const map = (markerShow, zoomLevel) => {
