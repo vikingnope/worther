@@ -263,7 +263,7 @@ export const ShowWeather = (props) => {
                       (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                     </p>
                   </section>
-                <a className="text-xl mt-8  underline uppercase font-bold" href="/weather">Go Back</a>
+                <a className="text-xl mt-8  underline uppercase font-bold" href={'/3HourWeather/' + props.lat + '/' + props.lon}>Go Back</a>
               </div>
             )
           :
