@@ -81,7 +81,7 @@ export const ThreeHourWeatherData = () => {
                   new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
                 ),
                 <button key={index} onClick={(e) => handleSubmit(e, index)} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white'>
-                  <p className='my-3.5 ml-4 underline mr-7 font-bold text-2xl'>{parseInt(index) + 1}.</p>
+                  <p className='my-auto ml-4 underline mr-7 font-bold text-2xl'>{parseInt(index) + 1}.</p>
                   <section className="ml-10 my-auto mr-20">
                     <WeatherIcons mainWeather={weather.mainWeather} description={weather.description} page={'multiple'}/>
                   </section>
