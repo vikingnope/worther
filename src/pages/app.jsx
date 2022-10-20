@@ -10,6 +10,7 @@ import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
 import { ThreeHourWeatherData } from '../components/3HourWeatherData.jsx';
 import ShowMap from '../components/showMap';
 import { SingleThreeHourWeatherData } from '../components/Single3HourWeatherData';
+import NotFound from './notFound';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
         <Route exact path="/3HourWeather/:lat/:lon" element={<ThreeHourWeatherData />} />
         <Route exact path="/Single3HourWeather/:index/:lat/:lon" element={<SingleThreeHourWeatherData />} />
+        <Route exact path="*" element={<NotFound />} /> // Displays error page, '*' is a wildcard to display when nothing else is found
       </Routes>
     </Router>
   );
