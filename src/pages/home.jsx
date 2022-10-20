@@ -1,5 +1,4 @@
 import logo from '../resources/logo.png';
-import React from 'react';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 
