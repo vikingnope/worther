@@ -5,6 +5,7 @@ import { Dropdown } from './mobileDropdown';
 import { AiFillHome } from 'react-icons/ai';
 import { BsFillMapFill, BsCloudSunFill } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
+import { TbBeach } from 'react-icons/tb';
 
 
 export const Header = ({choice}) => {
@@ -27,11 +28,15 @@ export const Header = ({choice}) => {
                             </div> :
                         (text === 'Map') ?
                             <div className='mt-1.5'>
-                                <BsFillMapFill size='23'/>
+                                <BsFillMapFill size='22'/>
                             </div> :
                         (text === 'Weather') ?
                             <div className='mt-1'>
                                 <BsCloudSunFill />
+                            </div> :
+                        (text === 'Recommendations') ?
+                            <div className='mt-1'>
+                                <TbBeach />
                             </div> :
                         (text === 'About') ?
                             <div className='mt-1'>
@@ -56,16 +61,18 @@ export const Header = ({choice}) => {
                 {(isDesktop) ?
                 (
                 (choice === 'about') ? 
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather')] :
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Recommendations', '/recommendations')] :
                 (choice === 'home') ?
-                    [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                    [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
                 (choice === 'weather') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('About', '/about')] :
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
                 (choice === 'showWeather') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'),, Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
                 (choice === 'map') ?
-                    [Navigations('Home', '/'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                    [Navigations('Home', '/'), Navigations('Weather', '/weather'), , Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
                 (choice === 'showMap') ?
+                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
+                (choice === 'recommendations') ?
                     [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
                 <></>
                 ) : (isMobile) ?
