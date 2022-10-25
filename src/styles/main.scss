@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+  }  
+
+#markerText{
+  color: inherit;
+}
+
+#weatherButtons {
+    background-color: #2f3037;
+    color: #dddddd;
+}
+
+.leaflet-control { z-index: 0 !important}
+.leaflet-pane { z-index: 0 !important}
+.leaflet-top, .leaflet-bottom {z-index: 0 !important}
+  
+
