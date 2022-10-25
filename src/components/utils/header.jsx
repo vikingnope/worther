@@ -61,19 +61,55 @@ export const Header = ({choice}) => {
                 {(isDesktop) ?
                 (
                 (choice === 'about') ? 
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Recommendations', '/recommendations')] :
+                    [
+                        Navigations('Home', '/'), 
+                        Navigations('Map', '/map'), 
+                        Navigations('Weather', '/weather'), 
+                        // Navigations('Recommendations', '/recommendations')
+                    ] :
                 (choice === 'home') ?
-                    [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
+                    [
+                        Navigations('Map', '/map'), 
+                        Navigations('Weather', '/weather'), 
+                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')
+                    ] :
                 (choice === 'weather') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
+                    [
+                        Navigations('Home', '/'), 
+                        Navigations('Map', '/map'), 
+                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')] :
                 (choice === 'showWeather') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'),, Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
+                    [
+                        Navigations('Home', '/'), 
+                        Navigations('Map', '/map'), 
+                        Navigations('Weather', '/weather'),
+                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')
+                    ] :
                 (choice === 'map') ?
-                    [Navigations('Home', '/'), Navigations('Weather', '/weather'), , Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
+                    [
+                        Navigations('Home', '/'), 
+                        Navigations('Weather', '/weather'), 
+                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')
+                    ] :
                 (choice === 'showMap') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('Recommendations', '/recommendations'), Navigations('About', '/about')] :
+                    [
+                        Navigations('Home', '/'), 
+                        Navigations('Map', '/map'), 
+                        Navigations('Weather', '/weather'), 
+                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')
+                    ] :
                 (choice === 'recommendations') ?
-                    [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                    [
+                        Navigations('Home', '/'), 
+                        Navigations('Map', '/map'), 
+                        Navigations('Weather', '/weather'), 
+                        Navigations('About', '/about')
+                    ] :
                 <></>
                 ) : (isMobile) ?
                     <Dropdown choice={choice}/> :
