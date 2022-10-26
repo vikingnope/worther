@@ -9,8 +9,6 @@ export const GetOpenWeatherData = () => {
 
     const history = useNavigate();
 
-    const APIkey = '45245b26fa062bdd9ca60efac28d1c01';
-
     const handleSubmit = (e) => {
       e.preventDefault();
   
@@ -29,10 +27,10 @@ export const GetOpenWeatherData = () => {
 
     useEffect(() => {
       axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
-      (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIkey}&units=metric`) :
+      (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`) :
       (latitude === undefined && longitude === undefined) ?
-      (`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=${APIkey}&units=metric`) :
-      (`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${APIkey}&units=metric`))
+      (`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`) :
+      (`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`))
       .then(response => {
         const weatherObj = {
           humidity: response.data.main.humidity,

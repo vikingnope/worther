@@ -23,7 +23,7 @@ export const ThreeHourWeatherData = () => {
   document.title = "Worther - 3 Hour Weather - " + location.name;
 
   useEffect(() => {
-    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=45245b26fa062bdd9ca60efac28d1c01&units=metric`)    
+    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
       for (let i = 0; i < response.data.list.length; i++){
         if(weather.length < 40) {

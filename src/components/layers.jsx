@@ -2,8 +2,6 @@ import axios from "axios";
 import { TileLayer, useMap } from 'react-leaflet';
 import { useEffect, useState } from "react"
 
-const APIkey = '45245b26fa062bdd9ca60efac28d1c01';
-
 export const CloudLayer = (props) => {
 
   return (
@@ -11,7 +9,7 @@ export const CloudLayer = (props) => {
     {
       (props.show) ?
         <TileLayer
-        url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${APIkey}`}
+        url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
         opacity = {props.opacity} 
@@ -29,7 +27,7 @@ export const WindSpeedLayer = (props) => {
     {
       (props.show) ?
         <TileLayer
-        url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${APIkey}`}
+        url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
         opacity = {props.opacity} 
@@ -47,7 +45,7 @@ export const TemperatureLayer = (props) => {
     {
       (props.show) ?
         <TileLayer
-        url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${APIkey}`}
+        url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
         opacity = {props.opacity} 
