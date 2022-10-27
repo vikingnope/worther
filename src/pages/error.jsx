@@ -2,7 +2,7 @@ import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 
 
-export default function NotFound() {
+export default function Error() {
     return (
         <div className='select-none text-white'>
             <Header choice={'home'}/>
