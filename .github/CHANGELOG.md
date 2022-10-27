@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (Minor)
+
+1. Rename of some files
+1. Update version in about page
+
 ## 1.0.0 (Major)
 
 1. Changed logo

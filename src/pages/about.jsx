@@ -27,7 +27,7 @@ export default function About() {
               Disclaimer: Any location data used is only on client-side and is not sent to any server outside of client's network.
             </p>
             <p className="absolute text-base underline -bottom-12 right-1.5">
-              Version 1.0.0
+              Version 1.0.1
             </p>
           </> :
           <>
@@ -47,7 +47,7 @@ export default function About() {
               Disclaimer: Any location data used is only on client-side and is not sent to any server outside of client's network.
             </p>
             <p className="absolute text-base underline -bottom-12 left-1.5">
-              Version 1.0.0
+              Version 1.0.1
             </p>
           </>
         }
