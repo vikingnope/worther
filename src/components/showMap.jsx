@@ -37,9 +37,10 @@ export default function ShowMap(props) {
 
     const markerIconConst = L.icon({
         iconUrl: markerDot,
+        iconRetinaUrl: markerDot,
         iconAnchor: [13, 14],
         popupAnchor: [-0.5, -13],
-        iconSize: [25, 28]
+        iconSize: [26.5, 28]
     });
 
     const map = (markerShow, zoomLevel) => {
