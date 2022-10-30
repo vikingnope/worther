@@ -9,6 +9,7 @@
 1. Fixed location of popup
 1. Changed marker icon
 1. Arranged syntax of some files
+1. Updated images in map file
 
 ## 1.0.0 (Major)
 
