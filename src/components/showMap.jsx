@@ -60,8 +60,9 @@ export default function ShowMap(props) {
                     (nightLayerChoice) ?
                         <NightRegion
                             fillColor='#000000'
+                            color='#001a2e'
                             refreshInterval={1000}
-                            weight='0'
+                            weight='1'
                         /> :
                         <></>
                     }
