@@ -39,7 +39,7 @@ export default function ShowMap(props) {
         iconUrl: markerDot,
         iconRetinaUrl: markerDot,
         iconAnchor: [13, 14],
-        popupAnchor: [-0.5, -13],
+        popupAnchor: [0, -13],
         iconSize: [26.5, 28]
     });
 
