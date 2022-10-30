@@ -5,6 +5,7 @@
 1. Rename of some files
 1. Update version in about page
 1. Added recommendations page
+1. Fixed marker not staying in correct location
 
 ## 1.0.0 (Major)
 
