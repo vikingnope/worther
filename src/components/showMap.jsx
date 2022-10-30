@@ -8,6 +8,7 @@ import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData } from './layers';
 import { NightRegion } from 'react-leaflet-night-region';
+import markerDot from "../resources/location-dot.png";
 
 export default function ShowMap(props) {   
     const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
@@ -35,7 +36,7 @@ export default function ShowMap(props) {
     }, []);
 
     const markerIconConst = L.icon({
-        iconUrl: require("../resources/location-dot.png"),
+        iconUrl: markerDot,
         iconAnchor: [13, 14],
         popupAnchor: [-0.5, -13],
         iconSize: [25, 28]
