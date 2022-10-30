@@ -3,6 +3,7 @@
 ## 1.0.2 (Minor)
 
 1. Updated version in about
+1. Readded outline to night layer
 ## 1.0.1 (Minor)
 
 1. Rename of some files
