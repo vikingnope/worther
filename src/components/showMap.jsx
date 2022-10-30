@@ -1,5 +1,4 @@
 import { MapContainer, TileLayer, Marker, Popup , ScaleControl} from 'react-leaflet';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L from 'leaflet';
 import {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
@@ -36,11 +35,10 @@ export default function ShowMap(props) {
     }, []);
 
     const markerIconConst = L.icon({
-        iconUrl: markerIcon,
-        iconRetinaUrl: markerIcon,
-        iconAnchor: [17, 46],
-        popupAnchor: [10, -44],
-        iconSize: [35, 50]
+        iconUrl: require("../resources/location-dot-blue.png"),
+        iconAnchor: [13, 14],
+        popupAnchor: [-0.5, -13],
+        iconSize: [25, 28]
     });
 
     const map = (markerShow, zoomLevel) => {

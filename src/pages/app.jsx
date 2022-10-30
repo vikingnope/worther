@@ -28,7 +28,7 @@ export default function App() {
         <Route exact path="/3HourWeather/:lat/:lon" element={<ThreeHourWeatherData />} />
         <Route exact path="/Single3HourWeather/:index/:lat/:lon" element={<SingleThreeHourWeatherData />} />
         <Route exact path="/recommendations" element={<Recommendations />} />
-        <Route exact path="*" element={<Error />} /> // Displays error page, '*' is a wildcard to display when nothing else is found
+        <Route exact path="*" element={<Error />} /> (// Displays error page, '*' is a wildcard to display when nothing else is found)
       </Routes>
     </Router>
   );

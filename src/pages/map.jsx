@@ -14,13 +14,13 @@ export default function Home() {
     const handleSubmitDark = (e) => {
         e.preventDefault();
 
-        history('/map/' + 'dark');
+        history('/map/dark');
     }
 
     const handleSubmitLight = (e) => {
         e.preventDefault();
 
-        history('/map/' + 'light');
+        history('/map/light');
     }
 
     return (

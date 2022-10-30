@@ -6,6 +6,9 @@
 1. Update version in about page
 1. Added recommendations page
 1. Fixed marker not staying in correct location
+1. Fixed location of popup
+1. Changed marker icon
+1. Arranged syntax of some files
 
 ## 1.0.0 (Major)
 
