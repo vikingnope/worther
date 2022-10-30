@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.1 (Minor)
+
+1. Rename of some files
+1. Update version in about page
+1. Added recommendations page
+1. Fixed marker not staying in correct location
+1. Fixed location of popup
+1. Changed marker icon
+1. Arranged syntax of some files
+1. Updated images in map file
+
 ## 1.0.0 (Major)
 
 1. Changed logo
@@ -33,6 +44,7 @@
 1. Added API blocked page
 1. Updated favicon to be rounded
 1. Added option to view each 3 hour weather data
+1. Hid Open Weather API key using environment variables
 
 ## 0.0.1 (Minor)
 

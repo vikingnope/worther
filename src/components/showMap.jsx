@@ -1,5 +1,4 @@
 import { MapContainer, TileLayer, Marker, Popup , ScaleControl} from 'react-leaflet';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import L from 'leaflet';
 import {useEffect, useState} from 'react';
 import 'leaflet/dist/leaflet.css';
@@ -9,6 +8,7 @@ import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData } from './layers';
 import { NightRegion } from 'react-leaflet-night-region';
+import markerDot from "../resources/location-dot.png";
 
 export default function ShowMap(props) {   
     const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
@@ -36,11 +36,11 @@ export default function ShowMap(props) {
     }, []);
 
     const markerIconConst = L.icon({
-        iconUrl: markerIcon,
-        iconRetinaUrl: markerIcon,
-        iconAnchor: [5, 55],
-        popupAnchor: [10, -44],
-        iconSize: [35, 50]
+        iconUrl: markerDot,
+        iconRetinaUrl: markerDot,
+        iconAnchor: [13, 14],
+        popupAnchor: [0, -13],
+        iconSize: [26.5, 28]
     });
 
     const map = (markerShow, zoomLevel) => {
