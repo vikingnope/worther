@@ -35,7 +35,7 @@ export default function ShowMap(props) {
     }, []);
 
     const markerIconConst = L.icon({
-        iconUrl: require("../resources/location-dot-blue.png"),
+        iconUrl: require("../resources/location-dot.png"),
         iconAnchor: [13, 14],
         popupAnchor: [-0.5, -13],
         iconSize: [25, 28]
