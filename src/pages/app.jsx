@@ -22,13 +22,13 @@ export default function App() {
         <Route exact path="/map/:mapType" element={<ShowMap />} />
         <Route exact path="/weather" element={<Weather />} />
         <Route exact path="/advancedWeather" element={<AdvancedWeather />} />
-        <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> (// changes url according to city)
+        <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> (// * Changes url according to city)
         <Route exact path="/weatherCountry/:countryCode/:city" element={<GetOpenWeatherData />} />
         <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
         <Route exact path="/3HourWeather/:lat/:lon" element={<ThreeHourWeatherData />} />
         <Route exact path="/Single3HourWeather/:index/:lat/:lon" element={<SingleThreeHourWeatherData />} />
         <Route exact path="/recommendations" element={<Recommendations />} />
-        <Route exact path="*" element={<Error />} /> (// Displays error page, '*' is a wildcard to display when nothing else is found)
+        <Route exact path="*" element={<Error />} /> (// * Displays error page, '*' is a wildcard to display when nothing else is found)
       </Routes>
     </Router>
   );
