@@ -1,11 +1,16 @@
 import { Header } from "../components/utils/header";
-import { Footer  } from "../components/utils/footer";
+import { Footer } from "../components/utils/footer";
 import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import { usePapaParse } from 'react-papaparse';
+import { useState } from "react";
 import L from 'leaflet';
 import markerDot from "../resources/location-dot.png";
 
-
 export default function Recommendations () {
+  const { readString } = usePapaParse();
+
+  const csvString=`Name,Lat,Lon
+Wied Iz-Zurrieq,35.820148,14.451877`;
 
   const markerIconConst = L.icon({
     iconUrl: markerDot,
@@ -13,6 +18,15 @@ export default function Recommendations () {
     iconAnchor: [13, 14],
     popupAnchor: [0, -13],
     iconSize: [26.5, 28]
+  });
+
+  readString(csvString, {
+    worker: true,
+    complete: (results) => {
+      console.log('---------------------------');
+      console.log(results);
+      console.log('---------------------------');
+    },
   });
 
   return (
