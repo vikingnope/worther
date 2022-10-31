@@ -2,7 +2,6 @@ import { Header } from "../components/utils/header";
 import { Footer } from "../components/utils/footer";
 import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
-import { useState } from "react";
 import L from 'leaflet';
 import markerDot from "../resources/location-dot.png";
 
