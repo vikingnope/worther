@@ -5,7 +5,7 @@ import { ShowWeather } from "./utils/weatherVariables";
 
 export const GetOpenWeatherData = () => {
 
-    const { countryCode, city, latitude, longitude } = useParams(); // Gets city from the url
+    const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url
 
     const history = useNavigate();
 

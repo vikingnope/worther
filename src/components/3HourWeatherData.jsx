@@ -40,7 +40,7 @@ export const ThreeHourWeatherData = () => {
             windDegrees: response.data.list[i].wind.deg,
             visibility: response.data.list[i].visibility,
             dayUNIX: ((response.data.list[i].dt) * 1000),
-            timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+            timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // * padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
             timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
           }
           setWeather(weather => [...weather, weatherObj])

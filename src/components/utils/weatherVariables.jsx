@@ -1,15 +1,6 @@
-import { BsFillSunFill } from 'react-icons/bs'; // sunny
-import { AiFillCloud } from 'react-icons/ai'; // cloudy
-import { BsFillCloudRainHeavyFill } from 'react-icons/bs'; // heavy intensity rain
-import { BsFillCloudDrizzleFill } from 'react-icons/bs' // drizzle
-import { BsFillCloudLightningRainFill } from 'react-icons/bs'; // thunder and rain
-import { BsFillCloudSnowFill } from 'react-icons/bs'; // snow
-import { BsCloudFog } from 'react-icons/bs'; // fog
-import { BsFillCloudRainFill } from 'react-icons/bs'; // light rain
-import { BsFillCloudsFill } from 'react-icons/bs'; // overcast clouds
-import { BsFillCloudSunFill } from 'react-icons/bs'; // scattered clouds
-import { BsFillCloudHazeFill } from 'react-icons/bs'; // haze
-import { TbMist } from 'react-icons/tb'; // mist
+import { BsFillSunFill, BsFillCloudRainHeavyFill, BsFillCloudDrizzleFill, BsFillCloudLightningRainFill, BsFillCloudSnowFill, BsCloudFog, BsFillCloudRainFill, BsFillCloudsFill, BsFillCloudSunFill, BsFillCloudHazeFill } from 'react-icons/bs'; // * Sunny, Heavy Intensity Rain, Drizzle, Thunder and Rain, Snow, Fog, Light Rain, Overcast Clouds, Scattered Clouds, Haze
+import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
+import { TbMist } from 'react-icons/tb'; // * mist
 import { Header } from './header';
 import { Footer } from './footer';
 

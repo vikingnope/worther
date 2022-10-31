@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import lightModeImage from '../resources/lightMode.png';
 import darkModeImage from '../resources/darkMode.png';
 import { isDesktop } from 'react-device-detect';
-import { MdDarkMode } from 'react-icons/md'; // dark mode
-import { MdOutlineDarkMode } from 'react-icons/md'; // light mode
+import { MdDarkMode } from 'react-icons/md'; // * Dark mode
+import { MdOutlineDarkMode } from 'react-icons/md'; // * Light mode
 
 export default function Home() {
 
