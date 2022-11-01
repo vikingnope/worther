@@ -57,7 +57,7 @@ export const Header = ({choice}) => {
                 <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 border-4 hover:scale-90 hover:border-green-600 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
             </section>
 
-            <nav className="absolute right-0 top-3 flex">
+            <nav className="absolute right-0 top-2.5 flex">
                 {(isDesktop) ?
                 (
                 (choice === 'about') ? 
