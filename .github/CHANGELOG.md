@@ -4,7 +4,7 @@
 
 1. Updated version in about
 1. Readded outline to night layer
-1. Added recommendations page
+1. Added beach recommendations page
 1. Added border to header image
 
 ## 1.0.1 (Minor)
