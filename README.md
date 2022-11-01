@@ -8,4 +8,6 @@
 Created as a student project by using OpenStreetMaps API, OpenWeather API & Rainviewer API, all of which are free to use.
 
 Tools used: React, React Leaflet, React Router, React Icons, Axios, Tailwind CSS
+
+This project has helped me understand the basics of React, calling APIs in React, how to use the React Router efficiently and how to organise files in React
     
