@@ -4,12 +4,16 @@ import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
 import markerDot from "../resources/location-dot.png";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
+  const [ data, setData ] = useState([]);
 
   const csvString=`Num,Name,Lat,Lon
-1,Wied Iz-Zurrieq,35.820148,14.451877`;
+1,Wied Iz-Zurrieq,35.820148,14.451877
+2,Ghar Lapsi,35.826847,14.423327`;
 
   const markerIconConst = L.icon({
     iconUrl: markerDot,
@@ -19,14 +23,25 @@ export default function Recommendations () {
     iconSize: [26.5, 28]
   });
 
-  readString(csvString, {
-    worker: true,
-    complete: (results) => {
-      console.log('---------------------------');
-      console.log(results);
-      console.log('---------------------------');
-    },
-  });
+  useEffect(() => {
+    readString(csvString, {
+      worker: true,
+      complete: (results) => {
+        for (let i = 1; i < results.data.length; i++){
+          const resultsData = {
+            num: results.data[i][0],
+            name: results.data[i][1],
+            lat: results.data[i][2],
+            lon: results.data[i][3]
+          }
+          setData(data => [...data, resultsData])
+        }
+        // console.log('---------------------------');
+        // console.log(results);
+        // console.log('---------------------------');
+      },
+    });
+  }, [])
 
   return (
     <div className='select-none text-white'>
@@ -48,8 +63,16 @@ export default function Recommendations () {
               </Marker>
             </MapContainer>
           </section>
-          <section className="mt-8 border-t-2 border-white w-full h-72"> 
-
+          <section className="mt-8 border-t-2 border-white w-full h-72 flex"> 
+          {/* {console.log(data)} */}
+          {
+            data.map((data, index) => (
+              <>
+                <p className="font-bold text-xl inline mr-5 mt-4 ml-2.5">{data.num}</p>
+                <p className="font-bold text-xl inline mt-4">{data.name}</p>
+              </>
+            )
+          )}
           </section>
         </div>
         <Footer />
