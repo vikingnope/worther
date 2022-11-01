@@ -53,11 +53,11 @@ export const Header = ({choice}) => {
 
     return (
         <header className="inset-x-0 top-0 bg-neutral-800 h-min w-full border-y border-zinc-600">
-            <section className="relative mt-2.5">
-                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 hover:scale-90 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
+            <section className="relative mt-2">
+                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 border-4 hover:scale-90 hover:border-green-600 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
             </section>
 
-            <nav className="absolute right-0 top-1.5 flex">
+            <nav className="absolute right-0 top-3 flex">
                 {(isDesktop) ?
                 (
                 (choice === 'about') ? 
