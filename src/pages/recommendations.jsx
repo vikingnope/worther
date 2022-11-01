@@ -69,8 +69,8 @@ export default function Recommendations () {
           {
             data.map((data, index) => (
               <div key={index} className="flex border-b-2">
-                <p className="font-bold text-xl mr-5 mt-4 ml-3 mb-4">{data.num}</p>
-                <p className="font-bold text-xl mt-4 block">{data.name}</p>
+                <span className="font-bold text-xl mr-5 mt-4 ml-3 mb-4">{data.num}</span>
+                <span className="font-bold text-xl mt-4">{data.name}</span>
               </div>
             )
           )}
