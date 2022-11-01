@@ -8,8 +8,8 @@ import markerDot from "../resources/location-dot.png";
 export default function Recommendations () {
   const { readString } = usePapaParse();
 
-  const csvString=`Name,Lat,Lon
-Wied Iz-Zurrieq,35.820148,14.451877`;
+  const csvString=`Num,Name,Lat,Lon
+1,Wied Iz-Zurrieq,35.820148,14.451877`;
 
   const markerIconConst = L.icon({
     iconUrl: markerDot,
@@ -41,7 +41,9 @@ Wied Iz-Zurrieq,35.820148,14.451877`;
               />
               <Marker icon = {markerIconConst} position={[35.820148, 14.451877]}>
                 <Popup>
-                    <p className="font-bold underline" id="markerText">Wied Iz-Zurrieq</p>
+                    <p className="font-bold underline flex justify-center" id="markerText">Wied Iz-Zurrieq</p>
+                    <p className="underline border-b border-black"></p>
+                    <p className="font-bold justify-center flex text-green-500">Available</p>
                 </Popup> 
               </Marker>
             </MapContainer>
