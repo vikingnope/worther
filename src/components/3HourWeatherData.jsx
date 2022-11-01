@@ -73,7 +73,7 @@ export const ThreeHourWeatherData = () => {
           <p className='text-4xl font-bold my-5'>3 Hour Weather Data</p>
           {(weather.length > 0) ?
             (
-              weather.map((weather, index) => ( // .map is used instead of loops
+              weather.map((weather, index) => ( // * .map is used instead of loops
                 hourConversion = (
                   Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
                 ),

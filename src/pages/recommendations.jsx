@@ -36,9 +36,6 @@ export default function Recommendations () {
           }
           setData(data => [...data, resultsData])
         }
-        // console.log('---------------------------');
-        // console.log(results);
-        // console.log('---------------------------');
       },
     });
   }, [])
@@ -54,23 +51,27 @@ export default function Recommendations () {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
               />
-              <Marker icon = {markerIconConst} position={[35.820148, 14.451877]}>
-                <Popup>
-                    <p className="font-bold underline flex justify-center" id="markerText">Wied Iz-Zurrieq</p>
-                    <p className="underline border-b border-black"></p>
-                    <p className="font-bold justify-center flex text-green-500">Available</p>
-                </Popup> 
-              </Marker>
+              {
+                data.map((data, index) => (
+                  <Marker key={index} icon = {markerIconConst} position={[data.lat, data.lon]}>
+                    <Popup>
+                        <p className="font-bold underline flex justify-center" id="markerText">{data.name}</p>
+                        <p className="underline border-b border-black"></p>
+                        <p className="font-bold justify-center flex text-green-500">Available</p>
+                    </Popup> 
+                  </Marker>
+                )
+              )}
+              
             </MapContainer>
           </section>
-          <section className="mt-8 border-t-2 border-white w-full h-72 flex"> 
-          {/* {console.log(data)} */}
+          <section className="mt-8 border-t-2 border-white w-full h-72 block"> 
           {
             data.map((data, index) => (
-              <>
-                <p className="font-bold text-xl inline mr-5 mt-4 ml-2.5">{data.num}</p>
-                <p className="font-bold text-xl inline mt-4">{data.name}</p>
-              </>
+              <div key={index} className="flex border-b-2">
+                <p className="font-bold text-xl mr-5 mt-4 ml-3 mb-4">{data.num}</p>
+                <p className="font-bold text-xl mt-4 block">{data.name}</p>
+              </div>
             )
           )}
           </section>
