@@ -1,6 +1,6 @@
-import { MapContainer, TileLayer, Marker, Popup , ScaleControl} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup , ScaleControl } from 'react-leaflet';
 import L from 'leaflet';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
