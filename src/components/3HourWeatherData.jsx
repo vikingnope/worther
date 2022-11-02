@@ -63,8 +63,8 @@ export const ThreeHourWeatherData = () => {
     })
   }, []);
 
-  var hourConversion = '';
-  var dayConversion = '';
+  let hourConversion = '';
+  let dayConversion = '';
 
   return (
     <div className='select-none text-white'>

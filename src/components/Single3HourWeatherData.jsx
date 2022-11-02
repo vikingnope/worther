@@ -67,8 +67,11 @@ export const SingleThreeHourWeatherData = () => {
     })
   }, []);
 
-  var hourConversion = '';
-  var dayConversion = '';
+  let hourConversion = '';
+  let dayConversion = '';
+  let d = new Date();
+  let currentTime = [];
+
 
   return (
     hourConversion = (
@@ -77,6 +80,11 @@ export const SingleThreeHourWeatherData = () => {
     dayConversion = (
       new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
     ),
-    <ShowWeather index = {index} dayConversion= {dayConversion} hourConversion = {hourConversion} timeNormalMinutes = {weather.timeNormalMinutes} connectionError = {connectionError} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={location.name} lat = {lat} lon = {lon}/>  
+    currentTime = {
+      hour: d.getHours(),
+      minute: d.getMinutes()
+    },
+    console.log(currentTime),
+    <ShowWeather index = {index} currentTime={currentTime} dayConversion= {dayConversion} hourConversion = {hourConversion} timeNormalMinutes = {weather.timeNormalMinutes} connectionError = {connectionError} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={location.name} lat = {lat} lon = {lon}/>  
   )
 }

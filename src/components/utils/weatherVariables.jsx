@@ -5,7 +5,7 @@ import { Header } from './header';
 import { Footer } from './footer';
 
 export const WeatherIcons = (props) => {
-  var size = '';
+  let size = '';
 
   ((props.page === 'single') ?
     size = '200' :
@@ -42,7 +42,7 @@ export const WeatherIcons = (props) => {
 }
 
 export const TimeZoneShow = (props) => {
-    var timeZoneShown = '';
+    let timeZoneShown = '';
     
     ((props.timeZone === 0) ?
       timeZoneShown = 'GMT' :
@@ -109,7 +109,7 @@ export const TimeZoneShow = (props) => {
 }
 
 export const VisibilityDesc = (props) => {
-  var visibilityDescription = '';
+  let visibilityDescription = '';
 
   ((props.visibility < 50) ?
   visibilityDescription = 'Dense Fog' :
@@ -137,7 +137,7 @@ export const VisibilityDesc = (props) => {
 
 
 export const WindDirection = (props) => {
-  var windDirection = '';
+  let windDirection = '';
 
   (((props.windDegrees >= 0 && props.windDegrees <= 11.25) || (props.windDegrees  > 348.75)) ? 
           windDirection = 'N'  : 
@@ -180,7 +180,7 @@ export const WindDirection = (props) => {
 }
 
 export const ShowWeather = (props) => {
-  var times = {};
+  let times = {};
 
   (times = {
     sunriseHour: String((new Date(props.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
@@ -191,11 +191,11 @@ export const ShowWeather = (props) => {
     timeUpdatedMinute: String((new Date(props.timeUpdatedUNIX * 1000)).getMinutes()).padStart(2, '0')
   });
 
-  var sunriseHourConversion = (
+  let sunriseHourConversion = (
     Math.round((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
   );
 
-  var sunsetHourConversion = (
+  let sunsetHourConversion = (
     Math.round((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
   );
 
@@ -228,7 +228,7 @@ export const ShowWeather = (props) => {
                   <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
                 </form>
                 <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
-                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute}</p>
+                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div> 
             :
               <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
@@ -257,6 +257,8 @@ export const ShowWeather = (props) => {
                     </p>
                   </section>
                 <a className="text-xl mt-8  underline uppercase font-bold" href={'/3HourWeather/' + props.lat + '/' + props.lon}>Go Back</a>
+                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {props.currentTime.hour}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+              
               </div>
             )
           :
