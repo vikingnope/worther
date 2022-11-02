@@ -15,7 +15,7 @@ export default function Home() {
                             <img src={lightMode} className="mx-auto mt-5 hover:border-green-300 duration-300 rounded-md max-w-6xl border-2 border-zinc-600 flex mr-10 h-5/6" alt="light map" />
                         </a>
                         <a href='/map/dark'>
-                            <img src={darkMode} className="mx-auto mt-5 hover:border-green-300  duration-300 rounded-md max-w-6xl border-2 border-zinc-600 flex h-5/6" alt="dark map" />
+                            <img src={darkMode} className="mx-auto mt-5 hover:border-green-300 duration-300 rounded-md max-w-6xl border-2 border-zinc-600 flex h-5/6" alt="dark map" />
                         </a>
                     </div>
                     <p className="uppercase font-bold text-7xl">
