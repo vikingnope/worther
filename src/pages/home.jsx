@@ -1,4 +1,3 @@
-import logo from '../resources/logo.png';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import lightMode from '../resources/lightMode.png';
