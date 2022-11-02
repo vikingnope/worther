@@ -13,14 +13,14 @@ export default function Home() {
                     <div className='flex'>
                         <div id="homeImagesDiv">
                             <a href='/map/light'>
-                                <p className='relative top-96 left-3.5 flex font-bold text-black text-2xl'>Light Map</p>
-                                <img src={lightMode} className="mx-auto mt-5 hover:border-red-700 duration-300 rounded border-zinc-600 border-3" alt="light map" />
+                                <p className='relative top-96 left-3.5 flex font-bold text-black opacity-100 text-2xl z-50'>Light Map</p>
+                                <img src={lightMode} className="mx-auto mt-5 hover:border-red-700 duration-300 rounded border-zinc-600 border-3 opacity-80" alt="light map" />
                             </a>
                         </div>
                         <div id="homeImagesDiv">
                             <a href='/map/dark'>
-                                <p className='relative top-96 left-3.5 flex font-bold text-2xl'>Dark Map</p>
-                                <img src={darkMode} className="mx-auto mt-5 hover:border-red-700 duration-300 rounded border-zinc-600 homeImages border-3" alt="dark map" />
+                                <p className='relative top-96 left-3.5 flex font-bold text-2xl z-50'>Dark Map</p>
+                                <img src={darkMode} className="mx-auto mt-5 hover:border-red-700 duration-300 rounded border-zinc-600 border-3 opacity-90" alt="dark map" />
                             </a>
                         </div>
                     </div>
