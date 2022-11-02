@@ -8,15 +8,21 @@ export default function Home() {
     return (
         <div className='select-none text-white'>
             <Header choice={'home'}/>
-            <div className="text-center bg-black flex min-h-screen flex-col items-center justify-center">
+            <div className="text-center bg-black flex min-h-screen flex-col items-center">
                 <main>
                     <div className='flex'>
-                        <a href='/map/light'>
-                            <img src={lightMode} className="mx-auto mt-5 hover:border-green-300 duration-300 rounded-md max-w-6xl border-2 border-zinc-600 flex mr-10 h-5/6" alt="light map" />
-                        </a>
-                        <a href='/map/dark'>
-                            <img src={darkMode} className="mx-auto mt-5 hover:border-green-300 duration-300 rounded-md max-w-6xl border-2 border-zinc-600 flex h-5/6" alt="dark map" />
-                        </a>
+                        <div id="homeImagesDiv">
+                            <a href='/map/light'>
+                                <p className='relative top-96 left-3.5 flex font-bold text-black text-2xl'>Light Map</p>
+                                <img src={lightMode} className="mx-auto mt-5 hover:border-red-700 duration-300 rounded border-zinc-600 border-3" alt="light map" />
+                            </a>
+                        </div>
+                        <div id="homeImagesDiv">
+                            <a href='/map/dark'>
+                                <p className='relative top-96 left-3.5 flex font-bold text-2xl'>Dark Map</p>
+                                <img src={darkMode} className="mx-auto mt-5 hover:border-red-700 duration-300 rounded border-zinc-600 homeImages border-3" alt="dark map" />
+                            </a>
+                        </div>
                     </div>
                     <p className="uppercase font-bold text-7xl">
                         Worther
