@@ -4,12 +4,13 @@ import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
 import markerDot from "../resources/location-dot.png";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
   const [ data, setData ] = useState([]);
+  const [ windDegrees,  setWindDegrees ] = useState();
 
   const csvString=`Num,Name,Lat,Lon
 1,Wied Iz-Zurrieq,35.820148,14.451877
@@ -22,6 +23,13 @@ export default function Recommendations () {
     popupAnchor: [0, -13],
     iconSize: [26.5, 28]
   });
+
+  useEffect(() => {
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)
+    .then(response => {
+      setWindDegrees( response.data.wind.deg);
+    })
+  }, []);  
 
   useEffect(() => {
     readString(csvString, {
