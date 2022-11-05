@@ -79,7 +79,8 @@ export const Header = ({choice}) => {
                         Navigations('Home', '/'), 
                         Navigations('Map', '/map'), 
                         Navigations('Recommendations', '/recommendations'), 
-                        Navigations('About', '/about')] :
+                        Navigations('About', '/about')
+                    ] :
                 (choice === 'showWeather') ?
                     [
                         Navigations('Home', '/'), 
