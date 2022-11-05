@@ -12,6 +12,7 @@ export default function Recommendations () {
   const { readString } = usePapaParse();
   const [ csvFile, setCSVFile ] = useState();
   const [ data, setData ] = useState([]);
+  const [ availability, setAvailability ] = useState([]);
   const [ windDegrees,  setWindDegrees ] = useState();
 
   const markerIconConst = L.icon({
@@ -69,7 +70,7 @@ export default function Recommendations () {
                     <Popup>
                         <p className="font-bold underline flex justify-center" id="markerText">{data.name}</p>
                         <p className="underline border-b border-black"></p>
-                        <p className="font-bold justify-center flex text-green-500">Available</p>
+                        <p className="font-bold justify-center flex text-green-500">Safe</p>
                     </Popup> 
                   </Marker>
                 )
@@ -83,6 +84,11 @@ export default function Recommendations () {
               <div key={index} className="flex border-b-2">
                 <span className="font-bold text-xl mr-5 mt-4 ml-3 mb-4">{data.num}</span>
                 <span className="font-bold text-xl mt-4">{data.name}</span>
+                {
+                  (availability === "Safe") ?
+                    <span className="font-bold text-xl mt-4 text-green-500">{availability}</span> :
+                    <span className="font-bold text-xl mt-4 text-red-600">{availability}</span>
+                }
               </div>
             )
           )}
