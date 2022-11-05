@@ -6,15 +6,13 @@ import L from 'leaflet';
 import markerDot from "../resources/location-dot.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import beaches from "../resources/beaches.csv";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
+  const [ csvFile, setCSVFile ] = useState();
   const [ data, setData ] = useState([]);
   const [ windDegrees,  setWindDegrees ] = useState();
-
-  const csvString=`Num,Name,Lat,Lon
-1,Wied Iz-Zurrieq,35.820148,14.451877
-2,Ghar Lapsi,35.826847,14.423327`;
 
   const markerIconConst = L.icon({
     iconUrl: markerDot,
@@ -29,10 +27,16 @@ export default function Recommendations () {
     .then(response => {
       setWindDegrees( response.data.wind.deg);
     })
-  }, []);  
+  }, []);
 
   useEffect(() => {
-    readString(csvString, {
+    fetch(beaches)
+    .then((r) => r.text())
+    .then(text  => {
+      setCSVFile(text);
+    })
+
+    readString(csvFile, {
       worker: true,
       complete: (results) => {
         for (let i = 1; i < results.data.length; i++){
@@ -46,7 +50,7 @@ export default function Recommendations () {
         }
       },
     });
-  }, [])
+  }, [csvFile])
 
   return (
     <div className='select-none text-white'>
