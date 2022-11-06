@@ -1,6 +1,6 @@
 import { BsFillSunFill, BsFillCloudRainHeavyFill, BsFillCloudDrizzleFill, BsFillCloudLightningRainFill, BsFillCloudSnowFill, BsCloudFog, BsFillCloudRainFill, BsFillCloudsFill, BsFillCloudSunFill, BsFillCloudHazeFill } from 'react-icons/bs'; // * Sunny, Heavy Intensity Rain, Drizzle, Thunder and Rain, Snow, Fog, Light Rain, Overcast Clouds, Scattered Clouds, Haze
 import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
-import { TbMist } from 'react-icons/tb'; // * mist
+import { TbMist, TbWind } from 'react-icons/tb'; // * Mist, Windy
 import { Header } from './header';
 import { Footer } from './footer';
 
@@ -13,6 +13,8 @@ export const WeatherIcons = (props) => {
   );
 
   return (
+    (props.windSpeed >= 8.0) ?
+      <TbWind size={size} color={'white'} /> :
     (props.mainWeather === "Clear") ?
       <BsFillSunFill size={size} color={'white'} /> :
     (props.description === "scattered clouds" || props.description === "broken clouds") ?
@@ -179,6 +181,43 @@ export const WindDirection = (props) => {
   );
 }
 
+export const WindForce = (props) => {
+  let windForce = '';
+
+  ((props.windSpeed < 0.3) ?
+    windForce = 'Force 0' :
+  ((props.windSpeed >= 0.3) && (props.windSpeed < 1.5)) ?
+    windForce = 'Force 1' :
+  ((props.windSpeed >= 1.5) && (props.windSpeed < 3.3)) ?
+    windForce = 'Force 2' :  
+  ((props.windSpeed >= 3.3) && (props.windSpeed < 5.5)) ?
+    windForce = 'Force 3' : 
+  ((props.windSpeed >= 5.5) && (props.windSpeed < 8.0)) ?
+    windForce = 'Force 4' : 
+  ((props.windSpeed >= 8.0) && (props.windSpeed < 10.8)) ?
+    windForce = 'Force 5' : 
+  ((props.windSpeed >= 10.8) && (props.windSpeed < 13.9)) ?
+    windForce = 'Force 6' : 
+  ((props.windSpeed >= 13.9) && (props.windSpeed < 17.2)) ?
+    windForce = 'Force 7' : 
+  ((props.windSpeed >= 17.2) && (props.windSpeed < 20.7)) ?
+    windForce = 'Force 8' : 
+  ((props.windSpeed >= 20.7) && (props.windSpeed < 24.5)) ?
+    windForce = 'Force 9' : 
+  ((props.windSpeed >= 24.5) && (props.windSpeed < 28.4)) ?
+    windForce = 'Force 10' : 
+  ((props.windSpeed >= 28.4) && (props.windSpeed < 32.6)) ?
+    windForce = 'Force 11' :
+  (props.windSpeed >= 32.6) ?
+    windForce = 'Force 12' :
+    <></> 
+  );
+
+  return (
+    windForce
+  );
+}
+
 export const ShowWeather = (props) => {
   let times = {};
 
@@ -207,7 +246,7 @@ export const ShowWeather = (props) => {
             ((props.choice === 'normal') ?
               <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
                 <section className="mx-auto mb-4">
-                  <WeatherIcons mainWeather={props.mainWeather} description={props.description} page={'single'}/>
+                  <WeatherIcons mainWeather={props.mainWeather} windSpeed = {props.windSpeed} description={props.description} page={'single'}/>
                 </section>
                 <section className="text-lg">
                   <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
@@ -216,7 +255,7 @@ export const ShowWeather = (props) => {
                   <p>Feels like: {Math.round(props.tempFeel)}°C</p>
                   <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
                   <p>Humidity: {props.humidity}%</p>
-                  <p>Wind Speed: {props.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                  <p>Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
                   <p>Pressure: {props.pressure} hPa</p>
                   <p>Visibility: {(props.visibility >= 1000) ?
                     (props.visibility / 1000) + 'km' :
@@ -240,7 +279,7 @@ export const ShowWeather = (props) => {
                   <span className='font-bold text-4xl mr-10 underline'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</span>
                 </section>
                   <section className="mb-4 mx-auto">
-                    <WeatherIcons mainWeather={props.mainWeather} description={props.description} page={'single'}/>
+                    <WeatherIcons mainWeather={props.mainWeather} windSpeed={props.windSpeed} description={props.description} page={'single'}/>
                   </section>
                   <section className="text-lg">
                     <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
@@ -249,7 +288,7 @@ export const ShowWeather = (props) => {
                     <p>Feels like: {Math.round(props.tempFeel)}°C</p>
                     <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
                     <p>Humidity: {props.humidity}%</p>
-                    <p>Wind Speed: {props.windSpeed} m/s &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                    <p>Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
                     <p>Pressure: {props.pressure} hPa</p>
                     <p>Visibility: {(props.visibility >= 1000) ?
                       (props.visibility / 1000) + 'km' :

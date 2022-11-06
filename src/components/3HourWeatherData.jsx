@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc } from './utils/weatherVariables';
+import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce } from './utils/weatherVariables';
 
 export const ThreeHourWeatherData = () => {
   const { lat, lon } = useParams();
@@ -83,13 +83,13 @@ export const ThreeHourWeatherData = () => {
                 <button key={index} onClick={(e) => handleSubmit(e, index)} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white'>
                   <span className='my-auto ml-4 underline mr-6 font-bold text-2xl'>{parseInt(index) + 1}.</span>
                   <span className="ml-10 my-auto mr-20">
-                    <WeatherIcons mainWeather={weather.mainWeather} description={weather.description} page={'multiple'}/>
+                    <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} page={'multiple'}/>
                   </span>
                   <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
                   <span className='my-3.5 font-bold text-xl mr-10'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
                   <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
                   <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C &ensp; Max: {Math.round(weather.tempMax)}°C &ensp; Min {Math.round(weather.tempMin)}°C</span>
-                  <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s &ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                  <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
                   <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
                     (weather.visibility / 1000) + 'km' :
                     (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})

@@ -7,6 +7,8 @@
 1. Added beach recommendations page
 1. Added border to header image
 1. Added max zoom for layers
+1. Added wind beaufort scale
+1. Added windy icons
 
 ## 1.0.1 (Minor)
 
