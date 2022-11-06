@@ -1,46 +1,74 @@
 import { BsFillSunFill, BsFillCloudRainHeavyFill, BsFillCloudDrizzleFill, BsFillCloudLightningRainFill, BsFillCloudSnowFill, BsCloudFog, BsFillCloudRainFill, BsFillCloudsFill, BsFillCloudSunFill, BsFillCloudHazeFill } from 'react-icons/bs'; // * Sunny, Heavy Intensity Rain, Drizzle, Thunder and Rain, Snow, Fog, Light Rain, Overcast Clouds, Scattered Clouds, Haze
 import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
-import { TbMist, TbWind } from 'react-icons/tb'; // * Mist, Windy
+import { TbMist, TbWind } from 'react-icons/tb'; // * Mist, Windy Clear
+import { WiCloudyWindy, WiDayCloudyWindy, WiDayRainWind, WiDaySnowWind } from 'react-icons/wi'; // * Windy Cloudy, Windy Scattered/Broken, Windy Light Rain, Windy Snow
 import { Header } from './header';
 import { Footer } from './footer';
 
 export const WeatherIcons = (props) => {
   let size = '';
+  let icon = undefined;
 
   ((props.page === 'single') ?
     size = '200' :
     size = '50'
   );
 
-  return (
-    (props.windSpeed >= 8.0) ?
-      <TbWind size={size} color={'white'} /> :
+  if (props.windSpeed >= 8.0) {
+      (props.mainWeather === "Clear") ?
+        icon = <TbWind size={size} color={'white'} /> :
+      (props.description === "scattered clouds" || props.description === "broken clouds") ?
+        icon = <WiDayCloudyWindy size={size} color={'white'} className="mb-0" /> :
+      (props.description === "few clouds" || props.description === "overcast clouds") ?
+        icon = <WiCloudyWindy size={size} color={'white'} className="mb-0" /> :
+      (props.description === "light rain") ?
+        icon = <WiDayRainWind size={size} color={'white'} /> :
+      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+        icon = <BsFillCloudRainHeavyFill size={size} color={'white'} /> :
+      (props.mainWeather === "Drizzle") ?
+        icon = <BsFillCloudDrizzleFill size={size} color={'white'} /> :
+      (props.description === "thunderstorm with light rain") ?
+        icon = <BsFillCloudLightningRainFill  size={size} color={'white'} className="mb-0" /> :
+      (props.mainWeather === "Fog") ?
+        icon = <BsCloudFog size={size} color={'white'} /> :
+      (props.mainWeather === "Snow") ?
+        icon = <WiDaySnowWind size={size} color={'white'} /> :
+      (props.description === "haze") ?
+        icon = <BsFillCloudHazeFill size={size} color={'white'} /> :
+      (props.description === "mist") ?
+        icon = <TbMist size={size} color={'white'} /> :
+      <> </>
+  } else {
     (props.mainWeather === "Clear") ?
-      <BsFillSunFill size={size} color={'white'} /> :
+      icon = <BsFillSunFill size={size} color={'white'} /> :
     (props.description === "scattered clouds" || props.description === "broken clouds") ?
-      <BsFillCloudSunFill size={size} color={'white'} className="mb-0" /> :
+      icon = <BsFillCloudSunFill size={size} color={'white'} className="mb-0" /> :
     (props.description === "few clouds") ?
-      <AiFillCloud size={size} color={'white'} className="mb-0" /> :
+      icon = <AiFillCloud size={size} color={'white'} className="mb-0" /> :
     (props.description === "overcast clouds") ?
-      <BsFillCloudsFill size={size} color={'white'} className="mb-0" /> :
+      icon = <BsFillCloudsFill size={size} color={'white'} className="mb-0" /> :
     (props.description === "light rain") ?
-      <BsFillCloudRainFill size={size} color={'white'} /> :
+      icon = <BsFillCloudRainFill size={size} color={'white'} /> :
     (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
-      <BsFillCloudRainHeavyFill size={size} color={'white'} /> :
+      icon = <BsFillCloudRainHeavyFill size={size} color={'white'} /> :
     (props.mainWeather === "Drizzle") ?
-      <BsFillCloudDrizzleFill size={size} color={'white'} /> :
+      icon = <BsFillCloudDrizzleFill size={size} color={'white'} /> :
     (props.description === "thunderstorm with light rain") ?
-      <BsFillCloudLightningRainFill  size={size} color={'white'} className="mb-0" /> :
+      icon = <BsFillCloudLightningRainFill  size={size} color={'white'} className="mb-0" /> :
     (props.mainWeather === "Fog") ?
-      <BsCloudFog size={size} color={'white'} /> :
+      icon = <BsCloudFog size={size} color={'white'} /> :
     (props.mainWeather === "Snow") ?
-      <BsFillCloudSnowFill size={size} color={'white'} /> :
+      icon = <BsFillCloudSnowFill size={size} color={'white'} /> :
     (props.description === "haze") ?
-      <BsFillCloudHazeFill size={size} color={'white'} /> :
+      icon = <BsFillCloudHazeFill size={size} color={'white'} /> :
     (props.description === "mist") ?
-      <TbMist size={size} color={'white'} /> :
+      icon = <TbMist size={size} color={'white'} /> :
     <> </>
-  );
+  }
+
+  return (
+    icon
+  ); 
 }
 
 export const TimeZoneShow = (props) => {
