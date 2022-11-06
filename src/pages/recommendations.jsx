@@ -78,7 +78,7 @@ export default function Recommendations () {
               
             </MapContainer>
           </section>
-          <section className="mt-8 border-t-2 border-white w-full h-72 block"> 
+          <section className="mt-8 border-t-2 border-white w-full h-max block"> 
           {
             data.map((data, index) => (
               <div key={index} className="flex border-b-2 duration-500" id="recommendations">
