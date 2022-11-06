@@ -81,13 +81,13 @@ export default function Recommendations () {
           <section className="mt-8 border-t-2 border-white w-full h-72 block"> 
           {
             data.map((data, index) => (
-              <div key={index} className="flex border-b-2">
-                <span className="font-bold text-xl mr-5 mt-4 ml-3 mb-4">{data.num}.</span>
-                <span className="font-bold text-xl mt-4">{data.name}</span>
+              <div key={index} className="flex border-b-2 duration-500" id="recommendations">
+                <span className="font-bold text-xl mr-5 my-4 ml-3">{data.num}.</span>
+                <span className="font-bold text-xl my-4">{data.name}</span>
                 {
                   (availability === "Safe") ?
-                    <span className="font-bold text-xl mt-4 text-green-500">{availability}</span> :
-                    <span className="font-bold text-xl mt-4 text-red-600">{availability}</span>
+                    <span className="font-bold text-xl my-4 text-green-500">{availability}</span> :
+                    <span className="font-bold text-xl my-4 text-red-600">{availability}</span>
                 }
               </div>
             )
