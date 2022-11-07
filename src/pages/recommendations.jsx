@@ -13,7 +13,7 @@ export default function Recommendations () {
   const [ csvFile, setCSVFile ] = useState();
   const [ data, setData ] = useState([]);
   const [ availability, setAvailability ] = useState([]);
-  const [ windDegrees,  setWindDegrees ] = useState();
+  const [ wind, setWind ] = useState([]);
 
   const markerIconConst = L.icon({
     iconUrl: markerDot,
@@ -26,9 +26,25 @@ export default function Recommendations () {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)
     .then(response => {
-      setWindDegrees( response.data.wind.deg);
+      console.log(response.data)
+      const windObj = {
+        windSpeed: response.data.wind.speed,
+        windDegrees: response.data.wind.deg
+      }
+      setWind(windObj);
     })
   }, []);
+
+  useEffect(() => {
+    let availabilityObj = "";
+
+    (wind.windSpeed >= 8) ?
+      availabilityObj = "Not Safe" :
+      availabilityObj = "Safe" 
+
+    setAvailability(availability => [...availability, availabilityObj])
+    
+  }, [wind.windSpeed])
 
   useEffect(() => {
     fetch(beaches)
@@ -83,11 +99,11 @@ export default function Recommendations () {
             data.map((data, index) => (
               <div key={index} className="flex border-b-2 duration-500" id="recommendations">
                 <span className="font-bold text-xl mr-5 my-4 ml-3">{data.num}.</span>
-                <span className="font-bold text-xl my-4">{data.name}</span>
+                <span className="font-bold text-xl my-4 mr-5">{data.name}</span>
                 {
                   (availability === "Safe") ?
-                    <span className="font-bold text-xl my-4 text-green-500">{availability}</span> :
-                    <span className="font-bold text-xl my-4 text-red-600">{availability}</span>
+                    <span className="font-bold text-2xl my-3.5 text-green-500">{availability}</span> :
+                    <span className="font-bold text-2xl my-3.5 text-red-600">{availability}</span>
                 }
               </div>
             )
