@@ -38,12 +38,11 @@ export default function Recommendations () {
   useEffect(() => {
     let availabilityObj = "";
 
-    (wind.windSpeed >= 8) ?
+      (wind.windSpeed >= 8) ?
       availabilityObj = "Not Safe" :
       availabilityObj = "Safe" 
 
-    setAvailability(availability => [...availability, availabilityObj])
-    
+      setAvailability(availabilityObj);
   }, [wind.windSpeed])
 
   useEffect(() => {
@@ -86,7 +85,10 @@ export default function Recommendations () {
                     <Popup>
                         <p className="font-bold underline flex justify-center" id="markerText">{data.name}</p>
                         <p className="underline border-b border-black"></p>
-                        <p className="font-bold justify-center flex text-green-500">Safe</p>
+                        {(availability === "Safe") ?
+                        <span className="font-bold justify-center flex text-green-500">{availability}</span> :
+                        <span className="font-bold justify-center flex text-red-600">{availability}</span>
+                        }
                     </Popup> 
                   </Marker>
                 )
