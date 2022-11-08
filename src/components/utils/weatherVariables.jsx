@@ -281,7 +281,7 @@ export const ShowWeather = (props) => {
                   <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
                   <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
                   <p>Feels like: {Math.round(props.tempFeel)}°C</p>
-                  <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
+                  <p>Min: {Math.round(props.tempMin)}°C &emsp; Max: {Math.round(props.tempMax)}°C</p>
                   <p>Humidity: {props.humidity}%</p>
                   <p>Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
                   <p>Pressure: {props.pressure} hPa</p>
@@ -314,7 +314,7 @@ export const ShowWeather = (props) => {
                     <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
                     <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
                     <p>Feels like: {Math.round(props.tempFeel)}°C</p>
-                    <p>Max: {Math.round(props.tempMax)}°C &emsp; Min: {Math.round(props.tempMin)}°C</p>
+                    <p>Min: {Math.round(props.tempMin)}°C &emsp; Max: {Math.round(props.tempMax)}°C</p>
                     <p>Humidity: {props.humidity}%</p>
                     <p>Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
                     <p>Pressure: {props.pressure} hPa</p>
