@@ -9,6 +9,7 @@
 1. Added max zoom for layers
 1. Added wind beaufort scale
 1. Added windy icons
+1. Changed home page
 1. Small styling updates
 
 ## 1.0.1 (Minor)
