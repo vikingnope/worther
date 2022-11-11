@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiSearchAlt } from 'react-icons/bi';
 import { IoLocationSharp } from 'react-icons/io5';
+import { FaCity } from 'react-icons/fa';
  
 export default function Weather () {
   document.title = "Worther - Weather";
@@ -45,14 +46,17 @@ export default function Weather () {
           Current Weather
         </p>
         <form onSubmit={handleSubmit}>
-          <input
-              className="rounded-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
-              type="text"
-              id="weatherButtons"
-              value={city}
-              onChange={(e) => setCity(e.target.value.toUpperCase())}
-              placeholder="Enter City"
-          />
+          <div className='rounded-md w-56 h-7 text-base font-bold indent-1.5 outline-none mx-auto' id="weatherButtons">
+            <FaCity size='17' className='inline mr-1.5 mb-1'/>
+            <input
+                className="rounded-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
+                type="text"
+                id="weatherButtons"
+                value={city}
+                onChange={(e) => setCity(e.target.value.toUpperCase())}
+                placeholder='Enter City'
+            />
+          </div>
           <button disabled={!city} type="submit" className='rounded-md block w-24 h-7 mx-auto mt-3' id="weatherButtons">
             <BiSearchAlt size='22' className='inline mr-1.5 mb-px'/>
             Search
