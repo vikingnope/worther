@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
+import { BiSearchAlt } from 'react-icons/bi';
  
 export default function AdvancedWeather () {
   document.title = "Worther - Advanced Weather";
@@ -45,11 +46,12 @@ export default function AdvancedWeather () {
               onChange={(e) => setCity(e.target.value.toUpperCase())}
               placeholder="Enter City"
           />
-          <button disabled={!country || !city} type="submit" className='rounded-md block w-16 h-6 mx-auto mt-3' id="weatherButtons">
-              Search
+          <button disabled={!country || !city} type="submit" className='rounded-md block w-24 h-6 mx-auto mt-3' id="weatherButtons">
+            <BiSearchAlt size='22' className='inline mr-1.5 mb-px'/>
+            Search
           </button>
         </form>
-        <a href='/weather' className='mt-3 underline'>Simple Search</a>
+        <a href='/weather' className='mt-3 underline w-max mx-auto'>Simple Search</a>
       </div>
       <Footer />
     </div>

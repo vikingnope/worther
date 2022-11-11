@@ -294,7 +294,7 @@ export const ShowWeather = (props) => {
                 <form onSubmit={props.handleSubmit}>
                   <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
                 </form>
-                <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+                <a className="text-xl mt-8 underline uppercase font-bold w-max mx-auto" href="/weather">Go Back</a>
                 <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div> 
             :
@@ -323,7 +323,7 @@ export const ShowWeather = (props) => {
                       (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                     </p>
                   </section>
-                <a className="text-xl mt-8  underline uppercase font-bold" href={'/3HourWeather/' + props.lat + '/' + props.lon}>Go Back</a>
+                <a className="text-xl mt-8  underline uppercase font-bold w-max mx-auto" href={'/3HourWeather/' + props.lat + '/' + props.lon}>Go Back</a>
                 <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {props.currentTime.hour}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               
               </div>
