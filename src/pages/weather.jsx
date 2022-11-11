@@ -49,7 +49,7 @@ export default function Weather () {
               id="weatherButtons"
               value={city}
               onChange={(e) => setCity(e.target.value.toUpperCase())}
-              placeholder="City"
+              placeholder="Enter City"
           />
           <button disabled={!city} type="submit" className='rounded-md block w-16 h-6 mx-auto mt-3' id="weatherButtons">
               Search

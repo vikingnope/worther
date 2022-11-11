@@ -34,7 +34,8 @@ export default function AdvancedWeather () {
               onChange = {(val) => [setCountry(val), setCountryCode(val.value)]}
               options={options}
               className="rounded-md w-48 h-8 mx-auto mb-5 text-black"
-              placeholder='Country'
+              id="country"
+              placeholder='Choose Country'
           />
           <input
               className="rounded-md w-48 h-8 text-base font-bold indent-1.5 outline-none"
@@ -42,7 +43,7 @@ export default function AdvancedWeather () {
               id="weatherButtons"
               value={city}
               onChange={(e) => setCity(e.target.value.toUpperCase())}
-              placeholder="City"
+              placeholder="Enter City"
           />
           <button disabled={!country || !city} type="submit" className='rounded-md block w-16 h-6 mx-auto mt-3' id="weatherButtons">
               Search
