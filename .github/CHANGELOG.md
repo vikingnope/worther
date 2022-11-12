@@ -12,6 +12,7 @@
 1. Added night icons
 1. Changed home page
 1. Small styling updates
+1. Bug fixes
 
 ## 1.0.1 (Minor)
 
