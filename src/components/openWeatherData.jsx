@@ -46,7 +46,7 @@ export const GetOpenWeatherData = () => {
           sunrise: response.data.sys.sunrise,
           sunset: response.data.sys.sunset,
           visibility: response.data.visibility,
-          rain: response.data.rain['1h'],
+          rain: (response.data.rain !== undefined) ? response.data.rain['1h'] : undefined,
           timeUpdatedUNIX: response.data.dt
         }
         setWeather(weatherObj);
