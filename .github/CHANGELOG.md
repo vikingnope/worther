@@ -10,6 +10,7 @@
 1. Added wind beaufort scale
 1. Added windy icons
 1. Added night icons
+1. Added rain info
 1. Changed home page
 1. Small styling updates
 1. Bug fixes
