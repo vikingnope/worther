@@ -51,7 +51,7 @@ export const WeatherIcons = (props) => {
         icon = <WiNightCloudyWindy size={size} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <WiNightAltRainWind size={size} color={'white'} /> :
-      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+      (props.description === "heavy intensity rain" || props.description === "moderate rain" || props.description === "light intensity shower rain") ?
         icon = <WiNightAltRainWind size={size} color={'white'} /> :
       (props.mainWeather === "Drizzle") ?
         icon = <WiNightAltRainWind size={size} color={'white'} /> :
@@ -71,7 +71,7 @@ export const WeatherIcons = (props) => {
         icon = <WiNightAltCloudy size={size} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <WiNightAltRainMix size={size} color={'white'} /> :
-      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+      (props.description === "heavy intensity rain" || props.description === "moderate rain" || props.description === "light intensity shower rain") ?
         icon = <WiNightAltRain size={size} color={'white'} /> :
       (props.mainWeather === "Drizzle") ?
         icon = <WiNightAltShowers size={size} color={'white'} /> :
@@ -95,7 +95,7 @@ export const WeatherIcons = (props) => {
         icon = <WiCloudyWindy size={size} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <WiDayRainWind size={size} color={'white'} /> :
-      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+      (props.description === "heavy intensity rain" || props.description === "moderate rain" || props.description === "light intensity shower rain") ?
         icon = <BsFillCloudRainHeavyFill size={size} color={'white'} /> :
       (props.mainWeather === "Drizzle") ?
         icon = <BsFillCloudDrizzleFill size={size} color={'white'} /> :
@@ -121,7 +121,7 @@ export const WeatherIcons = (props) => {
         icon = <BsFillCloudsFill size={size} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <BsFillCloudRainFill size={size} color={'white'} /> :
-      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+      (props.description === "heavy intensity rain" || props.description === "moderate rain" || props.description === "light intensity shower rain") ?
         icon = <BsFillCloudRainHeavyFill size={size} color={'white'} /> :
       (props.mainWeather === "Drizzle") ?
         icon = <BsFillCloudDrizzleFill size={size} color={'white'} /> :
