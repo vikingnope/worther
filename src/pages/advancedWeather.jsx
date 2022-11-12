@@ -39,10 +39,10 @@ export default function AdvancedWeather () {
               id="country"
               placeholder='Choose Country'
           />
-          <div className='rounded-md w-56 h-7 text-base font-bold indent-1.5 outline-none mx-auto' id="weatherButtons">
-            <FaCity size='17' className='inline mr-1.5 mb-1'/>
+          <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-none mx-auto rounded-md' id="weatherButtons">
+            <FaCity size='17' className='inline mr-1.5 mb-0.5'/>
             <input
-                className="rounded-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
+                className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
                 type="text"
                 id="weatherButtons"
                 value={city}
@@ -50,7 +50,7 @@ export default function AdvancedWeather () {
                 placeholder='Enter City'
             />
           </div>
-          <button disabled={!country || !city} type="submit" className='rounded-md block w-24 h-6 mx-auto mt-3' id="weatherButtons">
+          <button disabled={!country || !city} type="submit" className='rounded-md border block w-24 h-7 mx-auto mt-3' id="weatherButtons">
             <BiSearchAlt size='22' className='inline mr-1.5 mb-px'/>
             Search
           </button>

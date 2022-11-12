@@ -397,7 +397,7 @@ export const ShowWeather = (props) => {
                 <form onSubmit={props.handleSubmit}>
                   <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
                 </form>
-                <button className="rounded-md h-7 text-xl my-8 font-bold w-24 mx-auto" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
+                <button className="rounded-md h-8 text-xl my-8 font-bold w-24 mx-auto border" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
                 <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>          
             :
@@ -426,9 +426,8 @@ export const ShowWeather = (props) => {
                       (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                     </p>
                   </section>
-                <button className="rounded-md h-7 text-xl my-8 font-bold w-24 mx-auto" id="weatherButtons" onClick={handleSubmitAdvanced}>Go Back</button>
-                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {String(currentHourConversion).padStart(2, '0')}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
-              
+                <button className="rounded-md border h-8 text-xl my-8 font-bold w-24 mx-auto" id="weatherButtons" onClick={handleSubmitAdvanced}>Go Back</button>
+                <p className="flex mx-auto underline">Last Updated: {String(currentHourConversion).padStart(2, '0')}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>
             )
           :
