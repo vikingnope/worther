@@ -1,26 +1,90 @@
 import { BsFillSunFill, BsFillCloudRainHeavyFill, BsFillCloudDrizzleFill, BsFillCloudLightningRainFill, BsFillCloudSnowFill, BsCloudFog, BsFillCloudRainFill, BsFillCloudsFill, BsFillCloudSunFill, BsFillCloudHazeFill } from 'react-icons/bs'; // * Sunny, Heavy Intensity Rain, Drizzle, Thunder and Rain, Snow, Fog, Light Rain, Overcast Clouds, Scattered Clouds, Haze
 import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
 import { TbMist, TbWind } from 'react-icons/tb'; // * Mist, Windy Clear
-import { WiCloudyWindy, WiDayCloudyWindy, WiDayRainWind, WiDaySnowWind } from 'react-icons/wi'; // * Windy Cloudy, Windy Scattered/Broken, Windy Light Rain, Windy Snow
+import { WiCloudyWindy, WiDayCloudyWindy, WiDayRainWind, WiDaySnowWind, WiNightFog, WiNightCloudyWindy, WiNightAltPartlyCloudy, WiNightAltCloudy, WiNightAltRainMix, WiNightAltRain, WiNightAltShowers, WiNightAltStormShowers, WiNightAltSnow, WiNightAltRainWind } from 'react-icons/wi'; // * Windy Cloudy, Windy Scattered/Broken, Windy Light Rain, Windy Snow, Night Fog, Night Windy, Broken/Scattered Clouds Night, Cloudy Night, Light Rain Night, Rain Night, Drizzle Night, Thunderstorm with Rain Night, Night Snow, Windy Rain Night
+import { MdModeNight } from 'react-icons/md'; // * Night Clear
 import { Header } from './header';
 import { Footer } from './footer';
 
 export const WeatherIcons = (props) => {
-  let size = '';
+
+  let size = undefined;
   let icon = undefined;
 
-  ((props.page === 'single') ?
-    size = '200' :
-    size = '50'
+  let d = new Date();
+
+  let currentTime = {
+    hour: d.getHours(),
+    minute: d.getMinutes()
+  };
+
+  let currentHourConversion = (
+    Math.round((((currentTime.hour * 3600) + (d.getTimezoneOffset() * 60)) + props.timeZone) / 3600)
   );
 
-  if (props.windSpeed >= 8.0) {
+  ((props.page === 'single') ?
+    size = 200 :
+    size = 50
+  );
+
+  (
+    ((currentHourConversion <= props.sunriseHour) || (currentHourConversion >= props.sunsetHour)) ?
+    nightIcons() :
+    dayIcons()
+  );
+
+  function nightIcons() {
+    if (props.windSpeed >= 8.0) {
+      (props.mainWeather === "Clear") ?
+        icon = <MdModeNight size={size} color={'white'} /> :
+      (props.description === "scattered clouds" || props.description === "broken clouds") ?
+        icon = <WiNightCloudyWindy size={size} color={'white'} /> :
+      (props.description === "few clouds" || props.description === "overcast clouds") ?
+        icon = <WiNightCloudyWindy size={size} color={'white'} /> :
+      (props.description === "light rain") ?
+        icon = <WiNightAltRainWind size={size} color={'white'} /> :
+      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+        icon = <WiNightAltRainWind size={size} color={'white'} /> :
+      (props.mainWeather === "Drizzle") ?
+        icon = <WiNightAltRainWind size={size} color={'white'} /> :
+      (props.description === "thunderstorm with light rain") ?
+        icon = <WiNightAltStormShowers  size={size} color={'white'} /> :
+      (props.mainWeather === "Fog" || props.description === "haze" || props.description === "mist") ?
+        icon = <WiNightFog size={size} color={'white'} /> :
+      (props.mainWeather === "Snow") ?
+        icon = <WiNightAltSnow size={size} color={'white'} /> :
+      <> </>
+    } else {
+      (props.mainWeather === "Clear") ?
+        icon = <MdModeNight size={size} color={'white'} /> :
+      (props.description === "scattered clouds" || props.description === "broken clouds") ?
+        icon = <WiNightAltPartlyCloudy size={size + 17} color={'white'} /> :
+      (props.description === "few clouds" || props.description === "overcast clouds") ?
+        icon = <WiNightAltCloudy size={size} color={'white'} /> :
+      (props.description === "light rain") ?
+        icon = <WiNightAltRainMix size={size} color={'white'} /> :
+      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+        icon = <WiNightAltRain size={size} color={'white'} /> :
+      (props.mainWeather === "Drizzle") ?
+        icon = <WiNightAltShowers size={size} color={'white'} /> :
+      (props.description === "thunderstorm with light rain") ?
+        icon = <WiNightAltStormShowers size={size} color={'white'} /> :
+      (props.mainWeather === "Fog" || props.description === "haze" || props.description === "mist") ?
+        icon = <WiNightFog size={size} color={'white'} /> :
+      (props.mainWeather === "Snow") ?
+        icon = <WiNightAltSnow size={size} color={'white'} /> :
+      <> </>
+    }
+  }
+
+  function dayIcons() {
+    if (props.windSpeed >= 8.0) {
       (props.mainWeather === "Clear") ?
         icon = <TbWind size={size} color={'white'} /> :
       (props.description === "scattered clouds" || props.description === "broken clouds") ?
-        icon = <WiDayCloudyWindy size={size} color={'white'} className="mb-0" /> :
+        icon = <WiDayCloudyWindy size={size} color={'white'}  /> :
       (props.description === "few clouds" || props.description === "overcast clouds") ?
-        icon = <WiCloudyWindy size={size} color={'white'} className="mb-0" /> :
+        icon = <WiCloudyWindy size={size} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <WiDayRainWind size={size} color={'white'} /> :
       (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
@@ -28,7 +92,7 @@ export const WeatherIcons = (props) => {
       (props.mainWeather === "Drizzle") ?
         icon = <BsFillCloudDrizzleFill size={size} color={'white'} /> :
       (props.description === "thunderstorm with light rain") ?
-        icon = <BsFillCloudLightningRainFill  size={size} color={'white'} className="mb-0" /> :
+        icon = <BsFillCloudLightningRainFill  size={size} color={'white'} /> :
       (props.mainWeather === "Fog") ?
         icon = <BsCloudFog size={size} color={'white'} /> :
       (props.mainWeather === "Snow") ?
@@ -38,32 +102,33 @@ export const WeatherIcons = (props) => {
       (props.description === "mist") ?
         icon = <TbMist size={size} color={'white'} /> :
       <> </>
-  } else {
-    (props.mainWeather === "Clear") ?
-      icon = <BsFillSunFill size={size} color={'white'} /> :
-    (props.description === "scattered clouds" || props.description === "broken clouds") ?
-      icon = <BsFillCloudSunFill size={size} color={'white'} className="mb-0" /> :
-    (props.description === "few clouds") ?
-      icon = <AiFillCloud size={size} color={'white'} className="mb-0" /> :
-    (props.description === "overcast clouds") ?
-      icon = <BsFillCloudsFill size={size} color={'white'} className="mb-0" /> :
-    (props.description === "light rain") ?
-      icon = <BsFillCloudRainFill size={size} color={'white'} /> :
-    (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
-      icon = <BsFillCloudRainHeavyFill size={size} color={'white'} /> :
-    (props.mainWeather === "Drizzle") ?
-      icon = <BsFillCloudDrizzleFill size={size} color={'white'} /> :
-    (props.description === "thunderstorm with light rain") ?
-      icon = <BsFillCloudLightningRainFill  size={size} color={'white'} className="mb-0" /> :
-    (props.mainWeather === "Fog") ?
-      icon = <BsCloudFog size={size} color={'white'} /> :
-    (props.mainWeather === "Snow") ?
-      icon = <BsFillCloudSnowFill size={size} color={'white'} /> :
-    (props.description === "haze") ?
-      icon = <BsFillCloudHazeFill size={size} color={'white'} /> :
-    (props.description === "mist") ?
-      icon = <TbMist size={size} color={'white'} /> :
-    <> </>
+    } else {
+      (props.mainWeather === "Clear") ?
+        icon = <BsFillSunFill size={size} color={'white'} /> :
+      (props.description === "scattered clouds" || props.description === "broken clouds") ?
+        icon = <BsFillCloudSunFill size={size} color={'white'}/> :
+      (props.description === "few clouds") ?
+        icon = <AiFillCloud size={size} color={'white'}/> :
+      (props.description === "overcast clouds") ?
+        icon = <BsFillCloudsFill size={size} color={'white'} /> :
+      (props.description === "light rain") ?
+        icon = <BsFillCloudRainFill size={size} color={'white'} /> :
+      (props.description === "heavy intensity rain" || props.description === "moderate rain") ?
+        icon = <BsFillCloudRainHeavyFill size={size} color={'white'} /> :
+      (props.mainWeather === "Drizzle") ?
+        icon = <BsFillCloudDrizzleFill size={size} color={'white'} /> :
+      (props.description === "thunderstorm with light rain") ?
+        icon = <BsFillCloudLightningRainFill  size={size} color={'white'} /> :
+      (props.mainWeather === "Fog") ?
+        icon = <BsCloudFog size={size} color={'white'} /> :
+      (props.mainWeather === "Snow") ?
+        icon = <BsFillCloudSnowFill size={size} color={'white'} /> :
+      (props.description === "haze") ?
+        icon = <BsFillCloudHazeFill size={size} color={'white'} /> :
+      (props.description === "mist") ?
+        icon = <TbMist size={size} color={'white'} /> :
+      <> </>
+    }
   }
 
   return (
@@ -248,6 +313,7 @@ export const WindForce = (props) => {
 
 export const ShowWeather = (props) => {
   let times = {};
+  let currentHourConversion = undefined;
 
   (times = {
     sunriseHour: String((new Date(props.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
@@ -266,6 +332,16 @@ export const ShowWeather = (props) => {
     Math.round((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
   );
 
+  let timeUpdatedHourConversion = (
+    Math.round((((times.timeUpdatedHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
+  );
+
+  if(props.choice !== 'normal'){
+    currentHourConversion = (
+      Math.round((((props.currentTime.hour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
+    );
+  }
+
   return(
     <div className="text-white">
       <Header choice={'showWeather'}/>
@@ -274,7 +350,7 @@ export const ShowWeather = (props) => {
             ((props.choice === 'normal') ?
               <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
                 <section className="mx-auto mb-4">
-                  <WeatherIcons mainWeather={props.mainWeather} windSpeed = {props.windSpeed} description={props.description} page={'single'}/>
+                  <WeatherIcons mainWeather={props.mainWeather} windSpeed = {props.windSpeed} description={props.description} timeZone={props.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} page={'single'}/>
                 </section>
                 <section className="text-lg">
                   <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
@@ -295,7 +371,7 @@ export const ShowWeather = (props) => {
                   <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
                 </form>
                 <a className="text-xl mt-8 underline uppercase font-bold w-max mx-auto" href="/weather">Go Back</a>
-                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {times.timeUpdatedHour}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div> 
             :
               <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
@@ -324,7 +400,7 @@ export const ShowWeather = (props) => {
                     </p>
                   </section>
                 <a className="text-xl mt-8  underline uppercase font-bold w-max mx-auto" href={'/3HourWeather/' + props.lat + '/' + props.lon}>Go Back</a>
-                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {props.currentTime.hour}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {String(currentHourConversion).padStart(2, '0')}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               
               </div>
             )
