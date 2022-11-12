@@ -5,6 +5,7 @@ import { WiCloudyWindy, WiDayCloudyWindy, WiDayRainWind, WiDaySnowWind, WiNightF
 import { MdModeNight } from 'react-icons/md'; // * Night Clear
 import { Header } from './header';
 import { Footer } from './footer';
+import { useNavigate } from 'react-router-dom';
 
 export const WeatherIcons = (props) => {
 
@@ -342,6 +343,20 @@ export const ShowWeather = (props) => {
     );
   }
 
+  const history = useNavigate();
+
+  const handleSubmitNormal = (e) => {
+    e.preventDefault();
+
+    history('/weather');
+  }
+
+  const handleSubmitAdvanced = (e) => {
+    e.preventDefault();
+
+    history('/3HourWeather/' + props.lat + '/' + props.lon);
+  }
+
   return(
     <div className="text-white">
       <Header choice={'showWeather'}/>
@@ -370,9 +385,9 @@ export const ShowWeather = (props) => {
                 <form onSubmit={props.handleSubmit}>
                   <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
                 </form>
-                <a className="text-xl mt-8 underline uppercase font-bold w-max mx-auto" href="/weather">Go Back</a>
-                <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
-              </div> 
+                <button className="rounded-md h-7 text-xl my-8 font-bold w-24 mx-auto" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
+                <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+              </div>          
             :
               <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
                 <section className='mb-32'>
@@ -399,7 +414,7 @@ export const ShowWeather = (props) => {
                       (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                     </p>
                   </section>
-                <a className="text-xl mt-8  underline uppercase font-bold w-max mx-auto" href={'/3HourWeather/' + props.lat + '/' + props.lon}>Go Back</a>
+                <button className="rounded-md h-7 text-xl my-8 font-bold w-24 mx-auto" id="weatherButtons" onClick={handleSubmitAdvanced}>Go Back</button>
                 <p className="absolute -bottom-12 right-2.5 underline">Last Updated: {String(currentHourConversion).padStart(2, '0')}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               
               </div>
