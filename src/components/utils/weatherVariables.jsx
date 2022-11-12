@@ -388,6 +388,11 @@ export const ShowWeather = (props) => {
                     (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                   </p>
                   <p>Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={props.timeZone}/>}) &emsp; Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                  {
+                  (props.rain !== undefined) ?
+                    <p>Rain in last hour: {props.rain} mm</p> :
+                    <></>
+                  }
                 </section>
                 <form onSubmit={props.handleSubmit}>
                   <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
