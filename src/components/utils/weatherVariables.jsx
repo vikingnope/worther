@@ -11,7 +11,7 @@ export const WeatherIcons = (props) => {
 
   let size = undefined;
   let icon = undefined;
-
+  let currentHourConversion = undefined;
   let d = new Date();
 
   let currentTime = {
@@ -19,9 +19,16 @@ export const WeatherIcons = (props) => {
     minute: d.getMinutes()
   };
 
-  let currentHourConversion = (
-    Math.round((((currentTime.hour * 3600) + (d.getTimezoneOffset() * 60)) + props.timeZone) / 3600)
-  );
+  if(props.page === 'single'){
+    currentHourConversion = (
+      Math.round((((currentTime.hour * 3600) + (d.getTimezoneOffset() * 60)) + props.timeZone) / 3600)
+    );
+  } else {
+    currentHourConversion = (
+      Math.round((((props.hourConversion * 3600) + (d.getTimezoneOffset() * 60)) + props.timeZone) / 3600)
+    );
+  }
+  
 
   ((props.page === 'single') ?
     size = 200 :
@@ -29,7 +36,7 @@ export const WeatherIcons = (props) => {
   );
 
   (
-    ((currentHourConversion <= props.sunriseHour) || (currentHourConversion >= props.sunsetHour)) ?
+    ((currentHourConversion <= props.sunriseHour) || (currentHourConversion  >= (props.sunsetHour + 1))) ?
     nightIcons() :
     dayIcons()
   );
