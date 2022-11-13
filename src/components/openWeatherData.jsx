@@ -12,7 +12,7 @@ export const GetOpenWeatherData = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
   
-      history('/3HourWeather/' + location.lat + '/' + location.lon);
+      history('/3HourForecast/' + location.lat + '/' + location.lon);
     }
 
     const [ location, setLocation ] = useState([]);

@@ -5,7 +5,7 @@ import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce } from './utils/weatherVariables';
 
-export const ThreeHourWeatherData = () => {
+export const ThreeHourForecastData = () => {
   const { lat, lon } = useParams();
 
   const [ location, setLocation ] = useState([]);
@@ -91,7 +91,7 @@ export const ThreeHourWeatherData = () => {
     <div className='select-none text-white'>
       <Header choice='showWeather'/>
       <div className="text-center select-none bg-black text-white min-h-screen flex flex-col">
-          <p className='text-4xl font-bold my-5 underline'>3 Hour Weather Data - {location.name}</p>
+          <p className='text-4xl font-bold my-5 underline'>3 Hour Forecast Data - {location.name}</p>
           {(weather.length > 0) ?
             (
               weather.map((weather, index) => ( // * .map is used instead of loops

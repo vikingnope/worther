@@ -6,7 +6,7 @@ import Map from './map.jsx';
 import Weather from './weather.jsx';
 import AdvancedWeather from './advancedWeather.jsx';
 import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
-import { ThreeHourWeatherData } from '../components/3HourWeatherData.jsx';
+import { ThreeHourForecastData } from '../components/3HourForecastData.jsx';
 import ShowMap from '../components/showMap';
 import { SingleThreeHourWeatherData } from '../components/Single3HourWeatherData';
 import Error from './error';
@@ -25,7 +25,7 @@ export default function App() {
         <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> (// * Changes url according to city)
         <Route exact path="/weatherCountry/:countryCode/:city" element={<GetOpenWeatherData />} />
         <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
-        <Route exact path="/3HourWeather/:lat/:lon" element={<ThreeHourWeatherData />} />
+        <Route exact path="/3HourForecast/:lat/:lon" element={<ThreeHourForecastData />} />
         <Route exact path="/Single3HourWeather/:index/:lat/:lon" element={<SingleThreeHourWeatherData />} />
         <Route exact path="/recommendations" element={<Recommendations />} />
         <Route exact path="*" element={<Error />} /> (// * Displays error page, '*' is a wildcard to display when nothing else is found)

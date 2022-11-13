@@ -46,9 +46,9 @@ export const WeatherIcons = (props) => {
       (props.mainWeather === "Clear") ?
         icon = <MdModeNight size={size} color={'white'} /> :
       (props.description === "scattered clouds" || props.description === "broken clouds") ?
-        icon = <WiNightCloudyWindy size={size} color={'white'} /> :
+        icon = <WiNightCloudyWindy size={size + 20} color={'white'} /> :
       (props.description === "few clouds" || props.description === "overcast clouds") ?
-        icon = <WiNightCloudyWindy size={size} color={'white'} /> :
+        icon = <WiNightCloudyWindy size={size + 17} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <WiNightAltRainWind size={size} color={'white'} /> :
       (props.description === "heavy intensity rain" || props.description === "moderate rain" || props.description === "light intensity shower rain") ?
@@ -66,16 +66,16 @@ export const WeatherIcons = (props) => {
       (props.mainWeather === "Clear") ?
         icon = <MdModeNight size={size} color={'white'} /> :
       (props.description === "scattered clouds" || props.description === "broken clouds") ?
-        icon = <WiNightAltPartlyCloudy size={size + 17} color={'white'} /> :
+        icon = <WiNightAltPartlyCloudy size={size + 30} color={'white'} /> :
       (props.description === "few clouds" || props.description === "overcast clouds") ?
-        icon = <WiNightAltCloudy size={size} color={'white'} /> :
+        icon = <WiNightAltCloudy size={size + 20} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <WiNightAltRainMix size={size} color={'white'} /> :
       (props.description === "heavy intensity rain" || props.description === "moderate rain" || props.description === "light intensity shower rain") ?
         icon = <WiNightAltRain size={size} color={'white'} /> :
       (props.mainWeather === "Drizzle") ?
         icon = <WiNightAltShowers size={size} color={'white'} /> :
-      (props.description === "thunderstorm with light rain") ?
+      (props.description === "thunderstorm with light rain" || props.description === "thunderstorm with rain") ?
         icon = <WiNightAltStormShowers size={size} color={'white'} /> :
       (props.mainWeather === "Fog" || props.description === "haze" || props.description === "mist") ?
         icon = <WiNightFog size={size} color={'white'} /> :
@@ -92,7 +92,7 @@ export const WeatherIcons = (props) => {
       (props.description === "scattered clouds" || props.description === "broken clouds") ?
         icon = <WiDayCloudyWindy size={size} color={'white'}  /> :
       (props.description === "few clouds" || props.description === "overcast clouds") ?
-        icon = <WiCloudyWindy size={size} color={'white'} /> :
+        icon = <WiCloudyWindy size={size + 20} color={'white'} /> :
       (props.description === "light rain") ?
         icon = <WiDayRainWind size={size} color={'white'} /> :
       (props.description === "heavy intensity rain" || props.description === "moderate rain" || props.description === "light intensity shower rain") ?
@@ -361,7 +361,7 @@ export const ShowWeather = (props) => {
   const handleSubmitAdvanced = (e) => {
     e.preventDefault();
 
-    history('/3HourWeather/' + props.lat + '/' + props.lon);
+    history('/3HourForecast/' + props.lat + '/' + props.lon);
   }
 
   return(
@@ -395,14 +395,14 @@ export const ShowWeather = (props) => {
                   }
                 </section>
                 <form onSubmit={props.handleSubmit}>
-                  <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour weather</button>
+                  <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour forecast</button>
                 </form>
                 <button className="rounded-md h-8 text-xl my-8 font-bold w-24 mx-auto border" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
                 <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>          
             :
               <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
-                <section className='mb-32'>
+                <section className='mb-24'>
                   <span className='mt-5 mr-10 font-bold text-4xl underline'>Index: {parseInt(props.index) + 1}</span>
                   <span className='mt-5 mr-10 font-bold text-4xl'>|</span>
                   <span className='mt-5 mr-10 font-bold text-4xl underline'>{props.dayConversion}</span>
