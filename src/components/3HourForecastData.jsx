@@ -17,7 +17,7 @@ export const ThreeHourForecastData = () => {
   const handleSubmit = (e, index) => {
     e.preventDefault();
 
-    history('/Single3HourWeather/' + index + '/' + location.lat + '/' + location.lon);
+    history('/Single3HourForecast/' + index + '/' + location.lat + '/' + location.lon);
   }
 
   document.title = "Worther - 3 Hour Weather - " + location.name;

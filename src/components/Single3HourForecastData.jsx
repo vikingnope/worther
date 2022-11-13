@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShowWeather } from './utils/weatherVariables';
 
-export const SingleThreeHourWeatherData = () => {
+export const SingleThreeHourForecastData = () => {
   const { index, lat, lon } = useParams();
 
   const [ location, setLocation ] = useState([]);
