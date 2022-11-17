@@ -14,9 +14,9 @@ export default function Home() {
                     Getting weather closer to you
                 </p>
                 <ul className='my-16'>
-                    <a href='/map' className='uppercase text-5xl underline block w-max mx-auto font-bold hover:text-cyan-300 hover:text-5xl duration-500 mb-5'>Map</a>
-                    <a href='/weather' className='uppercase text-5xl underline w-max mx-auto block font-bold hover:text-cyan-300 hover:text-5xl duration-500 mb-5'>Weather</a>
-                    <a href='/recommendations' className='uppercase text-5xl block underline w-max mx-auto font-bold hover:text-cyan-300 hover:text-5xl duration-500'>Recommendations</a>
+                    <a href='/map' className='uppercase text-5xl underline block w-max font-bold hover:text-cyan-300 hover:text-5xl duration-500 mb-10'>Map</a>
+                    <a href='/weather' className='uppercase text-5xl underline w-max block font-bold hover:text-cyan-300 hover:text-5xl duration-500 mb-10'>Weather</a>
+                    <a href='/recommendations' className='uppercase text-5xl block underline w-max font-bold hover:text-cyan-300 hover:text-5xl duration-500'>Recommendations</a>
                 </ul>
             </div>
             <Footer />
