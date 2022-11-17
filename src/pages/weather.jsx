@@ -42,7 +42,7 @@ export default function Weather () {
     <div className='select-none text-white'>
       <Header choice={'weather'}/>
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
-        <p className='text-7xl mb-9 font-bold'>
+        <p className='text-7xl mb-16 font-bold text-teal-500 underline'>
           Current Weather
         </p>
         <form onSubmit={handleSubmit}>

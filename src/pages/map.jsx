@@ -26,7 +26,10 @@ export default function Home() {
     return (
         <div className='select-none text-white'>
             <Header choice={'map'}/>
-            <div className="text-center bg-black flex min-h-screen flex-col items-center underline justify-center text-3xl font-bold">
+            <div className="text-center bg-black flex min-h-screen flex-col items-center justify-center text-3xl font-bold">
+                <p className="underline font-bold text-6xl mt-4 mb-10 text-orange-400">
+                    Maps
+                </p>
                 <form onSubmit={handleSubmitLight}>
                     <button className='hover:text-green-300 hover:text-4xl underline duration-150 block' type='submit'>
                         <div className='justify-center flex'>
@@ -52,8 +55,8 @@ export default function Home() {
                         </div>
                         {
                         (isDesktop) ?
-                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-xl border-2 hover:border-green-300 hover:max-w-2xl duration-150 border-zinc-600" alt='dark mode'/> :
-                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-sm border-2 border-zinc-600" alt='dark mode'/>
+                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-xl border-2 hover:border-green-300 hover:max-w-2xl duration-150 border-zinc-600 mb-10" alt='dark mode'/> :
+                            <img src={darkModeImage} draggable='false' className="mx-auto mt-5 rounded-md max-w-sm border-2 border-zinc-600 mb-10" alt='dark mode'/>
                         }
                     </button>
                 </form>

@@ -395,18 +395,18 @@ export const ShowWeather = (props) => {
                   }
                 </section>
                 <form onSubmit={props.handleSubmit}>
-                  <button type='submit' className="text-lg underline mt-5 font-bold">Show 3 hour forecast</button>
+                  <button type='submit' className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show 3 hour forecast</button>
                 </form>
                 <button className="rounded-md h-8 text-xl my-8 font-bold w-24 mx-auto border" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
                 <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>          
             :
               <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
-                <section className='mb-24'>
-                  <span className='mt-5 mr-10 font-bold text-4xl underline'>Index: {parseInt(props.index) + 1}</span>
-                  <span className='mt-5 mr-10 font-bold text-4xl'>|</span>
-                  <span className='mt-5 mr-10 font-bold text-4xl underline'>{props.dayConversion}</span>
-                  <span className='mt-5 mr-10 font-bold text-4xl'>|</span>
+                <section className='mb-24 mt-7'>
+                  <span className='mr-10 font-bold text-4xl underline'>Index: {parseInt(props.index) + 1}</span>
+                  <span className='mr-10 font-bold text-4xl'>|</span>
+                  <span className='mr-10 font-bold text-4xl underline'>{props.dayConversion}</span>
+                  <span className='mr-10 font-bold text-4xl'>|</span>
                   <span className='font-bold text-4xl mr-10 underline'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</span>
                 </section>
                   <section className="mb-4 mx-auto">
@@ -427,29 +427,29 @@ export const ShowWeather = (props) => {
                     </p>
                   </section>
                 <button className="rounded-md border h-8 text-xl my-8 font-bold w-24 mx-auto" id="weatherButtons" onClick={handleSubmitAdvanced}>Go Back</button>
-                <p className="flex mx-auto underline">Last Updated: {String(currentHourConversion).padStart(2, '0')}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                <p className="flex mx-auto underline mb-7">Last Updated: {String(currentHourConversion).padStart(2, '0')}:{props.currentTime.minute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>
             )
           :
             <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
               <p className="text-3xl uppercase font-bold">The city you have entered ('{props.city}') has not been found</p>
-              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+              <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
             </div>
           ) :
           (props.loaded === false && props.blocked === true) ?
           <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
             <p className="text-4xl uppercase font-bold">The API is currently blocked</p>
-            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+            <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
           </div> :
           (props.loaded === false && props.connectionError === true) ?
           <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
             <p className="text-4xl uppercase font-bold">Please check your internet connection</p>
-            <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+            <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
           </div> :
           (props.loaded === false && !props.mainWeather) ?
             <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
               <p className="text-3xl uppercase font-bold">The city you have entered ('{props.city}') has not been found</p>
-              <a className="text-xl mt-8 underline uppercase font-bold" href="/weather">Go Back</a>
+              <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
             </div>
           :
           <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">    
