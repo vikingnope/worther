@@ -7,10 +7,10 @@ export default function Home() {
         <div className='select-none text-white'>
             <Header choice={'home'}/>
             <div className="text-center bg-black flex min-h-screen flex-col items-center">
-                <p className="uppercase font-bold text-7xl mt-20 text-green-500">
+                <p className="uppercase font-bold text-8xl mt-20 text-green-500">
                     Worther
                 </p>
-                <p className="uppercase text-3xl mt-7 mb-10 text-sky-400">
+                <p className="uppercase text-5xl mt-7 mb-10 text-sky-400">
                     Getting weather closer to you
                 </p>
                 <ul className='my-16'>
