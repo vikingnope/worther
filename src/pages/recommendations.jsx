@@ -35,11 +35,22 @@ export default function Recommendations () {
   }, []);
 
   useEffect(() => {
-    if(wind.windSpeed && wind.windSpeed >= 8){
+    if (wind.windSpeed && wind.windSpeed >= 8) {
       for(let i = 0; i < data.length; i++){
         let availabilityObj = "Not Safe";
 
         setAvailability(availability => [...availability, availabilityObj]);
+      }
+    } else if (wind.windSpeed) {
+      let availabilityObj = "";
+
+      for (let i = 0; i < data.length; i++) {
+        if(wind.windDegrees >= data.startLimitDegrees[i] || wind.windDegrees <= data.endLimitDegrees[i]){
+          availabilityObj = "Safe";
+        } else {
+          availabilityObj = "Not Safe";
+        }
+      setAvailability(availability => [...availability, availabilityObj]);
       }
     }
   }, [wind.windSpeed])
@@ -59,7 +70,9 @@ export default function Recommendations () {
             num: results.data[i][0],
             name: results.data[i][1],
             lat: results.data[i][2],
-            lon: results.data[i][3]
+            lon: results.data[i][3],
+            startLimitDegrees: results.data[i][4],
+            endLimitDegrees: results.data[i][5]
           }
           setData(data => [...data, resultsData])
         }
