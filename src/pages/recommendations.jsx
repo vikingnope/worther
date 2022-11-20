@@ -45,7 +45,7 @@ export default function Recommendations () {
       let availabilityObj = "";
 
       for (let i = 0; i < data.length; i++) {
-        if(wind.windDegrees >= data.startLimitDegrees[i] || wind.windDegrees <= data.endLimitDegrees[i]){
+        if(wind.windDegrees <= data.startLimitDegrees[i] || wind.windDegrees >= data.endLimitDegrees[i]){
           availabilityObj = "Safe";
         } else {
           availabilityObj = "Not Safe";
