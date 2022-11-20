@@ -26,7 +26,6 @@ export default function Recommendations () {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)
     .then(response => {
-      console.log(response.data)
       const windObj = {
         windSpeed: response.data.wind.speed,
         windDegrees: response.data.wind.deg
@@ -36,13 +35,13 @@ export default function Recommendations () {
   }, []);
 
   useEffect(() => {
-    let availabilityObj = "";
+    if(wind.windSpeed && wind.windSpeed >= 8){
+      for(let i = 0; i < data.length; i++){
+        let availabilityObj = "Not Safe";
 
-      (wind.windSpeed >= 8) ?
-      availabilityObj = "Not Safe" :
-      availabilityObj = "Safe" 
-
-      setAvailability(availabilityObj);
+        setAvailability(availability => [...availability, availabilityObj]);
+      }
+    }
   }, [wind.windSpeed])
 
   useEffect(() => {
@@ -88,9 +87,9 @@ export default function Recommendations () {
                         <p className="font-bold underline flex justify-center" id="markerText">{data.name}</p>
                         <p className="underline border-b border-black"></p>
                         {
-                        (availability === "Safe") ?
-                          <span className="font-bold justify-center flex text-green-500">{availability}</span> :
-                          <span className="font-bold justify-center flex text-red-600">{availability}</span>
+                        (availability[index] === "Safe") ?
+                          <span className="font-bold justify-center flex text-green-500">{availability[index]}</span> :
+                          <span className="font-bold justify-center flex text-red-600">{availability[index]}</span>
                         }
                     </Popup> 
                   </Marker>
@@ -99,16 +98,16 @@ export default function Recommendations () {
               
             </MapContainer>
           </section>
-          <section className="mt-8 border-t-2 border-white w-full h-max block"> 
+          <section className="mt-8 border-t-2 border-white w-full h-max block">
           {
             data.map((data, index) => (
               <div key={index} className="flex border-b-2 duration-500" id="recommendations">
                 <span className="font-bold text-xl mr-5 my-4 ml-3">{data.num}.</span>
                 <span className="font-bold text-xl my-4 mr-5">{data.name}</span>
                 {
-                  (availability === "Safe") ?
-                    <span className="font-bold text-2xl my-3.5 text-green-500">{availability}</span> :
-                    <span className="font-bold text-2xl my-3.5 text-red-600">{availability}</span>
+                  (availability[index] === "Safe") ?
+                    <span className="font-bold text-2xl my-3.5 text-green-500">{availability[index]}</span> :
+                    <span className="font-bold text-2xl my-3.5 text-red-600">{availability[index]}</span>
                 }
               </div>
             )
