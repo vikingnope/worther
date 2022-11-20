@@ -41,18 +41,19 @@ export default function Recommendations () {
 
         setAvailability(availability => [...availability, availabilityObj]);
       }
-    } else if (wind.windSpeed) {
-      let availabilityObj = "";
+    } 
+    // else if (wind.windSpeed) {
+    //   let availabilityObj = "";
 
-      for (let i = 0; i < data.length; i++) {
-        if(wind.windDegrees <= data.startLimitDegrees[i] || wind.windDegrees >= data.endLimitDegrees[i]){
-          availabilityObj = "Safe";
-        } else {
-          availabilityObj = "Not Safe";
-        }
-      setAvailability(availability => [...availability, availabilityObj]);
-      }
-    }
+    //   for (let i = 0; i < data.length; i++) {
+    //     if(wind.windDegrees <= data.startLimitDegrees[i] || wind.windDegrees >= data.endLimitDegrees[i]){
+    //       availabilityObj = "Safe";
+    //     } else {
+    //       availabilityObj = "Not Safe";
+    //     }
+    //   setAvailability(availability => [...availability, availabilityObj]);
+    //   }
+    // }
   }, [wind.windSpeed])
 
   useEffect(() => {
@@ -67,7 +68,6 @@ export default function Recommendations () {
       complete: (results) => {
         for (let i = 1; i < results.data.length; i++){
           const resultsData = {
-            num: results.data[i][0],
             name: results.data[i][1],
             lat: results.data[i][2],
             lon: results.data[i][3],
@@ -115,7 +115,7 @@ export default function Recommendations () {
           {
             data.map((data, index) => (
               <div key={index} className="flex border-b-2 duration-500" id="recommendations">
-                <span className="font-bold text-xl mr-5 my-4 ml-3">{data.num}.</span>
+                <span className="font-bold text-xl mr-5 my-4 ml-3">{index + 1}.</span>
                 <span className="font-bold text-xl my-4 mr-5">{data.name}</span>
                 {
                   (availability[index] === "Safe") ?
