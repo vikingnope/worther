@@ -27,34 +27,44 @@ export default function Recommendations () {
     axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)
     .then(response => {
       const windObj = {
-        windSpeed: response.data.wind.speed,
-        windDegrees: response.data.wind.deg
+        speed: response.data.wind.speed,
+        degrees: response.data.wind.deg
       }
       setWind(windObj);
     })
   }, []);
 
   useEffect(() => {
-    if (wind.windSpeed && wind.windSpeed >= 8) {
+    if (wind.speed && wind.speed >= 8) {
       for(let i = 0; i < data.length; i++){
         let availabilityObj = "Not Safe";
 
         setAvailability(availability => [...availability, availabilityObj]);
       }
     } 
-    // else if (wind.windSpeed) {
+    // else if (wind.speed >= 0 && data.length > 0) {
     //   let availabilityObj = "";
 
     //   for (let i = 0; i < data.length; i++) {
-    //     if(wind.windDegrees <= data.startLimitDegrees[i] || wind.windDegrees >= data.endLimitDegrees[i]){
+    //     console.log(data.startLimitDegrees[i] + ' ' + wind.degrees);
+    //     if(data.startLimitDegrees[i] >= wind.degrees || data.endLimitDegrees[i] <= wind.degrees){
+    //       console.log('safe');
     //       availabilityObj = "Safe";
     //     } else {
+    //       console.log('not safe');
     //       availabilityObj = "Not Safe";
     //     }
     //   setAvailability(availability => [...availability, availabilityObj]);
     //   }
-    // }
-  }, [wind.windSpeed])
+    // } 
+    else {
+      for(let i = 0; i < data.length; i++){
+        let availabilityObj = " ";
+
+        setAvailability(availability => [...availability, availabilityObj]);
+      }
+    }
+  }, [wind.speed, data])
 
   useEffect(() => {
     fetch(beaches)
@@ -111,7 +121,16 @@ export default function Recommendations () {
               
             </MapContainer>
           </section>
-          <section className="mt-8 border-t-2 border-white w-full h-max block">
+          <section className="mt-8 w-full h-max block">
+            {
+              (wind.speed >= 8) ?
+                <p className="text-3xl font-bold underline border-3 rounded-lg p-3 border-orange-600">
+                  Warning: Since wind is Force 5 or greater it is not recommended to swim!
+                </p> :
+                <></>
+            }
+          </section>
+          <section className="mt-8 border-t-2 border-white w-full h-max block"> 
           {
             data.map((data, index) => (
               <div key={index} className="flex border-b-2 duration-500" id="recommendations">
