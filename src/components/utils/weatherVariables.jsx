@@ -6,6 +6,10 @@ import { MdModeNight } from 'react-icons/md'; // * Night Clear
 import { Header } from './header';
 import { Footer } from './footer';
 import { useNavigate } from 'react-router-dom';
+import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
+import { WiHumidity, WiStrongWind } from 'react-icons/wi'; // * humidity icon, wind icon
+import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunrise icon, sunset icon
+import { GiWindsock } from "react-icons/gi"; // * wind sock icon
 
 export const WeatherIcons = (props) => {
 
@@ -377,17 +381,17 @@ export const ShowWeather = (props) => {
                 <section className="text-lg">
                   <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
                   <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
-                  <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
+                  <p className="mt-1">{<FaTemperatureHigh size={20} className="inline mr-2"/>}Temperature: {Math.round(props.temperature)}°C</p>
                   <p>Feels like: {Math.round(props.tempFeel)}°C</p>
                   <p>Min: {Math.round(props.tempMin)}°C &emsp; Max: {Math.round(props.tempMax)}°C</p>
-                  <p>Humidity: {props.humidity}%</p>
-                  <p>Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                  <p>{<WiHumidity size={27} className="inline"/>}Humidity: {props.humidity}%</p>
+                  <p>{<WiStrongWind size={27} className="inline mr-2" />}Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; {<GiWindsock size={23} className="inline mr-2"/>}Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
                   <p>Pressure: {props.pressure} hPa</p>
                   <p>Visibility: {(props.visibility >= 1000) ?
                     (props.visibility / 1000) + 'km' :
                     (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                   </p>
-                  <p>Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={props.timeZone}/>}) &emsp; Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                  <p>{<BsFillSunriseFill size={25} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={props.timeZone}/>}) &emsp; {<BsFillSunsetFill size={25} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
                   {
                   (props.rain !== undefined) ?
                     <p>Rain in last hour: {props.rain} mm</p> :
@@ -415,11 +419,11 @@ export const ShowWeather = (props) => {
                   <section className="text-lg">
                     <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
                     <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
-                    <p className="mt-1">Temperature: {Math.round(props.temperature)}°C</p>
+                    <p className="mt-1">{<FaTemperatureHigh size={20} className="inline mr-2"/>}Temperature: {Math.round(props.temperature)}°C</p>
                     <p>Feels like: {Math.round(props.tempFeel)}°C</p>
                     <p>Min: {Math.round(props.tempMin)}°C &emsp; Max: {Math.round(props.tempMax)}°C</p>
-                    <p>Humidity: {props.humidity}%</p>
-                    <p>Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                    <p>{<WiHumidity size={27} className="inline"/>}Humidity: {props.humidity}%</p>
+                    <p>{<WiStrongWind size={27} className="inline mr-2" />}Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; {<GiWindsock size={23} className="inline mr-2"/>}Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
                     <p>Pressure: {props.pressure} hPa</p>
                     <p>Visibility: {(props.visibility >= 1000) ?
                       (props.visibility / 1000) + 'km' :
