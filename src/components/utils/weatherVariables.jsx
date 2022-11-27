@@ -7,7 +7,7 @@ import { Header } from './header';
 import { Footer } from './footer';
 import { useNavigate } from 'react-router-dom';
 import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
-import { WiHumidity, WiStrongWind } from 'react-icons/wi'; // * humidity icon, wind icon
+import { WiHumidity, WiStrongWind, WiBarometer } from 'react-icons/wi'; // * humidity icon, wind icon, barometer
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunrise icon, sunset icon
 import { GiWindsock } from "react-icons/gi"; // * wind sock icon
 
@@ -386,7 +386,7 @@ export const ShowWeather = (props) => {
                   <p>Min: {Math.round(props.tempMin)}°C &emsp; Max: {Math.round(props.tempMax)}°C</p>
                   <p>{<WiHumidity size={27} className="inline"/>}Humidity: {props.humidity}%</p>
                   <p>{<WiStrongWind size={27} className="inline mr-2" />}Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; {<GiWindsock size={23} className="inline mr-2"/>}Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
-                  <p>Pressure: {props.pressure} hPa</p>
+                  <p>{<WiBarometer size={30} className="inline mr-1" />}Pressure: {props.pressure} hPa</p>
                   <p>Visibility: {(props.visibility >= 1000) ?
                     (props.visibility / 1000) + 'km' :
                     (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
@@ -424,7 +424,7 @@ export const ShowWeather = (props) => {
                     <p>Min: {Math.round(props.tempMin)}°C &emsp; Max: {Math.round(props.tempMax)}°C</p>
                     <p>{<WiHumidity size={27} className="inline"/>}Humidity: {props.humidity}%</p>
                     <p>{<WiStrongWind size={27} className="inline mr-2" />}Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; {<GiWindsock size={23} className="inline mr-2"/>}Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
-                    <p>Pressure: {props.pressure} hPa</p>
+                    <p>{<WiBarometer size={30} className="inline mr-1" />}Pressure: {props.pressure} hPa</p>
                     <p>Visibility: {(props.visibility >= 1000) ?
                       (props.visibility / 1000) + 'km' :
                       (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
