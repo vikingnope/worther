@@ -95,7 +95,7 @@ export default function Recommendations () {
         <Header choice={'recommendations'}/>
         <div className="text-center bg-black flex min-h-screen flex-col">
           <p className="text-6xl font-bold underline mt-4 mb-8 text-yellow-400">
-            Recommendations
+            Recommendations (ALPHA)
           </p>
           <section className="my-auto justify-center flex">
             <MapContainer center={[35.940125, 14.374125]} zoom={11} minZoom={10} style={{ height: '82vh', width: '110vh', borderRadius: '7px'}} maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} maxBoundsViscosity={1} doubleClickZoom={false}>
