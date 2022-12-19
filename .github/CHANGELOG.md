@@ -14,6 +14,7 @@
 1. Changed 3 hour weather to 3 hour forecast
 1. Changed home page styling
 1. Small styling updates
+1. Updated dependencies for better security
 1. Bug fixes
 
 ## 1.0.1 (Minor)
