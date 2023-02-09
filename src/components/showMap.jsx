@@ -16,7 +16,7 @@ export default function ShowMap(props) {
     const [ cloudLayerChoice, setCloudLayerChoice ] = useState(false);
     const [ temperatureLayerChoice, setTemperatureLayerChoice ] = useState(false);
     const [ windLayerChoice, setWindLayerChoice ] = useState(false);
-    const [ rainLayerChoice, setRainLayerChoice ] = useState(false);
+    const [ rainLayerChoice, setRainLayerChoice ] = useState(true);
     const [ nightLayerChoice, setNightLayerChoice ] = useState(false);
 
     const { mapType } = useParams();

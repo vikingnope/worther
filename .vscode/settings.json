@@ -1,6 +1,6 @@
 {
     "editor.cursorBlinking": "phase",
-    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorSmoothCaretAnimation": "on",
     "window.zoomLevel": 0.1,
     "terminal.integrated.gpuAcceleration": "off",
     "css.lint.unknownAtRules": "ignore",
