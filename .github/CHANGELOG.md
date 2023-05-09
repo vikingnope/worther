@@ -16,6 +16,7 @@
 1. Changed home page styling
 1. Small styling updates
 1. Updated dependencies for better security
+1. Added analytics
 1. Bug fixes
 
 ## 1.0.1 (Minor)
