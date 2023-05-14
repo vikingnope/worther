@@ -44,7 +44,7 @@ export default function About() {
               APIs used: <a href="https://wiki.openstreetmap.org/wiki/API" className="underline font-bold">OpenStreetMap API</a>, <a href="https://www.rainviewer.com/api.html" className="underline font-bold">Rainviewer API</a>, <a href="https://openweathermap.org/api" className="underline font-bold">OpenWeatherMap API</a>
             </p>
             <p className="absolute text-base underline -bottom-2 left-1.5">
-              Disclaimer: Any location data used is only on client-side and is not sent to any server outside of client's network.
+              Disclaimer: Any location data used is only on client-side and is not sent to any server outside of client's network. Only analytics are being sent back to a server.
             </p>
             <p className="absolute text-base underline -bottom-12 left-1.5">
               Version 1.0.2
