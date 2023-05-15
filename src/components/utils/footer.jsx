@@ -8,7 +8,7 @@ export const Footer = () => {
                 <a className="hover:text-green-300" href="https://discord.gg/n6xr3ZWM8J" target="_blank" rel="noreferrer">
                     <FaDiscord size="26"/>
                 </a>
-                <a className="hover:text-green-300" href="https://github.com/vikingnope/worther" target="_blank" rel="noreferrer">
+                <a className="hover:text-green-300" href="https://github.com/vikingnope" target="_blank" rel="noreferrer">
                     <BsGithub size="26"/>
                 </a>
             </nav>
