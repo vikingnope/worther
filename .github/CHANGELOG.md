@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.2 (Minor)
+## 1.0.2 (Major)
 
 1. Added satellite layer
 1. Updated version in about
