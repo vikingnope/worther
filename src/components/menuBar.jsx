@@ -33,7 +33,7 @@ export const MenuBar = (props) => {
                 {
                     (toggle) ?
                     <>
-                        <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold left-10 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold left-1/3 top-16 rounded-md px-1 bg-white text-black'}>
+                        <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold left-1/4 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold left-1/4 top-16 rounded-md px-1 bg-white text-black'}>
                             <AiOutlineClose size='28'/>
                         </button>
                         <div className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min z-40 bg-black border-2 border-white rounded-md cursor-default p-px text-white" : "absolute ml-3 z-40 mt-24 w-max h-min bg-white border-2 border-black rounded-md cursor-default p-px text-black"} id="opacityBar">
