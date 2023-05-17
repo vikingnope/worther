@@ -27,6 +27,7 @@ export const MenuBar = (props) => {
                             className={(props.mode === 'dark') ? "border-b border-white bg-black h-7 text-base font-bold indent-1.5 outline-none w-full" : "border-b border-black bg-white h-7 text-base font-bold indent-1.5 outline-none w-full text-black"}
                             type="text"
                             value={city}
+                            autoFocus="autoFocus"
                             onChange={(e) => setCity(e.target.value.toUpperCase())}
                             placeholder="Enter City"
                         />
