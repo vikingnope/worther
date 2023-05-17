@@ -60,13 +60,27 @@ export const MenuBar = (props) => {
                         </button>
                         <button onClick={e => props.onShowRainChange && props.onShowRainChange(!props.showRain)} className={(props.mode === 'dark') ? ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
                             Rain
-                        </button>
-                        <button onClick={e => props.onShowNightChange && props.onShowNightChange(!props.showNight)} className={(props.mode === 'dark') ? ((!props.showNight)? "block-inline mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "block-inline mr-2 w-14 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showNight)? "block-inline mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-14" : "block-inline mr-2 w-14 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
-                            Night
-                        </button>
-                        <button onClick={e => props.onShowSatelliteChange && props.onShowSatelliteChange(!props.showSatellite)} className={(props.mode === 'dark') ? ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
-                            Satellite
-                        </button>
+                        </button>,
+                        {(isDesktop)?
+                            <>
+                                <button onClick={e => props.onShowNightChange && props.onShowNightChange(!props.showNight)} className={(props.mode === 'dark') ? ((!props.showNight)? "block-inline mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "block-inline mr-2 w-14 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showNight)? "block-inline mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-14" : "block-inline mr-2 w-14 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                                    Night
+                                </button>
+                                <button onClick={e => props.onShowSatelliteChange && props.onShowSatelliteChange(!props.showSatellite)} className={(props.mode === 'dark') ? ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                                    Satellite
+                                </button> 
+                            </>
+                            :
+                            <>
+                                <button onClick={e => props.onShowNightChange && props.onShowNightChange(!props.showNight)} className={(props.mode === 'dark') ? ((!props.showNight)? "block mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "block mr-2 w-14 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showNight)? "block mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-14" : "block mr-2 w-14 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                                    Night
+                                </button>
+                                <button onClick={e => props.onShowSatelliteChange && props.onShowSatelliteChange(!props.showSatellite)} className={(props.mode === 'dark') ? ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                                    Satellite
+                                </button>
+                            </>
+                        }
+                        
                     </div> 
                 </div> 
             </>
@@ -90,7 +104,7 @@ export const MenuBar = (props) => {
 
                 {
                     (toggle) ?
-                        <OptionsMethod mode={props.mode} showSatellite={props.showSatellite} onShowSatelliteChange={props.onShowSatelliteChange} showNight={props.showNight} onShowNightChange={props.onShowNightChange} showRain={props.showRain} onShowRainChange={props.onShowRainChange} showCloud={props.showCloud} onShowCloudChange={props.onShowCloudChange} showWind={props.showWind} onShowWindChange={props.onShowWindChange} showTemperature={props.showTemperature} onShowTemperatureChange={props.onShowTemperatureChange} layerOpacity={props.layerOpacity} onLayerOpacityChange={props.onLayerOpacityChange} setClassName={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold left-1/3 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold left-1/3 top-16 rounded-md px-1 bg-white text-black'}/>                              
+                        <OptionsMethod mode={props.mode} showSatellite={props.showSatellite} onShowSatelliteChange={props.onShowSatelliteChange} showNight={props.showNight} onShowNightChange={props.onShowNightChange} showRain={props.showRain} onShowRainChange={props.onShowRainChange} showCloud={props.showCloud} onShowCloudChange={props.onShowCloudChange} showWind={props.showWind} onShowWindChange={props.onShowWindChange} showTemperature={props.showTemperature} onShowTemperatureChange={props.onShowTemperatureChange} layerOpacity={props.layerOpacity} onLayerOpacityChange={props.onLayerOpacityChange} setClassName={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold left-1/4 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold left-1/4 top-16 rounded-md px-1 bg-white text-black'}/>                              
                     :
                     <></>
                 }
