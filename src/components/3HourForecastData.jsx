@@ -30,8 +30,6 @@ export const ThreeHourForecastData = () => {
           const weatherObj = {
             humidity: response.data.list[i].main.humidity,
             temperature: response.data.list[i].main.temp,
-            tempMax: response.data.list[i].main.temp_max,
-            tempMin: response.data.list[i].main.temp_min,
             tempFeel: response.data.list[i].main.feels_like,
             pressure: response.data.list[i].main.pressure,
             mainWeather: response.data.list[i].weather[0].main,
@@ -109,7 +107,7 @@ export const ThreeHourForecastData = () => {
                   <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
                   <span className='my-3.5 font-bold text-xl mr-10'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
                   <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
-                  <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C &ensp; Min: {Math.round(weather.tempMin)}°C &ensp; Max: {Math.round(weather.tempMax)}°C</span>
+                  <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
                   <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
                   <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
                     (weather.visibility / 1000) + 'km' :
