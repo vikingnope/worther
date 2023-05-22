@@ -12,6 +12,7 @@ import { SingleThreeHourForecastData } from '../components/Single3HourForecastDa
 import Error from './error';
 import Recommendations from './recommendations';
 import { Analytics } from '@vercel/analytics/react';
+import { DailyWeatherData } from '../components/dailyWeather';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route exact path="/weatherCountry/:countryCode/:city" element={<GetOpenWeatherData />} />
           <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
           <Route exact path="/3HourForecast/:lat/:lon" element={<ThreeHourForecastData />} />
+          <Route exact path="/dailyWeather/:lat/:lon" element={<DailyWeatherData />} />
           <Route exact path="/Single3HourForecast/:index/:lat/:lon" element={<SingleThreeHourForecastData />} />
           <Route exact path="/recommendations" element={<Recommendations />} />
           <Route exact path="*" element={<Error />} /> (// * Displays error page, '*' is a wildcard to display when nothing else is found)

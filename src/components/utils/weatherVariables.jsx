@@ -398,8 +398,11 @@ export const ShowWeather = (props) => {
                     <></>
                   }
                 </section>
-                <form onSubmit={props.handleSubmit}>
+                <form onSubmit={props.handleSubmit3Hour}>
                   <button type='submit' className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show 3 hour forecast</button>
+                </form>
+                <form onSubmit={props.handleSubmitDaily}>
+                  <button type='submit' className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show daily forecast</button>
                 </form>
                 <button className="rounded-md h-8 text-xl my-8 font-bold w-24 mx-auto border" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
                 <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
