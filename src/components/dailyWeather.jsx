@@ -98,21 +98,21 @@ export const DailyWeatherData = () => {
                 ),
                 [
                   (hourConversionShowOnly === '11' || hourConversionShowOnly === '12' || hourConversionShowOnly === '13') ?
-                      <div key={index} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white h-fit'>
-                          <span className="ml-5 my-auto mr-7">
-                          <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'multiple'}/>
-                          </span>
-                          <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
-                          <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
-                          <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
-                          <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
-                          <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
-                          (weather.visibility / 1000) + 'km' :
-                          (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                          </span>
-                      </div> 
-                      : 
-                      <></>
+                    <div key={index} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white h-fit'>
+                        <span className="ml-5 my-auto mr-7">
+                        <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'multiple'}/>
+                        </span>
+                        <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
+                        <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
+                        <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
+                        <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                        <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
+                        (weather.visibility / 1000) + 'km' :
+                        (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
+                        </span>
+                    </div> 
+                    : 
+                    <></>
                 ]
               ))
             ) :
