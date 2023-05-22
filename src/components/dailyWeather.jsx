@@ -103,7 +103,6 @@ export const DailyWeatherData = () => {
                           <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'multiple'}/>
                           </span>
                           <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
-                          <span className='my-3.5 font-bold text-xl mr-10'>{hourConversionShowOnly}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
                           <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
                           <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
                           <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
