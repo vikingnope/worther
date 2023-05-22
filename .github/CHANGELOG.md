@@ -12,6 +12,7 @@
 1. Added windy icons
 1. Added night icons
 1. Added rain info
+1. Added daily weather
 1. Changed 3 hour weather to 3 hour forecast
 1. Changed home page styling
 1. Small styling updates
