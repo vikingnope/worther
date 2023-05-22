@@ -14,8 +14,6 @@ export const DailyWeatherData = () => {
 
   document.title = "Worther - Daily Weather - " + location.name;
 
-  let hourConversionCheckData= '';
-
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
@@ -44,14 +42,8 @@ export const DailyWeatherData = () => {
             timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // * padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
             timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
           }
-
-          hourConversionCheckData = (
-            Math.round((((weatherObj.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-          )
-
-          if(hourConversionCheckData === 11){
-            setWeather(weather => [...weather, weatherObj])
-          }
+          
+          setWeather(weather => [...weather, weatherObj])
         }
       }
 
@@ -70,6 +62,7 @@ export const DailyWeatherData = () => {
   let hourConversion = '';
   let dayConversion = '';
   let hoursMinutes = '';
+  let hourConversionShowOnly = '';
 
   (hoursMinutes = {
     sunriseHour: String((new Date(times.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
@@ -86,7 +79,6 @@ export const DailyWeatherData = () => {
     Math.round((((hoursMinutes.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + times.timeZone) / 3600)
   );
 
- 
   return (
     <div className='select-none text-white'>
       <Header choice='showWeather'/>
@@ -101,25 +93,27 @@ export const DailyWeatherData = () => {
                 dayConversion = (
                   new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
                 ),
+                hourConversionShowOnly = (
+                  (hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')
+                ),
                 [
-                    (hourConversion === 11) ?
-                        <div key={index} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white h-fit'>
-                            <span className='my-auto ml-4 mr-6 font-bold text-2xl'>{parseInt(index) + 1}.</span>
-                            <span className="ml-5 my-auto mr-7">
-                            <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'multiple'}/>
-                            </span>
-                            <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
-                            <span className='my-3.5 font-bold text-xl mr-10'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
-                            <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
-                            <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
-                            <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
-                            <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
-                            (weather.visibility / 1000) + 'km' :
-                            (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                            </span>
-                        </div> 
-                        : <></>
-                    
+                  (hourConversionShowOnly === '11' || hourConversionShowOnly === '12' || hourConversionShowOnly === '13') ?
+                      <div key={index} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white h-fit'>
+                          <span className="ml-5 my-auto mr-7">
+                          <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'multiple'}/>
+                          </span>
+                          <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
+                          <span className='my-3.5 font-bold text-xl mr-10'>{hourConversionShowOnly}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
+                          <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
+                          <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
+                          <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                          <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
+                          (weather.visibility / 1000) + 'km' :
+                          (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
+                          </span>
+                      </div> 
+                      : 
+                      <></>
                 ]
               ))
             ) :
