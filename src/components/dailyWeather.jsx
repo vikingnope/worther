@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce } from './utils/weatherVariables';
+import { WeatherIcons, WindDirection, VisibilityDesc, WindForce } from './utils/weatherVariables';
 
 export const DailyWeatherData = () => {
   const { lat, lon } = useParams();
