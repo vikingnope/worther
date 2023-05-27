@@ -36,7 +36,11 @@ export const WeatherIcons = (props) => {
 
   ((props.page === 'single') ?
     size = 200 :
-    size = 50
+    (
+      (props.page === 'multiple') ?
+        size = 50 :
+        size = 85
+    )
   );
 
   (

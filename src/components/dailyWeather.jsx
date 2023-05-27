@@ -3,7 +3,8 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { WeatherIcons, WindDirection, VisibilityDesc, WindForce } from './utils/weatherVariables';
+import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow } from './utils/weatherVariables';
+import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 
 export const DailyWeatherData = () => {
   const { lat, lon } = useParams();
@@ -84,40 +85,45 @@ export const DailyWeatherData = () => {
       <Header choice='showWeather'/>
       <div className="text-center select-none bg-black text-white min-h-screen flex flex-col">
           <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data - {location.name}</p>
-          {(weather.length > 0) ?
-            (
-              weather.map((weather, index) => ( // * .map is used instead of loops
-                hourConversion = (
-                  Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-                ),
-                dayConversion = (
-                  new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
-                ),
-                hourConversionShowOnly = (
-                  (hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')
-                ),
-                [
-                  (hourConversionShowOnly === '11' || hourConversionShowOnly === '12' || hourConversionShowOnly === '13') ?
-                    <div key={index} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white h-fit'>
-                        <span className="ml-5 my-auto mr-7">
-                        <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'multiple'}/>
-                        </span>
-                        <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
-                        <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
-                        <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
-                        <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
-                        <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
-                        (weather.visibility / 1000) + 'km' :
-                        (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                        </span>
-                    </div> 
-                    : 
-                    <></>
-                ]
-              ))
-            ) :
-            <></>
-          }
+          <div className="flex flex-row my-auto">
+            {(weather.length > 0) ?
+              (
+                weather.map((weather, index) => ( // * .map is used instead of loops
+                  hourConversion = (
+                    Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
+                  ),
+                  dayConversion = (
+                    new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
+                  ),
+                  hourConversionShowOnly = (
+                    (hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')
+                  ),
+                  [
+                    (hourConversionShowOnly === '11' || hourConversionShowOnly === '12' || hourConversionShowOnly === '13') ?
+                      <div key={index} className='flex flex-col duration-300 hover:bg-cyan-800 border-2 text-white h-fit w-80 mx-auto'>
+                          <p className="mx-auto mt-3">
+                            <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
+                          </p>
+                          <p className='mx-auto mt-10 font-bold text-2xl block'>{dayConversion}</p>
+                          <p className='mx-auto mt-10 font-bold text-2xl block'>{weather.description.toUpperCase()}</p>
+                          <p className='mx-auto mt-10 text-xl block'>Temp: {Math.round(weather.temperature)}°C</p>
+                          <p className='mx-auto mt-10 text-xl block'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
+                          <p className='mx-auto mt-10 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
+                          <p className='mx-auto mt-10 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
+                          (weather.visibility / 1000) + 'km' :
+                          (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
+                          </p>
+                          <p className='mx-auto mt-10 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{hoursMinutes.sunriseMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                          <p className='mx-auto my-10 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{hoursMinutes.sunsetMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                      </div> 
+                      : 
+                      <></>
+                  ]
+                ))
+              ) :
+              <></>
+            }
+          </div>
       </div>
       <Footer />
     </div>
