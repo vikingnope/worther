@@ -104,7 +104,7 @@ export const DailyWeatherData = () => {
                           <p className="mx-auto mt-3">
                             <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
                           </p>
-                          <p className='mx-auto mt-10 font-bold text-2xl block'>{dayConversion}</p>
+                          <p className='mx-auto mt-10 font-bold text-2xl block underline'>{dayConversion}</p>
                           <p className='mx-auto mt-10 font-bold text-2xl block'>{weather.description.toUpperCase()}</p>
                           <p className='mx-auto mt-10 text-xl block'>Temp: {Math.round(weather.temperature)}°C</p>
                           <p className='mx-auto mt-10 text-xl block'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
