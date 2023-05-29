@@ -122,7 +122,7 @@ export default function Recommendations () {
               
             </MapContainer>
           </section>
-          <section className="mt-8 w-full h-max block">
+          <section className="mt-8 w-3/4 h-max block mx-auto">
             {
               (wind.speed >= 8) ?
                 <p className="text-3xl font-bold underline border-3 rounded-lg p-3 border-orange-600">
