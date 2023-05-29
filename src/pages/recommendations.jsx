@@ -12,7 +12,7 @@ export default function Recommendations () {
   const { readString } = usePapaParse();
   const [ csvFile, setCSVFile ] = useState();
   const [ data, setData ] = useState([]);
-  const [ availability, setAvailability ] = useState([]);
+  const [ suitability, setSuitability ] = useState([]);
   const [ wind, setWind ] = useState([]);
 
   const markerIconConst = L.icon({
@@ -35,33 +35,35 @@ export default function Recommendations () {
   }, []);
 
   useEffect(() => {
+    let suitableObj = " ";
+
     if (wind.speed && wind.speed >= 8) {
       for(let i = 0; i < data.length; i++){
-        let availabilityObj = "Not Safe";
+        suitableObj = "Unsuitable";
 
-        setAvailability(availability => [...availability, availabilityObj]);
+        setSuitability(suitability => [...suitability, suitableObj]);
       }
     } 
     // else if (wind.speed >= 0 && data.length > 0) {
-    //   let availabilityObj = "";
+    //   suitableObj = "";
 
     //   for (let i = 0; i < data.length; i++) {
     //     console.log(data.startLimitDegrees[i] + ' ' + wind.degrees);
     //     if(data.startLimitDegrees[i] >= wind.degrees || data.endLimitDegrees[i] <= wind.degrees){
-    //       console.log('safe');
-    //       availabilityObj = "Safe";
+    //       console.log('Recommended');
+    //       suitableObj = "Recommended";
     //     } else {
-    //       console.log('not safe');
-    //       availabilityObj = "Not Safe";
+    //       console.log('Unsuitable');
+    //       suitableObj = "Unsuitable";
     //     }
-    //   setAvailability(availability => [...availability, availabilityObj]);
+    //   setSuitability(suitability => [...suitability, suitableObj]);
     //   }
     // } 
     else {
       for(let i = 0; i < data.length; i++){
-        let availabilityObj = " ";
+        suitableObj = " ";
 
-        setAvailability(availability => [...availability, availabilityObj]);
+        setSuitability(suitability => [...suitability, suitableObj]);
       }
     }
   }, [wind.speed, data])
@@ -108,11 +110,10 @@ export default function Recommendations () {
                   <Marker key={index} icon = {markerIconConst} position={[data.lat, data.lon]}>
                     <Popup>
                         <p className="font-bold underline flex justify-center" id="markerText">{data.name}</p>
-                        <p className="underline border-b border-black"></p>
                         {
-                        (availability[index] === "Safe") ?
-                          <span className="font-bold justify-center flex text-green-500">{availability[index]}</span> :
-                          <span className="font-bold justify-center flex text-red-600">{availability[index]}</span>
+                        (suitability[index] === "Recommended") ?
+                          <span className="font-bold justify-center flex text-green-500">{suitability[index]}</span> :
+                          <span className="font-bold justify-center flex text-red-600">{suitability[index]}</span>
                         }
                     </Popup> 
                   </Marker>
@@ -130,16 +131,16 @@ export default function Recommendations () {
                 <></>
             }
           </section>
-          <section className="mt-8 border-t-2 border-white w-full h-max block"> 
+          <section className="mt-8 border-t-2 border-white w-full h-max flex flex-col"> 
           {
             data.map((data, index) => (
               <div key={index} className="flex border-b-2 duration-500" id="recommendations">
                 <span className="font-bold text-xl mr-5 my-4 ml-3">{index + 1}.</span>
                 <span className="font-bold text-xl my-4 mr-5">{data.name}</span>
                 {
-                  (availability[index] === "Safe") ?
-                    <span className="font-bold text-2xl my-3.5 text-green-500">{availability[index]}</span> :
-                    <span className="font-bold text-2xl my-3.5 text-red-600">{availability[index]}</span>
+                  (suitability[index] === "Recommended") ?
+                    <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
+                    <span className="font-bold text-2xl my-3.5 text-red-600">{suitability[index]}</span>
                 }
               </div>
             )
