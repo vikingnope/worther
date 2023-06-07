@@ -44,6 +44,7 @@ export default function Recommendations () {
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     } else if (wind.speed >= 0 && data.length > 0) {
+      // * needs to be rewritten
       suitableObj = "";
 
       let oppositeWindDeg = "";
