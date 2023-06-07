@@ -43,30 +43,46 @@ export default function Recommendations () {
 
         setSuitability(suitability => [...suitability, suitableObj]);
       }
-    } 
-    // else if (wind.speed >= 0 && data.length > 0) {
-    //   suitableObj = "";
+    } else if (wind.speed >= 0 && data.length > 0) {
+      suitableObj = "";
 
-    //   for (let i = 0; i < data.length; i++) {
-    //     console.log(data.startLimitDegrees[i] + ' ' + wind.degrees);
-    //     if(data.startLimitDegrees[i] >= wind.degrees || data.endLimitDegrees[i] <= wind.degrees){
-    //       console.log('Recommended');
-    //       suitableObj = "Recommended";
-    //     } else {
-    //       console.log('Unsuitable');
-    //       suitableObj = "Unsuitable";
-    //     }
-    //   setSuitability(suitability => [...suitability, suitableObj]);
-    //   }
-    // } 
-    else {
+      let oppositeWindDeg = "";
+      let oppositeWindDegHigher = "";
+      let oppositeWindDegLower = "";
+
+      if(wind.degrees <= 179){
+        oppositeWindDeg = wind.degrees + 180;
+      } else {
+        oppositeWindDeg = wind.degrees - 180;
+      }
+
+      if(oppositeWindDeg > 330){
+        oppositeWindDegHigher = (oppositeWindDeg + 30) - 360;
+        oppositeWindDegLower = oppositeWindDeg - 30;
+      } else if (oppositeWindDeg < 30) {
+        oppositeWindDegHigher = oppositeWindDeg + 30;
+        oppositeWindDegLower = (oppositeWindDeg - 30) + 360;
+      } else {
+        oppositeWindDegHigher = oppositeWindDeg + 30;
+        oppositeWindDegLower = oppositeWindDeg - 30;
+      }
+
+      for (let i = 0; i < data.length; i++) {
+        if((data[i].degreesOut <= oppositeWindDegHigher) && (data[i].degreesOut >= oppositeWindDegLower)){
+          suitableObj = "Recommended";
+        } else {
+          suitableObj = "Unsuitable";
+        }
+        setSuitability(suitability => [...suitability, suitableObj]);
+      }
+    } else {
       for(let i = 0; i < data.length; i++){
         suitableObj = " ";
 
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     }
-  }, [wind.speed, data])
+  }, [wind.speed, data, wind.degrees])
 
   useEffect(() => {
     fetch(beaches)
@@ -83,8 +99,7 @@ export default function Recommendations () {
             name: results.data[i][1],
             lat: results.data[i][2],
             lon: results.data[i][3],
-            startLimitDegrees: results.data[i][4],
-            endLimitDegrees: results.data[i][5]
+            degreesOut: results.data[i][4]
           }
           setData(data => [...data, resultsData])
         }
