@@ -35,51 +35,41 @@ export default function Recommendations () {
   }, []);
 
   useEffect(() => {
-    let suitableObj = " ";
+    let suitableObj = "";
 
-    if (wind.speed && wind.speed >= 8) {
+    let windDegreesEndSolution = "";
+
+    
+
+    if (wind.speed >= 8) {
       for(let i = 0; i < data.length; i++){
         suitableObj = "Unsuitable";
 
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     } else if (wind.speed >= 0 && data.length > 0) {
-      // * needs to be rewritten
-      suitableObj = "";
-
-      let oppositeWindDeg = "";
-      let oppositeWindDegHigher = "";
-      let oppositeWindDegLower = "";
-
-      if(wind.degrees <= 179){
-        oppositeWindDeg = wind.degrees + 180;
-      } else {
-        oppositeWindDeg = wind.degrees - 180;
-      }
-
-      if(oppositeWindDeg > 330){
-        oppositeWindDegHigher = (oppositeWindDeg + 30) - 360;
-        oppositeWindDegLower = oppositeWindDeg - 30;
-      } else if (oppositeWindDeg < 30) {
-        oppositeWindDegHigher = oppositeWindDeg + 30;
-        oppositeWindDegLower = (oppositeWindDeg - 30) + 360;
-      } else {
-        oppositeWindDegHigher = oppositeWindDeg + 30;
-        oppositeWindDegLower = oppositeWindDeg - 30;
-      }
-
       for (let i = 0; i < data.length; i++) {
-        if((data[i].degreesOut <= oppositeWindDegHigher) && (data[i].degreesOut >= oppositeWindDegLower)){
-          suitableObj = "Recommended";
+        if(wind.degrees >= 300 && data[i].degreesStart >= 300 && data[i].degreesEnd <= 50){
+          windDegreesEndSolution = wind.degrees - 360;
         } else {
+          windDegreesEndSolution = wind.degrees;
+        }
+
+        console.log(data[i].degreesEnd);
+
+        console.log(windDegreesEndSolution);
+
+        console.log("--------------------")
+
+        if(((wind.degrees >= data[i].degreesStart) && (windDegreesEndSolution <= data[i].degreesEnd)) || data[i].name === "Marfa"){
           suitableObj = "Unsuitable";
+        } else {
+          suitableObj = "Recommended";
         }
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     } else {
       for(let i = 0; i < data.length; i++){
-        suitableObj = " ";
-
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     }
@@ -100,7 +90,8 @@ export default function Recommendations () {
             name: results.data[i][1],
             lat: results.data[i][2],
             lon: results.data[i][3],
-            degreesOut: results.data[i][4]
+            degreesStart: results.data[i][4],
+            degreesEnd: results.data[i][5]
           }
           setData(data => [...data, resultsData])
         }
