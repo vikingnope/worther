@@ -49,6 +49,8 @@ export default function Recommendations () {
       }
     } else if (wind.speed >= 0 && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
+        suitableObj = "";
+        
         if(wind.degrees >= 300 && data[i].degreesStart >= 300 && data[i].degreesEnd <= 50){
           windDegreesEndSolution = wind.degrees - 360;
         } else {
