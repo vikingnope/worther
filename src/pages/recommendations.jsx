@@ -3,21 +3,31 @@ import { Footer } from "../components/utils/footer";
 import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
-import markerDot from "../resources/location-dot.png";
+import markerDotBlue from "../resources/location-dot.png";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
+import markerDotRed from "../resources/location-dot-red.png";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
   const [ csvFile, setCSVFile ] = useState();
   const [ data, setData ] = useState([]);
-  const [ suitability, setSuitability ] = useState([]);
   const [ wind, setWind ] = useState([]);
+  const [ suitability, setSuitability ] = useState([]);
 
-  const markerIconConst = L.icon({
-    iconUrl: markerDot,
-    iconRetinaUrl: markerDot,
+  const markerIconConstRecommended = L.icon({
+    iconUrl: markerDotBlue,
+    iconRetinaUrl: markerDotBlue,
+    iconAnchor: [13, 14],
+    popupAnchor: [0, -13],
+    iconSize: [26.5, 28]
+  });
+
+
+  const markerIconConstUnsuitable = L.icon({
+    iconUrl: markerDotRed,
+    iconRetinaUrl: markerDotRed,
     iconAnchor: [13, 14],
     popupAnchor: [0, -13],
     iconSize: [26.5, 28]
@@ -35,43 +45,36 @@ export default function Recommendations () {
   }, []);
 
   useEffect(() => {
-    let suitableObj = "";
-
-    let windDegreesEndSolution = "";
-
-    
+    let windDegreesEndSolution = "";   
 
     if (wind.speed >= 8) {
       for(let i = 0; i < data.length; i++){
-        suitableObj = "Unsuitable";
+        let suitableObj = "Unsuitable";
 
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     } else if (wind.speed >= 0 && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
-        suitableObj = "";
-        
+        let suitableObj2 = "";
+
         if(wind.degrees >= 300 && data[i].degreesStart >= 300 && data[i].degreesEnd <= 50){
-          windDegreesEndSolution = wind.degrees - 360;
+          windDegreesEndSolution = wind.degrees + 360;
         } else {
           windDegreesEndSolution = wind.degrees;
-        }
+        } 
 
-        console.log(data[i].degreesEnd);
-
-        console.log(windDegreesEndSolution);
-
-        console.log("--------------------")
-
-        if(((wind.degrees >= data[i].degreesStart) && (windDegreesEndSolution <= data[i].degreesEnd)) || data[i].name === "Marfa"){
-          suitableObj = "Unsuitable";
+        if(((wind.degrees >= data[i].degreesStart) && (windDegreesEndSolution <= data[i].degreesEnd))) {
+          suitableObj2 = "Unsuitable";
         } else {
-          suitableObj = "Recommended";
+          suitableObj2 = "Recommended";
         }
-        setSuitability(suitability => [...suitability, suitableObj]);
+
+        setSuitability(suitability => [...suitability, suitableObj2]);
       }
     } else {
       for(let i = 0; i < data.length; i++){
+        let suitableObj = "";
+
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     }
@@ -106,7 +109,7 @@ export default function Recommendations () {
         <Header choice={'recommendations'}/>
         <div className="text-center bg-black flex min-h-screen flex-col">
           <p className="text-6xl font-bold underline mt-4 mb-8 text-yellow-400">
-            Recommendations (ALPHA)
+            Recommendations
           </p>
           <section className="my-auto justify-center flex">
             <MapContainer center={[35.940125, 14.374125]} zoom={11} minZoom={10} style={{ height: '82vh', width: '110vh', borderRadius: '7px'}} maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} maxBoundsViscosity={1} doubleClickZoom={false}>
@@ -116,7 +119,7 @@ export default function Recommendations () {
               />
               {
                 data.map((data, index) => (
-                  <Marker key={index} icon = {markerIconConst} position={[data.lat, data.lon]}>
+                  <Marker key={index} icon = {(suitability[index] === "Recommended") ? markerIconConstRecommended : markerIconConstUnsuitable} position={[data.lat, data.lon]}>
                     <Popup>
                         <p className="font-bold underline flex justify-center" id="markerText">{data.name}</p>
                         {
