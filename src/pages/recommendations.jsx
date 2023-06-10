@@ -45,6 +45,30 @@ export default function Recommendations () {
   }, []);
 
   useEffect(() => {
+    fetch(beaches)
+    .then((r) => r.text())
+    .then(text  => {
+      setCSVFile(text);
+    })
+
+    readString(csvFile, {
+      worker: true,
+      complete: (results) => {
+        for (let i = 1; i < results.data.length; i++){
+          const resultsData = {
+            name: results.data[i][1],
+            lat: results.data[i][2],
+            lon: results.data[i][3],
+            degreesStart: results.data[i][4],
+            degreesEnd: results.data[i][5]
+          }
+          setData(data => [...data, resultsData])
+        }
+      },
+    });
+  }, [csvFile])
+
+  useEffect(() => {
     let windDegreesEndSolution = "";   
 
     if (wind.speed >= 8) {
@@ -80,29 +104,7 @@ export default function Recommendations () {
     }
   }, [wind.speed, data, wind.degrees])
 
-  useEffect(() => {
-    fetch(beaches)
-    .then((r) => r.text())
-    .then(text  => {
-      setCSVFile(text);
-    })
 
-    readString(csvFile, {
-      worker: true,
-      complete: (results) => {
-        for (let i = 1; i < results.data.length; i++){
-          const resultsData = {
-            name: results.data[i][1],
-            lat: results.data[i][2],
-            lon: results.data[i][3],
-            degreesStart: results.data[i][4],
-            degreesEnd: results.data[i][5]
-          }
-          setData(data => [...data, resultsData])
-        }
-      },
-    });
-  }, [csvFile])
 
   return (
     <div className='select-none text-white'>
