@@ -69,8 +69,6 @@ export default function Recommendations () {
   }, [csvFile])
 
   useEffect(() => {
-    let windDegreesEndSolution = "";   
-
     if (wind.speed >= 8) {
       for(let i = 0; i < data.length; i++){
         let suitableObj = "Unsuitable";
@@ -80,6 +78,7 @@ export default function Recommendations () {
     } else if (wind.speed >= 0 && data.length > 0) {
       for (let i = 0; i < data.length; i++) {
         let suitableObj2 = "";
+        let windDegreesEndSolution = "";
 
         if(wind.degrees >= 200 && data[i].degreesStart >= 200 && data[i].degreesEnd <= 50){
           windDegreesEndSolution = data[i].degreesEnd + 360;
@@ -87,7 +86,7 @@ export default function Recommendations () {
           windDegreesEndSolution = data[i].degreesEnd;
         } 
 
-        if(((wind.degrees >= data[i].degreesStart) && (windDegreesEndSolution <= wind.degrees))) {
+        if(((wind.degrees >= data[i].degreesStart) && (wind.degrees <= windDegreesEndSolution))) {
           suitableObj2 = "Unsuitable";
         } else {
           suitableObj2 = "Recommended";
