@@ -81,13 +81,13 @@ export default function Recommendations () {
       for (let i = 0; i < data.length; i++) {
         let suitableObj2 = "";
 
-        if(wind.degrees >= 300 && data[i].degreesStart >= 300 && data[i].degreesEnd <= 50){
-          windDegreesEndSolution = wind.degrees + 360;
+        if(wind.degrees >= 200 && data[i].degreesStart >= 200 && data[i].degreesEnd <= 50){
+          windDegreesEndSolution = data[i].degreesEnd + 360;
         } else {
-          windDegreesEndSolution = wind.degrees;
+          windDegreesEndSolution = data[i].degreesEnd;
         } 
 
-        if(((wind.degrees >= data[i].degreesStart) && (windDegreesEndSolution <= data[i].degreesEnd))) {
+        if(((wind.degrees >= data[i].degreesStart) && (windDegreesEndSolution <= wind.degrees))) {
           suitableObj2 = "Unsuitable";
         } else {
           suitableObj2 = "Recommended";
