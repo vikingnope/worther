@@ -73,7 +73,6 @@ export default function ShowMap(props) {
                     <CloudLayer show={cloudLayerChoice} opacity={layerOpacity}/>
                     <SatelliteDataEsri show={satelliteLayerChoice} opacity={layerOpacity} />
                     <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} />
-                    {console.log(windDirChoice)}
                     <MenuBar mode={mapType} showWindDir={windDirChoice} onShowWindDirChange={setWindDirChoice} showSatellite={satelliteLayerChoice} onShowSatelliteChange={setSatelliteLayerChoice} showNight={nightLayerChoice} onShowNightChange={setNightLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>

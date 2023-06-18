@@ -119,15 +119,6 @@ export const WindDirectionLayer = (props) => {
     {
       (props.show) ?
         <TileLayer
-          // {...(
-          //   axios.get(`https://api.stormglass.io/v2/weather/point?lat={y}&lng={x}`)
-          //   .then(response => {
-          //     console.log(response);
-          //   })
-          //   .catch(error => {
-          //     console.log(error);
-          //   })
-          // )}
           url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
           tileSize={256}
           zIndex = {2}
