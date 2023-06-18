@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TileLayer, useMap } from 'react-leaflet';
+import { TileLayer } from 'react-leaflet';
 import { useEffect, useState } from "react"
 
 export const CloudLayer = (props) => {
@@ -101,6 +101,33 @@ export const SatelliteDataEsri = (props) => {
     {
       (props.show) ?
         <TileLayer
+          url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
+          tileSize={256}
+          zIndex = {2}
+          opacity = {props.opacity}
+        /> : <></>
+    }
+  </>
+  )
+  
+}
+
+export const WindDirectionLayer = (props) => {
+
+  return (
+    <>
+    {
+      (props.show) ?
+        <TileLayer
+          // {...(
+          //   axios.get(`https://api.stormglass.io/v2/weather/point?lat={y}&lng={x}`)
+          //   .then(response => {
+          //     console.log(response);
+          //   })
+          //   .catch(error => {
+          //     console.log(error);
+          //   })
+          // )}
           url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
           tileSize={256}
           zIndex = {2}
