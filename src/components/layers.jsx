@@ -12,7 +12,7 @@ export const CloudLayer = (props) => {
         url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
-        maxZoom={13}
+        maxZoom={16}
         opacity = {props.opacity} 
         /> :
         <></>
@@ -31,7 +31,7 @@ export const WindSpeedLayer = (props) => {
         url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
-        maxZoom={13}
+        maxZoom={16}
         opacity = {props.opacity} 
         /> :
         <></>
@@ -50,7 +50,7 @@ export const TemperatureLayer = (props) => {
         url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
-        maxZoom={13}
+        maxZoom={16}
         opacity = {props.opacity} 
         /> :
         <></>
@@ -87,7 +87,7 @@ export const RainViewerData = (props) => {
             url={`https://tilecache.rainviewer.com${path}/256/{z}/{x}/{y}/2/1_1.png`}
             tileSize={256}
             zIndex = {3}
-            maxZoom={13}
+            maxZoom={16}
             opacity = {props.opacity} /> : <></>
       }
     </>
