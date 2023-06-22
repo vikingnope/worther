@@ -80,7 +80,7 @@ export default function Recommendations () {
         let suitableObj2 = "";
         let windDegreesEndSolution = "";
 
-        if(wind.degrees >= 200 && data[i].degreesStart >= 200 && data[i].degreesEnd <= 50){
+        if(wind.degrees >= 210 && data[i].degreesStart >= 210 && data[i].degreesEnd <= 50){
           windDegreesEndSolution = data[i].degreesEnd + 360;
         } else {
           windDegreesEndSolution = data[i].degreesEnd;
