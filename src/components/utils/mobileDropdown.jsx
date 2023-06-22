@@ -4,14 +4,15 @@ import { MdArrowLeft, MdOutlineArrowDropDown } from 'react-icons/md';
 import { AiFillHome } from 'react-icons/ai';
 import { BsFillMapFill, BsCloudSunFill } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
+import { TbBeach } from 'react-icons/tb';
 
 export const Dropdown = (props) => {
     const [toggle, setToggle ] = useState(false);
 
     const Navigations = (text, path) => {
         return(
-            <a href={path} className="w-44 h-14 flex justify-center uppercase text-2xl border-y-2 border-x-2 border-zinc-600 mr-1 bg-stone-900 indent-2">
-                <div className='mt-2 flex'>
+            <a href={path} className="h-14 flex justify-center uppercase text-2xl border-y-2 border-x-3 border-zinc-600 mr-1 bg-stone-900 indent-2">
+                <div className='mx-3 mt-2 flex'>
                     <div className='mr-px'>
                         {(text === 'Home') ?
                             <div className='mt-1'>
@@ -24,6 +25,10 @@ export const Dropdown = (props) => {
                         (text === 'Weather') ?
                             <div className='mt-1'>
                                 <BsCloudSunFill />
+                            </div> :
+                        (text === 'Recommendations') ?
+                            <div className='mt-1'>
+                                <TbBeach />
                             </div> :
                         (text === 'About') ?
                             <div className='mt-1'>
@@ -57,17 +62,56 @@ export const Dropdown = (props) => {
                 <li>
                     {
                         (props.choice === 'about') ? 
-                            [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather')] :
+                            [
+                                Navigations('Home', '/'), 
+                                Navigations('Map', '/map'), 
+                                Navigations('Weather', '/weather'), 
+                                Navigations('Recommendations', '/recommendations')
+                            ] :
                         (props.choice === 'home') ?
-                            [Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                            [
+                                Navigations('Map', '/map'), 
+                                Navigations('Weather', '/weather'), 
+                                Navigations('Recommendations', '/recommendations'), 
+                                Navigations('About', '/about')
+                            ] :
                         (props.choice === 'weather') ?
-                            [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('About', '/about')] :
+                            [
+                                Navigations('Home', '/'), 
+                                Navigations('Map', '/map'), 
+                                Navigations('Recommendations', '/recommendations'), 
+                                Navigations('About', '/about')
+                            ] :
                         (props.choice === 'showWeather') ?
-                            [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                            [
+                                Navigations('Home', '/'), 
+                                Navigations('Map', '/map'), 
+                                Navigations('Weather', '/weather'), 
+                                Navigations('Recommendations', '/recommendations'), 
+                                Navigations('About', '/about')
+                            ] :
                         (props.choice === 'map') ?
-                            [Navigations('Home', '/'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                            [
+                                Navigations('Home', '/'), 
+                                Navigations('Weather', '/weather'),
+                                Navigations('Recommendations', '/recommendations'), 
+                                Navigations('About', '/about')
+                            ] :
                         (props.choice === 'showMap') ?
-                            [Navigations('Home', '/'), Navigations('Map', '/map'), Navigations('Weather', '/weather'), Navigations('About', '/about')] :
+                            [   
+                                Navigations('Home', '/'), 
+                                Navigations('Map', '/map'), 
+                                Navigations('Weather', '/weather'), 
+                                Navigations('Recommendations', '/recommendations'), 
+                                Navigations('About', '/about')
+                            ] :
+                        (props.choice === 'recommendations') ?
+                        [
+                            Navigations('Home', '/'), 
+                            Navigations('Map', '/map'), 
+                            Navigations('Weather', '/weather'), 
+                            Navigations('About', '/about')
+                        ] :
                         <></>
                     }
                 </li>

@@ -1,12 +1,12 @@
-import { MapContainer, TileLayer, Marker, Popup , ScaleControl} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup , ScaleControl } from 'react-leaflet';
 import L from 'leaflet';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
-import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData } from './layers';
+import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, SatelliteDataEsri, WindDirectionLayer } from './layers';
 import { NightRegion } from 'react-leaflet-night-region';
 import markerDot from "../resources/location-dot.png";
 
@@ -16,8 +16,10 @@ export default function ShowMap(props) {
     const [ cloudLayerChoice, setCloudLayerChoice ] = useState(false);
     const [ temperatureLayerChoice, setTemperatureLayerChoice ] = useState(false);
     const [ windLayerChoice, setWindLayerChoice ] = useState(false);
-    const [ rainLayerChoice, setRainLayerChoice ] = useState(false);
+    const [ rainLayerChoice, setRainLayerChoice ] = useState(true);
     const [ nightLayerChoice, setNightLayerChoice ] = useState(false);
+    const [ satelliteLayerChoice, setSatelliteLayerChoice ] = useState(false);
+    const [ windDirChoice, setWindDirChoice ] = useState(false);
 
     const { mapType } = useParams();
 
@@ -55,13 +57,13 @@ export default function ShowMap(props) {
                         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" :
                         "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"}
                     />
-                    {/* <SatelliteData /> */}
                     {
                     (nightLayerChoice) ?
                         <NightRegion
                             fillColor='#000000'
+                            color='#001a2e'
                             refreshInterval={1000}
-                            weight='0'
+                            weight='1'
                         /> :
                         <></>
                     }
@@ -69,11 +71,13 @@ export default function ShowMap(props) {
                     <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity}/>
                     <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity}/>
                     <CloudLayer show={cloudLayerChoice} opacity={layerOpacity}/>
-                    <MenuBar mode={mapType} showNight={nightLayerChoice} onShowNightChange={setNightLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
+                    <SatelliteDataEsri show={satelliteLayerChoice} opacity={layerOpacity} />
+                    <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} />
+                    <MenuBar mode={mapType} showWindDir={windDirChoice} onShowWindDirChange={setWindDirChoice} showSatellite={satelliteLayerChoice} onShowSatelliteChange={setSatelliteLayerChoice} showNight={nightLayerChoice} onShowNightChange={setNightLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
-                                <a id='markerText' className='font-bold text-sm underline text-black' href={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of location</a>
+                                <a id='markerText' className='font-bold text-sm underline' href={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of current location</a>
                             </Popup> 
                         </Marker>
                     ) : (

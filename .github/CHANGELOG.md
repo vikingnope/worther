@@ -1,10 +1,29 @@
 # Changelog
 
+## 1.0.2 (Major)
+
+1. Added satellite layer
+1. Updated version in about
+1. Readded outline to night layer
+1. Added beach recommendations page
+1. Added border to header image
+1. Added max zoom for layers
+1. Added wind beaufort scale
+1. Added windy icons
+1. Added night icons
+1. Added rain info
+1. Added daily weather
+1. Changed 3 hour weather to 3 hour forecast
+1. Changed home page styling
+1. Small styling updates
+1. Updated dependencies for better security
+1. Added analytics
+1. Bug fixes
+
 ## 1.0.1 (Minor)
 
 1. Rename of some files
 1. Update version in about page
-1. Added recommendations page
 1. Fixed marker not staying in correct location
 1. Fixed location of popup
 1. Changed marker icon

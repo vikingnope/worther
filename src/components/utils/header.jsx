@@ -53,11 +53,11 @@ export const Header = ({choice}) => {
 
     return (
         <header className="inset-x-0 top-0 bg-neutral-800 h-min w-full border-y border-zinc-600">
-            <section className="relative mt-2.5">
-                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 hover:scale-90 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
+            <section className="relative mt-2">
+                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 border-3 hover:scale-90 hover:border-cyan-300 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" />
             </section>
 
-            <nav className="absolute right-0 top-1.5 flex">
+            <nav className="absolute right-0 top-2.5 flex">
                 {(isDesktop) ?
                 (
                 (choice === 'about') ? 
@@ -65,34 +65,35 @@ export const Header = ({choice}) => {
                         Navigations('Home', '/'), 
                         Navigations('Map', '/map'), 
                         Navigations('Weather', '/weather'), 
-                        // Navigations('Recommendations', '/recommendations')
+                        Navigations('Recommendations', '/recommendations')
                     ] :
                 (choice === 'home') ?
                     [
                         Navigations('Map', '/map'), 
                         Navigations('Weather', '/weather'), 
-                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('Recommendations', '/recommendations'), 
                         Navigations('About', '/about')
                     ] :
                 (choice === 'weather') ?
                     [
                         Navigations('Home', '/'), 
                         Navigations('Map', '/map'), 
-                        // Navigations('Recommendations', '/recommendations'), 
-                        Navigations('About', '/about')] :
+                        Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')
+                    ] :
                 (choice === 'showWeather') ?
                     [
                         Navigations('Home', '/'), 
                         Navigations('Map', '/map'), 
                         Navigations('Weather', '/weather'),
-                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('Recommendations', '/recommendations'), 
                         Navigations('About', '/about')
                     ] :
                 (choice === 'map') ?
                     [
                         Navigations('Home', '/'), 
                         Navigations('Weather', '/weather'), 
-                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('Recommendations', '/recommendations'), 
                         Navigations('About', '/about')
                     ] :
                 (choice === 'showMap') ?
@@ -100,7 +101,7 @@ export const Header = ({choice}) => {
                         Navigations('Home', '/'), 
                         Navigations('Map', '/map'), 
                         Navigations('Weather', '/weather'), 
-                        // Navigations('Recommendations', '/recommendations'), 
+                        Navigations('Recommendations', '/recommendations'), 
                         Navigations('About', '/about')
                     ] :
                 (choice === 'recommendations') ?

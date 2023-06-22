@@ -5,14 +5,20 @@ import { ShowWeather } from "./utils/weatherVariables";
 
 export const GetOpenWeatherData = () => {
 
-    const { countryCode, city, latitude, longitude } = useParams(); // Gets city from the url
+    const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url
 
     const history = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit3Hour = (e) => {
       e.preventDefault();
   
-      history('/3HourWeather/' + location.lat + '/' + location.lon);
+      history('/3HourForecast/' + location.lat + '/' + location.lon);
+    }
+
+    const handleSubmitDaily = (e) => {
+      e.preventDefault();
+  
+      history('/dailyWeather/' + location.lat + '/' + location.lon);
     }
 
     const [ location, setLocation ] = useState([]);
@@ -46,6 +52,7 @@ export const GetOpenWeatherData = () => {
           sunrise: response.data.sys.sunrise,
           sunset: response.data.sys.sunset,
           visibility: response.data.visibility,
+          rain: (response.data.rain !== undefined) ? response.data.rain['1h'] : undefined,
           timeUpdatedUNIX: response.data.dt
         }
         setWeather(weatherObj);
@@ -73,6 +80,6 @@ export const GetOpenWeatherData = () => {
     }, []);   
 
     return(
-      <ShowWeather connectionError = {connectionError} choice = {'normal'} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={city}/>
+      <ShowWeather connectionError = {connectionError} choice = {'normal'} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit3Hour={handleSubmit3Hour} handleSubmitDaily={handleSubmitDaily} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} rain={weather.rain} timeZone={location.timeZone} city={city}/>
     )
   };

@@ -2,18 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-  }  
-
 #markerText{
   color: inherit;
 }
 
 #weatherButtons {
     background-color: #2f3037;
-    color: #dddddd;
+    color: white;
+}
+
+#recommendations {
+  &:hover{
+    background-color: #343a40;
+  }
 }
 
 .leaflet-control { z-index: 0 !important}

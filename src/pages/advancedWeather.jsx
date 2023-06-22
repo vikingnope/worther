@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
+import { FaCity } from 'react-icons/fa';
+import { BiSearchAlt } from 'react-icons/bi';
  
 export default function AdvancedWeather () {
   document.title = "Worther - Advanced Weather";
@@ -25,7 +27,7 @@ export default function AdvancedWeather () {
     <div className='select-none text-white'>
       <Header choice={'weather'}/>
       <div className="text-center bg-black min-h-screen flex flex-col justify-center">
-        <p className='text-7xl mb-9 font-bold'>
+        <p className='text-7xl mb-16 font-bold underline text-red-500'>
           Advanced Current Weather
         </p>
         <form onSubmit={handleSubmit}>
@@ -34,21 +36,26 @@ export default function AdvancedWeather () {
               onChange = {(val) => [setCountry(val), setCountryCode(val.value)]}
               options={options}
               className="rounded-md w-48 h-8 mx-auto mb-5 text-black"
-              placeholder='Country'
+              id="country"
+              placeholder='Choose Country'
           />
-          <input
-              className="rounded-md w-48 h-8 text-base font-bold indent-1.5 outline-none"
-              type="text"
-              id="weatherButtons"
-              value={city}
-              onChange={(e) => setCity(e.target.value.toUpperCase())}
-              placeholder="City"
-          />
-          <button disabled={!country || !city} type="submit" className='rounded-md block w-16 h-6 mx-auto mt-3' id="weatherButtons">
-              Search
+          <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-none mx-auto rounded-md' id="weatherButtons">
+            <FaCity size='17' className='inline mr-1.5 mb-0.5'/>
+            <input
+                className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
+                type="text"
+                id="weatherButtons"
+                value={city}
+                onChange={(e) => setCity(e.target.value.toUpperCase())}
+                placeholder='Enter City'
+            />
+          </div>
+          <button disabled={!country || !city} type="submit" className='rounded-md border block w-24 h-7 mx-auto mt-3' id="weatherButtons">
+            <BiSearchAlt size='22' className='inline mr-1.5 mb-px'/>
+            Search
           </button>
         </form>
-        <a href='/weather' className='mt-3 underline'>Simple Search</a>
+        <a href='/weather' className='mt-3 underline w-max mx-auto'>Simple Search</a>
       </div>
       <Footer />
     </div>
