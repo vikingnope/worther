@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3 (Minor)
+
+1. Design changes
+
 ## 1.0.2 (Major)
 
 1. Added satellite layer
