@@ -101,7 +101,7 @@ export default function Recommendations () {
         setSuitability(suitability => [...suitability, suitableObj]);
       }
     }
-  }, [wind.speed, data, wind.degrees])
+  }, [wind.speed, wind.degrees])
 
 
 
