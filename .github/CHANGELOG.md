@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.4 (Minor)
+
+1. Updated packages for greater security
+
 ## 1.0.3 (Minor)
 
 1. Design changes
