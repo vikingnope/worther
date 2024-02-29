@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, SatelliteDataEsri, WindDirectionLayer } from './layers';
 import { NightRegion } from 'react-leaflet-night-region';
 import markerDot from "../resources/location-dot.png";
+import { MapMode } from './utils/mapMode';
 
 export default function ShowMap(props) {   
     const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
@@ -83,6 +84,7 @@ export default function ShowMap(props) {
                     ) : (
                         <></>
                     )}
+                    <MapMode mode={mapType}/>
                 </MapContainer>
                 <Footer/>
             </div>

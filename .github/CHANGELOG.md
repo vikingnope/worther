@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 (Minor)
+
+1. Changed map to have a button for dark mode and light mode
+
 ## 1.0.4 (Minor)
 
 1. Updated packages for greater security
