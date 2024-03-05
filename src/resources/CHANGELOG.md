@@ -1,8 +1,7 @@
-# Changelog
-
 ## 1.0.5 (Minor)
 
 1. Changed map to have a button for dark mode and light mode
+1. Added changelog to website (can be found at bottom right of footer)
 
 ## 1.0.4 (Minor)
 
@@ -79,4 +78,4 @@
 
 ## 0.0.1 (Minor)
 
-This is the first release of the website which shows only the about page and the main page, will have new uploads in the future.
+1. This is the first release of the website which shows only the about page and the main page, will have new uploads in the future.

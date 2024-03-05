@@ -12,6 +12,7 @@ import Error from './error';
 import Recommendations from './recommendations';
 import { Analytics } from '@vercel/analytics/react';
 import { DailyWeatherData } from '../components/dailyWeather';
+import Changelog from './changelog.jsx';
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           <Route exact path="/dailyWeather/:lat/:lon" element={<DailyWeatherData />} />
           <Route exact path="/Single3HourForecast/:index/:lat/:lon" element={<SingleThreeHourForecastData />} />
           <Route exact path="/recommendations" element={<Recommendations />} />
+          <Route exact path="/changelog" element={<Changelog />} />
           <Route exact path="*" element={<Error />} /> (// * Displays error page, '*' is a wildcard to display when nothing else is found)
         </Routes>
       </Router>
