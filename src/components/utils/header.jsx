@@ -111,6 +111,14 @@ export const Header = ({choice}) => {
                         Navigations('Weather', '/weather'), 
                         Navigations('About', '/about')
                     ] :
+                (choice === 'changelog') ?
+                    [
+                        Navigations('Home', '/'), 
+                        Navigations('Map', '/map/light'), 
+                        Navigations('Weather', '/weather'), 
+                        Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')
+                    ] :
                 <></>
                 ) : (isMobile) ?
                     <Dropdown choice={choice}/> :

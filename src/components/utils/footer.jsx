@@ -1,5 +1,6 @@
 import { FaDiscord } from 'react-icons/fa';
 import { BsGithub } from 'react-icons/bs';
+import { IoDocumentTextSharp } from "react-icons/io5";
 
 export const Footer = () => {
     return(
@@ -11,7 +12,13 @@ export const Footer = () => {
                 <a className="hover:text-green-300" href="https://github.com/vikingnope/worther" target="_blank" rel="noreferrer">
                     <BsGithub size="26"/>
                 </a>
-            </nav>
+                <div className='absolute right-5'>
+                    <a href='/changelog' className='font-bold underline flex gap-x-1'>
+                        <IoDocumentTextSharp size="20"className='my-auto'/>
+                        Changelog
+                    </a>
+                </div>
+            </nav>  
         </footer> 
     )
 };
