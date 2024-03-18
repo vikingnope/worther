@@ -14,7 +14,7 @@ export default function Home() {
                     Getting weather closer to you
                 </p>
                 <section className='my-16'>
-                    <a href='/map' className='uppercase text-5xl underline block w-max font-bold hover:text-cyan-300 hover:text-6xl duration-500 mb-10'>Map</a>
+                    <a href='/map/light' className='uppercase text-5xl underline block w-max font-bold hover:text-cyan-300 hover:text-6xl duration-500 mb-10'>Map</a>
                     <a href='/weather' className='uppercase text-5xl underline w-max block font-bold hover:text-cyan-300 hover:text-6xl duration-500 mb-10'>Weather</a>
                     <a href='/recommendations' className='uppercase text-5xl block underline w-max font-bold hover:text-cyan-300 hover:text-6xl duration-500 mb-10'>Recommendations</a>
                     <a href='/about' className='uppercase text-5xl block underline w-max font-bold hover:text-cyan-300 hover:text-6xl duration-500'>About</a>
