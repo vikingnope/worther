@@ -144,10 +144,10 @@ export default function Recommendations () {
                 <></>
             }
           </section>
-          <section className="mt-8 border-t-2 border-white w-full h-max flex flex-col"> 
+          <section className="mt-8 h-max grid grid-cols-4 gap-4"> 
           {
             data.map((data, index) => (
-              <div key={index} className="flex border-b-2 duration-500" id="recommendations">
+              <div key={index} className="flex border-2 rounded duration-500" id="recommendations">
                 <span className="font-bold text-xl mr-5 my-4 ml-3">{index + 1}.</span>
                 <span className="font-bold text-xl my-4 mr-5">{data.name}</span>
                 {
