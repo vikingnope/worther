@@ -1,3 +1,8 @@
+## 1.0.6 (Minor)
+
+1. Changed layout of recommendations text boxes
+1. Security updates
+
 ## 1.0.5 (Minor)
 
 1. Changed map to have a button for dark mode and light mode

@@ -27,7 +27,7 @@ export default function About() {
             Disclaimer: Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
             </p>
             <p className="absolute text-base underline -bottom-12 right-1.5">
-              Version 1.0.5
+              Version 1.0.6
             </p>
           </> :
           <>
@@ -47,7 +47,7 @@ export default function About() {
               Disclaimer: Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
             </p>
             <p className="absolute text-base underline -bottom-12 left-1.5">
-              Version 1.0.5
+              Version 1.0.6
             </p>
           </>
         }
