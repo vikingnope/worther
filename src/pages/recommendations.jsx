@@ -11,10 +11,10 @@ import markerDotRed from "../resources/location-dot-red.png";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
-  const [ csvFile, setCSVFile ] = useState();
   const [ data, setData ] = useState([]);
   const [ wind, setWind ] = useState([]);
   const [ suitability, setSuitability ] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const markerIconConstRecommended = L.icon({
     iconUrl: markerDotBlue,
@@ -34,78 +34,84 @@ export default function Recommendations () {
   });
 
   useEffect(() => {
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)
-    .then(response => {
+    const fetchWind = async () => {
+      const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`);
       const windObj = {
-        speed: response.data.wind.speed,
-        degrees: response.data.wind.deg
+        speed: windData.data.wind.speed,
+        degrees: windData.data.wind.deg
       }
       setWind(windObj);
-    })
+    }
+
+    fetchWind();
   }, []);
 
   useEffect(() => {
-    fetch(beaches)
-    .then((r) => r.text())
-    .then(text  => {
-      setCSVFile(text);
-    })
-
-    readString(csvFile, {
-      worker: true,
-      complete: (results) => {
-        for (let i = 1; i < results.data.length; i++){
-          const resultsData = {
-            name: results.data[i][1],
-            lat: results.data[i][2],
-            lon: results.data[i][3],
-            degreesStart: results.data[i][4],
-            degreesEnd: results.data[i][5]
+    const fetchData = async () => {
+      const response = await fetch(beaches);
+      const text = await response.text();
+  
+      readString(text, {
+        worker: true,
+        complete: (results) => {
+          const newData = [];
+          for (let i = 1; i < results.data.length; i++){
+            const resultsData = {
+              name: results.data[i][1],
+              lat: results.data[i][2],
+              lon: results.data[i][3],
+              degreesStart: results.data[i][4],
+              degreesEnd: results.data[i][5]
+            }
+            newData.push(resultsData);
           }
-          setData(data => [...data, resultsData])
-        }
-      },
-    });
-  }, [csvFile])
+          setData(newData);
+          setLoading(false);
+        },
+      });
+    }
+  
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    if (wind.speed >= 8) {
-      for(let i = 0; i < data.length; i++){
-        let suitableObj = "Unsuitable";
+    if (!loading) {
+      if (wind.speed >= 8) {
+        for(let i = 0; i < data.length; i++){
+          let suitableObj = "Unsuitable";
 
-        setSuitability(suitability => [...suitability, suitableObj]);
-      }
-    } else if (wind.speed >= 0 && data.length > 0) {
-      for (let i = 0; i < data.length; i++) {
-        let suitableObj2 = "";
-        let windDegreesEndSolution = "";
-
-        if(wind.degrees >= 210 && data[i].degreesStart >= 210 && data[i].degreesEnd <= 50){
-          windDegreesEndSolution = data[i].degreesEnd + 360;
-        } else {
-          windDegreesEndSolution = data[i].degreesEnd;
-        } 
-
-        if(((wind.degrees >= data[i].degreesStart) && (wind.degrees <= windDegreesEndSolution))) {
-          suitableObj2 = "Unsuitable";
-        } else {
-          suitableObj2 = "Recommended";
+          setSuitability(suitability => [...suitability, suitableObj]);
         }
+      } else if (wind.speed >= 0 && data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          let suitableObj2 = "";
+          let windDegreesEndSolution = "";
 
-        setSuitability(suitability => [...suitability, suitableObj2]);
-      }
-    } else {
-      for(let i = 0; i < data.length; i++){
-        let suitableObj = "";
+          if(wind.degrees >= 210 && data[i].degreesStart >= 210 && data[i].degreesEnd <= 50){
+            windDegreesEndSolution = data[i].degreesEnd + 360;
+          } else {
+            windDegreesEndSolution = data[i].degreesEnd;
+          } 
 
-        setSuitability(suitability => [...suitability, suitableObj]);
+          if(((wind.degrees >= data[i].degreesStart) && (wind.degrees <= windDegreesEndSolution))) {
+            suitableObj2 = "Unsuitable";
+          } else {
+            suitableObj2 = "Recommended";
+          }
+
+          setSuitability(suitability => [...suitability, suitableObj2]);
+        }
+      } else {
+        for(let i = 0; i < data.length; i++){
+          let suitableObj = "";
+
+          setSuitability(suitability => [...suitability, suitableObj]);
+        }
       }
     }
-  }, [wind.speed, wind.degrees])
+  }, [wind])
 
-
-
-  return (
+  return(
     <div className='select-none text-white'>
         <Header choice={'recommendations'}/>
         <div className="text-center bg-black flex min-h-screen flex-col">
@@ -160,7 +166,7 @@ export default function Recommendations () {
           )}
           </section>
         </div>
-        <Footer />
+      <Footer />
     </div>
   )
 }
