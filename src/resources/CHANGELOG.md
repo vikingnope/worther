@@ -1,6 +1,7 @@
 ## 1.0.6 (Minor)
 
 1. Changed layout of recommendations text boxes
+1. Fix for data not being loaded on hard refresh in recommendations
 1. Security updates
 
 ## 1.0.5 (Minor)
