@@ -43,10 +43,6 @@ export default function Recommendations () {
       setWind(windObj);
     }
 
-    fetchWind();
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(beaches);
       const text = await response.text();
@@ -70,12 +66,13 @@ export default function Recommendations () {
         },
       });
     }
-  
+
+    fetchWind();
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (!loading) {
+    if (loading === false && wind.speed !== undefined && wind.degrees !== undefined) {
       if (wind.speed >= 8) {
         for(let i = 0; i < data.length; i++){
           let suitableObj = "Unsuitable";
@@ -109,7 +106,7 @@ export default function Recommendations () {
         }
       }
     }
-  }, [wind])
+  }, [wind, loading, data])
 
   return(
     <div className='select-none text-white'>
