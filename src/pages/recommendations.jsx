@@ -11,10 +11,10 @@ import markerDotRed from "../resources/location-dot-red.png";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
-  const [ csvFile, setCSVFile ] = useState();
   const [ data, setData ] = useState([]);
   const [ wind, setWind ] = useState([]);
   const [ suitability, setSuitability ] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const markerIconConstRecommended = L.icon({
     iconUrl: markerDotBlue,
@@ -34,78 +34,81 @@ export default function Recommendations () {
   });
 
   useEffect(() => {
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)
-    .then(response => {
+    const fetchWind = async () => {
+      const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`);
       const windObj = {
-        speed: response.data.wind.speed,
-        degrees: response.data.wind.deg
+        speed: windData.data.wind.speed,
+        degrees: windData.data.wind.deg
       }
       setWind(windObj);
-    })
+    }
+
+    const fetchData = async () => {
+      const response = await fetch(beaches);
+      const text = await response.text();
+  
+      readString(text, {
+        worker: true,
+        complete: (results) => {
+          const newData = [];
+          for (let i = 1; i < results.data.length; i++){
+            const resultsData = {
+              name: results.data[i][1],
+              lat: results.data[i][2],
+              lon: results.data[i][3],
+              degreesStart: results.data[i][4],
+              degreesEnd: results.data[i][5]
+            }
+            newData.push(resultsData);
+          }
+          setData(newData);
+          setLoading(false);
+        },
+      });
+    }
+
+    fetchWind();
+    fetchData();
   }, []);
 
   useEffect(() => {
-    fetch(beaches)
-    .then((r) => r.text())
-    .then(text  => {
-      setCSVFile(text);
-    })
+    if (loading === false && wind.speed !== undefined && wind.degrees !== undefined) {
+      if (wind.speed >= 8) {
+        for(let i = 0; i < data.length; i++){
+          let suitableObj = "Unsuitable";
 
-    readString(csvFile, {
-      worker: true,
-      complete: (results) => {
-        for (let i = 1; i < results.data.length; i++){
-          const resultsData = {
-            name: results.data[i][1],
-            lat: results.data[i][2],
-            lon: results.data[i][3],
-            degreesStart: results.data[i][4],
-            degreesEnd: results.data[i][5]
+          setSuitability(suitability => [...suitability, suitableObj]);
+        }
+      } else if (wind.speed >= 0 && data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          let suitableObj2 = "";
+          let windDegreesEndSolution = "";
+
+          if(wind.degrees >= 210 && data[i].degreesStart >= 210 && data[i].degreesEnd <= 50){
+            windDegreesEndSolution = data[i].degreesEnd + 360;
+          } else {
+            windDegreesEndSolution = data[i].degreesEnd;
+          } 
+
+          if(((wind.degrees >= data[i].degreesStart) && (wind.degrees <= windDegreesEndSolution))) {
+            suitableObj2 = "Unsuitable";
+          } else {
+            suitableObj2 = "Recommended";
           }
-          setData(data => [...data, resultsData])
+
+          setSuitability(suitability => [...suitability, suitableObj2]);
         }
-      },
-    });
-  }, [csvFile])
+      } else {
+        for(let i = 0; i < data.length; i++){
+          let suitableObj = "";
 
-  useEffect(() => {
-    if (wind.speed >= 8) {
-      for(let i = 0; i < data.length; i++){
-        let suitableObj = "Unsuitable";
-
-        setSuitability(suitability => [...suitability, suitableObj]);
-      }
-    } else if (wind.speed >= 0 && data.length > 0) {
-      for (let i = 0; i < data.length; i++) {
-        let suitableObj2 = "";
-        let windDegreesEndSolution = "";
-
-        if(wind.degrees >= 210 && data[i].degreesStart >= 210 && data[i].degreesEnd <= 50){
-          windDegreesEndSolution = data[i].degreesEnd + 360;
-        } else {
-          windDegreesEndSolution = data[i].degreesEnd;
-        } 
-
-        if(((wind.degrees >= data[i].degreesStart) && (wind.degrees <= windDegreesEndSolution))) {
-          suitableObj2 = "Unsuitable";
-        } else {
-          suitableObj2 = "Recommended";
+          setSuitability(suitability => [...suitability, suitableObj]);
         }
-
-        setSuitability(suitability => [...suitability, suitableObj2]);
-      }
-    } else {
-      for(let i = 0; i < data.length; i++){
-        let suitableObj = "";
-
-        setSuitability(suitability => [...suitability, suitableObj]);
       }
     }
-  }, [wind.speed, wind.degrees])
+  }, [wind, loading, data])
 
-
-
-  return (
+  return(
     <div className='select-none text-white'>
         <Header choice={'recommendations'}/>
         <div className="text-center bg-black flex min-h-screen flex-col">
@@ -144,12 +147,12 @@ export default function Recommendations () {
                 <></>
             }
           </section>
-          <section className="mt-8 h-max grid grid-cols-4 gap-4"> 
+          <section className="my-8 h-max grid grid-cols-4 gap-4 px-6"> 
           {
             data.map((data, index) => (
-              <div key={index} className="flex border-2 rounded duration-500" id="recommendations">
-                <span className="font-bold text-xl mr-5 my-4 ml-3">{index + 1}.</span>
-                <span className="font-bold text-xl my-4 mr-5">{data.name}</span>
+              <div key={index} className="flex border-2 rounded-xl" id="recommendations">
+                <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
+                <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
                 {
                   (suitability[index] === "Recommended") ?
                     <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
@@ -160,7 +163,7 @@ export default function Recommendations () {
           )}
           </section>
         </div>
-        <Footer />
+      <Footer />
     </div>
   )
 }
