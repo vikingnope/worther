@@ -3,6 +3,7 @@
 1. Changed layout of recommendations text boxes
 1. Fix for data not being loaded on hard refresh in recommendations
 1. Workaround for opacity bar clickable issue.
+1. Design changes throughout
 1. Security updates
 
 ## 1.0.5 (Minor)
