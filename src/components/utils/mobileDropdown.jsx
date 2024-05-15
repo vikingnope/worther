@@ -64,13 +64,13 @@ export const Dropdown = (props) => {
                         (props.choice === 'about') ? 
                             [
                                 Navigations('Home', '/'), 
-                                Navigations('Map', '/map'), 
+                                Navigations('Map', '/map/light'), 
                                 Navigations('Weather', '/weather'), 
                                 Navigations('Recommendations', '/recommendations')
                             ] :
                         (props.choice === 'home') ?
                             [
-                                Navigations('Map', '/map'), 
+                                Navigations('Map', '/map/light'), 
                                 Navigations('Weather', '/weather'), 
                                 Navigations('Recommendations', '/recommendations'), 
                                 Navigations('About', '/about')
@@ -78,29 +78,22 @@ export const Dropdown = (props) => {
                         (props.choice === 'weather') ?
                             [
                                 Navigations('Home', '/'), 
-                                Navigations('Map', '/map'), 
+                                Navigations('Map', '/map/light'), 
                                 Navigations('Recommendations', '/recommendations'), 
                                 Navigations('About', '/about')
                             ] :
                         (props.choice === 'showWeather') ?
                             [
                                 Navigations('Home', '/'), 
-                                Navigations('Map', '/map'), 
+                                Navigations('Map', '/map/light'), 
                                 Navigations('Weather', '/weather'), 
-                                Navigations('Recommendations', '/recommendations'), 
-                                Navigations('About', '/about')
-                            ] :
-                        (props.choice === 'map') ?
-                            [
-                                Navigations('Home', '/'), 
-                                Navigations('Weather', '/weather'),
                                 Navigations('Recommendations', '/recommendations'), 
                                 Navigations('About', '/about')
                             ] :
                         (props.choice === 'showMap') ?
                             [   
                                 Navigations('Home', '/'), 
-                                Navigations('Map', '/map'), 
+                                Navigations('Map', '/map/light'), 
                                 Navigations('Weather', '/weather'), 
                                 Navigations('Recommendations', '/recommendations'), 
                                 Navigations('About', '/about')
@@ -108,8 +101,16 @@ export const Dropdown = (props) => {
                         (props.choice === 'recommendations') ?
                         [
                             Navigations('Home', '/'), 
-                            Navigations('Map', '/map'), 
+                            Navigations('Map', '/map/light'), 
                             Navigations('Weather', '/weather'), 
+                            Navigations('About', '/about')
+                        ] :
+                        (props.choice === 'changelog') ?
+                        [
+                            Navigations('Home', '/'), 
+                            Navigations('Map', '/map/light'), 
+                            Navigations('Weather', '/weather'), 
+                            Navigations('Recommendations', '/recommendations'), 
                             Navigations('About', '/about')
                         ] :
                         <></>
