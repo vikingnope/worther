@@ -105,7 +105,7 @@ export const Dropdown = (props) => {
                             Navigations('Weather', '/weather'), 
                             Navigations('About', '/about')
                         ] :
-                        (choice === 'changelog') ?
+                        (props.choice === 'changelog') ?
                         [
                             Navigations('Home', '/'), 
                             Navigations('Map', '/map/light'), 
