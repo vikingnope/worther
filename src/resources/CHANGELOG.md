@@ -1,3 +1,7 @@
+## 1.0.7 (Minor)
+
+1. Added precipitation to 3 Hour Forecast and daily forecast
+
 ## 1.0.6 (Minor)
 
 1. Changed layout of recommendations text boxes

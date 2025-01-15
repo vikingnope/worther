@@ -36,6 +36,7 @@ export const ThreeHourForecastData = () => {
             description: response.data.list[i].weather[0].description,
             windSpeed: response.data.list[i].wind.speed,
             windDegrees: response.data.list[i].wind.deg,
+            precipitation: (response.data.list[i].pop * 100),
             visibility: response.data.list[i].visibility,
             dayUNIX: ((response.data.list[i].dt) * 1000),
             timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // * padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
@@ -109,6 +110,7 @@ export const ThreeHourForecastData = () => {
                   <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
                   <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
                   <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                  <span className='my-3 mr-9 text-xl'>Precipitation: {weather.precipitation}%</span>
                   <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
                     (weather.visibility / 1000) + 'km' :
                     (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})

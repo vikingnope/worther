@@ -18,6 +18,7 @@ export const DailyWeatherData = () => {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
+      console.log(response.data);
       const locationObj = {
         name: response.data.city.name,
         country: response.data.city.country,
@@ -38,6 +39,7 @@ export const DailyWeatherData = () => {
             description: response.data.list[i].weather[0].description,
             windSpeed: response.data.list[i].wind.speed,
             windDegrees: response.data.list[i].wind.deg,
+            precipitation: (response.data.list[i].pop * 100),
             visibility: response.data.list[i].visibility,
             dayUNIX: ((response.data.list[i].dt) * 1000),
             timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // * padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
@@ -109,6 +111,7 @@ export const DailyWeatherData = () => {
                           <p className='mx-auto mt-10 text-xl block'>Temp: {Math.round(weather.temperature)}°C</p>
                           <p className='mx-auto mt-10 text-xl block'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
                           <p className='mx-auto mt-10 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
+                          <p className='mx-auto mt-10 text-xl block'>Precipitation: {weather.precipitation}%</p>
                           <p className='mx-auto mt-10 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
                           (weather.visibility / 1000) + 'km' :
                           (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
