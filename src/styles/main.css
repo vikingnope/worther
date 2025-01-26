@@ -2,37 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-#markerText{
-  color: inherit;
-}
-
-#recommendations {
-  &:hover{
-    background-color: #343a40;
-  }
-}
-
 .leaflet-control { z-index: 0 !important}
 .leaflet-pane { z-index: 0 !important}
 .leaflet-top, .leaflet-bottom {z-index: 0 !important}
   
-.markdown {
-  h2{
-    font-size: xx-large;
-    font-weight: bold;
-    text-decoration: underline;
-    margin-top: 40px;
-    margin-bottom: 25px;
-    margin-left: 25px;
-  }
+.markdown h2{
+  font-size: xx-large;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-top: 40px;
+  margin-bottom: 25px;
+  margin-left: 25px;
+}
   
-  li{
-    font-size: large;
-    margin-left: 60px;
-    list-style-type: decimal-leading-zero;
-    margin-top: 5px;
-    margin-bottom: 10px;
-  }
+.markdown li{
+  font-size: large;
+  margin-left: 60px;
+  list-style-type: decimal-leading-zero;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 /* width */

@@ -78,7 +78,7 @@ export default function ShowMap(props) {
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
-                                <a id='markerText' className='font-bold text-sm underline' href={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of current location</a>
+                                <a className='font-bold text-sm underline' style={{ color: 'inherit' }} href={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of current location</a>
                             </Popup> 
                         </Marker>
                     ) : (
