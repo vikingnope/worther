@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
 import markerDotRed from "../resources/location-dot-red.png";
+import { isDesktop } from "react-device-detect";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
@@ -144,21 +145,39 @@ export default function Recommendations () {
                 <></>
             }
           </section>
-          <section className="my-8 h-max grid grid-cols-4 gap-4 px-6"> 
-          {
-            data.map((data, index) => (
-              <div key={index} className="flex border-2 rounded-xl overflow-hidden" id="recommendations">
-                <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
-                <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
-                {
-                  (suitability[index] === "Recommended") ?
-                    <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
-                    <span className="font-bold text-2xl my-3.5 text-red-600">{suitability[index]}</span>
-                }
-              </div>
-            )
-          )}
-          </section>
+          { isDesktop ?
+              <section className="my-8 h-max grid grid-cols-4 gap-4 px-6"> 
+              {
+                data.map((data, index) => (
+                  <div key={index} className="flex border-2 rounded-xl overflow-hidden" id="recommendations">
+                    <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
+                    <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
+                    {
+                      (suitability[index] === "Recommended") ?
+                        <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
+                        <span className="font-bold text-2xl my-3.5 text-red-600">{suitability[index]}</span>
+                    }
+                  </div>
+                )
+              )}
+              </section> :
+              <section className="my-8 h-max"> 
+              {
+                data.map((data, index) => (
+                  <div key={index} className="flex border-y-2 overflow-hidden" id="recommendations">
+                    <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
+                    <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
+                    {
+                      (suitability[index] === "Recommended") ?
+                        <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
+                        <span className="font-bold text-2xl my-3.5 text-red-600">{suitability[index]}</span>
+                    }
+                  </div>
+                )
+              )}
+              </section>
+          }
+          
         </div>
       <Footer />
     </div>
