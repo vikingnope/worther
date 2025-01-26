@@ -8,7 +8,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
 import markerDotRed from "../resources/location-dot-red.png";
-import { isDesktop } from "react-device-detect";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
