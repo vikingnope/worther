@@ -10,7 +10,7 @@ export default function About() {
     <div className="select-none text-white overflow-hidden">
       <Header choice={'about'}/>
       <main className="bg-black flex flex-col items-center justify-center h-screen">
-          <p className="uppercase font-bold md:text-7xl text-5xl mb-14">
+          <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14">
             Welcome to Worther!
           </p>
           <p className="md:text-3xl text-2xl mt-8">
