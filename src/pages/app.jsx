@@ -11,6 +11,7 @@ import { SingleThreeHourForecastData } from '../components/Single3HourForecastDa
 import Error from './error';
 import Recommendations from './recommendations';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 import { DailyWeatherData } from '../components/dailyWeather';
 import Changelog from './changelog.jsx';
 
@@ -36,6 +37,7 @@ export default function App() {
         </Routes>
       </Router>
       <Analytics />
+      <SpeedInsights />
     </>
   );
 }
