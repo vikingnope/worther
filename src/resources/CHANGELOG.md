@@ -4,6 +4,7 @@
 1. Styling changes in multiple pages to make theme more consistent
 1. Linting and optimisation
 1. Adjusted styling for recommendations and homepage on mobile
+1. Removed night layer due to its package being outdated
 
 ## 1.0.6 (Minor)
 
