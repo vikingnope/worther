@@ -25,23 +25,23 @@ export const SingleThreeHourForecastData = () => {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
-      for (let i = 0; i < response.data.list.length; i++){
-        if (i == index) {
+      for (const [i, weatherAPI] of response.data.list) {
+        if (i === index) {
           const weatherObj = {
-            humidity: response.data.list[i].main.humidity,
-            temperature: response.data.list[i].main.temp,
-            tempMax: response.data.list[i].main.temp_max,
-            tempMin: response.data.list[i].main.temp_min,
-            tempFeel: response.data.list[i].main.feels_like,
-            pressure: response.data.list[i].main.pressure,
-            mainWeather: response.data.list[i].weather[0].main,
-            description: response.data.list[i].weather[0].description,
-            windSpeed: response.data.list[i].wind.speed,
-            windDegrees: response.data.list[i].wind.deg,
-            visibility: response.data.list[i].visibility,
-            dayUNIX: ((response.data.list[i].dt) * 1000),
-            timeNormalHour: String((new Date((response.data.list[i].dt) * 1000)).getHours()).padStart(2, '0'), // * padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-            timeNormalMinutes: String((new Date((response.data.list[i].dt) * 1000)).getMinutes()).padStart(2, '0')
+            humidity: weatherAPI.main.humidity,
+            temperature: weatherAPI.main.temp,
+            tempMax: weatherAPI.main.temp_max,
+            tempMin: weatherAPI.main.temp_min,
+            tempFeel: weatherAPI.main.feels_like,
+            pressure: weatherAPI.main.pressure,
+            mainWeather: weatherAPI.weather[0].main,
+            description: weatherAPI.weather[0].description,
+            windSpeed: weatherAPI.wind.speed,
+            windDegrees: weatherAPI.wind.deg,
+            visibility: weatherAPI.visibility,
+            dayUNIX: ((weatherAPI.dt) * 1000),
+            timeNormalHour: String((new Date((weatherAPI.dt) * 1000)).getHours()).padStart(2, '0'), // * padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
+            timeNormalMinutes: String((new Date((weatherAPI.dt) * 1000)).getMinutes()).padStart(2, '0')
           }
           setWeather(weatherObj)
         }
@@ -65,7 +65,7 @@ export const SingleThreeHourForecastData = () => {
     )
     setLoaded(false);
     })
-  }, []);
+  }, [index, lat, lon]);
 
   let hourConversion = '';
   let dayConversion = '';

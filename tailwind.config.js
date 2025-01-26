@@ -3,7 +3,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors:{
+        weatherButtons: '#2f3037',
+      },
+    },
     borderWidth: {
       DEFAULT: '1px',
       '0': '0',

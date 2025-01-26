@@ -69,42 +69,39 @@ export default function Recommendations () {
 
     fetchWind();
     fetchData();
-  }, []);
+  }, [readString]);
 
   useEffect(() => {
     if (loading === false && wind.speed !== undefined && wind.degrees !== undefined) {
-      if (wind.speed >= 8) {
-        for(let i = 0; i < data.length; i++){
-          let suitableObj = "Unsuitable";
+      try {
+        if (wind.speed >= 8) {
+            for (let i = 0; i < data.length; i++) {
+                let suitableObj = "Unsuitable";
+                setSuitability(suitability => [...suitability, suitableObj]);
+            }
+        } else if (wind.speed >= 0 && data.length > 0) {
+            for (const item of data) {
+                let suitableObj2 = "";
+                let windDegreesEndSolution = "";
 
-          setSuitability(suitability => [...suitability, suitableObj]);
+                if (wind.degrees >= 210 && item.degreesStart >= 210 && item.degreesEnd <= 50) {
+                    windDegreesEndSolution = item.degreesEnd + 360;
+                } else {
+                    windDegreesEndSolution = item.degreesEnd;
+                }
+
+                if ((wind.degrees >= item.degreesStart) && (wind.degrees <= windDegreesEndSolution)) {
+                    suitableObj2 = "Unsuitable";
+                } else {
+                    suitableObj2 = "Recommended";
+                }
+
+                setSuitability(suitability => [...suitability, suitableObj2]);
+            }
         }
-      } else if (wind.speed >= 0 && data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
-          let suitableObj2 = "";
-          let windDegreesEndSolution = "";
-
-          if(wind.degrees >= 210 && data[i].degreesStart >= 210 && data[i].degreesEnd <= 50){
-            windDegreesEndSolution = data[i].degreesEnd + 360;
-          } else {
-            windDegreesEndSolution = data[i].degreesEnd;
-          } 
-
-          if(((wind.degrees >= data[i].degreesStart) && (wind.degrees <= windDegreesEndSolution))) {
-            suitableObj2 = "Unsuitable";
-          } else {
-            suitableObj2 = "Recommended";
-          }
-
-          setSuitability(suitability => [...suitability, suitableObj2]);
-        }
-      } else {
-        for(let i = 0; i < data.length; i++){
-          let suitableObj = "";
-
-          setSuitability(suitability => [...suitability, suitableObj]);
-        }
-      }
+    } catch (error) {
+        console.error(error);
+    }
     }
   }, [wind, loading, data])
 
@@ -150,7 +147,7 @@ export default function Recommendations () {
           <section className="my-8 h-max grid grid-cols-4 gap-4 px-6"> 
           {
             data.map((data, index) => (
-              <div key={index} className="flex border-2 rounded-xl" id="recommendations">
+              <div key={index} className="flex border-2 rounded-xl overflow-hidden" id="recommendations">
                 <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
                 <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
                 {

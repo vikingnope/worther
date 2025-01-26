@@ -27,14 +27,26 @@ export default function Weather () {
   }
 
   useEffect(() => {
-    if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition((pos) =>{
-            const newUserPos = { 
-                  latitude: pos.coords.latitude,
-                  longitude: pos.coords.longitude,
-             };
-            setUserPos(newUserPos);
-       })
+    if (navigator.geolocation) {
+        const watchId = navigator.geolocation.watchPosition(
+            (pos) => {
+                const newUserPos = {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude,
+                };
+                setUserPos(newUserPos);
+            },
+            (err) => {
+                console.error(`ERROR(${err.code}): ${err.message}`);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0,
+            }
+        );
+
+        return () => navigator.geolocation.clearWatch(watchId);
     }
   }, []);
 
@@ -46,10 +58,10 @@ export default function Weather () {
           Current Weather
         </p>
         <form onSubmit={handleSubmit}>
-          <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-none mx-auto rounded-md' id="weatherButtons">
-            <FaCity size='17' className='inline mr-1.5 mb-0.5'/>
+          <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-none mx-auto rounded-md bg-weatherButtons'>
+            <FaCity size='17' className='inline mr-1.5 mb-1'/>
             <input
-                className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-none"
+                className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-none bg-weatherButtons"
                 type="text"
                 id="weatherButtons"
                 value={city}
@@ -57,16 +69,16 @@ export default function Weather () {
                 placeholder='Enter City'
             />
           </div>
-          <button disabled={!city} type="submit" className='rounded-md block w-24 h-7 mx-auto mt-3 border' id="weatherButtons">
-            <BiSearchAlt size='22' className='inline mr-1.5 mb-px'/>
+          <button disabled={!city} type="submit" className='rounded-md block w-24 h-7 mx-auto mt-3 border bg-weatherButtons'>
+            <BiSearchAlt size='22' className='inline mr-1.5 mb-0.5'/>
             Search
           </button>
         </form>
         {
           (userPos.latitude !== undefined && userPos.longitude !== undefined) ?
             <form onSubmit={handleSubmitLocation}>
-              <button type="submit" className='rounded-md border block w-56 h-7 mx-auto mt-3' id="weatherButtons">
-                <IoLocationSharp size='22' className='inline mr-1.5 mb-px'/>
+              <button type="submit" className='rounded-md border block w-56 h-7 mx-auto mt-3 bg-weatherButtons'>
+                <IoLocationSharp size='22' className='inline mr-1.5 mb-0.5'/>
                 Search with my location
               </button>
             </form> :

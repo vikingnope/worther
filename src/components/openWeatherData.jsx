@@ -77,7 +77,7 @@ export const GetOpenWeatherData = () => {
         )
         setLoaded(false);
       })
-    }, []);   
+    }, [city, countryCode, latitude, longitude]);   
 
     return(
       <ShowWeather connectionError = {connectionError} choice = {'normal'} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit3Hour={handleSubmit3Hour} handleSubmitDaily={handleSubmitDaily} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} rain={weather.rain} timeZone={location.timeZone} city={city}/>
