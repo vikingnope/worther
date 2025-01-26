@@ -107,7 +107,7 @@ export default function Recommendations () {
   }, [wind, loading, data])
 
   return(
-    <div className='select-none text-white'>
+    <div className='select-none text-white overflow-hidden'>
         <Header choice={'recommendations'}/>
         <div className="text-center bg-black flex min-h-screen flex-col">
           <p className="text-6xl font-bold underline mt-4 mb-8 text-yellow-400">

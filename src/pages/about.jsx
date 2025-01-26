@@ -6,7 +6,7 @@ export default function About() {
   document.title = "Worther - About";
   
   return (
-    <div className="select-none text-white">
+    <div className="select-none text-white overflow-hidden">
       <Header choice={'about'}/>
       <main className="bg-black flex flex-col items-center justify-center h-screen">
           {(isDesktop) ?

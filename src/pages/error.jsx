@@ -4,7 +4,7 @@ import { Footer } from '../components/utils/footer';
 
 export default function Error() {
     return (
-        <div className='select-none text-white'>
+        <div className='select-none text-white overflow-hidden'>
             <Header choice={'home'}/>
             <div className="text-center bg-black flex min-h-screen flex-col items-center justify-center">
                 <p className="font-bold text-5xl text-purple-400 mb-12">

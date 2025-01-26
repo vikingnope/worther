@@ -12,7 +12,7 @@ export default function Changelog() {
     }, []);
 
     return (
-        <div className="select-none text-white">
+        <div className="select-none text-white overflow-hidden">
             <Header choice={'changelog'}/>
             <div className="bg-black flex min-h-screen flex-col">
                 <h1 className='text-6xl font-bold underline mt-4 mb-7 text-center'>Changelog</h1>

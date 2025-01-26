@@ -51,7 +51,7 @@ export default function Weather () {
   }, []);
 
   return(
-    <div className='select-none text-white'>
+    <div className='select-none text-white overflow-hidden'>
       <Header choice={'weather'}/>
       <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
         <p className='text-7xl mb-16 font-bold text-teal-500 underline'>
