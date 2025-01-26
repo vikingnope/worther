@@ -3,7 +3,7 @@
 1. Added precipitation to 3 Hour Forecast and daily forecast
 1. Styling changes in multiple pages to make theme more consistent
 1. Linting and optimisation
-1. Adjusted styling for recommendations on mobile
+1. Adjusted styling for recommendations and homepage on mobile
 
 ## 1.0.6 (Minor)
 

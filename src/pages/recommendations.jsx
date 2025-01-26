@@ -114,7 +114,15 @@ export default function Recommendations () {
             Recommendations
           </p>
           <section className="my-auto justify-center flex">
-            <MapContainer center={[35.940125, 14.374125]} zoom={11} minZoom={10} style={{ height: '82vh', width: '110vh', borderRadius: '7px'}} maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} maxBoundsViscosity={1} doubleClickZoom={false}>
+            <MapContainer 
+              center={[35.940125, 14.374125]} 
+              zoom={11} 
+              minZoom={10} 
+              className="md:h-[82vh] w-[110vh] h-[60vh] rounded-[4px]" 
+              maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} 
+              maxBoundsViscosity={1} 
+              doubleClickZoom={false}
+            >
               <TileLayer zIndex={1}
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
