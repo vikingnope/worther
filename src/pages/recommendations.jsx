@@ -153,39 +153,21 @@ export default function Recommendations () {
                 <></>
             }
           </section>
-          { isDesktop ?
-              <section className="my-8 h-max grid grid-cols-4 gap-4 px-6"> 
-              {
-                data.map((data, index) => (
-                  <div key={index} className="flex border-2 rounded-xl overflow-hidden" id="recommendations">
-                    <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
-                    <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
-                    {
-                      (suitability[index] === "Recommended") ?
-                        <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
-                        <span className="font-bold text-2xl my-3.5 text-red-600">{suitability[index]}</span>
-                    }
-                  </div>
-                )
-              )}
-              </section> :
-              <section className="my-8 h-max"> 
-              {
-                data.map((data, index) => (
-                  <div key={index} className="flex border-y-2 overflow-hidden" id="recommendations">
-                    <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
-                    <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
-                    {
-                      (suitability[index] === "Recommended") ?
-                        <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
-                        <span className="font-bold text-2xl my-3.5 text-red-600">{suitability[index]}</span>
-                    }
-                  </div>
-                )
-              )}
-              </section>
-          }
-          
+          <section className="h-max md:my-8 md:grid xl:grid-cols-4 md:gap-4 md:px-6 lg:grid-cols-3 md:grid-cols-2"> 
+          {
+            data.map((data, index) => (
+              <div key={index} className="flex md:border-2 border-t-2 md:rounded-xl overflow-hidden" id="recommendations">
+                <span className="font-bold text-xl mr-3 my-4 ml-3">{index + 1}.</span>
+                <span className="font-bold text-xl my-4 mr-3">{data.name}:</span>
+                {
+                  (suitability[index] === "Recommended") ?
+                    <span className="font-bold text-2xl my-3.5 text-green-500">{suitability[index]}</span> :
+                    <span className="font-bold text-2xl my-3.5 text-red-600">{suitability[index]}</span>
+                }
+              </div>
+            )
+          )}
+          </section>
         </div>
       <Footer />
     </div>

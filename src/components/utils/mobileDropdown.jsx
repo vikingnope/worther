@@ -46,7 +46,7 @@ export const Dropdown = (props) => {
     return (
         <nav>
             <div className='mr-1'>
-                <button onClick={() => setToggle(!toggle)} className='flex mt-1'>
+                <button onClick={() => setToggle(!toggle)} className='flex mt-0.5'>
                     <MdOutlineSegment size='42' />
                     <div className='mt-1 -ml-2'>
                     {(!toggle) ?
