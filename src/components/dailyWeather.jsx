@@ -82,9 +82,9 @@ export const DailyWeatherData = () => {
   );
 
   return (
-    <div className='select-none text-white'>
+    <div className='text-white overflow-hidden'>
       <Header choice='showWeather'/>
-      <div className="text-center select-none bg-black text-white min-h-screen flex flex-col">
+      <div className="text-center bg-black text-white min-h-screen flex flex-col">
           <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data - {location.name}</p>
           <div className="flex flex-row my-auto">
             {(weather.length > 0) ?
@@ -126,6 +126,7 @@ export const DailyWeatherData = () => {
               <></>
             }
           </div>
+          <button className="rounded-md h-8 text-xl my-16 font-bold w-24 mx-auto border" onClick={() => window.history.back()}>Go Back</button>
       </div>
       <Footer />
     </div>

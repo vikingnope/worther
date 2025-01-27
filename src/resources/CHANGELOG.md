@@ -5,6 +5,7 @@
 1. Linting and optimisation
 1. Adjusted styling for recommendations and homepage on mobile
 1. Removed night layer due to its package being outdated
+1. Updated to React 19
 
 ## 1.0.6 (Minor)
 

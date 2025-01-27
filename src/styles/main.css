@@ -44,3 +44,13 @@
   background: #555;
 }
 
+::-moz-selection { /* Code for Firefox */
+  color: #83838a;
+  background: #1c1c1a;
+}
+
+::selection {
+  color: #83838a;
+  background: #1c1c1a;
+}
+

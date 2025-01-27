@@ -6,7 +6,7 @@ export default function Home() {
     const siteMapStyling = 'uppercase md:text-5xl text-3xl underline block w-max font-bold hover:text-cyan-300 duration-300'
 
     return (
-        <div className='select-none text-white overflow-hidden'>
+        <div className=' text-white overflow-hidden'>
             <Header choice={'home'}/>
             <div className="text-center bg-black flex min-h-screen flex-col items-center">
                 <p className="uppercase font-bold md:text-8xl text-5xl mt-20 text-green-500">

@@ -25,7 +25,7 @@ export default function AdvancedWeather () {
   }
 
   return(
-    <div className='select-none text-white overflow-hidden'>
+    <div className='text-white overflow-hidden'>
       <Header choice={'weather'}/>
       <div className="text-center bg-black min-h-screen flex flex-col justify-center">
         <p className='text-7xl mb-16 font-bold underline text-red-500'>

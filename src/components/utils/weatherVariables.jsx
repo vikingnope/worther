@@ -378,7 +378,7 @@ export const ShowWeather = (props) => {
         {(props.loaded) ?
           ((props.mainWeather) ?
             ((props.choice === 'normal') ?
-              <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+              <div className="text-center bg-black min-h-screen flex flex-col justify-center">
                 <section className="mx-auto mb-4">
                   <WeatherIcons mainWeather={props.mainWeather} windSpeed = {props.windSpeed} description={props.description} timeZone={props.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} page={'single'}/>
                 </section>
@@ -414,7 +414,7 @@ export const ShowWeather = (props) => {
                 <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>          
             :
-              <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+              <div className="text-center bg-black min-h-screen flex flex-col justify-center">
                 <section className='mb-24 mt-7'>
                   <span className='mr-10 font-bold text-4xl underline'>Index: {parseInt(props.index) + 1}</span>
                   <span className='mr-10 font-bold text-4xl'>|</span>
@@ -433,6 +433,7 @@ export const ShowWeather = (props) => {
                     <p>Min: {Math.round(props.tempMin)}°C &emsp; Max: {Math.round(props.tempMax)}°C</p>
                     <p>{<WiHumidity size={27} className="inline"/>}Humidity: {props.humidity}%</p>
                     <p>{<WiStrongWind size={27} className="inline mr-2" />}Wind Speed: {props.windSpeed} m/s ({<WindForce windSpeed={props.windSpeed} />}) &emsp; {<GiWindsock size={23} className="inline mr-2"/>}Wind Direction: {<WindDirection windDegrees={props.windDegrees}/>} @ {props.windDegrees}°</p>
+                    <p>Precipitation: {props.precipitation}%</p>
                     <p>{<WiBarometer size={30} className="inline mr-1" />}Pressure: {props.pressure} hPa</p>
                     <p>Visibility: {(props.visibility >= 1000) ?
                       (props.visibility / 1000) + 'km' :
@@ -444,28 +445,28 @@ export const ShowWeather = (props) => {
               </div>
             )
           :
-            <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+            <div className="text-center bg-black min-h-screen flex flex-col justify-center">
               <p className="text-3xl uppercase font-bold">The city you have entered ('{props.city}') has not been found</p>
               <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
             </div>
           ) :
           (props.loaded === false && props.blocked === true) ?
-          <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+          <div className="text-center bg-black min-h-screen flex flex-col justify-center">
             <p className="text-4xl uppercase font-bold">The API is currently blocked</p>
             <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
           </div> :
           (props.loaded === false && props.connectionError === true) ?
-          <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+          <div className="text-center bg-black min-h-screen flex flex-col justify-center">
             <p className="text-4xl uppercase font-bold">Please check your internet connection</p>
             <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
           </div> :
           (props.loaded === false && !props.mainWeather) ?
-            <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">
+            <div className="text-center bg-black min-h-screen flex flex-col justify-center">
               <p className="text-3xl uppercase font-bold">The city you have entered ('{props.city}') has not been found</p>
               <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
             </div>
           :
-          <div className="text-center select-none bg-black min-h-screen flex flex-col justify-center">    
+          <div className="text-center bg-black min-h-screen flex flex-col justify-center">    
             <p className="font-bold text-2xl">Loading...</p>
           </div>
         }
