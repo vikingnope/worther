@@ -13,7 +13,7 @@ export default function Changelog() {
 
     return (
         <div className="text-white overflow-hidden">
-            <Header choice={'changelog'}/>
+            <Header/>
             <div className="bg-black flex min-h-screen flex-col">
                 <h1 className='text-6xl font-bold underline mt-4 mb-7 text-center'>Changelog</h1>
                 <Markdown children={markdown} className={'markdown'}/>

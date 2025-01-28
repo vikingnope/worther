@@ -9,9 +9,14 @@ import { TbBeach } from 'react-icons/tb';
 export const Dropdown = (props) => {
     const [toggle, setToggle ] = useState(false);
 
+    console.log(props.location);
+
     const Navigations = (text, path) => {
+
+        let active = (props.location === path) ? 'text-green-300' : 'text-white';
+
         return(
-            <a href={path} className="h-14 flex justify-center uppercase text-2xl border-y-2 border-x-3 border-zinc-600 mr-1 bg-stone-900 indent-2">
+            <a href={path} className={`h-14 flex justify-center uppercase text-2xl border-y-2 border-x-3 border-zinc-600 mr-1 bg-stone-900 indent-2 ${active}`}>
                 <div className='mx-3 mt-2 flex'>
                     <div className='mr-px'>
                         {(text === 'Home') ?
@@ -32,7 +37,7 @@ export const Dropdown = (props) => {
                             </div> :
                         (text === 'About') ?
                             <div className='mt-1'>
-                                <HiInformationCircle size='25' color='white'/>
+                                <HiInformationCircle size='25'/>
                             </div> :
                             <></>         
                         }
@@ -61,59 +66,13 @@ export const Dropdown = (props) => {
             (<ul className={'absolute right-1 z-50 mt-1.5'}>
                 <li>
                     {
-                        (props.choice === 'about') ? 
-                            [
-                                Navigations('Home', '/'), 
-                                Navigations('Map', '/map/light'), 
-                                Navigations('Weather', '/weather'), 
-                                Navigations('Recommendations', '/recommendations')
-                            ] :
-                        (props.choice === 'home') ?
-                            [
-                                Navigations('Map', '/map/light'), 
-                                Navigations('Weather', '/weather'), 
-                                Navigations('Recommendations', '/recommendations'), 
-                                Navigations('About', '/about')
-                            ] :
-                        (props.choice === 'weather') ?
-                            [
-                                Navigations('Home', '/'), 
-                                Navigations('Map', '/map/light'), 
-                                Navigations('Recommendations', '/recommendations'), 
-                                Navigations('About', '/about')
-                            ] :
-                        (props.choice === 'showWeather') ?
-                            [
-                                Navigations('Home', '/'), 
-                                Navigations('Map', '/map/light'), 
-                                Navigations('Weather', '/weather'), 
-                                Navigations('Recommendations', '/recommendations'), 
-                                Navigations('About', '/about')
-                            ] :
-                        (props.choice === 'showMap') ?
-                            [   
-                                Navigations('Home', '/'), 
-                                Navigations('Map', '/map/light'), 
-                                Navigations('Weather', '/weather'), 
-                                Navigations('Recommendations', '/recommendations'), 
-                                Navigations('About', '/about')
-                            ] :
-                        (props.choice === 'recommendations') ?
-                        [
-                            Navigations('Home', '/'), 
-                            Navigations('Map', '/map/light'), 
-                            Navigations('Weather', '/weather'), 
-                            Navigations('About', '/about')
-                        ] :
-                        (props.choice === 'changelog') ?
                         [
                             Navigations('Home', '/'), 
                             Navigations('Map', '/map/light'), 
                             Navigations('Weather', '/weather'), 
                             Navigations('Recommendations', '/recommendations'), 
                             Navigations('About', '/about')
-                        ] :
-                        <></>
+                        ]
                     }
                 </li>
             </ul>) :

@@ -26,7 +26,7 @@ export default function AdvancedWeather () {
 
   return(
     <div className='text-white overflow-hidden'>
-      <Header choice={'weather'}/>
+      <Header/>
       <div className="text-center bg-black min-h-screen flex flex-col justify-center">
         <p className='text-7xl mb-16 font-bold underline text-red-500'>
           Advanced Current Weather

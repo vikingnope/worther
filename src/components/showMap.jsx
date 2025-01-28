@@ -47,7 +47,7 @@ export default function ShowMap(props) {
     const map = (markerShow, zoomLevel) => {
         return( 
             <div className="text-white">
-                <Header choice={'showMap'}/>
+                <Header/>
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
                     <ScaleControl />
                     <TileLayer zIndex={1}

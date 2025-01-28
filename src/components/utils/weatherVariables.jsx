@@ -373,7 +373,7 @@ export const ShowWeather = (props) => {
 
   return(
     <div className="text-white">
-      <Header choice={'showWeather'}/>
+      <Header/>
         {(props.loaded) ?
           ((props.mainWeather) ?
             ((props.choice === 'normal') ?

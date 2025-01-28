@@ -8,7 +8,7 @@ export default function About() {
   
   return (
     <div className="text-white overflow-hidden">
-      <Header choice={'about'}/>
+      <Header/>
       <main className="bg-black flex flex-col md:items-center justify-center h-screen">
           <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14">
             Welcome to Worther!

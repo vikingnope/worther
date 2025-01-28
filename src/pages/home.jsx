@@ -7,7 +7,7 @@ export default function Home() {
 
     return (
         <div className=' text-white overflow-hidden'>
-            <Header choice={'home'}/>
+            <Header/>
             <div className="text-center bg-black flex min-h-screen flex-col items-center">
                 <p className="uppercase font-bold md:text-8xl text-5xl mt-20 text-green-500">
                     Worther

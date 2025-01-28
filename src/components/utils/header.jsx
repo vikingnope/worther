@@ -1,5 +1,5 @@
 import logo from '../../resources/logoSmall.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { isMobile, isDesktop } from 'react-device-detect';
 import { Dropdown } from './mobileDropdown';
 import { AiFillHome } from 'react-icons/ai';
@@ -8,8 +8,15 @@ import { HiInformationCircle } from 'react-icons/hi';
 import { TbBeach } from 'react-icons/tb';
 
 
-export const Header = ({choice}) => {
+export const Header = () => {
     const history = useNavigate();
+    let location = "/" + useLocation().pathname.split('/')[1];
+
+    if (location === '/weatherCountry' || location === '/weatherLocation' || location === '/3HourForecast' || location === '/dailyWeather' || location === '/Single3HourForecast' || location === '/advancedWeather') {
+        location = '/weather';
+    } else if (location === '/map') {
+        location = '/map/light';
+    }
 
     const handleClick = (e) => {
         e.preventDefault();
@@ -18,8 +25,11 @@ export const Header = ({choice}) => {
     };
 
     const Navigations = (text, path) => {
+
+        const active = (location === path) ? 'text-green-300' : 'text-white';
+
         return(
-            <a href={path} className="uppercase text-2xl mr-7 hover:text-green-300 hover:font-bold duration-150">
+            <a href={path} className={`uppercase text-2xl mr-7 hover:text-green-300 duration-150 ${active}`}>
                 <div className='mt-2 flex'>
                     <div className='mr-2'>
                         {(text === 'Home') ?
@@ -60,61 +70,15 @@ export const Header = ({choice}) => {
             <nav className="absolute right-0 top-2.5 flex">
                 {(isDesktop) ?
                 (
-                (choice === 'about') ? 
                     [
-                        Navigations('Home', '/'), 
-                        Navigations('Map', '/map/light'), 
-                        Navigations('Weather', '/weather'), 
-                        Navigations('Recommendations', '/recommendations')
-                    ] :
-                (choice === 'home') ?
-                    [
-                        Navigations('Map', '/map/light'), 
-                        Navigations('Weather', '/weather'), 
-                        Navigations('Recommendations', '/recommendations'), 
-                        Navigations('About', '/about')
-                    ] :
-                (choice === 'weather') ?
-                    [
-                        Navigations('Home', '/'), 
-                        Navigations('Map', '/map/light'), 
-                        Navigations('Recommendations', '/recommendations'), 
-                        Navigations('About', '/about')
-                    ] :
-                (choice === 'showWeather') ?
-                    [
-                        Navigations('Home', '/'), 
-                        Navigations('Map', '/map/light'), 
-                        Navigations('Weather', '/weather'),
-                        Navigations('Recommendations', '/recommendations'), 
-                        Navigations('About', '/about')
-                    ] :
-                (choice === 'showMap') ?
-                    [
-                        Navigations('Home', '/'), 
-                        Navigations('Map', '/map/light'), 
-                        Navigations('Weather', '/weather'), 
-                        Navigations('Recommendations', '/recommendations'), 
-                        Navigations('About', '/about')
-                    ] :
-                (choice === 'recommendations') ?
-                    [
-                        Navigations('Home', '/'), 
-                        Navigations('Map', '/map/light'), 
-                        Navigations('Weather', '/weather'), 
-                        Navigations('About', '/about')
-                    ] :
-                (choice === 'changelog') ?
-                    [
-                        Navigations('Home', '/'), 
-                        Navigations('Map', '/map/light'), 
-                        Navigations('Weather', '/weather'), 
-                        Navigations('Recommendations', '/recommendations'), 
-                        Navigations('About', '/about')
-                    ] :
-                <></>
+                    Navigations('Home', '/'), 
+                    Navigations('Map', '/map/light'), 
+                    Navigations('Weather', '/weather'),
+                    Navigations('Recommendations', '/recommendations'), 
+                    Navigations('About', '/about')
+                    ]
                 ) : (isMobile) ?
-                    <Dropdown choice={choice}/> :
+                    <Dropdown location={location}/> :
                     <></>
                 }
             </nav>
