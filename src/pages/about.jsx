@@ -10,7 +10,7 @@ export default function About() {
     <div className="flex flex-col min-h-screen text-white overflow-hidden bg-black">
       <Header/>
       <main className="flex flex-col md:items-center justify-center flex-grow">
-          <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14">
+          <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14 mt-8 md:mt-0">
             Welcome to Worther!
           </p>
           <p className="md:text-3xl text-2xl mt-8">
@@ -25,7 +25,7 @@ export default function About() {
           <p className="md:absolute mt-5 text-base md:bottom-12 -bottom-2 left-1.5">
           <span className='underline'>Disclaimer:</span> Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
           </p>
-          <p className="md:absolute text-base underline md:bottom-12 md:right-1.5 md:left-auto mt-5">
+          <p className="md:absolute text-base underline md:bottom-12 md:right-1.5 md:left-auto my-5 md:my-0">
             Version 1.0.7
           </p>
       </main>

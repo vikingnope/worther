@@ -110,7 +110,7 @@ export default function Recommendations () {
     <div className=' text-white overflow-hidden bg-black flex flex-col min-h-screen'>
         <Header/>
         <div className="text-center flex flex-col flex-grow">
-          <p className="md:text-6xl text-4xl font-bold underline mt-4 mb-8 text-yellow-400">
+          <p className="md:text-6xl text-4xl font-bold underline mt-5 mb-8 text-yellow-400">
             Recommendations
           </p>
           <section className="my-auto justify-center flex">
