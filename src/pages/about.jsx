@@ -7,9 +7,9 @@ export default function About() {
   const clickableTextStyling = 'underline duration-300 font-bold hover:text-cyan-300'
   
   return (
-    <div className="text-white overflow-hidden bg-black">
+    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-black">
       <Header/>
-      <main className="flex flex-col md:items-center justify-center h-screen">
+      <main className="flex flex-col md:items-center justify-center flex-grow">
           <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14">
             Welcome to Worther!
           </p>
@@ -22,10 +22,10 @@ export default function About() {
           <p className="md:text-3xl text-2xl mt-8">
             APIs used: <a href="https://wiki.openstreetmap.org/wiki/API" className={clickableTextStyling}>OpenStreetMap API</a>, <a href="https://www.rainviewer.com/api.html" className={clickableTextStyling}>Rainviewer API</a>, <a href="https://openweathermap.org/api" className={clickableTextStyling}>OpenWeatherMap API</a>
           </p>
-          <p className="md:absolute mt-5 text-base md:-bottom-12 -bottom-2 left-1.5">
+          <p className="md:absolute mt-5 text-base md:bottom-12 -bottom-2 left-1.5">
           <span className='underline'>Disclaimer:</span> Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
           </p>
-          <p className="md:absolute text-base underline -bottom-12 md:right-1.5 md:left-auto mt-5">
+          <p className="md:absolute text-base underline md:bottom-12 md:right-1.5 md:left-auto mt-5">
             Version 1.0.7
           </p>
       </main>

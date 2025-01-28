@@ -88,9 +88,9 @@ export const ThreeHourForecastData = () => {
   );
 
   return (
-    <div className='text-white overflow-hidden'>
+    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
       <Header/>
-      <div className="text-center bg-black text-white min-h-screen flex flex-col">
+      <div className="text-center text-white flex-grow flex flex-col">
           <p className='text-4xl font-bold my-5 underline'>3 Hour Forecast Data - {location.name}</p>
           {(weather.length > 0) ?
             (

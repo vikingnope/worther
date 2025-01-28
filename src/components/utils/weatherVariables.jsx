@@ -372,12 +372,12 @@ export const ShowWeather = (props) => {
   }
 
   return(
-    <div className="text-white bg-black">
+    <div className="text-white bg-black flex flex-col min-h-screen">
       <Header/>
         {(props.loaded) ?
           ((props.mainWeather) ?
             ((props.choice === 'normal') ?
-              <div className="text-center min-h-screen flex flex-col justify-center">
+              <div className="text-center flex-grow flex flex-col justify-center">
                 <section className="mx-auto mb-4">
                   <WeatherIcons mainWeather={props.mainWeather} windSpeed = {props.windSpeed} description={props.description} timeZone={props.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} page={'single'}/>
                 </section>
@@ -413,7 +413,7 @@ export const ShowWeather = (props) => {
                 <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>          
             :
-              <div className="text-center min-h-screen flex flex-col justify-center">
+              <div className="text-center flex-grow flex flex-col justify-center">
                 <section className='mb-24 mt-7'>
                   <p className='mx-auto font-bold text-4xl underline'>{props.dayConversion}</p>
                   <p className='font-bold text-4xl mx-auto underline mt-5'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>

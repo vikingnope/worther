@@ -46,9 +46,9 @@ export default function ShowMap(props) {
 
     const map = (markerShow, zoomLevel) => {
         return( 
-            <div className="text-white">
+            <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
                 <Header/>
-                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} style={{ height: '100vh', width: '100%'}} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false}>
+                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='flex-grow'>
                     <ScaleControl />
                     <TileLayer zIndex={1}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

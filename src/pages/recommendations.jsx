@@ -107,9 +107,9 @@ export default function Recommendations () {
   }, [wind, loading, data])
 
   return(
-    <div className=' text-white overflow-hidden bg-black'>
+    <div className=' text-white overflow-hidden bg-black flex flex-col min-h-screen'>
         <Header/>
-        <div className="text-center flex min-h-screen flex-col">
+        <div className="text-center flex flex-col flex-grow">
           <p className="md:text-6xl text-4xl font-bold underline mt-4 mb-8 text-yellow-400">
             Recommendations
           </p>
