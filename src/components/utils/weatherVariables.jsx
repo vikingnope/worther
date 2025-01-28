@@ -33,7 +33,6 @@ export const WeatherIcons = (props) => {
     );
   }
   
-
   ((props.page === 'single') ?
     size = 200 :
     (
@@ -416,11 +415,8 @@ export const ShowWeather = (props) => {
             :
               <div className="text-center bg-black min-h-screen flex flex-col justify-center">
                 <section className='mb-24 mt-7'>
-                  <span className='mr-10 font-bold text-4xl underline'>Index: {parseInt(props.index) + 1}</span>
-                  <span className='mr-10 font-bold text-4xl'>|</span>
-                  <span className='mr-10 font-bold text-4xl underline'>{props.dayConversion}</span>
-                  <span className='mr-10 font-bold text-4xl'>|</span>
-                  <span className='font-bold text-4xl mr-10 underline'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</span>
+                  <p className='mx-auto font-bold text-4xl underline'>{props.dayConversion}</p>
+                  <p className='font-bold text-4xl mx-auto underline mt-5'>{(props.hourConversion > 23) ? String(props.hourConversion - 24).padStart(2, '0') : (props.hourConversion < 0) ? (props.hourConversion + 24) : String(props.hourConversion).padStart(2, '0')}:{props.timeNormalMinutes} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
                 </section>
                   <section className="mb-4 mx-auto">
                     <WeatherIcons mainWeather={props.mainWeather} windSpeed={props.windSpeed} description={props.description} page={'single'}/>

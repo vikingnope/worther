@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce } from './utils/weatherVariables';
+import { isDesktop } from 'react-device-detect';
 
 export const ThreeHourForecastData = () => {
   const { lat, lon } = useParams();
@@ -100,18 +101,17 @@ export const ThreeHourForecastData = () => {
                 dayConversion = (
                   new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
                 ),
-                <button key={index} onClick={(e) => handleSubmit(e, index)} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 flex border-y-2 text-white h-fit'>
-                  <span className='my-auto ml-4 mr-6 font-bold text-2xl'>{parseInt(index) + 1}.</span>
-                  <span className="ml-5 my-auto mr-7">
-                    <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'multiple'}/>
+                <button key={index} onClick={(e) => handleSubmit(e, index)} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 lg:flex-row flex flex-col border-y-2 text-white h-fit'>
+                  <span className="lg:ml-5 mx-auto mt-5 lg:my-auto lg:mr-7">
+                    <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={(isDesktop) ? 'multiple' : 'multiple-mobile'}/>
                   </span>
-                  <span className='my-3.5 mr-7 font-bold text-xl'>{dayConversion}</span>
-                  <span className='my-3.5 font-bold text-xl mr-10'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
-                  <span className='my-3 mr-10 font-bold text-2xl'>{weather.description.toUpperCase()}</span>
-                  <span className='my-3 mr-9 text-xl'>Temp: {Math.round(weather.temperature)}°C</span>
-                  <span className='my-3 mr-9 text-xl'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
-                  <span className='my-3 mr-9 text-xl'>Precipitation: {weather.precipitation}%</span>
-                  <span className='my-3 mr-9 text-xl'>Visibility: {(weather.visibility >= 1000) ?
+                  <span className='lg:my-3.5 lg:mr-7 font-bold text-xl mt-5 mx-auto'>{dayConversion}</span>
+                  <span className='lg:my-3.5 font-bold text-xl lg:mr-10 mt-5 mx-auto'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
+                  <span className='lg:my-3 lg:mr-10 font-bold text-2xl mt-5 mx-auto'>{weather.description.toUpperCase()}</span>
+                  <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Temp: {Math.round(weather.temperature)}°C</span>
+                  <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                  <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Precipitation: {weather.precipitation}%</span>
+                  <span className='lg:my-3 lg:mr-9 text-xl my-5 mx-auto'>Visibility: {(weather.visibility >= 1000) ?
                     (weather.visibility / 1000) + 'km' :
                     (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
                   </span>
