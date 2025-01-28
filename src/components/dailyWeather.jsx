@@ -101,7 +101,7 @@ export const DailyWeatherData = () => {
                   ),
                   [
                     (hourConversionShowOnly === '11' || hourConversionShowOnly === '12' || hourConversionShowOnly === '13') ?
-                      <div key={index} className='flex flex-col duration-300 hover:bg-cyan-800 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto'>
+                      <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto'>
                           <p className="mx-auto mt-10">
                             <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
                           </p>
