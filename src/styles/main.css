@@ -18,9 +18,14 @@
 .markdown li{
   font-size: large;
   margin-left: 60px;
-  list-style-type: decimal-leading-zero;
+  list-style-type: disc;
   margin-top: 5px;
   margin-bottom: 10px;
+}
+
+.markdown hr {
+  margin-top: 40px;
+  opacity: 0.3;
 }
 
 /* width */

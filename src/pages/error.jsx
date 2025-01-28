@@ -4,9 +4,9 @@ import { Footer } from '../components/utils/footer';
 
 export default function Error() {
     return (
-        <div className='text-white overflow-hidden'>
+        <div className='text-white overflow-hidden bg-black'>
             <Header/>
-            <div className="text-center bg-black flex min-h-screen flex-col items-center justify-center">
+            <div className="text-center flex min-h-screen flex-col items-center justify-center">
                 <p className="font-bold text-5xl text-purple-400 mb-12">
                     Oops! This page has gone on holiday. It might return when it feels like it!
                 </p>

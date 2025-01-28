@@ -12,10 +12,10 @@ export default function Changelog() {
     }, []);
 
     return (
-        <div className="text-white overflow-hidden">
+        <div className="text-white overflow-hidden bg-black">
             <Header/>
-            <div className="bg-black flex min-h-screen flex-col">
-                <h1 className='text-6xl font-bold underline mt-4 mb-7 text-center'>Changelog</h1>
+            <div className="flex min-h-screen flex-col mb-5">
+                <h1 className='text-6xl font-bold underline my-10 text-center'>Changelog</h1>
                 <Markdown children={markdown} className={'markdown'}/>
             </div>
             <Footer />

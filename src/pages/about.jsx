@@ -7,9 +7,9 @@ export default function About() {
   const clickableTextStyling = 'underline duration-300 font-bold hover:text-cyan-300'
   
   return (
-    <div className="text-white overflow-hidden">
+    <div className="text-white overflow-hidden bg-black">
       <Header/>
-      <main className="bg-black flex flex-col md:items-center justify-center h-screen">
+      <main className="flex flex-col md:items-center justify-center h-screen">
           <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14">
             Welcome to Worther!
           </p>

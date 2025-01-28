@@ -51,9 +51,9 @@ export default function Weather () {
   }, []);
 
   return(
-    <div className=' text-white overflow-hidden'>
+    <div className=' text-white overflow-hidden bg-black'>
       <Header/>
-      <div className="text-center bg-black min-h-screen flex flex-col justify-center">
+      <div className="text-center min-h-screen flex flex-col justify-center">
         <p className='text-7xl mb-16 font-bold text-teal-500 underline'>
           Current Weather
         </p>
