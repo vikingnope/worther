@@ -26,11 +26,8 @@ export const SingleThreeHourForecastData = () => {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
-      console.log(response.data.list);
       for (const [i, weatherAPI] of response.data.list.entries()) {
-        console.log("I: " + i);
         if (i === numericIndex) {
-          console.log("Index: " + index);
           const weatherObj = {
             humidity: weatherAPI.main.humidity,
             temperature: weatherAPI.main.temp,
