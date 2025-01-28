@@ -9,8 +9,6 @@ import { TbBeach } from 'react-icons/tb';
 export const Dropdown = (props) => {
     const [toggle, setToggle ] = useState(false);
 
-    console.log(props.location);
-
     const Navigations = (text, path) => {
 
         let active = (props.location === path) ? 'text-green-300' : 'text-white';
