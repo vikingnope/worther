@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
 import markerDotRed from "../resources/location-dot-red.png";
+import { isDesktop } from "react-device-detect";
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
@@ -115,7 +116,7 @@ export default function Recommendations () {
           <section className="my-auto justify-center flex">
             <MapContainer 
               center={[35.940125, 14.374125]} 
-              zoom={11} 
+              zoom={(isDesktop) ? 11 : 10} 
               minZoom={10} 
               className="md:h-[82vh] w-[110vh] h-[60vh] rounded-[4px]" 
               maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} 
