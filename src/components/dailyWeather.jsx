@@ -86,7 +86,7 @@ export const DailyWeatherData = () => {
       <Header choice='showWeather'/>
       <div className="text-center bg-black text-white min-h-screen flex flex-col">
           <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data - {location.name}</p>
-          <div className="flex flex-row my-auto">
+          <div className="lg:flex lg:flex-row my-auto">
             {(weather.length > 0) ?
               (
                 weather.map((weather, index) => ( // * .map is used instead of loops
@@ -101,22 +101,22 @@ export const DailyWeatherData = () => {
                   ),
                   [
                     (hourConversionShowOnly === '11' || hourConversionShowOnly === '12' || hourConversionShowOnly === '13') ?
-                      <div key={index} className='flex flex-col duration-300 hover:bg-cyan-800 border-2 rounded-xl text-white h-fit w-80 mx-auto'>
+                      <div key={index} className='flex flex-col duration-300 hover:bg-cyan-800 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto'>
                           <p className="mx-auto mt-10">
                             <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
                           </p>
-                          <p className='mx-auto mt-10 font-bold text-2xl block underline'>{dayConversion}</p>
-                          <p className='mx-auto mt-10 font-bold text-2xl block'>{weather.description.toUpperCase()}</p>
-                          <p className='mx-auto mt-10 text-xl block'>Temp: {Math.round(weather.temperature)}°C</p>
-                          <p className='mx-auto mt-10 text-xl block'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
-                          <p className='mx-auto mt-10 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
-                          <p className='mx-auto mt-10 text-xl block'>Precipitation: {weather.precipitation}%</p>
-                          <p className='mx-auto mt-10 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
+                          <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
+                          <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.description.toUpperCase()}</p>
+                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Temp: {Math.round(weather.temperature)}°C</p>
+                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
+                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
+                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Precipitation: {weather.precipitation}%</p>
+                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
                           (weather.visibility / 1000) + 'km' :
                           (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
                           </p>
-                          <p className='mx-auto mt-10 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{hoursMinutes.sunriseMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
-                          <p className='mx-auto my-10 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{hoursMinutes.sunsetMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{hoursMinutes.sunriseMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                          <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{hoursMinutes.sunsetMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
                       </div> 
                       : 
                       <></>
