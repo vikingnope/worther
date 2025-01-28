@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShowWeather } from "./utils/weatherVariables";
 
-export const GetOpenWeatherData = () => {
+export const GetSingleWeather = () => {
 
     const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url
 

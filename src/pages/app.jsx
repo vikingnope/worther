@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import About from './about.jsx';
 import Weather from './weather.jsx';
 import AdvancedWeather from './advancedWeather.jsx';
-import { GetOpenWeatherData } from '../components/openWeatherData.jsx';
+import { GetSingleWeather } from '../components/weatherSingle.jsx';
 import { ThreeHourForecastData } from '../components/3HourForecastData.jsx';
 import ShowMap from '../components/showMap';
 import { SingleThreeHourForecastData } from '../components/Single3HourForecastData';
@@ -25,9 +25,9 @@ export default function App() {
           <Route exact path="/map/:mapType" element={<ShowMap />} />
           <Route exact path="/weather" element={<Weather />} />
           <Route exact path="/advancedWeather" element={<AdvancedWeather />} />
-          <Route exact path="/weather/:city" element={<GetOpenWeatherData />} /> (// * Changes url according to city)
-          <Route exact path="/weatherCountry/:countryCode/:city" element={<GetOpenWeatherData />} />
-          <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetOpenWeatherData/>} />
+          <Route exact path="/weather/:city" element={<GetSingleWeather />} /> (// * Changes url according to city)
+          <Route exact path="/weatherCountry/:countryCode/:city" element={<GetSingleWeather />} />
+          <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetSingleWeather/>} />
           <Route exact path="/3HourForecast/:lat/:lon" element={<ThreeHourForecastData />} />
           <Route exact path="/dailyWeather/:lat/:lon" element={<DailyWeatherData />} />
           <Route exact path="/Single3HourForecast/:index/:lat/:lon" element={<SingleThreeHourForecastData />} />
