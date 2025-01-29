@@ -23,6 +23,20 @@
   margin-bottom: 10px;
 }
 
+@media only screen and (max-width: 768px) {
+  .markdown li {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  .markdown ul, .markdown ol {
+    list-style-type: disc; /* Ensure bullets are shown */
+    padding-left: 30px; /* Add padding to ensure bullets are visible */
+  }
+}
+
 .markdown hr {
   margin-top: 40px;
   opacity: 0.3;

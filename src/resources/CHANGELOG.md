@@ -6,8 +6,9 @@
 - Added precipitation to 3 Hour Forecast and daily forecast
 - Styling changes in multiple pages to make theme more consistent
 - Linting and optimisation
-- Adjusted styling for recommendations and homepage on mobile
+- Adjusted styling for multiple pages on mobile
 - Removed night layer due to its package being outdated
+- Fixed issue with footer not being shown directly on some pages but needing to scroll down instead
 - Updated to React 19
 
 ---
