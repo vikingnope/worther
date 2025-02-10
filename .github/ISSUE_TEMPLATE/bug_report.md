@@ -40,7 +40,7 @@ If applicable, add screenshots to help explain your problem.
 ### System Information
 - Device: <!-- e.g., Windows Desktop, iPhone 14 Pro, Samsung Galaxy S23 -->
 - Browser: <!-- e.g., Chrome 120.0.6099.109, Safari 16.2, Firefox 121.0 -->
-- Worther Version: <!-- e.g., v1.2.3 (found in footer) -->
+- Worther Version: <!-- e.g., v1.2.3 (found in about page) -->
 - Screen Resolution: <!-- e.g., 1920x1080, 390x844 -->
 
 ### Weather Conditions
