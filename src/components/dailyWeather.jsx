@@ -12,7 +12,7 @@ export const DailyWeatherData = () => {
   const [ location, setLocation ] = useState([]);
   const [ weather, setWeather ] = useState([]);
   const [ times, setTimes ] = useState([]);
-  const [error, setError] = useState(null);
+  const [ error, setError ] = useState(null);
 
   document.title = "Worther - Daily Weather - " + location.name;
 
@@ -84,7 +84,9 @@ export const DailyWeatherData = () => {
       setTimes(timesObj)
     })
     .catch(error => {
-      console.error('Weather data fetch error:', error);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Weather data fetch error:', error);
+      }
       if (error.response?.status === 429) {
         // Rate limit exceeded
         setError('Too many requests. Rate limit exceeded. Please try again later.');
@@ -100,7 +102,10 @@ export const DailyWeatherData = () => {
   let hourConversion = '';
   let dayConversion = '';
 
-  // Convert sunrise/sunset times considering timezone
+  // Convert sunrise/sunset times to local time:
+  // 1. Convert timestamp to milliseconds (* 1000)
+  // 2. Apply location's timezone offset (times.timeZone * 1000)
+  // 3. Adjust for browser's timezone offset (getTimezoneOffset() * 60 * 1000)
   const sunriseTime = new Date((times.sunrise * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
   const sunsetTime = new Date((times.sunset * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
 
@@ -122,7 +127,7 @@ export const DailyWeatherData = () => {
                     new Date((new Date(weather.date).getTime() + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
                   ),
                   [
-                    <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto px-2'>
+                    <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto px-2 role="article" aria-label={`Weather forecast for ${dayConversion}`}'>
                         <p className="mx-auto mt-10">
                           <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={localSunriseHour} sunsetHour={localSunsetHour} hourConversion={hourConversion} page={'daily'}/>
                         </p>
