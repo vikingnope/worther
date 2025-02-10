@@ -7,7 +7,9 @@
 - [ ] UI/UX improvement
 - [ ] Weather data processing
 - [ ] Optimisation
+- [ ] Security
 - [ ] Documentation update
+- [ ] Chore
 - [ ] Other (please describe)
 
 ## Changes Made

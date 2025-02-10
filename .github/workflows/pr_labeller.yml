@@ -23,7 +23,9 @@ jobs:
               'UI/UX improvement': 'UI/UX',
               'Weather data processing': 'Data Processing',
               'Optimisation': 'Optimisation',
-              'Documentation update': 'Documentation'
+              'Security': 'Security',
+              'Documentation update': 'Documentation',
+              'Chore': 'Chore'
             };
            
             // Determine which labels should be present
