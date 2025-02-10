@@ -17,8 +17,8 @@ A clear and concise description of the issue.
 
 ### Frequency
 - [ ] Always happens
-- [ ] Happens often
-- [ ] Happens occasionally
+- [ ] Often happens
+- [ ] Occasionally happens
 - [ ] Happened only once
 
 ### To Reproduce
