@@ -59,11 +59,11 @@ export const DailyWeatherData = () => {
         const data = dailyData[date];
         return {
           date,
-          precipitation: data.precipitation / data.count,
-          humidity: data.humidity / data.count,
-          visibility: data.visibility / data.count,
-          windSpeed: data.windSpeed / data.count,
-          windDegrees: data.windDegrees / data.count,
+          precipitation: Number((data.precipitation / data.count).toFixed(2)),
+          humidity: Number((data.humidity / data.count).toFixed(2)),
+          visibility: Number((data.visibility / data.count).toFixed(2)),
+          windSpeed: Number((data.windSpeed / data.count).toFixed(2)),
+          windDegrees: Number((data.windDegrees / data.count).toFixed(2)),
           tempMin: data.tempMin,
           tempMax: data.tempMax,
           weather: data.weather

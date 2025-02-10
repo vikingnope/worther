@@ -1,7 +1,7 @@
 ## 1.0.8 (Minor)
 
-- Changed the Daily Weather page to take averages instead of displaying the ones from 11/12/13 hours.
-- Changed sunrise/sunset logic as Mumbai was displaying wrong sunrise/sunset time.
+- Enhanced Daily Weather page to display averaged weather metrics (precipitation, humidity, wind) across all data points
+- Fixed sunrise/sunset time calculations to properly handle fractional timezone offsets (e.g., UTC+5:30 for Mumbai)
 
 ---
 
