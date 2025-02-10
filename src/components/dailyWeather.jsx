@@ -84,14 +84,13 @@ export const DailyWeatherData = () => {
       setTimes(timesObj)
     })
     .catch(error => {
-      console.log(error);
       console.error('Weather data fetch error:', error);
       if (error.response?.status === 429) {
         // Rate limit exceeded
-        setError('Too many requests. Please try again later.');
+        setError('Too many requests. Rate limit exceeded. Please try again later.');
       } else if (error.response?.status === 401) {
         // API key issues
-        setError('Authentication error. Please check your API configuration.');
+        setError(<>Authentication error. Please <a href="https://github.com/vikingnope/worther/issues/new?template=bug_report.md" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline hover:text-blue-300">open an issue on GitHub</a> stating this error.</>);
       } else {
         setError('Failed to fetch weather data. Please try again.');
       }
@@ -105,10 +104,10 @@ export const DailyWeatherData = () => {
   const sunriseTime = new Date((times.sunrise * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
   const sunsetTime = new Date((times.sunset * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
 
-  const sunriseHourConversion = sunriseTime.getHours();
-  const sunriseMinuteConversion = sunriseTime.getMinutes();
-  const sunsetHourConversion = sunsetTime.getHours();
-  const sunsetMinuteConversion = sunsetTime.getMinutes();
+  const localSunriseHour = sunriseTime.getHours();
+  const localSunriseMinute = sunriseTime.getMinutes();
+  const localSunsetHour = sunsetTime.getHours();
+  const localSunsetMinute = sunsetTime.getMinutes();
 
   return (
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
@@ -125,7 +124,7 @@ export const DailyWeatherData = () => {
                   [
                     <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto px-2'>
                         <p className="mx-auto mt-10">
-                          <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
+                          <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={localSunriseHour} sunsetHour={localSunsetHour} hourConversion={hourConversion} page={'daily'}/>
                         </p>
                         <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
                         <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.weather.description.toUpperCase()}</p>
@@ -138,8 +137,8 @@ export const DailyWeatherData = () => {
                         (weather.visibility / 1000).toFixed(2) + 'km' :
                         weather.visibility + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
                         </p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{String(sunriseMinuteConversion).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
-                        <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{String(sunsetMinuteConversion).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(localSunriseHour > 23) ? String(localSunriseHour - 24).padStart(2, '0') : String(localSunriseHour).padStart(2, '0')}:{String(localSunriseMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                        <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(localSunsetHour < 0) ? (localSunsetHour + 24) : localSunsetHour}:{String(localSunsetMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
                     </div> 
                   ]
                 ))
