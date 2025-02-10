@@ -24,7 +24,8 @@ jobs:
               'Weather data processing': 'Data Processing',
               'Optimisation': 'Optimisation',
               'Security': 'Security',
-              'Documentation update': 'Documentation'
+              'Documentation update': 'Documentation',
+              'Chore': 'Chore'
             };
            
             // Determine which labels should be present

@@ -9,6 +9,7 @@
 - [ ] Optimisation
 - [ ] Security
 - [ ] Documentation update
+- [ ] Chore
 - [ ] Other (please describe)
 
 ## Changes Made
