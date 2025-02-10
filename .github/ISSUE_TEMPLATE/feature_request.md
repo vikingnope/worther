@@ -2,7 +2,7 @@
 name: Feature Request
 about: Suggest an idea for the weather website
 title: '[FEATURE] '
-labels: feature
+labels: Feature
 assignees: ''
 ---
 

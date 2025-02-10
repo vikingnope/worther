@@ -2,7 +2,7 @@
 name: Bug Report
 about: Create a report to help improve the weather website
 title: '[BUG] '
-labels: bug
+labels: Bug
 assignees: ''
 ---
 
