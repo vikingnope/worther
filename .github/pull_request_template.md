@@ -7,6 +7,7 @@
 - [ ] UI/UX improvement
 - [ ] Weather data processing
 - [ ] Optimisation
+- [ ] Security
 - [ ] Documentation update
 - [ ] Other (please describe)
 

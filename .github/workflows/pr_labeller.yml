@@ -23,6 +23,7 @@ jobs:
               'UI/UX improvement': 'UI/UX',
               'Weather data processing': 'Data Processing',
               'Optimisation': 'Optimisation',
+              'Security': 'Security',
               'Documentation update': 'Documentation'
             };
            
