@@ -23,10 +23,10 @@ A clear and concise description of the issue.
 
 ### To Reproduce
 Steps to reproduce the behavior:
-1. Navigate to specific weather page/feature
-2. Enter location or search term
-3. Interact with specific weather component
-4. Describe what breaks
+1. Navigate to a specific weather page/feature <!-- e.g., "Go to the Hourly Forecast page" -->
+2. Enter a location or search term <!-- e.g., "Type London, UK in the search box" -->
+3. Interact with a specific weather component <!-- e.g., "Click on the temperature graph" -->
+4. Describe the issue that occurs <!-- e.g., "The graph fails to update" -->
 
 ### Expected Behavior
 A clear description of what you expected to happen.
