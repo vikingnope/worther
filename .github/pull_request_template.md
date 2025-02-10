@@ -6,6 +6,7 @@
 - [ ] New feature
 - [ ] UI/UX improvement
 - [ ] Weather data processing
+- [ ] Optimisation
 - [ ] Documentation update
 - [ ] Other (please describe)
 
