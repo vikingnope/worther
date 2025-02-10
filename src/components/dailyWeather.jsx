@@ -27,27 +27,49 @@ export const DailyWeatherData = () => {
       }
       setLocation(locationObj);
 
+      const dailyData = {};
+
       for (const weatherAPI of response.data.list) {
-        if(weather.length < 40) {
-          const weatherObj = {
-            humidity: weatherAPI.main.humidity,
-            temperature: weatherAPI.main.temp,
-            tempFeel: weatherAPI.main.feels_like,
-            pressure: weatherAPI.main.pressure,
-            mainWeather: weatherAPI.weather[0].main,
-            description: weatherAPI.weather[0].description,
-            windSpeed: weatherAPI.wind.speed,
-            windDegrees: weatherAPI.wind.deg,
-            precipitation: (weatherAPI.pop * 100),
-            visibility: weatherAPI.visibility,
-            dayUNIX: ((weatherAPI.dt) * 1000),
-            timeNormalHour: String((new Date((weatherAPI.dt) * 1000)).getHours()).padStart(2, '0'), // * padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-            timeNormalMinutes: String((new Date((weatherAPI.dt) * 1000)).getMinutes()).padStart(2, '0')
-          }
-          
-          setWeather(weather => [...weather, weatherObj])
+        const date = new Date(weatherAPI.dt * 1000).toDateString();
+        if (!dailyData[date]) {
+          dailyData[date] = {
+            precipitation: 0,
+            humidity: 0,
+            visibility: 0,
+            windSpeed: 0,
+            windDegrees: 0,
+            tempMin: weatherAPI.main.temp,
+            tempMax: weatherAPI.main.temp,
+            count: 0,
+            weather: weatherAPI.weather[0]
+          };
         }
+        dailyData[date].precipitation += weatherAPI.pop * 100;
+        dailyData[date].humidity += weatherAPI.main.humidity;
+        dailyData[date].visibility += weatherAPI.visibility;
+        dailyData[date].windSpeed += weatherAPI.wind.speed;
+        dailyData[date].windDegrees += weatherAPI.wind.deg;
+        dailyData[date].tempMin = Math.min(dailyData[date].tempMin, weatherAPI.main.temp_min);
+        dailyData[date].tempMax = Math.max(dailyData[date].tempMax, weatherAPI.main.temp_max);
+        dailyData[date].count += 1;
       }
+
+      const weatherArray = Object.keys(dailyData).map(date => {
+        const data = dailyData[date];
+        return {
+          date,
+          precipitation: data.precipitation / data.count,
+          humidity: data.humidity / data.count,
+          visibility: data.visibility / data.count,
+          windSpeed: data.windSpeed / data.count,
+          windDegrees: data.windDegrees / data.count,
+          tempMin: data.tempMin,
+          tempMax: data.tempMax,
+          weather: data.weather
+        };
+      });
+
+      setWeather(weatherArray);
 
       const timesObj = {
         sunrise: response.data.city.sunrise,
@@ -59,27 +81,19 @@ export const DailyWeatherData = () => {
     .catch(error => {
       console.log(error);
     })
-  }, [lat, lon, weather.length]);
+  }, [lat, lon]);
 
   let hourConversion = '';
   let dayConversion = '';
-  let hoursMinutes = '';
-  let hourConversionShowOnly = '';
 
-  (hoursMinutes = {
-    sunriseHour: String((new Date(times.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-    sunriseMinute: String((new Date(times.sunrise * 1000)).getMinutes()).padStart(2, '0'),
-    sunsetHour: String((new Date(times.sunset * 1000)).getHours()).padStart(2, '0'),
-    sunsetMinute: String((new Date(times.sunset * 1000)).getMinutes()).padStart(2, '0'),
-  });
+  // Convert sunrise/sunset times considering timezone
+  const sunriseTime = new Date((times.sunrise * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
+  const sunsetTime = new Date((times.sunset * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
 
-  let sunriseHourConversion = (
-    Math.round((((hoursMinutes.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + times.timeZone) / 3600)
-  );
-
-  let sunsetHourConversion = (
-    Math.round((((hoursMinutes.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + times.timeZone) / 3600)
-  );
+  const sunriseHourConversion = sunriseTime.getHours();
+  const sunriseMinuteConversion = sunriseTime.getMinutes();
+  const sunsetHourConversion = sunsetTime.getHours();
+  const sunsetMinuteConversion = sunsetTime.getMinutes();
 
   return (
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
@@ -89,37 +103,29 @@ export const DailyWeatherData = () => {
           <div className="lg:flex lg:flex-row my-auto">
             {(weather.length > 0) ?
               (
-                weather.map((weather, index) => ( // * .map is used instead of loops
-                  hourConversion = (
-                    Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-                  ),
+                weather.map((weather, index) => (
                   dayConversion = (
-                    new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
-                  ),
-                  hourConversionShowOnly = (
-                    (hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')
+                    new Date((new Date(weather.date).getTime() + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
                   ),
                   [
-                    (hourConversionShowOnly === '11' || hourConversionShowOnly === '12' || hourConversionShowOnly === '13') ?
-                      <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto'>
-                          <p className="mx-auto mt-10">
-                            <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
-                          </p>
-                          <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
-                          <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.description.toUpperCase()}</p>
-                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Temp: {Math.round(weather.temperature)}°C</p>
-                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
-                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</p>
-                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Precipitation: {weather.precipitation}%</p>
-                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
-                          (weather.visibility / 1000) + 'km' :
-                          (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                          </p>
-                          <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{hoursMinutes.sunriseMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
-                          <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{hoursMinutes.sunsetMinute} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
-                      </div> 
-                      : 
-                      <></>
+                    <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto'>
+                        <p className="mx-auto mt-10">
+                          <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
+                        </p>
+                        <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
+                        <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.weather.description.toUpperCase()}</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Temp: {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Speed: {weather.windSpeed.toFixed(2)} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {Math.round(weather.windDegrees)}°</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Precipitation: {weather.precipitation.toFixed(2)}%</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Humidity: {weather.humidity.toFixed(2)}%</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
+                        (weather.visibility / 1000).toFixed(2) + 'km' :
+                        weather.visibility + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
+                        </p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{String(sunriseMinuteConversion).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                        <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{String(sunsetMinuteConversion).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                    </div> 
                   ]
                 ))
               ) :

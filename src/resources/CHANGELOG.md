@@ -1,3 +1,7 @@
+## 1.0.8 (Minor)
+
+- Changed the Daily Weather page to take averages instead of displaying the ones from 11/12/13 hours.
+- Changed sunrise/sunset logic as Mumbai was displaying wrong sunrise/sunset time.
 
 ---
 
