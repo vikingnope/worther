@@ -34,22 +34,26 @@ export const DailyWeatherData = () => {
         const date = new Date(weatherAPI.dt * 1000).toDateString();
         if (!dailyData[date]) {
           dailyData[date] = {
-            precipitation: 0,
+            precipitation: weatherAPI.pop * 100,
             humidity: 0,
             visibility: 0,
             windSpeed: 0,
-            windDegrees: 0,
+            windSin: 0,
+            windCos: 0,
             tempMin: weatherAPI.main.temp,
             tempMax: weatherAPI.main.temp,
             count: 0,
             weather: weatherAPI.weather[0]
           };
+        } else {
+          dailyData[date].precipitation = Math.max(dailyData[date].precipitation, weatherAPI.pop * 100);
         }
-        dailyData[date].precipitation += weatherAPI.pop * 100;
         dailyData[date].humidity += weatherAPI.main.humidity;
         dailyData[date].visibility += weatherAPI.visibility;
         dailyData[date].windSpeed += weatherAPI.wind.speed;
-        dailyData[date].windDegrees += weatherAPI.wind.deg;
+        const windRad = (weatherAPI.wind.deg * Math.PI) / 180;
+        dailyData[date].windCos += Math.cos(windRad);
+        dailyData[date].windSin += Math.sin(windRad);
         dailyData[date].tempMin = Math.min(dailyData[date].tempMin, weatherAPI.main.temp_min);
         dailyData[date].tempMax = Math.max(dailyData[date].tempMax, weatherAPI.main.temp_max);
         dailyData[date].count += 1;
@@ -59,11 +63,11 @@ export const DailyWeatherData = () => {
         const data = dailyData[date];
         return {
           date,
-          precipitation: Number((data.precipitation / data.count).toFixed(2)),
+          precipitation: data.precipitation,
           humidity: Number((data.humidity / data.count).toFixed(2)),
           visibility: Number((data.visibility / data.count).toFixed(2)),
           windSpeed: Number((data.windSpeed / data.count).toFixed(2)),
-          windDegrees: Number((data.windDegrees / data.count).toFixed(2)),
+          windDegrees: ((Math.atan2(data.windSin, data.windCos) * 180) / Math.PI + 360) % 360,
           tempMin: data.tempMin,
           tempMax: data.tempMax,
           weather: data.weather
@@ -119,7 +123,7 @@ export const DailyWeatherData = () => {
                     new Date((new Date(weather.date).getTime() + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
                   ),
                   [
-                    <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto'>
+                    <div key={index} className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto px-2'>
                         <p className="mx-auto mt-10">
                           <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={'daily'}/>
                         </p>
@@ -128,8 +132,8 @@ export const DailyWeatherData = () => {
                         <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Temp: {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C</p>
                         <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Speed: {weather.windSpeed.toFixed(2)} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
                         <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {Math.round(weather.windDegrees)}°</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Precipitation: {weather.precipitation.toFixed(2)}%</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Humidity: {weather.humidity.toFixed(2)}%</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Precipitation: {Math.round(weather.precipitation)}%</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Humidity: {Math.round(weather.humidity)}%</p>
                         <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
                         (weather.visibility / 1000).toFixed(2) + 'km' :
                         weather.visibility + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
