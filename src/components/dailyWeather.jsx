@@ -12,6 +12,7 @@ export const DailyWeatherData = () => {
   const [ location, setLocation ] = useState([]);
   const [ weather, setWeather ] = useState([]);
   const [ times, setTimes ] = useState([]);
+  const [error, setError] = useState(null);
 
   document.title = "Worther - Daily Weather - " + location.name;
 
@@ -80,6 +81,16 @@ export const DailyWeatherData = () => {
     })
     .catch(error => {
       console.log(error);
+      console.error('Weather data fetch error:', error);
+      if (error.response?.status === 429) {
+        // Rate limit exceeded
+        setError('Too many requests. Please try again later.');
+      } else if (error.response?.status === 401) {
+        // API key issues
+        setError('Authentication error. Please check your API configuration.');
+      } else {
+        setError('Failed to fetch weather data. Please try again.');
+      }
     })
   }, [lat, lon]);
 
@@ -99,7 +110,7 @@ export const DailyWeatherData = () => {
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
       <Header/>
       <div className="text-center text-white flex-grow flex flex-col">
-          <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data - {location.name}</p>
+          <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data {(location.name && location.name.trim()) ? `- ${location.name}` : ` `} </p>
           <div className="lg:flex lg:flex-row my-auto">
             {(weather.length > 0) ?
               (
@@ -129,7 +140,9 @@ export const DailyWeatherData = () => {
                   ]
                 ))
               ) :
-              <></>
+              <>
+                {error ? <p className="text-white mx-auto font-bold text-xl">{error}</p> : <p className="text-white mx-auto font-bold text-xl">Loading...</p>}
+              </>
             }
           </div>
           <button className="rounded-md h-8 text-xl my-16 font-bold w-24 mx-auto border" onClick={() => window.history.back()}>Go Back</button>
