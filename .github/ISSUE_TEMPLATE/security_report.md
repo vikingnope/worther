@@ -1,5 +1,5 @@
 ---
-name: Weather App Security Report
+name: Security Report
 about: Report a security vulnerability in the React weather application
 title: '[SECURITY] '
 labels: Security
