@@ -1,5 +1,5 @@
 ---
-name: Optimization Report
+name: Optimisation Report
 about: Suggest performance improvements for the weather website
 title: '[OPTIMISATION] '
 labels: Optimisation
@@ -13,7 +13,7 @@ assignees: ''
 - Largest Contentful Paint: 
 - Time to Interactive: 
 
-### Area for Optimization
+### Area for Optimisation
 <!-- Describe which part of the website needs optimization -->
 
 ### Proposed Solution
