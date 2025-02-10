@@ -7,7 +7,7 @@ import { Header } from './header';
 import { Footer } from './footer';
 import { useNavigate } from 'react-router-dom';
 import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
-import { WiHumidity, WiStrongWind, WiBarometer } from 'react-icons/wi'; // * humidity icon, wind icon, barometer
+import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke } from 'react-icons/wi'; // * humidity icon, wind icon, barometer, smoke icon
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunrise icon, sunset icon
 import { GiWindsock } from "react-icons/gi"; // * wind sock icon
 
@@ -68,6 +68,8 @@ export const WeatherIcons = (props) => {
         icon = <WiNightFog size={size} color={'white'} /> :
       (props.mainWeather === "Snow") ?
         icon = <WiNightAltSnow size={size} color={'white'} /> :
+      (props.mainWeather === "Smoke") ?
+        icon = <WiSmoke size={size} color={'white'} /> :
       <> </>
     } else {
       (props.mainWeather === "Clear") ?
@@ -88,6 +90,8 @@ export const WeatherIcons = (props) => {
         icon = <WiNightFog size={size} color={'white'} /> :
       (props.mainWeather === "Snow") ?
         icon = <WiNightAltSnow size={size} color={'white'} /> :
+      (props.mainWeather === "Smoke") ?
+        icon = <WiSmoke size={size} color={'white'} /> :
       <> </>
     }
   }
@@ -116,6 +120,8 @@ export const WeatherIcons = (props) => {
         icon = <BsFillCloudHazeFill size={size} color={'white'} /> :
       (props.description === "mist") ?
         icon = <TbMist size={size} color={'white'} /> :
+      (props.mainWeather === "Smoke") ?
+        icon = <WiSmoke size={size} color={'white'} /> :
       <> </>
     } else {
       (props.mainWeather === "Clear") ?
@@ -142,6 +148,8 @@ export const WeatherIcons = (props) => {
         icon = <BsFillCloudHazeFill size={size} color={'white'} /> :
       (props.description === "mist") ?
         icon = <TbMist size={size} color={'white'} /> :
+      (props.mainWeather === "Smoke") ?
+        icon = <WiSmoke size={size} color={'white'} /> :
       <> </>
     }
   }
