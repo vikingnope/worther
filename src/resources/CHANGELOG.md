@@ -2,6 +2,7 @@
 
 - Enhanced Daily Weather page to display averaged weather metrics (precipitation, humidity, wind) across all data points
 - Fixed sunrise/sunset time calculations to properly handle fractional timezone offsets (e.g., UTC+5:30 for Mumbai)
+- Added smoke icon
 
 ---
 
