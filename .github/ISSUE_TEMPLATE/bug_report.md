@@ -25,14 +25,14 @@ What actually happened instead.
 ### Screenshots
 If applicable, add screenshots to help explain your problem.
 
-### System Information:
- - Device: [e.g. Desktop, iPhone 12]
- - Browser: [e.g. Chrome, Safari]
- - Version: [e.g. 22]
+### System Information
+- Device: [e.g. Desktop, iPhone 12]
+- Browser: [e.g. Chrome, Safari]
+- Version: [e.g. 22]
 
-### Location Details:
- - City/Region: [e.g. New York]
- - Weather Feature: [e.g. Temperature, Forecast, Radar]
+### Location Details
+- City/Region: [e.g. New York]
+- Weather Feature: [e.g. Temperature, Forecast, Radar]
 
 ### Additional Context
 Add any other context about the problem here.
