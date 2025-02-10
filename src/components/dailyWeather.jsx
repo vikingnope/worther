@@ -114,7 +114,7 @@ export const DailyWeatherData = () => {
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
       <Header/>
       <div className="text-center text-white flex-grow flex flex-col">
-          <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data {(location.name && location.name.trim()) ? `- ${location.name}` : ` `} </p>
+        <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data {location.name?.trim() ? `- ${location.name}` : ''} </p>
           <div className="lg:flex lg:flex-row my-auto">
             {(weather.length > 0) ?
               (
