@@ -8,7 +8,7 @@ jobs:
   label-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
 
       - name: Update PR labels
         uses: actions/github-script@v7.0.1
@@ -16,7 +16,7 @@ jobs:
           script: |
             const prBody = context.payload.pull_request.body;
             const shouldHaveLabels = new Set();
-            
+
             const labelMappings = {
               'Bug fix': 'Bug',
               'New feature': 'Feature',
@@ -25,14 +25,14 @@ jobs:
               'Optimisation': 'Optimisation',
               'Documentation update': 'Documentation'
             };
-            
+           
             // Determine which labels should be present
             for (const [text, label] of Object.entries(labelMappings)) {
               if (prBody && prBody.includes(`- [x] ${text}`)) {
                 shouldHaveLabels.add(label);
               }
             }
-            
+        
             // Get current labels
             const currentLabels = await github.rest.issues.listLabelsOnIssue({
               owner: context.repo.owner,
