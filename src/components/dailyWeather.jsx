@@ -92,7 +92,7 @@ export const DailyWeatherData = () => {
         setError('Too many requests. Rate limit exceeded. Please try again later.');
       } else if (error.response?.status === 401) {
         // API key issues
-        setError(<>Authentication error. Please <a href="https://github.com/vikingnope/worther/issues/new?template=bug_report.md" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline hover:text-blue-300">open an issue on GitHub</a> stating this error.</>);
+        setError(<>Authentication error. Please <a href="https://github.com/vikingnope/worther/issues/new?template=bug_report.md" target="_blank" rel="noopener noreferrer noreferrer" referrerPolicy="no-referrer" className="text-blue-400 underline hover:text-blue-300">open an issue on GitHub</a> stating this error.</>);
       } else {
         setError('Failed to fetch weather data. Please try again.');
       }
@@ -154,7 +154,11 @@ export const DailyWeatherData = () => {
                 ))
               ) :
               <>
-                {error ? <p className="text-white mx-auto font-bold text-xl">{error}</p> : <p className="text-white mx-auto font-bold text-xl">Loading...</p>}
+                {error ? (
+                  <p className="text-white mx-auto font-bold text-xl" role="alert" aria-live="polite">{error}</p>
+                ) : (
+                  <p className="text-white mx-auto font-bold text-xl" role="status" aria-live="polite">Loading...</p>
+                )}
               </>
             }
           </div>
