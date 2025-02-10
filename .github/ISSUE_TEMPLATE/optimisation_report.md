@@ -1,6 +1,6 @@
 ---
 name: Optimisation Report
-about: Suggest performance improvements for the weather website
+about: Suggest performance improvements for Worther
 title: '[OPTIMISATION] '
 labels: Optimisation
 assignees: ''

@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help improve the weather website
+about: Create a report to help improve Worther
 title: '[BUG] '
 labels: Bug
 assignees: ''
