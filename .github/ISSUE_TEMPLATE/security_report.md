@@ -1,6 +1,6 @@
 ---
-name: Weather App Security Report
-about: Report a security vulnerability in the React weather application
+name: Security Report
+about: Report a security vulnerability in Worther
 title: '[SECURITY] '
 labels: Security
 assignees: ''

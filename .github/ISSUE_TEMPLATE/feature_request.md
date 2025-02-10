@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for the weather website
+about: Suggest an idea for Worther
 title: '[FEATURE] '
 labels: Feature
 assignees: ''
