@@ -5,7 +5,7 @@
 - Added smoke icon
 - Better error handling
 - Minor design changes
-- Added changelog checker
+- Added automated changelog checker to ensure changelog updates in pull requests
 
 ---
 
