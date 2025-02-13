@@ -418,7 +418,7 @@ export const ShowWeather = (props) => {
                   </form>
                 </div>
                 <button className="rounded-md h-8 text-xl my-8 font-bold w-24 mx-auto border" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
-                <p className="flex mx-auto underline">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                <p className="flex mx-auto underline mb-7">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>          
             :
               <div className="text-center flex-grow flex flex-col justify-center">
