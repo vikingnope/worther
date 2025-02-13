@@ -1,0 +1,39 @@
+name: Changelog Checker
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - 'src/resources/CHANGELOG.md'
+
+jobs:
+  check-changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Check for changelog changes
+        id: changelog-check
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "src/resources/CHANGELOG.md" || true)
+          echo "changed=$CHANGELOG_CHANGED" >> $GITHUB_OUTPUT
+
+      - name: Handle changelog status
+        run: |
+          # Ensure the "Changelog needed" label exists (manual verification recommended)
+          gh label create "Changelog needed" --color FF0000 --description "Changelog update required" || true
+
+          if [[ ${{ steps.changelog-check.outputs.changed }} == "0" ]]; then
+            echo "No changelog changes detected"
+            gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
+            exit 1
+          else
+            echo "Changelog changes detected"
+            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
