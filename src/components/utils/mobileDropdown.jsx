@@ -47,19 +47,19 @@ export const Dropdown = (props) => {
             </div>
 
             {(toggle) ?
-            (<ul className={'absolute right-1 z-50 mt-1.5'}>
-                <li>
-                    {
-                        [
-                            Navigations('Home', '/'), 
-                            Navigations('Map', '/map/light'), 
-                            Navigations('Weather', '/weather'), 
-                            Navigations('Recommendations', '/recommendations'), 
-                            Navigations('About', '/about')
-                        ]
-                    }
-                </li>
-            </ul>) :
+            (
+                <nav className={'absolute right-1 z-50 mt-1.5'}>
+                    {[
+                        Navigations('Home', '/'), 
+                        Navigations('Map', '/map/light'), 
+                        Navigations('Weather', '/weather'), 
+                        Navigations('Recommendations', '/recommendations'), 
+                        Navigations('About', '/about')
+                    ].map((item) => (
+                        <span key={item.props.href}>{item}</span>
+                    ))}
+                </nav>
+            ) :
             <></>
             }
         </nav>

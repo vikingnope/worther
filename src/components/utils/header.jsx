@@ -62,8 +62,8 @@ export const Header = () => {
                     Navigations('Weather', '/weather'),
                     Navigations('Recommendations', '/recommendations'), 
                     Navigations('About', '/about')
-                    ].map((item, index) => (
-                        <span key={index}>{item}</span>
+                    ].map((item) => (
+                        <span key={item.props.href}>{item}</span>
                     ))
                 ) : (isMobile) ?
                     <Dropdown location={location}/> :
