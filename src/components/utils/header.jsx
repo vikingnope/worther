@@ -29,34 +29,20 @@ export const Header = () => {
         const active = (location === path) ? 'text-green-300' : 'text-white';
 
         return(
-            <a href={path} className={`uppercase text-2xl mr-7 hover:text-green-300 duration-150 ${active}`}>
-                <div className='mt-2 flex'>
-                    <div className='mr-2'>
-                        {(text === 'Home') ?
-                            <div className='mt-1'>
-                                <AiFillHome size='25'/>
-                            </div> :
-                        (text === 'Map') ?
-                            <div className='mt-1.5'>
-                                <BsFillMapFill size='22'/>
-                            </div> :
-                        (text === 'Weather') ?
-                            <div className='mt-1'>
-                                <BsCloudSunFill />
-                            </div> :
-                        (text === 'Recommendations') ?
-                            <div className='mt-1'>
-                                <TbBeach />
-                            </div> :
-                        (text === 'About') ?
-                            <div className='mt-1'>
-                                <HiInformationCircle size='25'/>
-                            </div> :
-                            <></>         
-                        }
-                    </div>
-                    {text}
-                </div>
+            <a href={path} className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-green-300 duration-150 mr-6 ${active}`}>
+                {(text === 'Home') ?
+                    <AiFillHome size='25'/> :
+                (text === 'Map') ?
+                    <BsFillMapFill size='22'/> :
+                (text === 'Weather') ?
+                    <BsCloudSunFill size='25'/> :
+                (text === 'Recommendations') ?
+                    <TbBeach size='25'/> :
+                (text === 'About') ?
+                    <HiInformationCircle size='26'/> :
+                    <></>         
+                }
+                {text}
             </a>
         )
     };
@@ -76,7 +62,9 @@ export const Header = () => {
                     Navigations('Weather', '/weather'),
                     Navigations('Recommendations', '/recommendations'), 
                     Navigations('About', '/about')
-                    ]
+                    ].map((item) => (
+                        <span key={item.props.href}>{item}</span>
+                    ))
                 ) : (isMobile) ?
                     <Dropdown location={location}/> :
                     <></>
