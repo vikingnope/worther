@@ -14,34 +14,20 @@ export const Dropdown = (props) => {
         let active = (props.location === path) ? 'text-green-300' : 'text-white';
 
         return(
-            <a href={path} className={`h-14 flex justify-center uppercase text-2xl border-y-2 border-x-3 border-zinc-600 mr-1 bg-stone-900 indent-2 ${active}`}>
-                <div className='mx-3 mt-2 flex'>
-                    <div className='mr-px'>
-                        {(text === 'Home') ?
-                            <div className='mt-1'>
-                                <AiFillHome size='25'/>
-                            </div> :
-                        (text === 'Map') ?
-                            <div className='mt-1.5'>
-                                <BsFillMapFill size='23'/>
-                            </div> :
-                        (text === 'Weather') ?
-                            <div className='mt-1'>
-                                <BsCloudSunFill />
-                            </div> :
-                        (text === 'Recommendations') ?
-                            <div className='mt-1'>
-                                <TbBeach />
-                            </div> :
-                        (text === 'About') ?
-                            <div className='mt-1'>
-                                <HiInformationCircle size='25'/>
-                            </div> :
-                            <></>         
-                        }
-                    </div>
-                    {text}
-                </div>
+            <a href={path} className={`h-14 flex justify-center px-3 items-center gap-2 uppercase text-2xl border-y-2 border-x-3 border-zinc-600 bg-stone-900 my-auto ${active}`}>
+                {(text === 'Home') ?
+                    <AiFillHome size='25'/> :
+                (text === 'Map') ?
+                    <BsFillMapFill size='22'/> :
+                (text === 'Weather') ?
+                    <BsCloudSunFill size='25'/> :
+                (text === 'Recommendations') ?
+                    <TbBeach size='25'/> :
+                (text === 'About') ?
+                    <HiInformationCircle size='26'/> :
+                    <></>         
+                }
+                {text}
             </a>
         )
     };
