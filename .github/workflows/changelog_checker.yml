@@ -12,10 +12,22 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - name: Check if PR author is a bot
+        id: check-bot
+        run: |
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          if [[ "$PR_AUTHOR" == *"[bot]" ]] || [[ "$PR_AUTHOR" == "dependabot" ]]; then
+            echo "is_bot=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_bot=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout code
+        if: steps.check-bot.outputs.is_bot == 'false'
         uses: actions/checkout@v4.2.2
 
       - name: Check for changelog changes
+        if: steps.check-bot.outputs.is_bot == 'false'
         id: changelog-check
         run: |
           git fetch origin ${{ github.base_ref }}
@@ -23,6 +35,7 @@ jobs:
           echo "changed=$CHANGELOG_CHANGED" >> $GITHUB_OUTPUT
 
       - name: Handle changelog status
+        if: steps.check-bot.outputs.is_bot == 'false'
         run: |
           # Ensure the "Changelog needed" label exists (manual verification recommended)
           gh label create "Changelog needed" --color FF0000 --description "Changelog update required" || true
@@ -37,3 +50,7 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Skip check for bot
+        if: steps.check-bot.outputs.is_bot == 'true'
+        run: echo "PR author is a bot, skipping changelog check"
