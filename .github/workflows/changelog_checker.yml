@@ -7,10 +7,10 @@ on:
       - 'src/resources/CHANGELOG.md'
 
 jobs:
-  check-changelog:
+  detect-author:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
+    outputs:
+      is_bot: ${{ steps.check-bot.outputs.is_bot }}
     steps:
       - name: Check if PR author is a bot
         id: check-bot
@@ -22,35 +22,45 @@ jobs:
             echo "is_bot=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Checkout code
-        if: steps.check-bot.outputs.is_bot == 'false'
-        uses: actions/checkout@v4.2.2
-
+  check-changelog:
+    needs: detect-author
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.changelog-check.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4.2.2
       - name: Check for changelog changes
-        if: steps.check-bot.outputs.is_bot == 'false'
         id: changelog-check
         run: |
           git fetch origin ${{ github.base_ref }}
           CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "src/resources/CHANGELOG.md" || true)
           echo "changed=$CHANGELOG_CHANGED" >> $GITHUB_OUTPUT
 
-      - name: Handle changelog status
-        if: steps.check-bot.outputs.is_bot == 'false'
+  enforce-changelog:
+    needs: [detect-author, check-changelog]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Handle changelog enforcement
         run: |
-          # Ensure the "Changelog needed" label exists (manual verification recommended)
-          gh label create "Changelog needed" --color FF0000 --description "Changelog update required" || true
+          IS_BOT="${{ needs.detect-author.outputs.is_bot }}"
+          HAS_CHANGES="${{ needs.check-changelog.outputs.has_changes }}"
 
-          if [[ ${{ steps.changelog-check.outputs.changed }} == "0" ]]; then
-            echo "No changelog changes detected"
-            gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
-            exit 1
+          if [[ "$IS_BOT" == "true" ]]; then
+            if [[ "$HAS_CHANGES" == "0" ]]; then
+              echo "Bot PR detected without changelog changes - allowing"
+              exit 0
+            fi
           else
-            echo "Changelog changes detected"
-            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed"
+            if [[ "$HAS_CHANGES" == "0" ]]; then
+              echo "User PR detected without changelog changes - blocking"
+              gh label create "Changelog needed" --color FF0000 --description "Changelog update required" || true
+              gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
+              exit 1
+            else
+              gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed"
+            fi
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Skip check for bot
-        if: steps.check-bot.outputs.is_bot == 'true'
-        run: echo "PR author is a bot, skipping changelog check"
