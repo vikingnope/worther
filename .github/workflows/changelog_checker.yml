@@ -45,21 +45,28 @@ jobs:
       should_block: ${{ steps.check-status.outputs.should_block }}
     steps:
       - uses: actions/checkout@v4.2.2
-        if: needs.detect-author.outputs.is_bot == 'false'
-        
+
       - name: Handle changelog enforcement
         id: check-status
         run: |
           IS_BOT="${{ needs.detect-author.outputs.is_bot }}"
           HAS_CHANGES="${{ needs.check-changelog.outputs.has_changes }}"
 
+          # Always try to remove the label first if changes exist
+          if [[ "$HAS_CHANGES" != "0" ]]; then
+            echo "Changelog changes detected - removing label if it exists"
+            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" 2>/dev/null || true
+          fi
+
           if [[ "$IS_BOT" == "true" ]]; then
             echo "Bot PR detected - skipping enforcement"
+            # Remove label for bot PRs even if no changelog changes
+            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" 2>/dev/null || true
             echo "should_block=false" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          # Only create/modify labels for non-bot PRs
+          # Handle non-bot PRs
           if [[ "$HAS_CHANGES" == "0" ]]; then
             echo "User PR detected without changelog changes - blocking"
             gh label create "Changelog needed" --color FF0000 --description "Changelog update required" 2>/dev/null || true
@@ -67,8 +74,6 @@ jobs:
             echo "should_block=true" >> $GITHUB_OUTPUT
           else
             echo "User PR detected with changelog changes - allowing"
-            # Simplified label removal - will silently succeed if label doesn't exist
-            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" 2>/dev/null || true
             echo "should_block=false" >> $GITHUB_OUTPUT
           fi
         env:
