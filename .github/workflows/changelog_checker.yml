@@ -63,14 +63,12 @@ jobs:
           if [[ "$HAS_CHANGES" == "0" ]]; then
             echo "User PR detected without changelog changes - blocking"
             gh label create "Changelog needed" --color FF0000 --description "Changelog update required" 2>/dev/null || true
-            gh pr view ${{ github.event.pull_request.number }} --json labels -q '.labels[].name' | grep -q "Changelog needed" || \
             gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
             echo "should_block=true" >> $GITHUB_OUTPUT
-            exit 0
           else
             echo "User PR detected with changelog changes - allowing"
-            gh pr view ${{ github.event.pull_request.number }} --json labels -q '.labels[].name' | grep -q "Changelog needed" && \
-            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" || true
+            # Simplified label removal - will silently succeed if label doesn't exist
+            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" 2>/dev/null || true
             echo "should_block=false" >> $GITHUB_OUTPUT
           fi
         env:
