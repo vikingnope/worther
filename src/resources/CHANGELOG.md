@@ -8,6 +8,7 @@
 - Added automated changelog checker to ensure changelog updates in pull requests
 - Fixed key index errors in mobile dropdown and header
 - Enhanced the changelog checker to check for bot PRs including removal of changelog labels for bot PRs
+- Added CodeRabbit config
 
 ---
 
