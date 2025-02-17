@@ -58,11 +58,16 @@ jobs:
           # Only create/modify labels for non-bot PRs
           if [[ "$HAS_CHANGES" == "0" ]]; then
             echo "User PR detected without changelog changes - blocking"
-            gh label create "Changelog needed" --color FF0000 --description "Changelog update required" || true
+            # Try to create label, ignore if it exists
+            gh label create "Changelog needed" --color FF0000 --description "Changelog update required" 2>/dev/null || true
+            # Add label to PR
+            gh pr view ${{ github.event.pull_request.number }} --json labels -q '.labels[].name' | grep -q "Changelog needed" || \
             gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
             exit 1
           else
             echo "User PR detected with changelog changes - allowing"
+            # Only try to remove label if it exists
+            gh pr view ${{ github.event.pull_request.number }} --json labels -q '.labels[].name' | grep -q "Changelog needed" && \
             gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" || true
           fi
         env:
