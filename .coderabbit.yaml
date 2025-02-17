@@ -30,6 +30,8 @@ reviews:
   auto_review:
     enabled: true
     auto_incremental_review: true
+    authors:
+      - "dependabot[bot]"
     ignore_title_keywords: []
     labels: []
     drafts: false
