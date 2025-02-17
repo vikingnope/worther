@@ -42,25 +42,28 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - uses: actions/checkout@v4.2.2
+        if: needs.detect-author.outputs.is_bot == 'false'
+        
       - name: Handle changelog enforcement
         run: |
           IS_BOT="${{ needs.detect-author.outputs.is_bot }}"
           HAS_CHANGES="${{ needs.check-changelog.outputs.has_changes }}"
 
           if [[ "$IS_BOT" == "true" ]]; then
-            if [[ "$HAS_CHANGES" == "0" ]]; then
-              echo "Bot PR detected without changelog changes - allowing"
-              exit 0
-            fi
+            echo "Bot PR detected - skipping enforcement"
+            exit 0
+          fi
+
+          # Only create/modify labels for non-bot PRs
+          if [[ "$HAS_CHANGES" == "0" ]]; then
+            echo "User PR detected without changelog changes - blocking"
+            gh label create "Changelog needed" --color FF0000 --description "Changelog update required" || true
+            gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
+            exit 1
           else
-            if [[ "$HAS_CHANGES" == "0" ]]; then
-              echo "User PR detected without changelog changes - blocking"
-              gh label create "Changelog needed" --color FF0000 --description "Changelog update required" || true
-              gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
-              exit 1
-            else
-              gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed"
-            fi
+            echo "User PR detected with changelog changes - allowing"
+            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" || true
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
