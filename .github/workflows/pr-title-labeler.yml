@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
 
-      - name: Update PR labels
+      - name: Update PR labels and title
         uses: actions/github-script@v7.0.1
         with:
           script: |
@@ -27,6 +27,19 @@ jobs:
               'Documentation update': 'Documentation',
               'Chore': 'Chore'
             };
+
+            const titlePrefixMappings = {
+              'Bug': 'fix',
+              'Feature': 'feat',
+              'UI/UX': 'ui',
+              'Data Processing': 'data',
+              'Optimisation': 'perf',
+              'Security': 'security',
+              'Documentation': 'docs',
+              'Chore': 'chore'
+            };
+
+            const validPrefixes = Object.values(titlePrefixMappings);
            
             // Determine which labels should be present
             for (const [text, label] of Object.entries(labelMappings)) {
@@ -71,4 +84,40 @@ jobs:
                 issue_number: context.payload.pull_request.number,
                 labels: labelsToAdd
               });
+            }
+
+            // Update PR title with prefix
+            const selectedLabel = [...shouldHaveLabels][0];
+            if (selectedLabel) {
+              const prefix = titlePrefixMappings[selectedLabel];
+              let currentTitle = context.payload.pull_request.title;
+              
+              // Check if current title has any prefix (including non-standard ones)
+              const prefixMatch = currentTitle.match(/^([a-zA-Z]+):\s*/);
+              
+              if (prefixMatch) {
+                const currentPrefix = prefixMatch[1].toLowerCase();
+                // Only update if current prefix is not the correct one
+                if (!validPrefixes.includes(currentPrefix) || currentPrefix !== prefix) {
+                  currentTitle = currentTitle.replace(/^[a-zA-Z]+:\s*/, '');
+                  const newTitle = `${prefix}: ${currentTitle}`;
+                  
+                  await github.rest.pulls.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: context.payload.pull_request.number,
+                    title: newTitle.toLowerCase()
+                  });
+                }
+              } else {
+                // No prefix exists, add new one
+                const newTitle = `${prefix}: ${currentTitle}`;
+                
+                await github.rest.pulls.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: context.payload.pull_request.number,
+                  title: newTitle.toLowerCase()
+                });
+              }
             }
