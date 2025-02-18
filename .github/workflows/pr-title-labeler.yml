@@ -89,24 +89,24 @@ jobs:
             // Update PR title with prefix
             const selectedLabel = [...shouldHaveLabels][0];
             if (selectedLabel) {
-              const prefix = titlePrefixMappings[selectedLabel];
+              const prefix = titlePrefixMappings[selectedLabel].toLowerCase();
               let currentTitle = context.payload.pull_request.title;
               
               // Check if current title has any prefix (including non-standard ones)
-              const prefixMatch = currentTitle.match(/^([a-zA-Z]+):\s*/);
+              const prefixMatch = currentTitle.match(/^([a-zA-Z]+):\s*(.*)/);
               
               if (prefixMatch) {
-                const currentPrefix = prefixMatch[1].toLowerCase();
+                const titleContent = prefixMatch[2];
                 // Only update if current prefix is not the correct one
+                const currentPrefix = prefixMatch[1].toLowerCase();
                 if (!validPrefixes.includes(currentPrefix) || currentPrefix !== prefix) {
-                  currentTitle = currentTitle.replace(/^[a-zA-Z]+:\s*/, '');
-                  const newTitle = `${prefix}: ${currentTitle}`;
+                  const newTitle = `${prefix}: ${titleContent}`;
                   
                   await github.rest.pulls.update({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     pull_number: context.payload.pull_request.number,
-                    title: newTitle.toLowerCase()
+                    title: newTitle
                   });
                 }
               } else {
@@ -117,7 +117,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   pull_number: context.payload.pull_request.number,
-                  title: newTitle.toLowerCase()
+                  title: newTitle
                 });
               }
             }
