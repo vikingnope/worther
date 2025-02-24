@@ -16,7 +16,9 @@ export default function Changelog() {
             <Header/>
             <div className="flex flex-col flex-grow mb-5">
                 <h1 className='text-6xl font-bold underline my-10 text-center'>Changelog</h1>
-                <Markdown children={markdown} className={'markdown'}/>
+                <div className='markdown'>
+                    <Markdown>{markdown}</Markdown>
+                </div>
             </div>
             <Footer />
         </div>
