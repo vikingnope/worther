@@ -95,6 +95,19 @@ export const RainViewerData = (props) => {
 }
 
 export const HybridLayer = (props) => {
+  // Define the labelLayerProps here, outside of JSX
+  const labelLayerProps = {
+    url: (props.mapType === 'light') 
+      ? "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" 
+      : "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+    tileSize: 256,
+    zIndex: 3,
+    opacity: 1,
+    className: "labels-layer",
+    subdomains: "abcd"
+  };
+  
   return (
     <>
     {
@@ -109,26 +122,15 @@ export const HybridLayer = (props) => {
             opacity={1}
           />
           {/* Labels overlay layer */}
-          {(props.mapType === 'light') ?
-            <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CARTO</a>'
-            tileSize={256}
-            zIndex={3}
-            opacity={1}
-            className="labels-layer"
-            subdomains="abcd"
-            /> :
-            <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CARTO</a>'
-            tileSize={256}
-            zIndex={3}
-            opacity={1}
-            className="labels-layer"
-            subdomains="abcd"
-            />
-          }
+          <TileLayer
+            url={labelLayerProps.url}
+            attribution={labelLayerProps.attribution}
+            tileSize={labelLayerProps.tileSize}
+            zIndex={labelLayerProps.zIndex}
+            opacity={labelLayerProps.opacity}
+            className={labelLayerProps.className}
+            subdomains={labelLayerProps.subdomains}
+          />
         </> : <></>
     }
     </>
