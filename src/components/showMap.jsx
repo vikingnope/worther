@@ -6,7 +6,7 @@ import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
-import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer, WindDirectionLayer } from './layers';
+import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from './layers';
 import markerDot from "../resources/location-dot.png";
 import { MapMode } from './utils/mapMode';
 
@@ -64,7 +64,7 @@ export default function ShowMap(props) {
                     <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity}/>
                     <CloudLayer show={cloudLayerChoice} opacity={layerOpacity}/>
                     <HybridLayer show={satelliteLayerChoice} mapType={mapType}/>
-                    <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} />
+                    {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
                     <MenuBar mode={mapType} showWindDir={windDirChoice} onShowWindDirChange={setWindDirChoice} showSatellite={satelliteLayerChoice} onShowSatelliteChange={setSatelliteLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>

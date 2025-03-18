@@ -137,20 +137,20 @@ export const HybridLayer = (props) => {
   )
 }
 
-export const WindDirectionLayer = (props) => {
+// export const WindDirectionLayer = (props) => {
 
-  return (
-    <>
-    {
-      (props.show) ?
-        <TileLayer
-          url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
-          tileSize={256}
-          zIndex = {2}
-          opacity = {props.opacity}
-        /> : <></>
-    }
-    </>
-  )
+//   return (
+//     <>
+//     {
+//       (props.show) ?
+//         <TileLayer
+//           url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
+//           tileSize={256}
+//           zIndex = {2}
+//           opacity = {props.opacity}
+//         /> : <></>
+//     }
+//     </>
+//   )
   
-}
+// }
