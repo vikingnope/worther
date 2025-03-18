@@ -50,11 +50,14 @@ export default function ShowMap(props) {
                 <Header/>
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='flex-grow'>
                     <ScaleControl />
-                    <TileLayer zIndex={1}
+                    <TileLayer 
+                        zIndex={1}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url={(mapType === 'light') ?
-                        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" :
-                        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"}
+                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" :
+                            "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+                        }
+                        subdomains={(mapType === 'light') ? "abc" : "abcd"}
                     />
                     <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
                     <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity}/>
