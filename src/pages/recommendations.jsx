@@ -1,6 +1,6 @@
 import { Header } from "../components/utils/header";
 import { Footer } from "../components/utils/footer";
-import { MapContainer, TileLayer, Marker, Popup} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
 import markerDotBlue from "../resources/location-dot.png";
@@ -8,7 +8,24 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
 import markerDotRed from "../resources/location-dot-red.png";
-import { isDesktop } from "react-device-detect";
+import { useDeviceDetect } from "../hooks/useDeviceDetect";
+
+// Component to control zoom based on device detection
+function ZoomController({ isDesktop }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    const currentZoom = map.getZoom();
+    
+    // Only adjust zoom if we're at minimum zoom (10) for desktop
+    // or if we're at the desktop zoom (11) for mobile
+    if ((currentZoom === 10 && isDesktop) || (currentZoom === 11 && !isDesktop)) {
+      map.setZoom(isDesktop ? 11 : 10);
+    }
+  }, [isDesktop, map]);
+  
+  return null;
+}
 
 export default function Recommendations () {
   const { readString } = usePapaParse();
@@ -16,6 +33,7 @@ export default function Recommendations () {
   const [ wind, setWind ] = useState([]);
   const [ suitability, setSuitability ] = useState([]);
   const [loading, setLoading] = useState(true);
+  const isDesktop = useDeviceDetect(768); // 768px is the breakpoint for desktop (i.e. md size in tailwindcss)
 
   const markerIconConstRecommended = L.icon({
     iconUrl: markerDotBlue,
@@ -123,6 +141,7 @@ export default function Recommendations () {
               maxBoundsViscosity={1} 
               doubleClickZoom={false}
             >
+              <ZoomController isDesktop={isDesktop} />
               <TileLayer zIndex={1}
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}

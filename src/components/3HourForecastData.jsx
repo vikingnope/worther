@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce } from './utils/weatherVariables';
-import { isDesktop } from 'react-device-detect';
+import { useDeviceDetect } from '../hooks/useDeviceDetect';
 
 export const ThreeHourForecastData = () => {
   const { lat, lon } = useParams();
@@ -12,6 +12,7 @@ export const ThreeHourForecastData = () => {
   const [ location, setLocation ] = useState([]);
   const [ weather, setWeather ] = useState([]);
   const [ times, setTimes ] = useState([]);
+  const isDesktopView = useDeviceDetect();
 
   const history = useNavigate();
 
@@ -103,7 +104,7 @@ export const ThreeHourForecastData = () => {
                 ),
                 <button key={index} onClick={(e) => handleSubmit(e, index)} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 lg:flex-row flex flex-col border-y-2 text-white h-fit'>
                   <span className="lg:ml-5 mx-auto mt-5 lg:my-auto lg:mr-7">
-                    <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={(isDesktop) ? 'multiple' : 'multiple-mobile'}/>
+                    <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={isDesktopView ? 'multiple' : 'multiple-mobile'}/>
                   </span>
                   <span className='lg:my-3.5 lg:mr-7 font-bold text-xl mt-5 mx-auto'>{dayConversion}</span>
                   <span className='lg:my-3.5 font-bold text-xl lg:mr-10 mt-5 mx-auto'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>

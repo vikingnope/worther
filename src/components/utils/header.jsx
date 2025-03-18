@@ -1,6 +1,5 @@
 import logo from '../../resources/logoSmall.png';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { isMobile, isDesktop } from 'react-device-detect';
 import { Dropdown } from './mobileDropdown';
 import { AiFillHome } from 'react-icons/ai';
 import { BsFillMapFill, BsCloudSunFill } from 'react-icons/bs';
@@ -54,9 +53,9 @@ export const Header = () => {
             </section>
 
             <nav className="absolute right-0 top-2.5 flex">
-                {(isDesktop) ?
-                (
-                    [
+                {/* Desktop navigation - visible on md screens and up */}
+                <div className="hidden lg:flex">
+                    {[
                     Navigations('Home', '/'), 
                     Navigations('Map', '/map/light'), 
                     Navigations('Weather', '/weather'),
@@ -64,11 +63,13 @@ export const Header = () => {
                     Navigations('About', '/about')
                     ].map((item) => (
                         <span key={item.props.href}>{item}</span>
-                    ))
-                ) : (isMobile) ?
-                    <Dropdown location={location}/> :
-                    <></>
-                }
+                    ))}
+                </div>
+                
+                {/* Mobile dropdown - visible below md screens */}
+                <div className="lg:hidden">
+                    <Dropdown location={location}/>
+                </div>
             </nav>
         </header>          
     )

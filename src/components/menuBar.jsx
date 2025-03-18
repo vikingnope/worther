@@ -1,4 +1,3 @@
-import { isMobile, isDesktop } from 'react-device-detect';
 import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
@@ -89,78 +88,47 @@ export const MenuBar = (props) => {
                         <button onClick={e => props.onShowRainChange && props.onShowRainChange(!props.showRain)} className={(props.mode === 'dark') ? ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
                             Rain
                         </button>
-                        {(isDesktop)?
-                            <>
-                                <button onClick={e => props.onShowSatelliteChange && props.onShowSatelliteChange(!props.showSatellite)} className={(props.mode === 'dark') ? ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showSatellite)? "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
-                                    Satellite
-                                </button> 
-                                {/* <button onClick={e => props.onShowWindDirChange && props.onShowWindDirChange(!props.showWindDir)} className={(props.mode === 'dark') ? ((!props.showWindDir)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "mr-2 w-20 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showWindDir)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "mr-2 w-20 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
-                                    Wind Dir
-                                </button> */}
-                            </>
-                            :
-                            <>
-                                <button onClick={e => props.onShowSatelliteChange && props.onShowSatelliteChange(!props.showSatellite)} className={(props.mode === 'dark') ? ((!props.showSatellite)? "block mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "block mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showSatellite)? "block mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "block mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
-                                    Satellite
-                                </button>
-                                {/* <button onClick={e => props.onShowWindDirChange && props.onShowWindDirChange(!props.showWindDir)} className={(props.mode === 'dark') ? ((!props.showWindDir)? "inline mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "inline mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showWindDir)? "inline mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "inline mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
-                                    Wind Dir
-                                </button> */}
-                            </>
-                        }
-                        
+                        <button onClick={e => props.onShowSatelliteChange?.(!props.showSatellite)} className={(props.mode === 'dark') ? 
+                            ((!props.showSatellite) ? 
+                                "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20 lg:inline block" 
+                                : 
+                                "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold lg:inline block") 
+                            : 
+                            ((!props.showSatellite) ? 
+                                "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20 lg:inline block" 
+                                : 
+                                "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold lg:inline block")}>
+                            Satellite
+                        </button>
+                        {/* <button onClick={e => props.onShowWindDirChange && props.onShowWindDirChange(!props.showWindDir)} className={(props.mode === 'dark') ? ((!props.showWindDir)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "mr-2 w-20 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showWindDir)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "mr-2 w-20 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                            Wind Dir
+                        </button> */}
                     </div> 
                 </div> 
             </>
         )
     }
 
-    if (isDesktop) { 
-        return(
-            <div>
-                {
-                (!toggle) ?
-                    <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 'absolute border-y-2 border-r-2 w-7 h-28 text-white text-lg font-bold bg-black top-24 left-0 rounded-r-lg' : 'absolute border-y-2 border-r-2 border-black w-7 h-28 text-black text-lg font-bold bg-white top-24 left-0 rounded-r-lg'}>
-                        <p>M</p>
-                        <p>E</p>
-                        <p>N</p>
-                        <p>U</p>
-                    </button>
+    return(
+        <div>
+            {
+            (!toggle) ?
+                <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 'absolute border-y-2 border-r-2 w-7 h-28 text-white text-lg font-bold bg-black top-24 left-0 rounded-r-lg' : 'absolute border-y-2 border-r-2 border-black w-7 h-28 text-black text-lg font-bold bg-white top-24 left-0 rounded-r-lg'}>
+                    <p>M</p>
+                    <p>E</p>
+                    <p>N</p>
+                    <p>U</p>
+                </button>
+            :
+            <></>
+            }
+
+            {
+                (toggle) ?
+                    <OptionsMethod mode={props.mode} showWindDir={props.showWindDir} onShowWindDirChange={props.onShowWindDirChange} showSatellite={props.showSatellite} onShowSatelliteChange={props.onShowSatelliteChange} showRain={props.showRain} onShowRainChange={props.onShowRainChange} showCloud={props.showCloud} onShowCloudChange={props.onShowCloudChange} showWind={props.showWind} onShowWindChange={props.onShowWindChange} showTemperature={props.showTemperature} onShowTemperatureChange={props.onShowTemperatureChange} layerOpacity={props.layerOpacity} onLayerOpacityChange={props.onLayerOpacityChange} setClassName={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold lg:left-1/4 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold lg:left-1/4 top-16 rounded-md px-1 bg-white text-black'}/>                              
                 :
                 <></>
-                }
-
-                {
-                    (toggle) ?
-                        <OptionsMethod mode={props.mode} showWindDir={props.showWindDir} onShowWindDirChange={props.onShowWindDirChange} showSatellite={props.showSatellite} onShowSatelliteChange={props.onShowSatelliteChange} showRain={props.showRain} onShowRainChange={props.onShowRainChange} showCloud={props.showCloud} onShowCloudChange={props.onShowCloudChange} showWind={props.showWind} onShowWindChange={props.onShowWindChange} showTemperature={props.showTemperature} onShowTemperatureChange={props.onShowTemperatureChange} layerOpacity={props.layerOpacity} onLayerOpacityChange={props.onLayerOpacityChange} setClassName={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold left-1/4 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold left-1/4 top-16 rounded-md px-1 bg-white text-black'}/>                              
-                    :
-                    <></>
-                }
-            </div>
-        )
-    } 
-    else if (isMobile) {
-        return(
-            <div>
-                {
-                (!toggle) ?
-                    <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 'absolute border-y-2 border-r-2 w-7 h-28 text-white text-lg font-bold bg-black top-24 left-0 rounded-r-lg' : 'absolute border-y-2 border-r-2 border-black w-7 h-28 text-black text-lg font-bold bg-white top-24 left-0 rounded-r-lg'}>
-                        <p>M</p>
-                        <p>E</p>
-                        <p>N</p>
-                        <p>U</p>
-                    </button>
-                :
-                <></>
-                }
-
-                {
-                    (toggle) ?
-                        <OptionsMethod mode={props.mode} showWindDir={props.showWindDir} onShowWindDirChange={props.onShowWindDirChange} showSatellite={props.showSatellite} onShowSatelliteChange={props.onShowSatelliteChange} showRain={props.showRain} onShowRainChange={props.onShowRainChange} showCloud={props.showCloud} onShowCloudChange={props.onShowCloudChange} showWind={props.showWind} onShowWindChange={props.onShowWindChange} showTemperature={props.showTemperature} onShowTemperatureChange={props.onShowTemperatureChange} layerOpacity={props.layerOpacity} onLayerOpacityChange={props.onLayerOpacityChange} setClassName={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold right-3.5 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold right-3.5 top-16 rounded-md px-1 bg-white text-black'}/>   
-                    :
-                    <></>
-                }
-            </div>
-        )
-    }
+            }
+        </div>
+    )
 };
