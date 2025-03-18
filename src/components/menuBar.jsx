@@ -88,7 +88,7 @@ export const MenuBar = (props) => {
                         <button onClick={e => props.onShowRainChange && props.onShowRainChange(!props.showRain)} className={(props.mode === 'dark') ? ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
                             Rain
                         </button>
-                        <button onClick={e => props.onShowSatelliteChange && props.onShowSatelliteChange(!props.showSatellite)} className={(props.mode === 'dark') ? 
+                        <button onClick={e => props.onShowSatelliteChange?.(!props.showSatellite)} className={(props.mode === 'dark') ? 
                             ((!props.showSatellite) ? 
                                 "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20 lg:inline block" 
                                 : 
