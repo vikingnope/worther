@@ -94,38 +94,63 @@ export const RainViewerData = (props) => {
   )
 }
 
-export const SatelliteDataEsri = (props) => {
-
+export const HybridLayer = (props) => {
+  // Define the labelLayerProps here, outside of JSX
+  const labelLayerProps = {
+    url: (props.mapType === 'light') 
+      ? "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" 
+      : "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+    tileSize: 256,
+    zIndex: 3,
+    opacity: 1,
+    className: "labels-layer",
+    subdomains: "abcd"
+  };
+  
   return (
     <>
     {
       (props.show) ?
-        <TileLayer
-          url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
-          tileSize={256}
-          zIndex = {2}
-          opacity = {props.opacity}
-        /> : <></>
+        <>
+          {/* Base satellite layer */}
+          <TileLayer
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            attribution='&copy; <a href="https://www.esri.com">Esri</a>, Maxar, Earthstar Geographics'
+            tileSize={256}
+            zIndex={2}
+            opacity={1}
+          />
+          {/* Labels overlay layer */}
+          <TileLayer
+            url={labelLayerProps.url}
+            attribution={labelLayerProps.attribution}
+            tileSize={labelLayerProps.tileSize}
+            zIndex={labelLayerProps.zIndex}
+            opacity={labelLayerProps.opacity}
+            className={labelLayerProps.className}
+            subdomains={labelLayerProps.subdomains}
+          />
+        </> : <></>
     }
-  </>
+    </>
   )
-  
 }
 
-export const WindDirectionLayer = (props) => {
+// export const WindDirectionLayer = (props) => {
 
-  return (
-    <>
-    {
-      (props.show) ?
-        <TileLayer
-          url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
-          tileSize={256}
-          zIndex = {2}
-          opacity = {props.opacity}
-        /> : <></>
-    }
-  </>
-  )
+//   return (
+//     <>
+//     {
+//       (props.show) ?
+//         <TileLayer
+//           url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
+//           tileSize={256}
+//           zIndex = {2}
+//           opacity = {props.opacity}
+//         /> : <></>
+//     }
+//     </>
+//   )
   
-}
+// }
