@@ -11,6 +11,7 @@
 - Added CodeRabbit config with auto review for bot PRs
 - Enhanced automatic PR labeler to also do automatic PR title prefixing
 - Removed `react-device-detect` package and started using tailwind sizing instead to make pages more seamless when resizing between large displays and smaller displays
+- Changed Satellite Layer to be a Hybrid Satellite Layer
 
 ---
 
