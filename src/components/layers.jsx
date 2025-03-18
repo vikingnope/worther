@@ -94,22 +94,46 @@ export const RainViewerData = (props) => {
   )
 }
 
-export const SatelliteDataEsri = (props) => {
-
+export const HybridLayer = (props) => {
   return (
     <>
     {
       (props.show) ?
-        <TileLayer
-          url = {`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}`}
-          tileSize={256}
-          zIndex = {2}
-          opacity = {props.opacity}
-        /> : <></>
+        <>
+          {/* Base satellite layer */}
+          <TileLayer
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            attribution='&copy; <a href="https://www.esri.com">Esri</a>, Maxar, Earthstar Geographics'
+            tileSize={256}
+            zIndex={2}
+            opacity={1}
+          />
+          {/* Labels overlay layer */}
+          {(props.mapType === 'light') ?
+            <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+            tileSize={256}
+            zIndex={3}
+            opacity={1}
+            className="labels-layer"
+            subdomains="abcd"
+            /> :
+            <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+            tileSize={256}
+            zIndex={3}
+            opacity={1}
+            className="labels-layer"
+            subdomains="abcd"
+            />
+          }
+          
+        </> : <></>
     }
-  </>
+    </>
   )
-  
 }
 
 export const WindDirectionLayer = (props) => {
@@ -125,7 +149,7 @@ export const WindDirectionLayer = (props) => {
           opacity = {props.opacity}
         /> : <></>
     }
-  </>
+    </>
   )
   
 }
