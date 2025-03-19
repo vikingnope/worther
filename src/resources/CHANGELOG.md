@@ -14,6 +14,7 @@
 - Changed Satellite Layer to be a Hybrid Satellite Layer
 - Added subdomains to main map layers, seems to have improved performance slightly
 - Overhauled most of dark mode in Map section
+- Enhanced PR template to include linked issues
 
 ---
 

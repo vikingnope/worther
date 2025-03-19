@@ -1,6 +1,10 @@
 ## Description
 <!-- Provide a brief description of the changes in this PR -->
 
+## Linked Issues
+<!-- Does this PR resolve any open issues? Use "Fixes #123" or "Resolves #123" to automatically close the issue when the PR is merged -->
+- [ ] This PR resolves an issue (Fixes #)
+
 ## Type of Change
 - [ ] Bug fix
 - [ ] New feature
