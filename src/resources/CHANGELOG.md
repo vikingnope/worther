@@ -13,6 +13,7 @@
 - Removed `react-device-detect` package and started using tailwind sizing instead to make pages more seamless when resizing between large displays and smaller displays
 - Changed Satellite Layer to be a Hybrid Satellite Layer
 - Added subdomains to main map layers, seems to have improved performance slightly
+- Overhauled most of dark mode in Map section
 
 ---
 
