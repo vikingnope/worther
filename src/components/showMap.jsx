@@ -39,6 +39,33 @@ const CustomZoomControl = ({ mapType }) => {
   return null; // This component doesn't render anything, just applies styling
 };
 
+// Custom component to style attribution control based on map mode
+const CustomAttributionControl = ({ mapType }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    // Find attribution control element and style according to map type
+    const attributionElement = document.querySelector('.leaflet-control-attribution');
+    
+    if (attributionElement) {
+      if (mapType === 'light') {
+        // Light mode
+        attributionElement.style.color = 'black';
+        attributionElement.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+      } else {
+        // Dark mode
+        attributionElement.style.color = 'white';
+        attributionElement.style.backgroundColor = 'rgba(60, 60, 60, 0.8)';
+      }
+      
+      // Add rounded corner only to the top-left
+      attributionElement.style.borderTopLeftRadius = '4px';
+    }
+  }, [mapType, map]);
+  
+  return null; // This component doesn't render anything, just applies styling
+};
+
 export default function ShowMap(props) {   
     const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
     const [ layerOpacity, setLayerOpacity ] = useState(props.layerOpacity || 0.7);
@@ -80,6 +107,7 @@ export default function ShowMap(props) {
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='flex-grow'>
                     <ScaleControl position="bottomleft" />
                     <CustomZoomControl mapType={mapType} />
+                    <CustomAttributionControl mapType={mapType} />
                     <TileLayer 
                         zIndex={1}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
