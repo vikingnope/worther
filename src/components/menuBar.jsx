@@ -92,25 +92,25 @@ export const MenuBar = (props) => {
                             Choose any layers:
                         </label>
                         <button 
-                            onClick={e => props.onShowWindChange && props.onShowWindChange(!props.showWind)} 
+                            onClick={e => props.onShowWindChange?.(!props.showWind)}
                             className={getButtonClass(props.mode, props.showWind)}
                         >
                             Wind
                         </button>
                         <button 
-                            onClick={e => props.onShowTemperatureChange && props.onShowTemperatureChange(!props.showTemperature)} 
+                            onClick={e => props.onShowTemperatureChange?.(!props.showTemperature)}
                             className={getButtonClass(props.mode, props.showTemperature)}
                         >
                             Temperature
                         </button>
                         <button 
-                            onClick={e => props.onShowCloudChange && props.onShowCloudChange(!props.showCloud)} 
+                            onClick={e => props.onShowCloudChange?.(!props.showCloud)}
                             className={getButtonClass(props.mode, props.showCloud)}
                         >
                             Cloud
                         </button>
                         <button 
-                            onClick={e => props.onShowRainChange && props.onShowRainChange(!props.showRain)} 
+                            onClick={e => props.onShowRainChange?.(!props.showRain)}
                             className={getButtonClass(props.mode, props.showRain)}
                         >
                             Rain
