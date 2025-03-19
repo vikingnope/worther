@@ -21,7 +21,7 @@ export const MapMode = (props) => {
         <div className="z-50 absolute bottom-12 right-8">
             {
                 (props.mode === 'light') ?
-                    <button onClick={handleSubmitDark} className="bg-gray-800 text-white p-2 rounded-lg" title="Dark Mode">
+                    <button onClick={handleSubmitDark} className="bg-neutral-800 text-white p-2 rounded-lg" title="Dark Mode">
                         <MdDarkMode size={27}/> 
                     </button>
                     : 

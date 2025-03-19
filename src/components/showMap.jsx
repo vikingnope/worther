@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup , ScaleControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, ScaleControl, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
@@ -9,6 +9,62 @@ import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from './layers';
 import markerDot from "../resources/location-dot.png";
 import { MapMode } from './utils/mapMode';
+
+// Custom component to style zoom control based on map mode
+const CustomZoomControl = ({ mapType }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    // Find all zoom control elements and style them according to map type
+    const zoomInButton = document.querySelector('.leaflet-control-zoom-in');
+    const zoomOutButton = document.querySelector('.leaflet-control-zoom-out');
+    
+    if (zoomInButton && zoomOutButton) {
+        if (mapType === 'light') {
+        // Light mode - dark buttons/light background
+        zoomInButton.style.color = 'black';
+        zoomInButton.style.backgroundColor = '#fff';
+        zoomOutButton.style.color = 'black';
+        zoomOutButton.style.backgroundColor = '#fff';
+        } else {
+        // Dark mode - light buttons/dark background
+        zoomInButton.style.color = 'white';
+        zoomInButton.style.backgroundColor = '#333';
+        zoomOutButton.style.color = 'white';
+        zoomOutButton.style.backgroundColor = '#333';
+        }
+    }
+  }, [mapType, map]);
+  
+  return null; // This component doesn't render anything, just applies styling
+};
+
+// Custom component to style attribution control based on map mode
+const CustomAttributionControl = ({ mapType }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    // Find attribution control element and style according to map type
+    const attributionElement = document.querySelector('.leaflet-control-attribution');
+    
+    if (attributionElement) {
+      if (mapType === 'light') {
+        // Light mode
+        attributionElement.style.color = 'black';
+        attributionElement.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+      } else {
+        // Dark mode
+        attributionElement.style.color = 'white';
+        attributionElement.style.backgroundColor = 'rgba(60, 60, 60, 0.8)';
+      }
+      
+      // Add rounded corner only to the top-left
+      attributionElement.style.borderTopLeftRadius = '4px';
+    }
+  }, [mapType, map]);
+  
+  return null; // This component doesn't render anything, just applies styling
+};
 
 export default function ShowMap(props) {   
     const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
@@ -49,7 +105,9 @@ export default function ShowMap(props) {
             <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
                 <Header/>
                 <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='flex-grow'>
-                    <ScaleControl />
+                    <ScaleControl position="bottomleft" />
+                    <CustomZoomControl mapType={mapType} />
+                    <CustomAttributionControl mapType={mapType} />
                     <TileLayer 
                         zIndex={1}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

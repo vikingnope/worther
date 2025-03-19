@@ -1,12 +1,27 @@
 import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
-import { CiSquarePlus, CiSquareMinus } from "react-icons/ci";
+import { CiSquarePlus, CiSquareMinus, CiMenuKebab } from "react-icons/ci";
 
 export const MenuBar = (props) => {
     const [ toggle, setToggle ] = useState(false);
     const[ city, setCity ] = useState();
     const history = useNavigate();
+
+    // Helper function to generate button classes
+    const getButtonClass = (mode, isActive, extraClasses) => {
+        const baseClass = `mr-5 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 duration-200 w-fit px-2 ${extraClasses || ''}`;
+        
+        if (mode === 'dark') {
+            return isActive 
+                ? `${baseClass} bg-[#424040]` 
+                : `${baseClass} bg-black-700`;
+        } else {
+            return isActive 
+                ? `${baseClass} bg-[#dedede]` 
+                : `${baseClass} bg-white`;
+        }
+    };
 
     // Prevents the map from moving when the menu is open
     const handleMouseDown = (event) => {
@@ -36,13 +51,13 @@ export const MenuBar = (props) => {
 
         return(
             <> 
-                <div onMouseMove={handleMouseDown} className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min z-40 bg-black border-2 border-white rounded-md cursor-default p-px text-white" : "absolute ml-3 z-40 mt-24 w-max h-min bg-white border-2 border-black rounded-md cursor-default p-px text-black"} id="opacityBar">
+                <div onMouseMove={handleMouseDown} className={props.className} id="opacityBar">
                     <button onClick={() => setToggle(!toggle)} className='absolute right-0.5'>
                         <AiOutlineClose size='28'/>
                     </button>
                     <form onSubmit={handleSubmit}>
                         <input
-                            className={(props.mode === 'dark') ? "border-b border-white bg-black h-7 text-base font-bold indent-1.5 outline-none w-full" : "border-b border-black bg-white h-7 text-base font-bold indent-1.5 outline-none w-full text-black"}
+                            className={(props.mode === 'dark') ? "border-b border-neutral-500 bg-neutral-800 h-7 text-base font-bold indent-1.5 outline-none w-full" : "border-b border-black bg-white h-7 text-base font-bold indent-1.5 outline-none w-full text-black"}
                             type="text"
                             value={city}
                             autoFocus="autoFocus"
@@ -76,31 +91,40 @@ export const MenuBar = (props) => {
                         <label htmlFor="weather" className="ml-1 block text-base">
                             Choose any layers:
                         </label>
-                        <button onClick={e => props.onShowWindChange && props.onShowWindChange(!props.showWind)} className={(props.mode === 'dark') ? ((!props.showWind) ? "mr-5 mt-1 mb-1 text-base ml-1 rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "mr-5 mb-1 mt-1 text-base ml-1 rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold w-14") : ((!props.showWind)? "mr-5 mt-1 mb-1 text-base ml-1 rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-14" : "mr-5 mb-1 mt-1 text-base ml-1 rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold w-14")}>
+                        <button 
+                            onClick={e => props.onShowWindChange?.(!props.showWind)}
+                            className={getButtonClass(props.mode, props.showWind)}
+                        >
                             Wind
                         </button>
-                        <button onClick={e => props.onShowTemperatureChange && props.onShowTemperatureChange(!props.showTemperature)} className={(props.mode === 'dark') ? ((!props.showTemperature)? "mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-28": "w-28 mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showTemperature)? "mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-28": "w-28 mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                        <button 
+                            onClick={e => props.onShowTemperatureChange?.(!props.showTemperature)}
+                            className={getButtonClass(props.mode, props.showTemperature)}
+                        >
                             Temperature
                         </button>
-                        <button onClick={e => props.onShowCloudChange && props.onShowCloudChange(!props.showCloud)} className={(props.mode === 'dark') ? ((!props.showCloud)? "mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-14" : "mr-5 text-base w-14 rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showCloud)? "mr-5 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-14" : "mr-5 text-base w-14 rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                        <button 
+                            onClick={e => props.onShowCloudChange?.(!props.showCloud)}
+                            className={getButtonClass(props.mode, props.showCloud)}
+                        >
                             Cloud
                         </button>
-                        <button onClick={e => props.onShowRainChange && props.onShowRainChange(!props.showRain)} className={(props.mode === 'dark') ? ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showRain)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-12" : "mr-2 w-12 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                        <button 
+                            onClick={e => props.onShowRainChange?.(!props.showRain)}
+                            className={getButtonClass(props.mode, props.showRain)}
+                        >
                             Rain
                         </button>
-                        <button onClick={e => props.onShowSatelliteChange?.(!props.showSatellite)} className={(props.mode === 'dark') ? 
-                            ((!props.showSatellite) ? 
-                                "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20 lg:inline block" 
-                                : 
-                                "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold lg:inline block") 
-                            : 
-                            ((!props.showSatellite) ? 
-                                "mr-2 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20 lg:inline block" 
-                                : 
-                                "mr-2 w-20 mt-1 mb-1 ml-1 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold lg:inline block")}>
+                        <button 
+                            onClick={e => props.onShowSatelliteChange?.(!props.showSatellite)} 
+                            className={getButtonClass(props.mode, props.showSatellite, "lg:inline block")}
+                        >
                             Satellite
                         </button>
-                        {/* <button onClick={e => props.onShowWindDirChange && props.onShowWindDirChange(!props.showWindDir)} className={(props.mode === 'dark') ? ((!props.showWindDir)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-black duration-200 w-20" : "mr-2 w-20 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold") : ((!props.showWindDir)? "mr-2 text-base rounded-md border-zinc-600 border-2 h-7 bg-white duration-200 w-20" : "mr-2 w-20 text-base rounded-md border-zinc-600 border-2 h-7 bg-cyan-500 duration-200 font-bold")}>
+                        {/* <button 
+                            onClick={e => props.onShowWindDirChange?.(!props.showWindDir)} 
+                            className={getButtonClass(props.mode, props.showWindDir)}
+                        >
                             Wind Dir
                         </button> */}
                     </div> 
@@ -113,11 +137,11 @@ export const MenuBar = (props) => {
         <div>
             {
             (!toggle) ?
-                <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 'absolute border-y-2 border-r-2 w-7 h-28 text-white text-lg font-bold bg-black top-24 left-0 rounded-r-lg' : 'absolute border-y-2 border-r-2 border-black w-7 h-28 text-black text-lg font-bold bg-white top-24 left-0 rounded-r-lg'}>
-                    <p>M</p>
-                    <p>E</p>
-                    <p>N</p>
-                    <p>U</p>
+                <button onClick={() => setToggle(!toggle)} className={(props.mode === 'dark') ? 
+                    'absolute border-y-2 border-r-2 w-fit text-white text-lg font-bold bg-neutral-800 top-24 rounded-r-lg border-neutral-500 py-1 h-fit' : 
+                    'absolute border-y-2 border-r-2 border-black w-fit text-black text-lg font-bold bg-white top-24 rounded-r-lg py-1 h-fit'
+                }>
+                    <CiMenuKebab size='30'/>
                 </button>
             :
             <></>
@@ -125,7 +149,26 @@ export const MenuBar = (props) => {
 
             {
                 (toggle) ?
-                    <OptionsMethod mode={props.mode} showWindDir={props.showWindDir} onShowWindDirChange={props.onShowWindDirChange} showSatellite={props.showSatellite} onShowSatelliteChange={props.onShowSatelliteChange} showRain={props.showRain} onShowRainChange={props.onShowRainChange} showCloud={props.showCloud} onShowCloudChange={props.onShowCloudChange} showWind={props.showWind} onShowWindChange={props.onShowWindChange} showTemperature={props.showTemperature} onShowTemperatureChange={props.onShowTemperatureChange} layerOpacity={props.layerOpacity} onLayerOpacityChange={props.onLayerOpacityChange} setClassName={(props.mode === 'dark') ? 'absolute border-2 text-lg font-bold lg:left-1/4 top-16 rounded-md px-1 bg-black' : 'absolute border-2 border-black text-lg font-bold lg:left-1/4 top-16 rounded-md px-1 bg-white text-black'}/>                              
+                    <OptionsMethod 
+                        mode={props.mode} 
+                        showWindDir={props.showWindDir} 
+                        onShowWindDirChange={props.onShowWindDirChange} 
+                        showSatellite={props.showSatellite} 
+                        onShowSatelliteChange={props.onShowSatelliteChange} 
+                        showRain={props.showRain} 
+                        onShowRainChange={props.onShowRainChange} 
+                        showCloud={props.showCloud} 
+                        onShowCloudChange={props.onShowCloudChange} 
+                        showWind={props.showWind} onShowWindChange={props.onShowWindChange} 
+                        showTemperature={props.showTemperature} 
+                        onShowTemperatureChange={props.onShowTemperatureChange} 
+                        layerOpacity={props.layerOpacity}
+                        onLayerOpacityChange={props.onLayerOpacityChange} 
+                        className={(props.mode === 'dark') ? 
+                            "absolute ml-3 mt-24 w-max h-min z-40 bg-neutral-800 border-2 rounded-md cursor-default p-px text-white border-neutral-500" : 
+                            "absolute ml-3 z-40 mt-24 w-max h-min bg-white border-2 border-black rounded-md cursor-default p-px text-black"
+                        }
+                    />                              
                 :
                 <></>
             }
