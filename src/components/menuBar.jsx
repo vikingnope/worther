@@ -149,7 +149,26 @@ export const MenuBar = (props) => {
 
             {
                 (toggle) ?
-                    <OptionsMethod mode={props.mode} showWindDir={props.showWindDir} onShowWindDirChange={props.onShowWindDirChange} showSatellite={props.showSatellite} onShowSatelliteChange={props.onShowSatelliteChange} showRain={props.showRain} onShowRainChange={props.onShowRainChange} showCloud={props.showCloud} onShowCloudChange={props.onShowCloudChange} showWind={props.showWind} onShowWindChange={props.onShowWindChange} showTemperature={props.showTemperature} onShowTemperatureChange={props.onShowTemperatureChange} layerOpacity={props.layerOpacity} onLayerOpacityChange={props.onLayerOpacityChange} className={(props.mode === 'dark') ? "absolute ml-3 mt-24 w-max h-min z-40 bg-neutral-800 border-2 rounded-md cursor-default p-px text-white border-neutral-500" : "absolute ml-3 z-40 mt-24 w-max h-min bg-white border-2 border-black rounded-md cursor-default p-px text-black"}/>                              
+                    <OptionsMethod 
+                        mode={props.mode} 
+                        showWindDir={props.showWindDir} 
+                        onShowWindDirChange={props.onShowWindDirChange} 
+                        showSatellite={props.showSatellite} 
+                        onShowSatelliteChange={props.onShowSatelliteChange} 
+                        showRain={props.showRain} 
+                        onShowRainChange={props.onShowRainChange} 
+                        showCloud={props.showCloud} 
+                        onShowCloudChange={props.onShowCloudChange} 
+                        showWind={props.showWind} onShowWindChange={props.onShowWindChange} 
+                        showTemperature={props.showTemperature} 
+                        onShowTemperatureChange={props.onShowTemperatureChange} 
+                        layerOpacity={props.layerOpacity}
+                        onLayerOpacityChange={props.onLayerOpacityChange} 
+                        className={(props.mode === 'dark') ? 
+                            "absolute ml-3 mt-24 w-max h-min z-40 bg-neutral-800 border-2 rounded-md cursor-default p-px text-white border-neutral-500" : 
+                            "absolute ml-3 z-40 mt-24 w-max h-min bg-white border-2 border-black rounded-md cursor-default p-px text-black"
+                        }
+                    />                              
                 :
                 <></>
             }
