@@ -66,6 +66,23 @@ const CustomAttributionControl = ({ mapType }) => {
   return null; // This component doesn't render anything, just applies styling
 };
 
+// Custom component to dynamically update map background color
+const MapBackgroundUpdater = ({ mapType }) => {
+    const map = useMap();
+
+    useEffect(() => {
+        if (map) {
+        // Get the map container element and update its background color
+        const container = map.getContainer();
+        if (container) {
+            container.style.backgroundColor = mapType === 'light' ? '#ffffff' : '#121212';
+        }
+        }
+    }, [mapType, map]);
+
+    return null; // This component doesn't render anything, just applies styling
+};
+
 export default function ShowMap(props) {   
     const [ userPos, setUserPos ] = useState({latitude: undefined, longitude: undefined});
     const [ layerOpacity, setLayerOpacity ] = useState(props.layerOpacity || 0.7);
@@ -122,6 +139,7 @@ export default function ShowMap(props) {
                     <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity}/>
                     <CloudLayer show={cloudLayerChoice} opacity={layerOpacity}/>
                     <HybridLayer show={satelliteLayerChoice} mapType={mapType}/>
+                    <MapBackgroundUpdater mapType={mapType} />
                     {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
                     <MenuBar mode={mapType} showWindDir={windDirChoice} onShowWindDirChange={setWindDirChoice} showSatellite={satelliteLayerChoice} onShowSatelliteChange={setSatelliteLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
