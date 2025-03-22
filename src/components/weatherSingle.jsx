@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { ShowWeather } from "./utils/weatherVariables";
+import { ShowWeather, SunriseSunsetTimes } from "./utils/weatherVariables";
+import { Header } from "./utils/header";
+import { Footer } from "./utils/footer";
 
 export const GetSingleWeather = () => {
 
@@ -24,6 +26,7 @@ export const GetSingleWeather = () => {
     const [ location, setLocation ] = useState([]);
     const [ weather, setWeather ] = useState([]);
     const [ loaded, setLoaded ] = useState();
+    const [ times, setTimes ] = useState(null);
     const [ blocked, setBlocked ] = useState();
     const [ connectionError, setConnectionError ] = useState();
 
@@ -53,7 +56,8 @@ export const GetSingleWeather = () => {
           sunset: response.data.sys.sunset,
           visibility: response.data.visibility,
           rain: (response.data.rain !== undefined) ? response.data.rain['1h'] : undefined,
-          timeUpdatedUNIX: response.data.dt
+          timeUpdatedUNIX: response.data.dt,
+          timeZone: response.data.timezone
         }
         setWeather(weatherObj);
 
@@ -61,10 +65,16 @@ export const GetSingleWeather = () => {
           name: response.data.name,
           lat: response.data.coord.lat,
           lon: response.data.coord.lon,
-          country: response.data.sys.country,
-          timeZone: response.data.timezone
+          country: response.data.sys.country
         }
         setLocation(locationObj);
+
+        const timesObj = {
+          sunrise: response.data.sys.sunrise,
+          sunset: response.data.sys.sunset,
+          timeZone: response.data.timezone
+        }
+        setTimes(timesObj)
       
         setLoaded(true);
       })
@@ -79,7 +89,53 @@ export const GetSingleWeather = () => {
       })
     }, [city, countryCode, latitude, longitude]);   
 
+    const localSunriseSunsetTimes = useMemo(() => {
+      if (times && times.sunrise && times.sunset && times.timeZone) {
+      return SunriseSunsetTimes(times);
+      }
+      return null;
+    }, [times]);
+
     return(
-      <ShowWeather connectionError = {connectionError} choice = {'normal'} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit3Hour={handleSubmit3Hour} handleSubmitDaily={handleSubmitDaily} sunrise={weather.sunrise} sunset={weather.sunset} timeUpdatedUNIX={weather.timeUpdatedUNIX} rain={weather.rain} timeZone={location.timeZone} city={city}/>
-    )
+      loaded ? (
+        <ShowWeather 
+          connectionError = {connectionError} 
+          choice = {'normal'} 
+          mainWeather = {weather.mainWeather} 
+          description = {weather.description} 
+          name = {location.name} 
+          country = {location.country} 
+          temperature = {weather.temperature} 
+          tempFeel = {weather.tempFeel} 
+          tempMax = {weather.tempMax} 
+          tempMin = {weather.tempMin} 
+          humidity = {weather.humidity} 
+          windSpeed={weather.windSpeed} 
+          pressure = {weather.pressure} 
+          visibility = {weather.visibility} 
+          windDegrees = {weather.windDegrees} 
+          loaded = {loaded} 
+          blocked={blocked} 
+          handleSubmit3Hour={handleSubmit3Hour} 
+          handleSubmitDaily={handleSubmitDaily} 
+          sunrise={weather.sunrise} 
+          sunset={weather.sunset} 
+          timeUpdatedUNIX={weather.timeUpdatedUNIX} 
+          rain={weather.rain} 
+          times={times} 
+          city={city} 
+          timeZone={weather.timeZone}
+          localSunriseSunsetTimes={localSunriseSunsetTimes}
+        />
+      ) : (
+        <div className="flex flex-col min-h-screen text-white overflow-hidden bg-black">
+          <Header/>
+          <main className="flex flex-col md:items-center justify-center flex-grow">
+            <p className="uppercase font-bold md:text-3xl text-xl md:mb-14 mt-8 md:mt-0">
+              Loading...
+            </p>
+          </main>
+          <Footer />
+        </div>
+      ))
   };

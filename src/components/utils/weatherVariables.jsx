@@ -196,7 +196,20 @@ export const TimeZoneShow = (props) => {
 }
 
 export const SunriseSunsetTimes = (props) => {
+  const sunriseTime = new Date((props.sunrise * 1000) + (props.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
+  const sunsetTime = new Date((props.sunset * 1000) + (props.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
 
+  const localSunriseHour = sunriseTime.getHours();
+  const localSunriseMinute = sunriseTime.getMinutes();
+  const localSunsetHour = sunsetTime.getHours();
+  const localSunsetMinute = sunsetTime.getMinutes();
+
+  return {
+    sunriseHour: localSunriseHour,
+    sunriseMinute: localSunriseMinute,
+    sunsetHour: localSunsetHour,
+    sunsetMinute: localSunsetMinute
+  }
 }
 
 export const VisibilityDesc = (props) => {
@@ -308,28 +321,15 @@ export const WindForce = (props) => {
 }
 
 export const ShowWeather = (props) => {
-  let times = {};
   let currentHourConversion = undefined;
-
-  (times = {
-    sunriseHour: String((new Date(props.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
-    sunriseMinute: String((new Date(props.sunrise * 1000)).getMinutes()).padStart(2, '0'),
-    sunsetHour: String((new Date(props.sunset * 1000)).getHours()).padStart(2, '0'),
-    sunsetMinute: String((new Date(props.sunset * 1000)).getMinutes()).padStart(2, '0'),
+  
+  let timeUpdated = {
     timeUpdatedHour: String((new Date(props.timeUpdatedUNIX * 1000)).getHours()).padStart(2, '0'),
     timeUpdatedMinute: String((new Date(props.timeUpdatedUNIX * 1000)).getMinutes()).padStart(2, '0')
-  });
-
-  let sunriseHourConversion = (
-    Math.round((((times.sunriseHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
-  );
-
-  let sunsetHourConversion = (
-    Math.round((((times.sunsetHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
-  );
+  }
 
   let timeUpdatedHourConversion = (
-    Math.round((((times.timeUpdatedHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
+    Math.round((((timeUpdated.timeUpdatedHour * 3600) + (new Date().getTimezoneOffset() * 60)) + props.timeZone) / 3600)
   );
 
   if(props.choice !== 'normal'){
@@ -360,7 +360,7 @@ export const ShowWeather = (props) => {
             ((props.choice === 'normal') ?
               <div className="text-center flex-grow flex flex-col justify-center">
                 <section className="mx-auto mb-4">
-                  <WeatherIcons mainWeather={props.mainWeather} windSpeed = {props.windSpeed} description={props.description} timeZone={props.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} page={'single'}/>
+                  <WeatherIcons mainWeather={props.mainWeather} windSpeed = {props.windSpeed} description={props.description} timeZone={props.timeZone} sunriseHour={props.localSunriseSunsetTimes.sunriseHour} sunsetHour={props.localSunriseSunsetTimes.sunsetHour} page={'single'}/>
                 </section>
                 <section className="text-lg">
                   <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
@@ -375,7 +375,7 @@ export const ShowWeather = (props) => {
                     (props.visibility / 1000) + 'km' :
                     (props.visibility) + 'm'} ({<VisibilityDesc visibility={props.visibility}/>})
                   </p>
-                  <p>{<BsFillSunriseFill size={25} className="inline mr-2"/>}Sunrise: {(sunriseHourConversion > 23) ? String(sunriseHourConversion - 24).padStart(2, '0') : String(sunriseHourConversion).padStart(2, '0')}:{times.sunriseMinute} ({<TimeZoneShow timeZone={props.timeZone}/>}) &emsp; {<BsFillSunsetFill size={25} className="inline mr-2"/>}Sunset: {(sunsetHourConversion < 0) ? (sunsetHourConversion + 24) : sunsetHourConversion}:{times.sunsetMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                  <p>{<BsFillSunriseFill size={25} className="inline mr-2"/>}Sunrise: {(props.localSunriseSunsetTimes.sunriseHour > 23) ? String(props.localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') : String(props.localSunriseSunsetTimes.sunriseHour).padStart(2, '0')}:{String(props.localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={props.timeZone}/>}) &emsp; {<BsFillSunsetFill size={25} className="inline mr-2"/>}Sunset: {(props.localSunriseSunsetTimes.sunsetHour < 0) ? (props.localSunriseSunsetTimes.sunsetHour + 24) : props.localSunriseSunsetTimes.sunsetHour}:{String(props.localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
                   {
                   (props.rain !== undefined) ?
                     <p>Rain in last hour: {props.rain} mm</p> :
@@ -391,7 +391,7 @@ export const ShowWeather = (props) => {
                   </form>
                 </div>
                 <button className="rounded-md h-8 text-xl my-8 font-bold w-24 mx-auto border" id="weatherButtons" onClick={handleSubmitNormal}>Go Back</button>
-                <p className="flex mx-auto underline mb-7">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{times.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
+                <p className="flex mx-auto underline mb-7">Last Updated: {String(timeUpdatedHourConversion).padStart(2, '0')}:{timeUpdated.timeUpdatedMinute} ({<TimeZoneShow timeZone={props.timeZone}/>})</p>
               </div>          
             :
               <div className="text-center flex-grow flex flex-col justify-center">

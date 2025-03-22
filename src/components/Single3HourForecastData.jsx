@@ -10,6 +10,7 @@ export const SingleThreeHourForecastData = () => {
   const [ location, setLocation ] = useState([]);
   const [ weather, setWeather ] = useState([]);
   const [ loaded, setLoaded ] = useState();
+  const [ times, setTimes ] = useState(null);
   const [ blocked, setBlocked ] = useState();
   const [ connectionError, setConnectionError ] = useState();
 
@@ -28,6 +29,7 @@ export const SingleThreeHourForecastData = () => {
     .then(response => {
       for (const [i, weatherAPI] of response.data.list.entries()) {
         if (i === numericIndex) {
+          console.log(weatherAPI);
           const weatherObj = {
             humidity: weatherAPI.main.humidity,
             temperature: weatherAPI.main.temp,
@@ -86,6 +88,35 @@ export const SingleThreeHourForecastData = () => {
       hour: d.getHours(),
       minute: d.getMinutes()
     },
-    <ShowWeather index = {index} currentTime={currentTime} dayConversion= {dayConversion} hourConversion = {hourConversion} timeNormalMinutes = {weather.timeNormalMinutes} connectionError = {connectionError} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} precipitation={weather.precipitation} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={location.name} lat = {lat} lon = {lon}/>  
+    <ShowWeather 
+      index = {index} 
+      currentTime={currentTime} 
+      dayConversion= {dayConversion} 
+      hourConversion = {hourConversion} 
+      timeNormalMinutes = {weather.timeNormalMinutes} 
+      connectionError = {connectionError} 
+      mainWeather = {weather.mainWeather} 
+      description = {weather.description} 
+      name = {location.name} 
+      country = {location.country} 
+      temperature = {weather.temperature} 
+      tempFeel = {weather.tempFeel} 
+      tempMax = {weather.tempMax} 
+      tempMin = {weather.tempMin} 
+      precipitation={weather.precipitation} 
+      humidity = {weather.humidity} 
+      windSpeed={weather.windSpeed} 
+      pressure = {weather.pressure} 
+      visibility = {weather.visibility} 
+      windDegrees = {weather.windDegrees} 
+      loaded = {loaded} 
+      blocked={blocked} 
+      handleSubmit={handleSubmit} 
+      timeUpdatedUNIX={weather.timeUpdatedUNIX} 
+      timeZone={location.timeZone} 
+      city={location.name} 
+      lat = {lat} 
+      lon = {lon}
+    />  
   )
 }
