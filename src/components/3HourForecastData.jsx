@@ -73,6 +73,21 @@ export const ThreeHourForecastData = () => {
   let dayConversion = '';
   let hoursMinutes = '';
 
+  // Group weather data by day
+  const groupWeatherByDay = () => {
+    const grouped = {};
+    
+    weather.forEach((item, index) => {
+      const day = new Date((item.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString();
+      if (!grouped[day]) {
+        grouped[day] = [];
+      }
+      grouped[day].push({ ...item, index });
+    });
+    
+    return grouped;
+  };
+
   (hoursMinutes = {
     sunriseHour: String((new Date(times.sunrise * 1000)).getHours()).padStart(2, '0'), // padStart makes sure we have 2 digits, if there is not it will add a 0 at the front
     sunriseMinute: String((new Date(times.sunrise * 1000)).getMinutes()).padStart(2, '0'),
@@ -92,35 +107,39 @@ export const ThreeHourForecastData = () => {
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
       <Header/>
       <div className="text-center text-white flex-grow flex flex-col">
-          <p className='text-4xl font-bold my-5 underline'>3 Hour Forecast Data - {location.name}</p>
-          {(weather.length > 0) ?
-            (
-              weather.map((weather, index) => ( // * .map is used instead of loops
-                hourConversion = (
-                  Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-                ),
-                dayConversion = (
-                  new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
-                ),
-                <button key={index} onClick={(e) => handleSubmit(e, index)} className='duration-300 hover:cursor-pointer hover:text-4xl hover:my-6 hover:bg-cyan-800 lg:flex-row flex flex-col border-y-2 text-white h-fit'>
-                  <span className="lg:ml-5 mx-auto mt-5 lg:my-auto lg:mr-7">
-                    <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={isDesktopView ? 'multiple' : 'multiple-mobile'}/>
-                  </span>
-                  <span className='lg:my-3.5 lg:mr-7 font-bold text-xl mt-5 mx-auto'>{dayConversion}</span>
-                  <span className='lg:my-3.5 font-bold text-xl lg:mr-10 mt-5 mx-auto'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
-                  <span className='lg:my-3 lg:mr-10 font-bold text-2xl mt-5 mx-auto'>{weather.description.toUpperCase()}</span>
-                  <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Temp: {Math.round(weather.temperature)}°C</span>
-                  <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
-                  <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Precipitation: {weather.precipitation}%</span>
-                  <span className='lg:my-3 lg:mr-9 text-xl my-5 mx-auto'>Visibility: {(weather.visibility >= 1000) ?
-                    (weather.visibility / 1000) + 'km' :
-                    (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                  </span>
-                </button>
-              ))
-            ) :
+          <p className='text-3xl font-bold my-5 underline lg:text-4xl'>3 Hour Forecast Data - {location.name}</p>
+          {(weather.length > 0) ? (
+            Object.entries(groupWeatherByDay()).map(([day, dayWeather]) => (
+              <div key={day} className="mb-4">
+                <h2 className="text-3xl font-bold py-3 bg-neutral-800 border-b-2">{day}</h2>
+                {dayWeather.map((weather) => {
+                  const hourConversion = Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600);
+                  return (
+                    <button 
+                      key={weather.index} 
+                      onClick={(e) => handleSubmit(e, weather.index)} 
+                      className='duration-300 hover:cursor-pointer hover:text-4xl hover:bg-cyan-800 lg:flex-row flex flex-col border-b-2 text-white h-fit w-screen'
+                    >
+                      <span className="lg:ml-5 mx-auto mt-5 lg:my-auto lg:mr-7">
+                        <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={sunriseHourConversion} sunsetHour={sunsetHourConversion} hourConversion={hourConversion} page={isDesktopView ? 'multiple' : 'multiple-mobile'}/>
+                      </span>
+                      <span className='lg:my-3.5 font-bold text-xl lg:mr-10 mt-5 mx-auto'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
+                      <span className='lg:my-3 lg:mr-10 font-bold text-2xl mt-5 mx-auto'>{weather.description.toUpperCase()}</span>
+                      <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Temp: {Math.round(weather.temperature)}°C</span>
+                      <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})&ensp; Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                      <span className='lg:my-3 lg:mr-9 text-xl mt-5 mx-auto'>Precipitation: {weather.precipitation}%</span>
+                      <span className='lg:my-3 lg:mr-9 text-xl my-5 mx-auto'>Visibility: {(weather.visibility >= 1000) ?
+                        (weather.visibility / 1000) + 'km' :
+                        (weather.visibility) + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))
+          ) : (
             <></>
-          }
+          )}
       </div>
       <Footer />
     </div>

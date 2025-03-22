@@ -16,6 +16,7 @@
 - Overhauled most of dark mode in Map section
 - Enhanced PR template to include linked issues
 - Added dynamic changing of background colour on map page
+- Enhanced 3 Hour Forecast layout
 
 ---
 
