@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { BsFillSunFill, BsFillCloudRainHeavyFill, BsFillCloudDrizzleFill, BsFillCloudLightningRainFill, BsFillCloudSnowFill, BsCloudFog, BsFillCloudRainFill, BsFillCloudsFill, BsFillCloudSunFill, BsFillCloudHazeFill } from 'react-icons/bs'; // * Sunny, Heavy Intensity Rain, Drizzle, Thunder and Rain, Snow, Fog, Light Rain, Overcast Clouds, Scattered Clouds, Haze
 import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
 import { TbMist, TbWind } from 'react-icons/tb'; // * Mist, Windy Clear
@@ -160,70 +161,42 @@ export const WeatherIcons = (props) => {
 }
 
 export const TimeZoneShow = (props) => {
-    let timeZoneShown = '';
-    
-    ((props.timeZone === 0) ?
-      timeZoneShown = 'GMT' :
-    (props.timeZone === -3600) ?
-      timeZoneShown = 'GMT-1' :
-    (props.timeZone === -7200) ?
-      timeZoneShown = 'GMT-2' :
-    (props.timeZone === -10800) ?
-      timeZoneShown = 'GMT-3' :
-    (props.timeZone === -14400) ?
-      timeZoneShown = 'GMT-4' :
-    (props.timeZone === -18000) ?
-      timeZoneShown = 'GMT-5' :
-    (props.timeZone === -21600) ?
-      timeZoneShown = 'GMT-6' :
-    (props.timeZone === -25200) ?
-      timeZoneShown = 'GMT-7' :
-    (props.timeZone === -28800) ?
-      timeZoneShown = 'GMT-8' :
-    (props.timeZone === -32400) ?
-      timeZoneShown = 'GMT-9' :
-    (props.timeZone === -36000) ?
-      timeZoneShown = 'GMT-10' :
-    (props.timeZone === -39600) ?
-      timeZoneShown = 'GMT-11' :
-    (props.timeZone === -43200) ?
-      timeZoneShown = 'GMT-12' :
-    (props.timeZone === 3600) ?
-      timeZoneShown = 'GMT+1' :
-    (props.timeZone === 7200) ?
-      timeZoneShown = 'GMT+2' :
-    (props.timeZone === 10800) ?
-      timeZoneShown = 'GMT+3' :
-    (props.timeZone === 14400) ?
-      timeZoneShown = 'GMT+4' :
-    (props.timeZone === 18000) ?
-      timeZoneShown = 'GMT+5' :
-    (props.timeZone === 19800) ?
-      timeZoneShown = 'GMT+5:30' :
-    (props.timeZone === 21600) ?
-      timeZoneShown = 'GMT+6' :
-    (props.timeZone === 25200) ?
-      timeZoneShown = 'GMT+7' :
-    (props.timeZone === 28800) ?
-      timeZoneShown = 'GMT+8' :
-    (props.timeZone === 32400) ?
-      timeZoneShown = 'GMT+9' :
-    (props.timeZone === 36000) ?
-      timeZoneShown = 'GMT+10' :
-    (props.timeZone === 39600) ?
-      timeZoneShown = 'GMT+11' :   
-    (props.timeZone === 43200) ?
-      timeZoneShown = 'GMT+12' :
-    (props.timeZone === 46800) ?
-      timeZoneShown = 'GMT+13' : 
-    (props.timeZone === 50400) ?
-      timeZoneShown = 'GMT+14' :                 
-    <></> 
-    );
+  const timeZoneMap = {
+    0: 'GMT',
+    '-3600': 'GMT-1',
+    '-7200': 'GMT-2',
+    '-10800': 'GMT-3',
+    '-14400': 'GMT-4',
+    '-18000': 'GMT-5',
+    '-21600': 'GMT-6',
+    '-25200': 'GMT-7',
+    '-28800': 'GMT-8',
+    '-32400': 'GMT-9',
+    '-36000': 'GMT-10',
+    '-39600': 'GMT-11',
+    '-43200': 'GMT-12',
+    3600: 'GMT+1',
+    7200: 'GMT+2',
+    10800: 'GMT+3',
+    14400: 'GMT+4',
+    18000: 'GMT+5',
+    19800: 'GMT+5:30',
+    21600: 'GMT+6',
+    25200: 'GMT+7',
+    28800: 'GMT+8',
+    32400: 'GMT+9',
+    36000: 'GMT+10',
+    39600: 'GMT+11',
+    43200: 'GMT+12',
+    46800: 'GMT+13',
+    50400: 'GMT+14'
+  };
 
-    return(
-        timeZoneShown
-    );
+  return timeZoneMap[props.timeZone] || '';
+}
+
+export const SunriseSunsetTimes = (props) => {
+
 }
 
 export const VisibilityDesc = (props) => {
