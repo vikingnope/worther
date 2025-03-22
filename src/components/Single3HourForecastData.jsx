@@ -86,6 +86,35 @@ export const SingleThreeHourForecastData = () => {
       hour: d.getHours(),
       minute: d.getMinutes()
     },
-    <ShowWeather index = {index} currentTime={currentTime} dayConversion= {dayConversion} hourConversion = {hourConversion} timeNormalMinutes = {weather.timeNormalMinutes} connectionError = {connectionError} mainWeather = {weather.mainWeather} description = {weather.description} name = {location.name} country = {location.country} temperature = {weather.temperature} tempFeel = {weather.tempFeel} tempMax = {weather.tempMax} tempMin = {weather.tempMin} precipitation={weather.precipitation} humidity = {weather.humidity} windSpeed={weather.windSpeed} pressure = {weather.pressure} visibility = {weather.visibility} windDegrees = {weather.windDegrees} loaded = {loaded} blocked={blocked} handleSubmit={handleSubmit} timeUpdatedUNIX={weather.timeUpdatedUNIX} timeZone={location.timeZone} city={location.name} lat = {lat} lon = {lon}/>  
+    <ShowWeather 
+      index = {index} 
+      currentTime={currentTime} 
+      dayConversion= {dayConversion} 
+      hourConversion = {hourConversion} 
+      timeNormalMinutes = {weather.timeNormalMinutes} 
+      connectionError = {connectionError} 
+      mainWeather = {weather.mainWeather} 
+      description = {weather.description} 
+      name = {location.name} 
+      country = {location.country} 
+      temperature = {weather.temperature} 
+      tempFeel = {weather.tempFeel} 
+      tempMax = {weather.tempMax} 
+      tempMin = {weather.tempMin} 
+      precipitation={weather.precipitation} 
+      humidity = {weather.humidity} 
+      windSpeed={weather.windSpeed} 
+      pressure = {weather.pressure} 
+      visibility = {weather.visibility} 
+      windDegrees = {weather.windDegrees} 
+      loaded = {loaded} 
+      blocked={blocked} 
+      handleSubmit={handleSubmit} 
+      timeUpdatedUNIX={weather.timeUpdatedUNIX} 
+      timeZone={location.timeZone} 
+      city={location.name} 
+      lat = {lat} 
+      lon = {lon}
+    />  
   )
 }
