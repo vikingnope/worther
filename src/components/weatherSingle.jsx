@@ -26,7 +26,7 @@ export const GetSingleWeather = () => {
     const [ location, setLocation ] = useState([]);
     const [ weather, setWeather ] = useState([]);
     const [ loaded, setLoaded ] = useState();
-    const [ times, setTimes ] = useState(null);
+    const [ times, setTimes ] = useState([]);
     const [ blocked, setBlocked ] = useState();
     const [ connectionError, setConnectionError ] = useState();
 
