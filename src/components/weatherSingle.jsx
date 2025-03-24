@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShowWeather, SunriseSunsetTimes } from "./utils/weatherVariables";
 import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
+import { use } from "react";
 
 export const GetSingleWeather = () => {
 
@@ -11,17 +12,17 @@ export const GetSingleWeather = () => {
 
     const history = useNavigate();
 
-    const handleSubmit3Hour = (e) => {
+    const handleSubmit3Hour = useCallback((e) => {
       e.preventDefault();
   
       history('/3HourForecast/' + location.lat + '/' + location.lon);
-    }
+    }, [history, location.lat, location.lon]);
 
-    const handleSubmitDaily = (e) => {
+    const handleSubmitDaily = useCallback((e) => {
       e.preventDefault();
   
       history('/dailyWeather/' + location.lat + '/' + location.lon);
-    }
+    }, [history, location.lat, location.lon]);
 
     const [ location, setLocation ] = useState([]);
     const [ weather, setWeather ] = useState([]);
@@ -30,9 +31,11 @@ export const GetSingleWeather = () => {
     const [ blocked, setBlocked ] = useState();
     const [ connectionError, setConnectionError ] = useState();
 
-    ((location.name) ?
-    document.title = "Worther - Weather - " + location.name :
-    document.title = "Worther - Weather");
+    useEffect(() => {
+      ((location.name) ?
+      document.title = "Worther - Weather - " + location.name :
+      document.title = "Worther - Weather");
+    }, [location.name]);
 
     useEffect(() => {
       axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
@@ -79,14 +82,16 @@ export const GetSingleWeather = () => {
         setLoaded(true);
       })
       .catch(error => {
-        ((error.response.data.cod === 429) ?
-          setBlocked(true) :
-          (error.response.data.code === 'ERR_NETWORK') ?
-          setConnectionError(true) :
-          setBlocked(false)
-        )
-        setLoaded(false);
-      })
+        const errorState = {
+          loaded: false,
+          blocked: error.response?.data.cod === 429,
+          connectionError: error.response?.data.code === 'ERR_NETWORK'
+        };
+        
+        setLoaded(errorState.loaded);
+        setBlocked(errorState.blocked);
+        setConnectionError(errorState.connectionError);
+      });
     }, [city, countryCode, latitude, longitude]);   
 
     const localSunriseSunsetTimes = useMemo(() => {
