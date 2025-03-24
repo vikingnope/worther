@@ -4,13 +4,19 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ShowWeather, SunriseSunsetTimes } from "./utils/weatherVariables";
 import { Header } from "./utils/header";
 import { Footer } from "./utils/footer";
-import { use } from "react";
 
 export const GetSingleWeather = () => {
 
     const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url
 
     const history = useNavigate();
+
+    const [ location, setLocation ] = useState([]);
+    const [ weather, setWeather ] = useState([]);
+    const [ loaded, setLoaded ] = useState();
+    const [ times, setTimes ] = useState([]);
+    const [ blocked, setBlocked ] = useState();
+    const [ connectionError, setConnectionError ] = useState();
 
     const handleSubmit3Hour = useCallback((e) => {
       e.preventDefault();
@@ -23,13 +29,6 @@ export const GetSingleWeather = () => {
   
       history('/dailyWeather/' + location.lat + '/' + location.lon);
     }, [history, location.lat, location.lon]);
-
-    const [ location, setLocation ] = useState([]);
-    const [ weather, setWeather ] = useState([]);
-    const [ loaded, setLoaded ] = useState();
-    const [ times, setTimes ] = useState([]);
-    const [ blocked, setBlocked ] = useState();
-    const [ connectionError, setConnectionError ] = useState();
 
     useEffect(() => {
       ((location.name) ?
