@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback, useMemo } from 'react';
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShowWeather } from './utils/weatherVariables';
@@ -15,13 +15,15 @@ export const SingleThreeHourForecastData = () => {
 
   const history = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
 
     history('/weather/' +  location.name + '/' + location.lat + '/' + location.lon);
-  }
+  }, [history, location.lat, location.lon, location.name]);
 
-  document.title = "Worther - 3 Hour Weather - " + location.name;
+  useEffect(() => {
+    document.title = "Worther - 3 Hour Weather - " + location.name;
+  }, [location.name]);
 
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
@@ -59,33 +61,37 @@ export const SingleThreeHourForecastData = () => {
       setLoaded(true);
     })
     .catch(error => {
-      ((error.response.data.cod === 429) ?
-      setBlocked(true) :
-      (error.response.data.code === 'ERR_NETWORK') ?
-      setConnectionError(true) :
-      setBlocked(false)
-    )
-    setLoaded(false);
-    })
+      const errorState = {
+        loaded: false,
+        blocked: error.response?.data.cod === 429,
+        connectionError: error.response?.data.code === 'ERR_NETWORK'
+      };
+      
+      setLoaded(errorState.loaded);
+      setBlocked(errorState.blocked);
+      setConnectionError(errorState.connectionError);
+    });
   }, [index, numericIndex, lat, lon]);
 
-  let hourConversion = '';
-  let dayConversion = '';
-  let d = new Date();
-  let currentTime = [];
+  const hourConversion = useMemo(() => {
+    if (!weather.timeNormalHour || location.timeZone === undefined) return 0;
+    return Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600);
+  }, [weather.timeNormalHour, location.timeZone]);
 
+  const dayConversion = useMemo(() => {
+    if (!weather.dayUNIX || location.timeZone === undefined) return 0;
+    return new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString();
+  }, [weather.dayUNIX, location.timeZone]);
 
-  return (
-    hourConversion = (
-      Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600)
-    ),
-    dayConversion = (
-      new Date((weather.dayUNIX + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
-    ),
-    currentTime = {
+  const currentTime = useMemo(() => {
+    const d = new Date();
+    return {
       hour: d.getHours(),
       minute: d.getMinutes()
-    },
+    };
+  }, []);
+
+  return (
     <ShowWeather 
       index = {index} 
       currentTime={currentTime} 
