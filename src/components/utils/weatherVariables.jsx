@@ -8,7 +8,7 @@ import { Header } from './header';
 import { Footer } from './footer';
 import { useNavigate } from 'react-router-dom';
 import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
-import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke } from 'react-icons/wi'; // * humidity icon, wind icon, barometer, smoke icon
+import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke, WiDust } from 'react-icons/wi'; // * humidity icon, wind icon, barometer, smoke icon
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunrise icon, sunset icon
 import { GiWindsock } from "react-icons/gi"; // * wind sock icon
 
@@ -42,6 +42,7 @@ export const WeatherIcons = React.memo((props) => {
         if (props.mainWeather === "Fog" || ["haze", "mist"].includes(props.description)) return <WiNightFog size={size} color="white" />;
         if (props.mainWeather === "Snow") return <WiNightAltSnow size={size} color="white" />;
         if (props.mainWeather === "Smoke") return <WiSmoke size={size} color="white" />;
+        if (props.mainWeather === "Dust") return <WiDust size={size} color="white" />;
       } else {
         if (props.mainWeather === "Clear") return <MdModeNight size={size} color="white" />;
         if (["scattered clouds", "broken clouds"].includes(props.description)) return <WiNightAltPartlyCloudy size={size + 30} color="white" />;
@@ -53,6 +54,7 @@ export const WeatherIcons = React.memo((props) => {
         if (props.mainWeather === "Fog" || ["haze", "mist"].includes(props.description)) return <WiNightFog size={size} color="white" />;
         if (props.mainWeather === "Snow") return <WiNightAltSnow size={size} color="white" />;
         if (props.mainWeather === "Smoke") return <WiSmoke size={size} color="white" />;
+        if (props.mainWeather === "Dust") return <WiDust size={size} color="white" />;
       }
     } else {
       if (isWindy) {
@@ -68,6 +70,7 @@ export const WeatherIcons = React.memo((props) => {
         if (props.description === "haze") return <BsFillCloudHazeFill size={size} color="white" />;
         if (props.description === "mist") return <TbMist size={size} color="white" />;
         if (props.mainWeather === "Smoke") return <WiSmoke size={size} color="white" />;
+        if (props.mainWeather === "Dust") return <WiDust size={size} color="white" />;
       } else {
         if (props.mainWeather === "Clear") return <BsFillSunFill size={size} color="white" />;
         if (["scattered clouds", "broken clouds"].includes(props.description)) return <BsFillCloudSunFill size={size} color="white" />;
@@ -82,6 +85,7 @@ export const WeatherIcons = React.memo((props) => {
         if (props.description === "haze") return <BsFillCloudHazeFill size={size} color="white" />;
         if (props.description === "mist") return <TbMist size={size} color="white" />;
         if (props.mainWeather === "Smoke") return <WiSmoke size={size} color="white" />;
+        if (props.mainWeather === "Dust") return <WiDust size={size} color="white" />;
       }
     }
     return <></>;
