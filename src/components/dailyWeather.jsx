@@ -1,9 +1,9 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useMemo} from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow } from './utils/weatherVariables';
+import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 
 export const DailyWeatherData = () => {
@@ -99,20 +99,14 @@ export const DailyWeatherData = () => {
     })
   }, [lat, lon]);
 
-  let hourConversion = '';
   let dayConversion = '';
 
-  // Convert sunrise/sunset times to local time:
-  // 1. Convert timestamp to milliseconds (* 1000)
-  // 2. Apply location's timezone offset (times.timeZone * 1000)
-  // 3. Adjust for browser's timezone offset (getTimezoneOffset() * 60 * 1000)
-  const sunriseTime = new Date((times.sunrise * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
-  const sunsetTime = new Date((times.sunset * 1000) + (times.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
-
-  const localSunriseHour = sunriseTime.getHours();
-  const localSunriseMinute = sunriseTime.getMinutes();
-  const localSunsetHour = sunsetTime.getHours();
-  const localSunsetMinute = sunsetTime.getMinutes();
+  const localSunriseSunsetTimes = useMemo(() => {
+    if (times && times.sunrise && times.sunset && times.timeZone) {
+    return SunriseSunsetTimes(times);
+    }
+    return null;
+  }, [times]);
 
   return (
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
@@ -134,7 +128,7 @@ export const DailyWeatherData = () => {
                       aria-label={`Weather forecast for ${dayConversion}`}
                     >
                         <p className="mx-auto mt-10">
-                          <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={localSunriseHour} sunsetHour={localSunsetHour} hourConversion={hourConversion} page={'daily'}/>
+                          <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={localSunriseSunsetTimes.sunriseHour} sunsetHour={localSunriseSunsetTimes.sunsetHour} page={'daily'}/>
                         </p>
                         <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
                         <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.weather.description.toUpperCase()}</p>
@@ -147,8 +141,8 @@ export const DailyWeatherData = () => {
                         (weather.visibility / 1000).toFixed(2) + 'km' :
                         weather.visibility + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
                         </p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(localSunriseHour > 23) ? String(localSunriseHour - 24).padStart(2, '0') : String(localSunriseHour).padStart(2, '0')}:{String(localSunriseMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
-                        <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(localSunsetHour < 0) ? (localSunsetHour + 24) : localSunsetHour}:{String(localSunsetMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(localSunriseSunsetTimes.sunriseHour > 23) ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')}:{String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                        <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(localSunriseSunsetTimes.sunsetHour < 0) ? (localSunriseSunsetTimes.sunsetHour + 24) : localSunriseSunsetTimes.sunsetHour}:{String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
                     </div> 
                   ]
                 ))

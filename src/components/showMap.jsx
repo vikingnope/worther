@@ -1,6 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup, ScaleControl, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
@@ -109,15 +109,15 @@ export default function ShowMap(props) {
         }  
     }, []);
 
-    const markerIconConst = L.icon({
+    const markerIconConst = useMemo(() => L.icon({
         iconUrl: markerDot,
         iconRetinaUrl: markerDot,
         iconAnchor: [13, 14],
         popupAnchor: [0, -13],
         iconSize: [26.5, 28]
-    });
+    }), []);
 
-    const map = (markerShow, zoomLevel) => {
+    const map = useCallback((markerShow, zoomLevel) => {
         return( 
             <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
                 <Header/>
@@ -156,7 +156,7 @@ export default function ShowMap(props) {
                 <Footer/>
             </div>
         )
-    }
+    }, [userPos, mapType, rainLayerChoice, windLayerChoice, temperatureLayerChoice, cloudLayerChoice, satelliteLayerChoice, windDirChoice, layerOpacity, markerIconConst]);
 
     return(
         <div>
