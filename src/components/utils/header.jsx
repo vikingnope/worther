@@ -5,9 +5,39 @@ import { AiFillHome } from 'react-icons/ai';
 import { BsFillMapFill, BsCloudSunFill } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
 import { TbBeach } from 'react-icons/tb';
+import { Link } from 'react-router-dom';
+import { memo, useCallback } from 'react';
+
+const NAV_ITEMS = [
+    { text: 'Home', path: '/' },
+    { text: 'Map', path: '/map/light' },
+    { text: 'Weather', path: '/weather' },
+    { text: 'Recommendations', path: '/recommendations' },
+    { text: 'About', path: '/about' }
+];
+
+const NAV_ICONS = {
+    Home: <AiFillHome size='25'/>,
+    Map: <BsFillMapFill size='22'/>,
+    Weather: <BsCloudSunFill size='25'/>,
+    Recommendations: <TbBeach size='25'/>,
+    About: <HiInformationCircle size='26'/>
+};
+
+const NavigationLink = memo(({ text, path }) => {
+    const location = "/" + useLocation().pathname.split('/')[1];
+    const active = (location === path) ? 'text-green-300' : 'text-white';
+
+    return (
+        <Link to={path} className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-green-300 duration-150 mr-6 ${active}`}>
+            {NAV_ICONS[text] || <></>}
+            {text}
+        </Link>
+    );
+});
 
 
-export const Header = () => {
+export const Header = memo(() => {
     const history = useNavigate();
     let location = "/" + useLocation().pathname.split('/')[1];
 
@@ -17,34 +47,11 @@ export const Header = () => {
         location = '/map/light';
     }
 
-    const handleClick = (e) => {
+    const handleClick = useCallback((e) => {
         e.preventDefault();
 
         history('/');
-    };
-
-    const Navigations = (text, path) => {
-
-        const active = (location === path) ? 'text-green-300' : 'text-white';
-
-        return(
-            <a href={path} className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-green-300 duration-150 mr-6 ${active}`}>
-                {(text === 'Home') ?
-                    <AiFillHome size='25'/> :
-                (text === 'Map') ?
-                    <BsFillMapFill size='22'/> :
-                (text === 'Weather') ?
-                    <BsCloudSunFill size='25'/> :
-                (text === 'Recommendations') ?
-                    <TbBeach size='25'/> :
-                (text === 'About') ?
-                    <HiInformationCircle size='26'/> :
-                    <></>         
-                }
-                {text}
-            </a>
-        )
-    };
+    }, [history]);
 
     return (
         <header className="inset-x-0 top-0 bg-neutral-800 h-min w-full border-y border-zinc-600 select-none">
@@ -55,14 +62,8 @@ export const Header = () => {
             <nav className="absolute right-0 top-2.5 flex">
                 {/* Desktop navigation - visible on md screens and up */}
                 <div className="hidden lg:flex">
-                    {[
-                    Navigations('Home', '/'), 
-                    Navigations('Map', '/map/light'), 
-                    Navigations('Weather', '/weather'),
-                    Navigations('Recommendations', '/recommendations'), 
-                    Navigations('About', '/about')
-                    ].map((item) => (
-                        <span key={item.props.href}>{item}</span>
+                    {NAV_ITEMS.map((item, index) => (
+                        <NavigationLink key={index} text={item.text} path={item.path} />
                     ))}
                 </div>
                 
@@ -73,4 +74,6 @@ export const Header = () => {
             </nav>
         </header>          
     )
-};
+});
+
+Header.displayName = 'Header';
