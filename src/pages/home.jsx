@@ -1,10 +1,18 @@
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+const SITE_MAP = [
+    { text: 'Map', path: '/map/light' },
+    { text: 'Weather', path: '/weather' },
+    { text: 'Recommendations', path: '/recommendations' },
+    { text: 'About', path: '/about' }
+];
+
+const SITE_MAP_STYLING = 'uppercase md:text-5xl text-3xl underline block w-max font-bold hover:text-cyan-300 duration-300 md:mb-10 mb-5';
 
 export default function Home() {
-
-    const siteMapStyling = 'uppercase md:text-5xl text-3xl underline block w-max font-bold hover:text-cyan-300 duration-300';
 
     useEffect(() => {
         document.title = "Worther - Home";
@@ -21,10 +29,11 @@ export default function Home() {
                     Getting weather closer to you
                 </p>
                 <nav className='my-10' aria-label="Main navigation">
-                    <a href='/map/light' className={`${siteMapStyling} md:mb-10 mb-5`}>Map</a>
-                    <a href='/weather' className={`${siteMapStyling} md:mb-10 mb-5`}>Weather</a>
-                    <a href='/recommendations' className={`${siteMapStyling} md:mb-10 mb-5`}>Recommendations</a>
-                    <a href='/about' className={siteMapStyling}>About</a>
+                    {SITE_MAP.map((item, index) => (
+                        <Link key={index} to={item.path} className={SITE_MAP_STYLING} aria-label={`Navigate to ${item.text}`}>
+                            {item.text}
+                        </Link>
+                    ))}
                 </nav>
             </main>
             <Footer />
