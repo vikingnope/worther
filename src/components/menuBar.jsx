@@ -56,8 +56,8 @@ const OptionsMethod = memo((props) => {
     // Memoize the range input class
     const rangeClassName = useMemo(() => 
         (props.mode === 'dark') 
-            ? "z-50 accent-white w-48 m-2" 
-            : "accent-black w-48 m-2 z-50",
+            ? "z-50 w-48 m-2 h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-neutral-600 to-white accent-white" 
+            : "z-50 w-48 m-2 h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-gray-100 to-gray-400 accent-black",
     [props.mode]);
 
     return(
@@ -86,15 +86,13 @@ const OptionsMethod = memo((props) => {
                         placeholder="Enter City"
                     />
                 </form>
-                <div>
+                <div className="flex items-center my-1">   
                     <label 
-                        htmlFor="weather" 
-                        className="text-base ml-1 mr-px"
+                        htmlFor="opacityBar" 
+                        className="text-base mx-1"
                     >
-                        Layers opacity:
-                    </label>
-                </div>
-                <div>                
+                        Layers Opacity:
+                    </label>             
                     <input 
                         className={rangeClassName}
                         type="range"
