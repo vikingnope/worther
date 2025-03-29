@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo} from 'react';
+import {useEffect, useState, useMemo } from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Header } from './utils/header';
@@ -14,7 +14,9 @@ export const DailyWeatherData = () => {
   const [ times, setTimes ] = useState([]);
   const [ error, setError ] = useState(null);
 
-  document.title = "Worther - Daily Weather - " + location.name;
+  useEffect(() => {
+    document.title = "Worther - Daily Weather - " + location.name;
+  }, [location.name]);
 
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
@@ -103,7 +105,7 @@ export const DailyWeatherData = () => {
 
   const localSunriseSunsetTimes = useMemo(() => {
     if (times && times.sunrise && times.sunset && times.timeZone) {
-    return SunriseSunsetTimes(times);
+      return SunriseSunsetTimes(times);
     }
     return null;
   }, [times]);
