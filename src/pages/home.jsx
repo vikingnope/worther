@@ -1,9 +1,14 @@
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
+import { useEffect } from 'react';
 
 export default function Home() {
 
-    const siteMapStyling = 'uppercase md:text-5xl text-3xl underline block w-max font-bold hover:text-cyan-300 duration-300'
+    const siteMapStyling = 'uppercase md:text-5xl text-3xl underline block w-max font-bold hover:text-cyan-300 duration-300';
+
+    useEffect(() => {
+        document.title = "Worther - Home";
+    }, []);
 
     return (
         <div className='flex flex-col min-h-screen text-white overflow-hidden bg-black'>
