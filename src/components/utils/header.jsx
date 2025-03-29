@@ -29,7 +29,7 @@ const NavigationLink = memo(({ text, path }) => {
     const active = (location === path) ? 'text-green-300' : 'text-white';
 
     return (
-        <Link to={path} className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-green-300 duration-150 mr-6 ${active}`}>
+        <Link to={path} className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-green-300 duration-150 mr-6 ${active}`} aria-label={`Navigate to ${text}`}>
             {NAV_ICONS[text] || <></>}
             {text}
         </Link>
@@ -56,7 +56,7 @@ export const Header = memo(() => {
     return (
         <header className="inset-x-0 top-0 bg-neutral-800 h-min w-full border-y border-zinc-600 select-none">
             <section className="relative mt-2">
-                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 border-3 hover:scale-90 hover:border-cyan-300 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" width="65" height="65" />
+                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 border-3 hover:scale-90 hover:border-cyan-300 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" width="65" height="65" aria-label="Navigate to home page"/>
             </section>
 
             <nav className="absolute right-0 top-2.5 flex">
