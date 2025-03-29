@@ -1,9 +1,8 @@
 import axios from "axios";
 import { TileLayer } from 'react-leaflet';
-import { useEffect, useState } from "react"
+import React, { useEffect, useState, memo } from "react";
 
-export const CloudLayer = (props) => {
-
+export const CloudLayer = memo((props) => {
   return (
     <>
     {
@@ -19,10 +18,9 @@ export const CloudLayer = (props) => {
     }   
     </>
   )
-};
+});
 
-export const WindSpeedLayer = (props) => {
-
+export const WindSpeedLayer = memo((props) => {
   return (
     <>
     {
@@ -38,10 +36,9 @@ export const WindSpeedLayer = (props) => {
     }
     </>
   )
-};
+});
 
-export const TemperatureLayer = (props) => {
-
+export const TemperatureLayer = memo((props) => {
   return (
     <>
     {
@@ -57,11 +54,11 @@ export const TemperatureLayer = (props) => {
     }  
     </>
   )
-};
+});
 
 const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
-export const RainViewerData = (props) => {
+export const RainViewerData = memo((props) => {
   const [path, setPath] = useState();
 
   useEffect(() => {
@@ -92,22 +89,24 @@ export const RainViewerData = (props) => {
       }
     </>
   )
-}
+});
 
-export const HybridLayer = (props) => {
-  // Define the labelLayerProps here, outside of JSX
-  const labelLayerProps = {
-    url: (props.mapType === 'light') 
-      ? "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" 
-      : "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
-    tileSize: 256,
-    zIndex: 3,
-    opacity: 1,
-    className: "labels-layer",
-    subdomains: "abcd"
-  };
-  
+// Define the labelLayerProps here, outside of JSX
+const getLabelLayerProps = (mapType) => ({
+  url: (mapType === 'light') 
+    ? "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png" 
+    : "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+  tileSize: 256,
+  zIndex: 3,
+  opacity: 1,
+  className: "labels-layer",
+  subdomains: "abcd"
+});
+
+export const HybridLayer = memo((props) => {
+  const labelLayerProps = getLabelLayerProps(props.mapType);
+
   return (
     <>
     {
@@ -122,20 +121,12 @@ export const HybridLayer = (props) => {
             opacity={1}
           />
           {/* Labels overlay layer */}
-          <TileLayer
-            url={labelLayerProps.url}
-            attribution={labelLayerProps.attribution}
-            tileSize={labelLayerProps.tileSize}
-            zIndex={labelLayerProps.zIndex}
-            opacity={labelLayerProps.opacity}
-            className={labelLayerProps.className}
-            subdomains={labelLayerProps.subdomains}
-          />
+          <TileLayer {...labelLayerProps} />
         </> : <></>
     }
     </>
   )
-}
+});
 
 // export const WindDirectionLayer = (props) => {
 
