@@ -3,7 +3,6 @@ import Home from './home.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import About from './about.jsx';
 import Weather from './weather.jsx';
-import AdvancedWeather from './advancedWeather.jsx';
 import { GetSingleWeather } from '../components/weatherSingle.jsx';
 import { ThreeHourForecastData } from '../components/3HourForecastData.jsx';
 import ShowMap from '../components/showMap';
@@ -24,7 +23,6 @@ export default function App() {
           <Route exact path="/about" element={<About />} />
           <Route exact path="/map/:mapType" element={<ShowMap />} />
           <Route exact path="/weather" element={<Weather />} />
-          <Route exact path="/advancedWeather" element={<AdvancedWeather />} />
           <Route exact path="/weather/:city" element={<GetSingleWeather />} /> (// * Changes url according to city)
           <Route exact path="/weatherCountry/:countryCode/:city" element={<GetSingleWeather />} />
           <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetSingleWeather/>} />
