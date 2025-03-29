@@ -240,10 +240,13 @@ export const ShowWeather = (props) => {
     timeUpdatedMinute: String(new Date(props.timeUpdatedUNIX * 1000).getMinutes()).padStart(2, '0'),
   }), [props.timeUpdatedUNIX]);
 
-  const timeUpdatedHourConversion = useMemo(() => 
-    Math.round(((timeUpdated.timeUpdatedHour * 3600 + new Date().getTimezoneOffset() * 60) + props.timeZone) / 3600),
-    [timeUpdated.timeUpdatedHour, props.timeZone]
-  );
+  const timeUpdatedHourConversion = useMemo(() => {
+    const convertedHour = Math.round(((timeUpdated.timeUpdatedHour * 3600 + new Date().getTimezoneOffset() * 60) + props.timeZone) / 3600);
+    // Handle hour wrapping for 24-hour format
+    if (convertedHour > 23) return convertedHour - 24;
+    if (convertedHour < 0) return convertedHour + 24;
+    return convertedHour;
+  }, [timeUpdated.timeUpdatedHour, props.timeZone]);
 
   const currentHourConversion = useMemo(() => 
     props.choice !== 'normal' 
@@ -256,7 +259,7 @@ export const ShowWeather = (props) => {
 
   const handleSubmitNormal = useCallback((e) => {
     e.preventDefault();
-    history('/weather');
+    history(-1);
   }, [history]);
 
   const handleSubmitAdvanced = useCallback((e) => {
@@ -349,12 +352,14 @@ export const ShowWeather = (props) => {
         <ErrorDisplay message="The API is currently blocked" />
       ) : props.connectionError ? (
         <ErrorDisplay message="Please check your internet connection" />
+      ) : props.loading ? (
+        <div className="text-center bg-black min-h-screen flex flex-col justify-center">
+          <p className="font-bold text-3xl">Loading...</p>
+        </div>
       ) : !props.mainWeather ? (
         <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} />
       ) : (
-        <div className="text-center bg-black min-h-screen flex flex-col justify-center">
-          <p className="font-bold text-2xl">Loading...</p>
-        </div>
+        <ErrorDisplay message="An unknown error occurred" />
       )}
       <Footer />
     </div>
