@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
 import markerDotBlue from "../resources/location-dot.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
 import markerDotRed from "../resources/location-dot-red.png";
@@ -35,22 +35,22 @@ export default function Recommendations () {
   const [loading, setLoading] = useState(true);
   const isDesktop = useDeviceDetect(768); // 768px is the breakpoint for desktop (i.e. md size in tailwindcss)
 
-  const markerIconConstRecommended = L.icon({
-    iconUrl: markerDotBlue,
-    iconRetinaUrl: markerDotBlue,
-    iconAnchor: [13, 14],
-    popupAnchor: [0, -13],
-    iconSize: [26.5, 28]
-  });
-
-
-  const markerIconConstUnsuitable = L.icon({
-    iconUrl: markerDotRed,
-    iconRetinaUrl: markerDotRed,
-    iconAnchor: [13, 14],
-    popupAnchor: [0, -13],
-    iconSize: [26.5, 28]
-  });
+  const markerIcons = useMemo(() => ({
+    recommended: L.icon({
+      iconUrl: markerDotBlue,
+      iconRetinaUrl: markerDotBlue,
+      iconAnchor: [13, 14],
+      popupAnchor: [0, -13],
+      iconSize: [26.5, 28]
+    }),
+    unsuitable: L.icon({
+      iconUrl: markerDotRed,
+      iconRetinaUrl: markerDotRed,
+      iconAnchor: [13, 14],
+      popupAnchor: [0, -13],
+      iconSize: [26.5, 28]
+    })
+  }), []);
 
   useEffect(() => {
     const fetchWind = async () => {
@@ -94,19 +94,14 @@ export default function Recommendations () {
     if (loading === false && wind.speed !== undefined && wind.degrees !== undefined) {
       try {
         if (wind.speed >= 8) {
-            for (let i = 0; i < data.length; i++) {
-                let suitableObj = "Unsuitable";
-                setSuitability(suitability => [...suitability, suitableObj]);
-            }
+            setSuitability(data.map(() => "Unsuitable"));
         } else if (wind.speed >= 0 && data.length > 0) {
             for (const item of data) {
                 let suitableObj2 = "";
-                let windDegreesEndSolution = "";
+                let windDegreesEndSolution = item.degreesEnd;
 
                 if (wind.degrees >= 210 && item.degreesStart >= 210 && item.degreesEnd <= 50) {
                     windDegreesEndSolution = item.degreesEnd + 360;
-                } else {
-                    windDegreesEndSolution = item.degreesEnd;
                 }
 
                 if ((wind.degrees >= item.degreesStart) && (wind.degrees <= windDegreesEndSolution)) {
@@ -148,7 +143,7 @@ export default function Recommendations () {
               />
               {
                 data.map((data, index) => (
-                  <Marker key={index} icon = {(suitability[index] === "Recommended") ? markerIconConstRecommended : markerIconConstUnsuitable} position={[data.lat, data.lon]}>
+                  <Marker key={index} icon = {(suitability[index] === "Recommended") ? markerIcons.recommended : markerIcons.unsuitable} position={[data.lat, data.lon]}>
                     <Popup>
                         <p className="font-bold underline flex justify-center">{data.name}</p>
                         {
