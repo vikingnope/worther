@@ -308,10 +308,16 @@ export const ShowWeather = memo((props) => {
     history('/3HourForecast/' + props.lat + '/' + props.lon);
   }, [history, props.lat, props.lon]);
 
-  const NormalWeather = memo(() => (
+  const WeatherDisplay = memo(() => (
     <div className="text-center flex-grow flex flex-col justify-center">
-      <section className="mx-auto mb-4">
-        <WeatherIcons
+      {props.dayConversion &&
+        <section className="mb-10 mt-7">
+          <p className="mx-auto font-bold text-4xl underline">{props.dayConversion}</p>
+          <p className="font-bold text-4xl mx-auto underline mt-5">{(props.hourConversion > 23 ? props.hourConversion - 24 : props.hourConversion < 0 ? props.hourConversion + 24 : props.hourConversion).toString().padStart(2, '0')}:{props.timeNormalMinutes} (<TimeZoneShow timeZone={props.timeZone} />)</p>
+        </section>
+      }
+      <section className="mb-4 mx-auto">
+        <WeatherIcons 
           mainWeather={props.mainWeather}
           windSpeed={props.windSpeed}
           description={props.description}
@@ -329,52 +335,29 @@ export const ShowWeather = memo((props) => {
         <p>Min: {Math.round(props.tempMin)}°C   Max: {Math.round(props.tempMax)}°C</p>
         <p><WiHumidity size={27} className="inline" />Humidity: {props.humidity}%</p>
         <p><WiStrongWind size={27} className="inline mr-2" />Wind Speed: {props.windSpeed} m/s (<WindForce windSpeed={props.windSpeed} />)   <GiWindsock size={23} className="inline mr-2" />Wind Direction: <WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°</p>
+        {props.precipitation !== undefined && <p>Precipitation: {props.precipitation}%</p>}
         <p><WiBarometer size={30} className="inline mr-1" />Pressure: {props.pressure} hPa</p>
         <p>Visibility: {props.visibility >= 1000 ? `${props.visibility / 1000}km` : `${props.visibility}m`} (<VisibilityDesc visibility={props.visibility} />)</p>
-        <p><BsFillSunriseFill size={25} className="inline mr-2" />Sunrise: {(props.localSunriseSunsetTimes.sunriseHour > 23 ? props.localSunriseSunsetTimes.sunriseHour - 24 : props.localSunriseSunsetTimes.sunriseHour).toString().padStart(2, '0')}:{props.localSunriseSunsetTimes.sunriseMinute.toString().padStart(2, '0')} (<TimeZoneShow timeZone={props.timeZone} />)   <BsFillSunsetFill size={25} className="inline mr-2" />Sunset: {(props.localSunriseSunsetTimes.sunsetHour < 0 ? props.localSunriseSunsetTimes.sunsetHour + 24 : props.localSunriseSunsetTimes.sunsetHour).toString().padStart(2, '0')}:{props.localSunriseSunsetTimes.sunsetMinute.toString().padStart(2, '0')} (<TimeZoneShow timeZone={props.timeZone} />)</p>
+        {props.localSunriseSunsetTimes &&
+          <p><BsFillSunriseFill size={25} className="inline mr-2" />Sunrise: {(props.localSunriseSunsetTimes.sunriseHour > 23 ? props.localSunriseSunsetTimes.sunriseHour - 24 : props.localSunriseSunsetTimes.sunriseHour).toString().padStart(2, '0')}:{props.localSunriseSunsetTimes.sunriseMinute.toString().padStart(2, '0')} (<TimeZoneShow timeZone={props.timeZone} />)   <BsFillSunsetFill size={25} className="inline mr-2" />Sunset: {(props.localSunriseSunsetTimes.sunsetHour < 0 ? props.localSunriseSunsetTimes.sunsetHour + 24 : props.localSunriseSunsetTimes.sunsetHour).toString().padStart(2, '0')}:{props.localSunriseSunsetTimes.sunsetMinute.toString().padStart(2, '0')} (<TimeZoneShow timeZone={props.timeZone} />)</p>
+        }
         {props.rain !== undefined && <p>Rain in last hour: {props.rain} mm</p>}
       </section>
-      <div className="flex mx-auto">
-        <form onSubmit={props.handleSubmit3Hour}>
-          <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show 3 hour forecast</button>
-        </form>
-        <form onSubmit={props.handleSubmitDaily} className="ml-10">
-          <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show daily forecast</button>
-        </form>
-      </div>
-      <button className="rounded-md h-8 text-xl my-8 font-bold w-24 mx-auto border" onClick={handleSubmitNormal}>Go Back</button>
-      <p className="flex mx-auto underline mb-7">Last Updated: {timeUpdatedHourConversion.toString().padStart(2, '0')}:{timeUpdated.timeUpdatedMinute} (<TimeZoneShow timeZone={props.timeZone} />)</p>
-    </div>
-  ));
-
-  const AdvancedWeather = memo(() => (
-    <div className="text-center flex-grow flex flex-col justify-center">
-      <section className="mb-24 mt-7">
-        <p className="mx-auto font-bold text-4xl underline">{props.dayConversion}</p>
-        <p className="font-bold text-4xl mx-auto underline mt-5">{(props.hourConversion > 23 ? props.hourConversion - 24 : props.hourConversion < 0 ? props.hourConversion + 24 : props.hourConversion).toString().padStart(2, '0')}:{props.timeNormalMinutes} (<TimeZoneShow timeZone={props.timeZone} />)</p>
-      </section>
-      <section className="mb-4 mx-auto">
-        <WeatherIcons 
-          mainWeather={props.mainWeather} 
-          windSpeed={props.windSpeed} 
-          description={props.description} 
-          page="single" 
-        />
-      </section>
-      <section className="text-lg">
-        <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
-        <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
-        <p className="mt-1"><FaTemperatureHigh size={20} className="inline mr-2" />Temperature: {Math.round(props.temperature)}°C</p>
-        <p>Feels like: {Math.round(props.tempFeel)}°C</p>
-        <p>Min: {Math.round(props.tempMin)}°C   Max: {Math.round(props.tempMax)}°C</p>
-        <p><WiHumidity size={27} className="inline" />Humidity: {props.humidity}%</p>
-        <p><WiStrongWind size={27} className="inline mr-2" />Wind Speed: {props.windSpeed} m/s (<WindForce windSpeed={props.windSpeed} />)   <GiWindsock size={23} className="inline mr-2" />Wind Direction: <WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°</p>
-        <p>Precipitation: {props.precipitation}%</p>
-        <p><WiBarometer size={30} className="inline mr-1" />Pressure: {props.pressure} hPa</p>
-        <p>Visibility: {props.visibility >= 1000 ? `${props.visibility / 1000}km` : `${props.visibility}m`} (<VisibilityDesc visibility={props.visibility} />)</p>
-      </section>
-      <button className="rounded-md border h-8 text-xl my-8 font-bold w-24 mx-auto" onClick={handleSubmitAdvanced}>Go Back</button>
-      <p className="flex mx-auto underline mb-7">Last Updated: {currentHourConversion?.toString().padStart(2, '0')}:{props.currentTime.minute} (<TimeZoneShow timeZone={props.timeZone} />)</p>
+      {props.choice === "normal" &&
+        <div className="flex mx-auto">
+          <form onSubmit={props.handleSubmit3Hour}>
+            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show 3 hour forecast</button>
+          </form>
+          <form onSubmit={props.handleSubmitDaily} className="ml-10">
+            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show daily forecast</button>
+          </form>
+        </div>
+      }
+      <button className="rounded-md border h-8 text-xl my-8 font-bold w-24 mx-auto" onClick={props.choice ==="normal" ? handleSubmitNormal : handleSubmitAdvanced} >Go Back</button>
+      {props.choice === "normal" ?
+        <p className="flex mx-auto underline mb-7">Last Updated: {timeUpdatedHourConversion.toString().padStart(2, '0')}:{timeUpdated.timeUpdatedMinute} (<TimeZoneShow timeZone={props.timeZone} />)</p> :
+        <p className="flex mx-auto underline mb-7">Last Updated: {currentHourConversion?.toString().padStart(2, '0')}:{props.currentTime.minute} (<TimeZoneShow timeZone={props.timeZone} />)</p>
+      }
     </div>
   ));
 
@@ -390,7 +373,7 @@ export const ShowWeather = memo((props) => {
       <Header />
       {props.loaded ? (
         props.mainWeather ? (
-          props.choice === 'normal' ? <NormalWeather /> : <AdvancedWeather />
+          <WeatherDisplay />
         ) : (
           <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} />
         )
