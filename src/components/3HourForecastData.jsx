@@ -96,7 +96,7 @@ export const ThreeHourForecastData = memo(() => {
   }, [weather, location.timeZone]); // Only recalculate when these dependencies change
 
   const localSunriseSunsetTimes = useMemo(() => {
-    if (times && times.sunrise && times.sunset && times.timeZone !== undefined) {
+    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
       return SunriseSunsetTimes(times);
     }
     return null;

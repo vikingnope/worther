@@ -14,7 +14,7 @@ export const CloudLayer = memo((props) => {
         maxZoom={16}
         opacity = {props.opacity} 
         /> :
-        <></>
+        null
     }   
     </>
   )
@@ -32,7 +32,7 @@ export const WindSpeedLayer = memo((props) => {
         maxZoom={16}
         opacity = {props.opacity} 
         /> :
-        <></>
+        null
     }
     </>
   )
@@ -50,7 +50,7 @@ export const TemperatureLayer = memo((props) => {
         maxZoom={16}
         opacity = {props.opacity} 
         /> :
-        <></>
+        null
     }  
     </>
   )
@@ -66,14 +66,15 @@ export const RainViewerData = memo((props) => {
   }, []);
 
   async function getPath(){
-    await axios.get(baseURL)
-      .then(response => {
-        const lastPath = response.data.radar.past.length-1;
+    try {
+      const response = await axios.get(baseURL);
+      const lastPath = response.data?.radar?.past?.length - 1;
+      if (lastPath >= 0) {
         setPath(response.data.radar.past[lastPath].path);
-      })
-      .catch(error => {
-        console.log(error);
-      })
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -122,7 +123,7 @@ export const HybridLayer = memo((props) => {
           />
           {/* Labels overlay layer */}
           <TileLayer {...labelLayerProps} />
-        </> : <></>
+        </> : null
     }
     </>
   )

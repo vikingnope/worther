@@ -104,7 +104,7 @@ export const DailyWeatherData = memo(() => {
   let dayConversion = '';
 
   const localSunriseSunsetTimes = useMemo(() => {
-    if (times && times.sunrise && times.sunset && times.timeZone !== undefined) {
+    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
       return SunriseSunsetTimes(times);
     }
     return null;

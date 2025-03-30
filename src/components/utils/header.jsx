@@ -30,7 +30,7 @@ const NavigationLink = memo(({ text, path }) => {
 
     return (
         <Link to={path} className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-green-300 duration-150 mr-6 ${active}`} aria-label={`Navigate to ${text}`}>
-            {NAV_ICONS[text] || <></>}
+            {NAV_ICONS[text] ?? null}
             {text}
         </Link>
     );

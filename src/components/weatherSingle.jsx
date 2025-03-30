@@ -96,7 +96,7 @@ export const GetSingleWeather = memo(() => {
   }, [city, countryCode, latitude, longitude]);   
 
   const localSunriseSunsetTimes = useMemo(() => {
-    if (times && times.sunrise && times.sunset && times.timeZone !== undefined) {
+    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
       return SunriseSunsetTimes(times);
     }
     return null;
