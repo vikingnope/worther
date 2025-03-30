@@ -414,6 +414,10 @@ export const ShowWeather = memo((props) => {
 
 ShowWeather.displayName = 'ShowWeather';
 
+const formatTimeDisplay = (hour, minute) => {
+  const adjustedHour = hour > 23 ? hour - 24 : hour < 0 ? hour + 24 : hour;
+  return `${adjustedHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+};
 
 export const WeatherPopupContent = memo((props) => {
   const [ currentLocationWeather, setCurrentLocationWeather ] = useState(null);
@@ -448,7 +452,7 @@ export const WeatherPopupContent = memo((props) => {
   }, [props.userPos, fetchWeatherForCurrentLocation]);
 
   const localSunriseSunsetTimes = useMemo(() => {
-      if (currentLocationWeather?.sys.sunrise && currentLocationWeather?.sys.sunset && currentLocationWeather?.timezone !== undefined) {
+      if (currentLocationWeather?.sys?.sunrise && currentLocationWeather?.sys?.sunset && currentLocationWeather?.timezone !== undefined) {
         return SunriseSunsetTimes({
           sunrise: currentLocationWeather.sys.sunrise,
           sunset: currentLocationWeather.sys.sunset,
@@ -507,8 +511,8 @@ export const WeatherPopupContent = memo((props) => {
               </div>
               <div>Pressure: {currentLocationWeather.main?.pressure ? `${currentLocationWeather.main.pressure} hPa` : '--'}</div>
               <div>Visibility: <br/>{currentLocationWeather.visibility ? (currentLocationWeather.visibility >= 1000 ? `${currentLocationWeather.visibility / 1000} km` : `${currentLocationWeather.visibility} m`) : '--'}</div>
-              <div>Sunrise: {localSunriseSunsetTimes ? ((localSunriseSunsetTimes.sunriseHour > 23 ? localSunriseSunsetTimes.sunriseHour - 24 : localSunriseSunsetTimes.sunriseHour < 0 ? localSunriseSunsetTimes.sunriseHour + 24 : localSunriseSunsetTimes.sunriseHour).toString().padStart(2, '0') + ':' + localSunriseSunsetTimes.sunriseMinute.toString().padStart(2, '0')) : '--:--'}</div>
-              <div>Sunset: {localSunriseSunsetTimes ? ((localSunriseSunsetTimes.sunsetHour < 0 ? localSunriseSunsetTimes.sunsetHour + 24 : localSunriseSunsetTimes.sunsetHour).toString().padStart(2, '0') + ':' + localSunriseSunsetTimes.sunsetMinute.toString().padStart(2, '0')) : '--:--'}</div>
+              <div>Sunrise: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunriseHour, localSunriseSunsetTimes.sunriseMinute) : '--:--'}</div>
+              <div>Sunset: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunsetHour, localSunriseSunsetTimes.sunsetMinute) : '--:--'}</div>
           </div>
           <Link 
               className='block mt-3 text-center font-bold text-sm underline' 
@@ -520,3 +524,5 @@ export const WeatherPopupContent = memo((props) => {
       </div>
   );
 });
+
+WeatherPopupContent.displayName = 'WeatherPopupContent';
