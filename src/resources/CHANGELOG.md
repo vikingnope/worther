@@ -28,6 +28,7 @@
 - Changed popup in map section to display useful weather data instead of just a link
 - Merged advanced and normal weather display into one
 - Fixed bug with icon not showing as night on Single 3 Hour Forecast page
+- Changed fixes to resolves in PR template
 
 ---
 
