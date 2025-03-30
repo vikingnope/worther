@@ -142,96 +142,80 @@ export const SunriseSunsetTimes = (props) => {
 }
 
 export const VisibilityDesc = React.memo((props) => {
-    if (props.visibility < 50) {
-      return 'Dense Fog';
-    } else if (props.visibility >= 50 && props.visibility < 200) {
-      return 'Thick Fog';
-    } else if (props.visibility >= 200 && props.visibility < 500) {
-      return 'Moderate Fog';
-    } else if (props.visibility >= 500 && props.visibility < 1000) {
-      return 'Light Fog';
-    } else if (props.visibility >= 1000 && props.visibility < 2000) {
-      return 'Thin Fog';
-    } else if (props.visibility >= 2000 && props.visibility < 4000) {
-      return 'Haze';
-    } else if (props.visibility >= 4000 && props.visibility < 10000) {
-      return 'Light Haze';
-    } else if (props.visibility === 10000) {
-      return 'Clear';
-    } else {
-      return '';
-    }
+  const visibilityRanges = [
+    { min: 0, max: 50, desc: 'Dense Fog' },
+    { min: 50, max: 200, desc: 'Thick Fog' },
+    { min: 200, max: 500, desc: 'Moderate Fog' },
+    { min: 500, max: 1000, desc: 'Light Fog' },
+    { min: 1000, max: 2000, desc: 'Thin Fog' },
+    { min: 2000, max: 4000, desc: 'Haze' },
+    { min: 4000, max: 10000, desc: 'Light Haze' },
+    { min: 10000, max: 10000, desc: 'Clear' },
+  ];
+
+  const { visibility } = props;
+  
+  const visibilityDesc = visibilityRanges.find(
+    range => visibility >= range.min && visibility <= range.max
+  );
+  
+  return visibilityDesc ? visibilityDesc.desc : '';
 });
 
-
 export const WindDirection = React.memo((props) => {
-  if ((props.windDegrees >= 0 && props.windDegrees <= 11.25) || (props.windDegrees  > 348.75)) {
-    return 'N';
-  } else if (props.windDegrees >= 11.26 && props.windDegrees < 33.75) {
-    return 'NNE';
-  } else if (props.windDegrees >= 33.75 && props.windDegrees < 56.25) {
-    return 'NE';
-  } else if (props.windDegrees >= 56.25 && props.windDegrees < 78.75) {
-    return 'ENE';
-  } else if (props.windDegrees >= 78.75 && props.windDegrees < 101.25) {
-    return 'E';
-  } else if (props.windDegrees >= 101.25 && props.windDegrees < 123.75) {
-    return 'ESE';
-  } else if (props.windDegrees >= 123.75 && props.windDegrees < 146.25) {
-    return 'SE';
-  } else if (props.windDegrees >= 146.25 && props.windDegrees < 168.75) {
-    return 'SSE';
-  } else if (props.windDegrees >= 168.75 && props.windDegrees < 191.25) {
-    return 'S';
-  } else if (props.windDegrees >= 191.25 && props.windDegrees < 213.75) {
-    return 'SSW';
-  } else if (props.windDegrees >= 213.75 && props.windDegrees < 236.25) {
-    return 'SW';
-  } else if (props.windDegrees >= 236.25 && props.windDegrees < 258.75) {
-    return 'WSW';
-  } else if (props.windDegrees >= 258.75 && props.windDegrees < 281.25) {
-    return 'W';
-  } else if (props.windDegrees >= 281.25 && props.windDegrees < 303.75) {
-    return 'WNW';
-  } else if (props.windDegrees >= 303.75 && props.windDegrees < 326.25) {
-    return 'NW';
-  } else if (props.windDegrees >= 326.25 && props.windDegrees < 348.75) {
-    return 'NNW';
-  } else {
-    return '';
-  }
+  const windDirections = [
+    { min: 348.75, max: 360, dir: 'N' },
+    { min: 0, max: 11.25, dir: 'N' },
+    { min: 11.26, max: 33.75, dir: 'NNE' },
+    { min: 33.75, max: 56.25, dir: 'NE' },
+    { min: 56.25, max: 78.75, dir: 'ENE' },
+    { min: 78.75, max: 101.25, dir: 'E' },
+    { min: 101.25, max: 123.75, dir: 'ESE' },
+    { min: 123.75, max: 146.25, dir: 'SE' },
+    { min: 146.25, max: 168.75, dir: 'SSE' },
+    { min: 168.75, max: 191.25, dir: 'S' },
+    { min: 191.25, max: 213.75, dir: 'SSW' },
+    { min: 213.75, max: 236.25, dir: 'SW' },
+    { min: 236.25, max: 258.75, dir: 'WSW' },
+    { min: 258.75, max: 281.25, dir: 'W' },
+    { min: 281.25, max: 303.75, dir: 'WNW' },
+    { min: 303.75, max: 326.25, dir: 'NW' },
+    { min: 326.25, max: 348.75, dir: 'NNW' }
+  ];
+
+  const { windDegrees } = props;
+  
+  const direction = windDirections.find(
+    dir => windDegrees >= dir.min && windDegrees <= dir.max
+  );
+  
+  return direction ? direction.dir : '';
 });
 
 export const WindForce = React.memo((props) => {
-  if (props.windSpeed < 0.3) {
-    return 'Force 0';
-  } else if (props.windSpeed >= 0.3 && props.windSpeed < 1.5) {
-    return 'Force 1';
-  } else if (props.windSpeed >= 1.5 && props.windSpeed < 3.3) {
-    return 'Force 2';
-  } else if (props.windSpeed >= 3.3 && props.windSpeed < 5.5) {
-    return 'Force 3';
-  } else if (props.windSpeed >= 5.5 && props.windSpeed < 8.0) {
-    return 'Force 4';
-  } else if (props.windSpeed >= 8.0 && props.windSpeed < 10.8) {
-    return 'Force 5';
-  } else if (props.windSpeed >= 10.8 && props.windSpeed < 13.9) {
-    return 'Force 6';
-  } else if (props.windSpeed >= 13.9 && props.windSpeed < 17.2) {
-    return 'Force 7';
-  } else if (props.windSpeed >= 17.2 && props.windSpeed < 20.7) {
-    return 'Force 8';
-  } else if (props.windSpeed >= 20.7 && props.windSpeed < 24.5) {
-    return 'Force 9';
-  } else if (props.windSpeed >= 24.5 && props.windSpeed < 28.4) {
-    return 'Force 10';
-  } else if (props.windSpeed >= 28.4 && props.windSpeed < 32.6) {
-    return 'Force 11';
-  } else if (props.windSpeed >= 32.6) {
-    return 'Force 12';
-  } else {
-    return '';
-  }
+  const windForceRanges = [
+    { min: 0, max: 0.3, force: 'Force 0' },
+    { min: 0.3, max: 1.5, force: 'Force 1' },
+    { min: 1.5, max: 3.3, force: 'Force 2' },
+    { min: 3.3, max: 5.5, force: 'Force 3' },
+    { min: 5.5, max: 8.0, force: 'Force 4' },
+    { min: 8.0, max: 10.8, force: 'Force 5' },
+    { min: 10.8, max: 13.9, force: 'Force 6' },
+    { min: 13.9, max: 17.2, force: 'Force 7' },
+    { min: 17.2, max: 20.7, force: 'Force 8' },
+    { min: 20.7, max: 24.5, force: 'Force 9' },
+    { min: 24.5, max: 28.4, force: 'Force 10' },
+    { min: 28.4, max: 32.6, force: 'Force 11' },
+    { min: 32.6, max: Infinity, force: 'Force 12' }
+  ];
+
+  const { windSpeed } = props;
+  
+  const force = windForceRanges.find(
+    range => windSpeed >= range.min && windSpeed < range.max
+  );
+  
+  return force ? force.force : '';
 });
 
 export const ShowWeather = (props) => {

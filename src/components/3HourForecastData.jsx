@@ -24,7 +24,7 @@ export const ThreeHourForecastData = memo(() => {
   }, [history, location.lat, location.lon]);
 
   useEffect(() => {
-    document.title = "Worther - 3 Hour Weather - " + location.name;
+    document.title = "Worther - 3 Hour Weather - " + (location.name || "");
   }, [location.name]);
 
   useEffect(() => {

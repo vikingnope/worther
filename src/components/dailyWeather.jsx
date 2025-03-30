@@ -15,7 +15,7 @@ export const DailyWeatherData = memo(() => {
   const [ error, setError ] = useState(null);
 
   useEffect(() => {
-    document.title = "Worther - Daily Weather - " + location.name;
+    document.title = "Worther - Daily Weather - " + (location.name || "");
   }, [location.name]);
 
   useEffect(() => {
