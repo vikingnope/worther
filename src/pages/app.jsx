@@ -12,7 +12,7 @@ const GetSingleWeather = lazy(() => import('../components/weatherSingle.jsx').th
 const ThreeHourForecastData = lazy(() => import('../components/3HourForecastData.jsx').then(module => ({ default: module.ThreeHourForecastData })));
 const ShowMap = lazy(() => import('../components/showMap'));
 const SingleThreeHourForecastData = lazy(() => import('../components/Single3HourForecastData').then(module => ({ default: module.SingleThreeHourForecastData })));
-const Error = lazy(() => import('./error'));
+const ErrorPage = lazy(() => import('./error'));
 const Recommendations = lazy(() => import('./recommendations'));
 const DailyWeatherData = lazy(() => import('../components/dailyWeather').then(module => ({ default: module.DailyWeatherData })));
 const Changelog = lazy(() => import('./changelog.jsx'));
@@ -37,7 +37,7 @@ export default function App() {
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/changelog" element={<Changelog />} />
             {/* Displays error page, '*' is a wildcard to display when nothing else is found */}
-            <Route path="*" element={<Error />} />
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
         </Suspense>
       </Router>

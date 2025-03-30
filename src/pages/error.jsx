@@ -3,7 +3,7 @@ import { Footer } from '../components/utils/footer';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Error() {
+export default function ErrorPage() {
     
     useEffect(() => {
         document.title = "Worther - Error 404";
