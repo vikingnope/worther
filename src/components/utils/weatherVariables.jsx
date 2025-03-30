@@ -485,9 +485,16 @@ export const WeatherPopupContent = memo((props) => {
           <p className="capitalize">{currentLocationWeather.weather?.[0]?.description}</p>
           <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
               <div>Humidity: {currentLocationWeather.main?.humidity ?? '--'}%</div>
-              <div>Wind: {currentLocationWeather.wind?.speed ? `${Math.round(currentLocationWeather.wind.speed)} m/s (${<WindForce windSpeed={currentLocationWeather.wind.speed} />})` : '--'}</div>
+              <div>Wind: {currentLocationWeather.wind?.speed 
+                ? (
+                    <>
+                      {Math.round(currentLocationWeather.wind.speed)} m/s (<WindForce windSpeed={currentLocationWeather.wind.speed} />)
+                    </>
+                  ) 
+                : '--'}
+              </div>
               <div>Pressure: {currentLocationWeather.main?.pressure ? `${currentLocationWeather.main.pressure} hPa` : '--'}</div>
-              <div>Visibility: {currentLocationWeather.visibility ? (currentLocationWeather.visibility >= 1000 ? `${currentLocationWeather.visibility / 1000} km` : `${currentLocationWeather.visibility} m`) : '--'}</div>
+              <div>Visibility: <br/>{currentLocationWeather.visibility ? (currentLocationWeather.visibility >= 1000 ? `${currentLocationWeather.visibility / 1000} km` : `${currentLocationWeather.visibility} m`) : '--'}</div>
               <div>Sunrise: {localSunriseSunsetTimes ? ((localSunriseSunsetTimes.sunriseHour > 23 ? localSunriseSunsetTimes.sunriseHour - 24 : localSunriseSunsetTimes.sunriseHour < 0 ? localSunriseSunsetTimes.sunriseHour + 24 : localSunriseSunsetTimes.sunriseHour).toString().padStart(2, '0') + ':' + localSunriseSunsetTimes.sunriseMinute.toString().padStart(2, '0')) : '--:--'}</div>
               <div>Sunset: {localSunriseSunsetTimes ? ((localSunriseSunsetTimes.sunsetHour < 0 ? localSunriseSunsetTimes.sunsetHour + 24 : localSunriseSunsetTimes.sunsetHour).toString().padStart(2, '0') + ':' + localSunriseSunsetTimes.sunsetMinute.toString().padStart(2, '0')) : '--:--'}</div>
           </div>
