@@ -1,7 +1,7 @@
 import {useEffect, useState, useCallback, useMemo, memo } from 'react';
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
-import { ShowWeather } from './utils/weatherVariables';
+import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
 
 export const SingleThreeHourForecastData = memo(() => {
   const { index, lat, lon } = useParams();
@@ -9,6 +9,7 @@ export const SingleThreeHourForecastData = memo(() => {
 
   const [ location, setLocation ] = useState([]);
   const [ weather, setWeather ] = useState([]);
+  const [ times, setTimes ] = useState([]);
   const [ loaded, setLoaded ] = useState();
   const [ blocked, setBlocked ] = useState();
   const [ connectionError, setConnectionError ] = useState();
@@ -51,12 +52,19 @@ export const SingleThreeHourForecastData = memo(() => {
         }
       }
 
+      const timesObj = {
+        sunrise: response.data.city.sunrise,
+        sunset: response.data.city.sunset,
+        timeZone: response.data.city.timezone
+      }
+      setTimes(timesObj);
+
       const locationObj = {
         name: response.data.city.name,
         country: response.data.city.country,
         timeZone: response.data.city.timezone
       }
-      setLocation(locationObj)
+      setLocation(locationObj);
 
       setLoaded(true);
     })
@@ -91,6 +99,13 @@ export const SingleThreeHourForecastData = memo(() => {
     };
   }, []);
 
+  const localSunriseSunsetTimes = useMemo(() => {
+    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
+      return SunriseSunsetTimes(times);
+    }
+    return null;
+  }, [times]);
+
   return (
     <ShowWeather 
       index = {index} 
@@ -121,6 +136,7 @@ export const SingleThreeHourForecastData = memo(() => {
       city={location.name} 
       lat = {lat} 
       lon = {lon}
+      localSunriseSunsetTimes={localSunriseSunsetTimes}
     />  
   )
 });
