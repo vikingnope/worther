@@ -129,7 +129,15 @@ export const DailyWeatherData = memo(() => {
                       aria-label={`Weather forecast for ${dayConversion}`}
                     >
                         <p className="mx-auto mt-10">
-                          <WeatherIcons mainWeather={weather.weather.main} windSpeed={weather.windSpeed} description={weather.weather.description} timeZone={times.timeZone} sunriseHour={localSunriseSunsetTimes.sunriseHour} sunsetHour={localSunriseSunsetTimes.sunsetHour} page={'daily'}/>
+                          <WeatherIcons 
+                            mainWeather={weather.weather.main} 
+                            windSpeed={weather.windSpeed} 
+                            description={weather.weather.description} 
+                            timeZone={times.timeZone} 
+                            sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
+                            sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
+                            page={'daily'}
+                          />
                         </p>
                         <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
                         <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.weather.description.toUpperCase()}</p>

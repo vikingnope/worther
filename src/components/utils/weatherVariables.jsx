@@ -275,8 +275,8 @@ export const ShowWeather = (props) => {
           windSpeed={props.windSpeed}
           description={props.description}
           timeZone={props.timeZone}
-          sunriseHour={props.localSunriseSunsetTimes.sunriseHour}
-          sunsetHour={props.localSunriseSunsetTimes.sunsetHour}
+          sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
+          sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
           page="single"
         />
       </section>
@@ -313,7 +313,12 @@ export const ShowWeather = (props) => {
         <p className="font-bold text-4xl mx-auto underline mt-5">{(props.hourConversion > 23 ? props.hourConversion - 24 : props.hourConversion < 0 ? props.hourConversion + 24 : props.hourConversion).toString().padStart(2, '0')}:{props.timeNormalMinutes} (<TimeZoneShow timeZone={props.timeZone} />)</p>
       </section>
       <section className="mb-4 mx-auto">
-        <WeatherIcons mainWeather={props.mainWeather} windSpeed={props.windSpeed} description={props.description} page="single" />
+        <WeatherIcons 
+          mainWeather={props.mainWeather} 
+          windSpeed={props.windSpeed} 
+          description={props.description} 
+          page="single" 
+        />
       </section>
       <section className="text-lg">
         <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>

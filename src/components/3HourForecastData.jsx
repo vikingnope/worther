@@ -121,7 +121,16 @@ export const ThreeHourForecastData = memo(() => {
                       className='duration-300 hover:cursor-pointer hover:text-4xl hover:bg-cyan-800 lg:flex-row flex flex-col border-b-2 text-white h-fit w-screen'
                     >
                       <span className="lg:ml-5 mx-auto mt-5 lg:my-auto lg:mr-7">
-                        <WeatherIcons mainWeather={weather.mainWeather} windSpeed={weather.windSpeed} description={weather.description} timeZone={times.timeZone} sunriseHour={localSunriseSunsetTimes.sunriseHour} sunsetHour={localSunriseSunsetTimes.sunsetHour} hourConversion={hourConversion} page={isDesktopView ? 'multiple' : 'multiple-mobile'}/>
+                        <WeatherIcons 
+                          mainWeather={weather.mainWeather} 
+                          windSpeed={weather.windSpeed} 
+                          description={weather.description} 
+                          timeZone={times.timeZone} 
+                          sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
+                          sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
+                          hourConversion={hourConversion} 
+                          page={isDesktopView ? 'multiple' : 'multiple-mobile'}
+                        />
                       </span>
                       <span className='lg:my-3.5 font-bold text-xl lg:mr-10 mt-5 mx-auto'>{(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes} ({<TimeZoneShow timeZone={location.timeZone}/>})</span>
                       <span className='lg:my-3 lg:mr-10 font-bold text-2xl mt-5 mx-auto'>{weather.description.toUpperCase()}</span>
