@@ -12,9 +12,92 @@ import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke, WiDust } from 'react-ic
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunrise icon, sunset icon
 import { GiWindsock } from "react-icons/gi"; // * wind sock icon
 
-export const WeatherIcons = memo((props) => {
-  const color = props.color || 'white';
+// Weather icons mapping configuration
+const weatherIconsMap = {
+  night: {
+    windy: {
+      "Clear": { icon: MdModeNight, sizeAdjust: 0 },
+      "scattered clouds": { icon: WiNightCloudyWindy, sizeAdjust: 20 },
+      "broken clouds": { icon: WiNightCloudyWindy, sizeAdjust: 20 },
+      "few clouds": { icon: WiNightCloudyWindy, sizeAdjust: 17 },
+      "overcast clouds": { icon: WiNightCloudyWindy, sizeAdjust: 17 },
+      "light rain": { icon: WiNightAltRainWind, sizeAdjust: 0 },
+      "heavy intensity rain": { icon: WiNightAltRainWind, sizeAdjust: 0 },
+      "moderate rain": { icon: WiNightAltRainWind, sizeAdjust: 0 },
+      "light intensity shower rain": { icon: WiNightAltRainWind, sizeAdjust: 0 },
+      "Drizzle": { icon: WiNightAltRainWind, sizeAdjust: 0 },
+      "thunderstorm with light rain": { icon: WiNightAltStormShowers, sizeAdjust: 0 },
+      "Fog": { icon: WiNightFog, sizeAdjust: 0 },
+      "haze": { icon: WiNightFog, sizeAdjust: 0 },
+      "mist": { icon: WiNightFog, sizeAdjust: 0 },
+      "Snow": { icon: WiNightAltSnow, sizeAdjust: 0 },
+      "Smoke": { icon: WiSmoke, sizeAdjust: 0 },
+      "Dust": { icon: WiDust, sizeAdjust: 0 },
+    },
+    calm: {
+      "Clear": { icon: MdModeNight, sizeAdjust: 0 },
+      "scattered clouds": { icon: WiNightAltPartlyCloudy, sizeAdjust: 30 },
+      "broken clouds": { icon: WiNightAltPartlyCloudy, sizeAdjust: 30 },
+      "few clouds": { icon: WiNightAltCloudy, sizeAdjust: 20 },
+      "overcast clouds": { icon: WiNightAltCloudy, sizeAdjust: 20 },
+      "light rain": { icon: WiNightAltRainMix, sizeAdjust: 0 },
+      "heavy intensity rain": { icon: WiNightAltRain, sizeAdjust: 0 },
+      "moderate rain": { icon: WiNightAltRain, sizeAdjust: 0 },
+      "light intensity shower rain": { icon: WiNightAltRain, sizeAdjust: 0 },
+      "Drizzle": { icon: WiNightAltShowers, sizeAdjust: 0 },
+      "thunderstorm with light rain": { icon: WiNightAltStormShowers, sizeAdjust: 0 },
+      "thunderstorm with rain": { icon: WiNightAltStormShowers, sizeAdjust: 0 },
+      "Fog": { icon: WiNightFog, sizeAdjust: 0 },
+      "haze": { icon: WiNightFog, sizeAdjust: 0 },
+      "mist": { icon: WiNightFog, sizeAdjust: 0 },
+      "Snow": { icon: WiNightAltSnow, sizeAdjust: 0 },
+      "Smoke": { icon: WiSmoke, sizeAdjust: 0 },
+      "Dust": { icon: WiDust, sizeAdjust: 0 },
+    }
+  },
+  day: {
+    windy: {
+      "Clear": { icon: TbWind, sizeAdjust: 0 },
+      "scattered clouds": { icon: WiDayCloudyWindy, sizeAdjust: 0 },
+      "broken clouds": { icon: WiDayCloudyWindy, sizeAdjust: 0 },
+      "few clouds": { icon: WiCloudyWindy, sizeAdjust: 20 },
+      "overcast clouds": { icon: WiCloudyWindy, sizeAdjust: 20 },
+      "light rain": { icon: WiDayRainWind, sizeAdjust: 0 },
+      "heavy intensity rain": { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
+      "moderate rain": { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
+      "light intensity shower rain": { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
+      "Drizzle": { icon: BsFillCloudDrizzleFill, sizeAdjust: 0 },
+      "thunderstorm with light rain": { icon: BsFillCloudLightningRainFill, sizeAdjust: 0 },
+      "Fog": { icon: BsCloudFog, sizeAdjust: 0 },
+      "Snow": { icon: WiDaySnowWind, sizeAdjust: 0 },
+      "haze": { icon: BsFillCloudHazeFill, sizeAdjust: 0 },
+      "mist": { icon: TbMist, sizeAdjust: 0 },
+      "Smoke": { icon: WiSmoke, sizeAdjust: 0 },
+      "Dust": { icon: WiDust, sizeAdjust: 0 },
+    },
+    calm: {
+      "Clear": { icon: BsFillSunFill, sizeAdjust: 0 },
+      "scattered clouds": { icon: BsFillCloudSunFill, sizeAdjust: 0 },
+      "broken clouds": { icon: BsFillCloudSunFill, sizeAdjust: 0 },
+      "few clouds": { icon: AiFillCloud, sizeAdjust: 0 },
+      "overcast clouds": { icon: BsFillCloudsFill, sizeAdjust: 0 },
+      "light rain": { icon: BsFillCloudRainFill, sizeAdjust: 0 },
+      "heavy intensity rain": { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
+      "moderate rain": { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
+      "light intensity shower rain": { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
+      "Drizzle": { icon: BsFillCloudDrizzleFill, sizeAdjust: 0 },
+      "thunderstorm with light rain": { icon: BsFillCloudLightningRainFill, sizeAdjust: 0 },
+      "Fog": { icon: BsCloudFog, sizeAdjust: 0 },
+      "Snow": { icon: BsFillCloudSnowFill, sizeAdjust: 0 },
+      "haze": { icon: BsFillCloudHazeFill, sizeAdjust: 0 },
+      "mist": { icon: TbMist, sizeAdjust: 0 },
+      "Smoke": { icon: WiSmoke, sizeAdjust: 0 },
+      "Dust": { icon: WiDust, sizeAdjust: 0 },
+    }
+  }
+};
 
+export const WeatherIcons = memo((props) => {
   const currentHourConversion = useMemo(() => {
     const d = new Date();
     const baseHour = props.page === 'single' ? d.getHours() : props.hourConversion;
@@ -32,66 +115,26 @@ export const WeatherIcons = memo((props) => {
   );
 
   const icon = useMemo(() => {
-    const isWindy = props.windSpeed >= 8.0;
-
-    if (isNight) {
-      if (isWindy) {
-        if (props.mainWeather === "Clear") return <MdModeNight size={size} color={color} />;
-        if (["scattered clouds", "broken clouds"].includes(props.description)) return <WiNightCloudyWindy size={size + 20} color={color} />;
-        if (["few clouds", "overcast clouds"].includes(props.description)) return <WiNightCloudyWindy size={size + 17} color={color} />;
-        if (["light rain", "heavy intensity rain", "moderate rain", "light intensity shower rain"].includes(props.description) || props.mainWeather === "Drizzle") return <WiNightAltRainWind size={size} color={color} />;
-        if (props.description === "thunderstorm with light rain") return <WiNightAltStormShowers size={size} color={color} />;
-        if (props.mainWeather === "Fog" || ["haze", "mist"].includes(props.description)) return <WiNightFog size={size} color={color} />;
-        if (props.mainWeather === "Snow") return <WiNightAltSnow size={size} color={color} />;
-        if (props.mainWeather === "Smoke") return <WiSmoke size={size} color={color} />;
-        if (props.mainWeather === "Dust") return <WiDust size={size} color={color} />;
-      } else {
-        if (props.mainWeather === "Clear") return <MdModeNight size={size} color={color} />;
-        if (["scattered clouds", "broken clouds"].includes(props.description)) return <WiNightAltPartlyCloudy size={size + 30} color={color} />;
-        if (["few clouds", "overcast clouds"].includes(props.description)) return <WiNightAltCloudy size={size + 20} color={color} />;
-        if (props.description === "light rain") return <WiNightAltRainMix size={size} color={color} />;
-        if (["heavy intensity rain", "moderate rain", "light intensity shower rain"].includes(props.description)) return <WiNightAltRain size={size} color={color} />;
-        if (props.mainWeather === "Drizzle") return <WiNightAltShowers size={size} color={color} />;
-        if (["thunderstorm with light rain", "thunderstorm with rain"].includes(props.description)) return <WiNightAltStormShowers size={size} color={color} />;
-        if (props.mainWeather === "Fog" || ["haze", "mist"].includes(props.description)) return <WiNightFog size={size} color={color} />;
-        if (props.mainWeather === "Snow") return <WiNightAltSnow size={size} color={color} />;
-        if (props.mainWeather === "Smoke") return <WiSmoke size={size} color={color} />;
-        if (props.mainWeather === "Dust") return <WiDust size={size} color={color} />;
-      }
-    } else {
-      if (isWindy) {
-        if (props.mainWeather === "Clear") return <TbWind size={size} color={color} />;
-        if (["scattered clouds", "broken clouds"].includes(props.description)) return <WiDayCloudyWindy size={size} color={color} />;
-        if (["few clouds", "overcast clouds"].includes(props.description)) return <WiCloudyWindy size={size + 20} color={color} />;
-        if (props.description === "light rain") return <WiDayRainWind size={size} color={color} />;
-        if (["heavy intensity rain", "moderate rain", "light intensity shower rain"].includes(props.description)) return <BsFillCloudRainHeavyFill size={size} color={color} />;
-        if (props.mainWeather === "Drizzle") return <BsFillCloudDrizzleFill size={size} color={color} />;
-        if (props.description === "thunderstorm with light rain") return <BsFillCloudLightningRainFill size={size} color={color} />;
-        if (props.mainWeather === "Fog") return <BsCloudFog size={size} color={color} />;
-        if (props.mainWeather === "Snow") return <WiDaySnowWind size={size} color={color} />;
-        if (props.description === "haze") return <BsFillCloudHazeFill size={size} color={color} />;
-        if (props.description === "mist") return <TbMist size={size} color={color} />;
-        if (props.mainWeather === "Smoke") return <WiSmoke size={size} color={color} />;
-        if (props.mainWeather === "Dust") return <WiDust size={size} color={color} />;
-      } else {
-        if (props.mainWeather === "Clear") return <BsFillSunFill size={size} color={color} />;
-        if (["scattered clouds", "broken clouds"].includes(props.description)) return <BsFillCloudSunFill size={size} color={color} />;
-        if (props.description === "few clouds") return <AiFillCloud size={size} color={color} />;
-        if (props.description === "overcast clouds") return <BsFillCloudsFill size={size} color={color} />;
-        if (props.description === "light rain") return <BsFillCloudRainFill size={size} color={color} />;
-        if (["heavy intensity rain", "moderate rain", "light intensity shower rain"].includes(props.description)) return <BsFillCloudRainHeavyFill size={size} color={color} />;
-        if (props.mainWeather === "Drizzle") return <BsFillCloudDrizzleFill size={size} color={color} />;
-        if (props.description === "thunderstorm with light rain") return <BsFillCloudLightningRainFill size={size} color={color} />;
-        if (props.mainWeather === "Fog") return <BsCloudFog size={size} color={color} />;
-        if (props.mainWeather === "Snow") return <BsFillCloudSnowFill size={size} color={color} />;
-        if (props.description === "haze") return <BsFillCloudHazeFill size={size} color={color} />;
-        if (props.description === "mist") return <TbMist size={size} color={color} />;
-        if (props.mainWeather === "Smoke") return <WiSmoke size={size} color={color} />;
-        if (props.mainWeather === "Dust") return <WiDust size={size} color={color} />;
-      }
+    const timeOfDay = isNight ? 'night' : 'day';
+    const windCondition = props.windSpeed >= 8.0 ? 'windy' : 'calm';
+    
+    // Try to find an icon for the exact description
+    let iconConfig = weatherIconsMap[timeOfDay]?.[windCondition]?.[props.description];
+    
+    // If no match for description, try to find by main weather
+    if (!iconConfig) {
+      iconConfig = weatherIconsMap[timeOfDay]?.[windCondition]?.[props.mainWeather];
     }
+    
+    if (iconConfig) {
+      const IconComponent = iconConfig.icon;
+      return <IconComponent size={size + (iconConfig.sizeAdjust || 0)} color={props.color || 'white'} />;
+    }
+    
+    // Fallback for any uncovered conditions
+    console.warn(`No weather icon found for: ${timeOfDay}, ${windCondition}, ${props.mainWeather}, ${props.description}`);
     return <></>;
-  }, [props.mainWeather, props.description, props.windSpeed, isNight, size, color]);
+  }, [props.mainWeather, props.description, props.windSpeed, isNight, size, props.color]);
 
   return icon;
 });
