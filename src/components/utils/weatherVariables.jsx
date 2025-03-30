@@ -6,7 +6,7 @@ import { WiCloudyWindy, WiDayCloudyWindy, WiDayRainWind, WiDaySnowWind, WiNightF
 import { MdModeNight } from 'react-icons/md'; // * Night Clear
 import { Header } from './header';
 import { Footer } from './footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
 import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke, WiDust } from 'react-icons/wi'; // * humidity icon, wind icon, barometer, smoke icon
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunrise icon, sunset icon
@@ -324,7 +324,7 @@ export const ShowWeather = (props) => {
   const ErrorDisplay = ({ message }) => (
     <div className="text-center bg-black min-h-screen flex flex-col justify-center">
       <p className="text-3xl uppercase font-bold">{message}</p>
-      <a className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" href="/weather">Go Back</a>
+      <Link className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" to="/weather">Go Back</Link>
     </div>
   );
 

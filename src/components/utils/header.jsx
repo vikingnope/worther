@@ -1,28 +1,9 @@
 import logo from '../../resources/logoSmall.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Dropdown } from './mobileDropdown';
-import { AiFillHome } from 'react-icons/ai';
-import { BsFillMapFill, BsCloudSunFill } from 'react-icons/bs';
-import { HiInformationCircle } from 'react-icons/hi';
-import { TbBeach } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import { memo, useCallback } from 'react';
-
-const NAV_ITEMS = [
-    { text: 'Home', path: '/' },
-    { text: 'Map', path: '/map/light' },
-    { text: 'Weather', path: '/weather' },
-    { text: 'Recommendations', path: '/recommendations' },
-    { text: 'About', path: '/about' }
-];
-
-const NAV_ICONS = {
-    Home: <AiFillHome size='25'/>,
-    Map: <BsFillMapFill size='22'/>,
-    Weather: <BsCloudSunFill size='25'/>,
-    Recommendations: <TbBeach size='25'/>,
-    About: <HiInformationCircle size='26'/>
-};
+import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants';
 
 const NavigationLink = memo(({ text, path, currentLocation }) => {
     const active = (currentLocation === path) ? 'text-green-300' : 'text-white';

@@ -2,6 +2,7 @@ import { FaDiscord } from 'react-icons/fa';
 import { BsGithub } from 'react-icons/bs';
 import { IoDocumentTextSharp } from "react-icons/io5";
 import { memo } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Footer = memo(() => {
     return(
@@ -14,10 +15,10 @@ export const Footer = memo(() => {
                     <BsGithub size="26"/>
                 </a>
                 <div className='absolute right-5'>
-                    <a href='/changelog' className='font-bold underline flex gap-x-1' aria-label="View changelog">
+                    <Link to='/changelog' className='font-bold underline flex gap-x-1' aria-label="View changelog">
                         <IoDocumentTextSharp size="20"className='my-auto'/>
                         Changelog
-                    </a>
+                    </Link>
                 </div>
             </nav>  
         </footer> 
