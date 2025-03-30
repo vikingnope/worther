@@ -415,11 +415,14 @@ export const WeatherPopupContent = memo((props) => {
     try {
         // Replace with your actual weather API endpoint
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${props.userPos.latitude}&lon=${props.userPos.longitude}&units=metric&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`);
-        if (!response.ok) throw new Error('Weather data fetch failed');
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Weather data fetch failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`);
+        }
         const data = await response.json();
         setCurrentLocationWeather(data);
     } catch (error) {
-        console.error("Error fetching weather data:", error);
+      console.error("Error fetching weather data:", error.message);
     } finally {
         setIsLoadingWeather(false);
     }
@@ -465,7 +468,7 @@ export const WeatherPopupContent = memo((props) => {
       <div className="p-2 max-w-xs">
           <h3 className="font-bold text-lg">{currentLocationWeather.name}</h3>
           <div className="flex items-center">
-              {currentLocationWeather.weather && currentLocationWeather.weather[0] && (
+              {currentLocationWeather.weather?.[0] && (
                   <WeatherIcons
                       mainWeather={currentLocationWeather.weather[0].main}
                       windSpeed={currentLocationWeather.wind?.speed}
@@ -477,14 +480,14 @@ export const WeatherPopupContent = memo((props) => {
                       color="black"
                   />
               )}
-              <span className="text-2xl ml-2">{Math.round(currentLocationWeather.main?.temp)}°C</span>
+              <span className="text-2xl ml-2">{Math.round(currentLocationWeather.main?.temp || 0)}°C</span>
           </div>
-          <p className="capitalize">{currentLocationWeather.weather && currentLocationWeather.weather[0]?.description}</p>
+          <p className="capitalize">{currentLocationWeather.weather?.[0]?.description}</p>
           <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-              <div>Humidity: {currentLocationWeather.main?.humidity}%</div>
-              <div>Wind: {Math.round(currentLocationWeather.wind?.speed)} m/s ({<WindForce windSpeed={currentLocationWeather.wind?.speed} />})</div>
-              <div>Pressure: {currentLocationWeather.main?.pressure} hPa</div>
-              <div>Visibility: {currentLocationWeather.visibility >= 1000 ? `${currentLocationWeather.visibility / 1000} km` : `${currentLocationWeather.visibility} m`}</div>
+              <div>Humidity: {currentLocationWeather.main?.humidity ?? '--'}%</div>
+              <div>Wind: {currentLocationWeather.wind?.speed ? `${Math.round(currentLocationWeather.wind.speed)} m/s (${<WindForce windSpeed={currentLocationWeather.wind.speed} />})` : '--'}</div>
+              <div>Pressure: {currentLocationWeather.main?.pressure ? `${currentLocationWeather.main.pressure} hPa` : '--'}</div>
+              <div>Visibility: {currentLocationWeather.visibility ? (currentLocationWeather.visibility >= 1000 ? `${currentLocationWeather.visibility / 1000} km` : `${currentLocationWeather.visibility} m`) : '--'}</div>
               <div>Sunrise: {localSunriseSunsetTimes ? ((localSunriseSunsetTimes.sunriseHour > 23 ? localSunriseSunsetTimes.sunriseHour - 24 : localSunriseSunsetTimes.sunriseHour < 0 ? localSunriseSunsetTimes.sunriseHour + 24 : localSunriseSunsetTimes.sunriseHour).toString().padStart(2, '0') + ':' + localSunriseSunsetTimes.sunriseMinute.toString().padStart(2, '0')) : '--:--'}</div>
               <div>Sunset: {localSunriseSunsetTimes ? ((localSunriseSunsetTimes.sunsetHour < 0 ? localSunriseSunsetTimes.sunsetHour + 24 : localSunriseSunsetTimes.sunsetHour).toString().padStart(2, '0') + ':' + localSunriseSunsetTimes.sunsetMinute.toString().padStart(2, '0')) : '--:--'}</div>
           </div>
