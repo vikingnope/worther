@@ -118,11 +118,10 @@ export const DailyWeatherData = () => {
           <div className="lg:flex lg:flex-row my-auto">
             {(weather.length > 0) ?
               (
-                weather.map((weather, index) => (
-                  dayConversion = (
-                    new Date((new Date(weather.date).getTime() + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString()
-                  ),
-                  [
+                weather.map((weather, index) => {
+                  dayConversion = new Date((new Date(weather.date).getTime() + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString();
+
+                  return (
                     <div 
                       key={index} 
                       className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto px-2' 
@@ -145,9 +144,9 @@ export const DailyWeatherData = () => {
                         </p>
                         <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(localSunriseSunsetTimes.sunriseHour > 23) ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')}:{String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
                         <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(localSunriseSunsetTimes.sunsetHour < 0) ? (localSunriseSunsetTimes.sunsetHour + 24) : localSunriseSunsetTimes.sunsetHour}:{String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
-                    </div> 
-                  ]
-                ))
+                    </div>
+                  );
+                })
               ) :
               <>
                 {error ? (
