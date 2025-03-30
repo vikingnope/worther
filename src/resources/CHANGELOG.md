@@ -25,6 +25,7 @@
 - Improvements to route loading times
 - Multiple memoisation throughout to prevent unnecessary re-renders
 - Optimised mobile dropdown and added animation to it
+- Changed popup in map section to display useful weather data instead of just a link
 
 ---
 

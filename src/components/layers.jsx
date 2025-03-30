@@ -20,6 +20,8 @@ export const CloudLayer = memo((props) => {
   )
 });
 
+CloudLayer.displayName = "CloudLayer";
+
 export const WindSpeedLayer = memo((props) => {
   return (
     <>
@@ -38,6 +40,8 @@ export const WindSpeedLayer = memo((props) => {
   )
 });
 
+WindSpeedLayer.displayName = "WindSpeedLayer";
+
 export const TemperatureLayer = memo((props) => {
   return (
     <>
@@ -55,6 +59,8 @@ export const TemperatureLayer = memo((props) => {
     </>
   )
 });
+
+TemperatureLayer.displayName = "TemperatureLayer";
 
 const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
@@ -92,6 +98,8 @@ export const RainViewerData = memo((props) => {
   )
 });
 
+RainViewerData.displayName = "RainViewerData";
+
 // Define the labelLayerProps here, outside of JSX
 const getLabelLayerProps = (mapType) => ({
   url: (mapType === 'light') 
@@ -128,6 +136,8 @@ export const HybridLayer = memo((props) => {
     </>
   )
 });
+
+HybridLayer.displayName = "HybridLayer";
 
 // export const WindDirectionLayer = (props) => {
 

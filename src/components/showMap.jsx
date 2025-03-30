@@ -5,10 +5,11 @@ import 'leaflet/dist/leaflet.css';
 import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from './layers';
 import markerDot from "../resources/location-dot.png";
 import { MapMode } from './utils/mapMode';
+import { WeatherPopupContent } from './utils/weatherVariables';
 
 // Custom component to style zoom control based on map mode
 const CustomZoomControl = ({ mapType }) => {
@@ -143,9 +144,11 @@ export default function ShowMap(props) {
                     {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
                     <MenuBar mode={mapType} showWindDir={windDirChoice} onShowWindDirChange={setWindDirChoice} showSatellite={satelliteLayerChoice} onShowSatelliteChange={setSatelliteLayerChoice} showRain={rainLayerChoice} onShowRainChange={setRainLayerChoice} showCloud={cloudLayerChoice} onShowCloudChange={setCloudLayerChoice} showWind={windLayerChoice} onShowWindChange={setWindLayerChoice} showTemperature={temperatureLayerChoice} onShowTemperatureChange={setTemperatureLayerChoice} layerOpacity={layerOpacity} onLayerOpacityChange={setLayerOpacity}/>
                     {(!markerShow) ? (
-                        <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
+                        <Marker icon={markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
-                                <Link className='font-bold text-sm underline' style={{ color: 'inherit' }} to={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of current location</Link>
+                                <WeatherPopupContent 
+                                    userPos={userPos}
+                                />
                             </Popup> 
                         </Marker>
                     ) : (
