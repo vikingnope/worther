@@ -24,7 +24,7 @@
 - Improvements to header button loading times
 - Improvements to route loading times
 - Multiple memoisation throughout to prevent unnecessary re-renders
-- Made changelog load quicker
+- Optimised mobile dropdown and added animation to it
 
 ---
 
