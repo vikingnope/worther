@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from './layers';
 import markerDot from "../resources/location-dot.png";
 import { MapMode } from './utils/mapMode';
@@ -145,7 +145,7 @@ export default function ShowMap(props) {
                     {(!markerShow) ? (
                         <Marker icon = {markerIconConst} position={[userPos.latitude, userPos.longitude]}>
                             <Popup>
-                                <a className='font-bold text-sm underline' style={{ color: 'inherit' }} href={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of current location</a>
+                                <Link className='font-bold text-sm underline' style={{ color: 'inherit' }} to={'/weatherLocation/' + userPos.latitude + '/' + userPos.longitude}>Get weather of current location</Link>
                             </Popup> 
                         </Marker>
                     ) : (
