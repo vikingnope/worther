@@ -3,7 +3,7 @@
 
 ## Linked Issues
 <!-- Does this PR resolve any open issues? Use "Fixes #123" or "Resolves #123" to automatically close the issue when the PR is merged -->
-- [ ] This PR resolves an issue (Fixes #)
+- [ ] This PR resolves an issue (Resolves #)
 
 ## Type of Change
 - [ ] Bug fix
