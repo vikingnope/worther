@@ -101,14 +101,24 @@ export const DailyWeatherData = memo(() => {
     })
   }, [lat, lon]);
 
-  let dayConversion = '';
-
   const localSunriseSunsetTimes = useMemo(() => {
     if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
       return SunriseSunsetTimes(times);
     }
     return null;
   }, [times]);
+
+  const localDayConversions = useMemo(() => {
+    if (!weather.length || !location.timeZone) return {};
+    
+    return weather.reduce((acc, item) => {
+      acc[item.date] = new Date(
+        (new Date(item.date).getTime() + (location.timeZone * 1000)) + 
+        ((new Date().getTimezoneOffset() * 60) * 1000)
+      ).toDateString();
+      return acc;
+    }, {});
+  }, [weather, location.timeZone]);
 
   return (
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
@@ -119,7 +129,7 @@ export const DailyWeatherData = memo(() => {
             {(weather.length > 0) ?
               (
                 weather.map((weather, index) => {
-                  dayConversion = new Date((new Date(weather.date).getTime() + (location.timeZone * 1000)) + ((new Date().getTimezoneOffset() * 60) * 1000)).toDateString();
+                  const dayConversion = localDayConversions[weather.date];
 
                   return (
                     <div 
@@ -150,8 +160,30 @@ export const DailyWeatherData = memo(() => {
                         (weather.visibility / 1000).toFixed(2) + 'km' :
                         weather.visibility + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
                         </p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>{<BsFillSunriseFill size={40} className="inline mr-2"/>}Sunrise: {(localSunriseSunsetTimes.sunriseHour > 23) ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')}:{String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
-                        <p className='mx-auto lg:my-10 my-5 text-xl block'>{<BsFillSunsetFill size={40} className="inline mr-2"/>}Sunset: {(localSunriseSunsetTimes.sunsetHour < 0) ? (localSunriseSunsetTimes.sunsetHour + 24) : localSunriseSunsetTimes.sunsetHour}:{String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')} ({<TimeZoneShow timeZone={times.timeZone}/>})</p>
+                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>
+                          <BsFillSunriseFill size={40} className="inline mr-2"/>
+                          Sunrise: {localSunriseSunsetTimes ? 
+                            `${localSunriseSunsetTimes.sunriseHour > 23 
+                                ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') 
+                                : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')
+                              }:${String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')}` 
+                            : 'N/A'} 
+                          {times.timeZone !== undefined && (
+                            <span> (<TimeZoneShow timeZone={times.timeZone}/>)</span>
+                          )}
+                        </p>
+                        <p className='mx-auto lg:my-10 my-5 text-xl block'>
+                          <BsFillSunsetFill size={40} className="inline mr-2"/>
+                          Sunset: {localSunriseSunsetTimes ? 
+                            `${localSunriseSunsetTimes.sunsetHour < 0 
+                                ? String(localSunriseSunsetTimes.sunsetHour + 24).padStart(2, '0') 
+                                : String(localSunriseSunsetTimes.sunsetHour).padStart(2, '0')
+                              }:${String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')}` 
+                            : 'N/A'} 
+                          {times.timeZone !== undefined && (
+                            <span> (<TimeZoneShow timeZone={times.timeZone}/>)</span>
+                          )}
+                        </p>
                     </div>
                   );
                 })

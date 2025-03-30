@@ -29,9 +29,7 @@ export const GetSingleWeather = memo(() => {
   }, [history, location.lat, location.lon]);
 
   useEffect(() => {
-    ((location.name) ?
-    document.title = "Worther - Weather - " + location.name :
-    document.title = "Worther - Weather");
+    document.title = location.name ? "Worther - Weather - " + location.name : "Worther - Weather";
   }, [location.name]);
 
   useEffect(() => {

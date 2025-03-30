@@ -24,9 +24,8 @@ const NAV_ICONS = {
     About: <HiInformationCircle size='26'/>
 };
 
-const NavigationLink = memo(({ text, path }) => {
-    const location = "/" + useLocation().pathname.split('/')[1];
-    const active = (location === path) ? 'text-green-300' : 'text-white';
+const NavigationLink = memo(({ text, path, currentLocation }) => {
+    const active = (currentLocation === path) ? 'text-green-300' : 'text-white';
 
     return (
         <Link to={path} className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-green-300 duration-150 mr-6 ${active}`} aria-label={`Navigate to ${text}`}>
@@ -35,6 +34,8 @@ const NavigationLink = memo(({ text, path }) => {
         </Link>
     );
 });
+
+NavigationLink.displayName = 'NavigationLink';
 
 
 export const Header = memo(() => {
@@ -63,7 +64,7 @@ export const Header = memo(() => {
                 {/* Desktop navigation - visible on md screens and up */}
                 <div className="hidden lg:flex">
                     {NAV_ITEMS.map((item, index) => (
-                        <NavigationLink key={index} text={item.text} path={item.path} />
+                        <NavigationLink key={index} text={item.text} path={item.path} currentLocation={location} />
                     ))}
                 </div>
                 
