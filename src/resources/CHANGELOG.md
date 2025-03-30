@@ -17,7 +17,13 @@
 - Enhanced PR template to include linked issues
 - Added dynamic changing of background colour on map page
 - Enhanced 3-Hour Forecast layout
-- Multiple optimisation & performance fixes
+- Changed timezone to map instead of ternary operators
+- Added separate function to calculate sunrise and sunset times
+- Added dust icon
+- Fixed opacity bar not being draggable
+- Improvements to header button loading times
+- Improvements to route loading times
+- Multiple memoisation throughout to prevent unnecessary re-renders
 
 ---
 
