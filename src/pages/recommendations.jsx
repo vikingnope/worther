@@ -9,6 +9,7 @@ import axios from "axios";
 import beaches from "../resources/beaches.csv";
 import markerDotRed from "../resources/location-dot-red.png";
 import { useDeviceDetect } from "../hooks/useDeviceDetect";
+import 'leaflet/dist/leaflet.css';
 
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
