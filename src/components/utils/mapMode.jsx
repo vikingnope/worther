@@ -1,34 +1,26 @@
-import { MdOutlineLightMode } from "react-icons/md";
-import { MdDarkMode } from "react-icons/md";
+import { MdOutlineLightMode, MdDarkMode } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 
-export const MapMode = (props) => {
-    const history = useNavigate();
+export const MapMode = ({ mode }) => {
+    const navigate = useNavigate();
 
-    const handleSubmitDark = (e) => {
+    const handleModeToggle = (e) => {
         e.preventDefault();
-
-        history('/map/dark');
-    }
-
-    const handleSubmitLight = (e) => {
-        e.preventDefault();
-
-        history('/map/light');
+        navigate(mode === 'light' ? '/map/dark' : '/map/light');
     }
 
     return (
         <div className="z-50 absolute bottom-12 right-8">
-            {
-                (props.mode === 'light') ?
-                    <button onClick={handleSubmitDark} className="bg-neutral-800 text-white p-2 rounded-lg" title="Dark Mode">
-                        <MdDarkMode size={27}/> 
-                    </button>
-                    : 
-                    <button onClick={handleSubmitLight} className="bg-neutral-300 text-white p-2 rounded-lg" title="Light Mode">
-                        <MdOutlineLightMode size={27} color="black"/>
-                    </button>
-            }
+            <button 
+                onClick={handleModeToggle} 
+                className={`p-2 rounded-lg ${mode === 'light' ? 'bg-neutral-800 text-white' : 'bg-neutral-300'}`}
+                title={`${mode === 'light' ? 'Dark' : 'Light'} Mode`}
+            >
+                {mode === 'light' 
+                    ? <MdDarkMode size={27}/> 
+                    : <MdOutlineLightMode size={27} color="black"/>
+                }
+            </button>
         </div>
     )
 }
