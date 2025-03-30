@@ -139,6 +139,8 @@ export const WeatherIcons = memo((props) => {
   return icon;
 });
 
+WeatherIcons.displayName = 'WeatherIcons';
+
 export const TimeZoneShow = memo((props) => {
   const timeZoneMap = {
     0: 'GMT',
@@ -174,6 +176,8 @@ export const TimeZoneShow = memo((props) => {
   return timeZoneMap[props.timeZone] || '';
 });
 
+TimeZoneShow.displayName = 'TimeZoneShow';
+
 export const SunriseSunsetTimes = (props) => {
   const sunriseTime = new Date((props.sunrise * 1000) + (props.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
   const sunsetTime = new Date((props.sunset * 1000) + (props.timeZone * 1000) + (new Date().getTimezoneOffset() * 60 * 1000));
@@ -185,6 +189,8 @@ export const SunriseSunsetTimes = (props) => {
     sunsetMinute: sunsetTime.getMinutes(),
   };
 }
+
+SunriseSunsetTimes.displayName = 'SunriseSunsetTimes';
 
 export const VisibilityDesc = memo((props) => {
   const visibilityRanges = [
@@ -206,6 +212,8 @@ export const VisibilityDesc = memo((props) => {
   
   return visibilityDesc ? visibilityDesc.desc : '';
 });
+
+VisibilityDesc.displayName = 'VisibilityDesc';
 
 export const WindDirection = memo((props) => {
   const windDirections = [
@@ -237,6 +245,8 @@ export const WindDirection = memo((props) => {
   return direction ? direction.dir : '';
 });
 
+WindDirection.displayName = 'WindDirection';
+
 export const WindForce = memo((props) => {
   const windForceRanges = [
     { min: 0, max: 0.3, force: 'Force 0' },
@@ -262,6 +272,8 @@ export const WindForce = memo((props) => {
   
   return force ? force.force : '';
 });
+
+WindForce.displayName = 'WindForce';
 
 export const ShowWeather = memo((props) => {
   const timeUpdated = useMemo(() => ({
