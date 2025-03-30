@@ -1,40 +1,45 @@
 import '../styles/main.css';
-import Home from './home.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import About from './about.jsx';
-import Weather from './weather.jsx';
-import AdvancedWeather from './advancedWeather.jsx';
-import { GetSingleWeather } from '../components/weatherSingle.jsx';
-import { ThreeHourForecastData } from '../components/3HourForecastData.jsx';
-import ShowMap from '../components/showMap';
-import { SingleThreeHourForecastData } from '../components/Single3HourForecastData';
-import Error from './error';
-import Recommendations from './recommendations';
+import { Suspense, lazy } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
-import { DailyWeatherData } from '../components/dailyWeather';
-import Changelog from './changelog.jsx';
+
+// Lazy load all components
+const Home = lazy(() => import('./home.jsx'));
+const About = lazy(() => import('./about.jsx'));
+const Weather = lazy(() => import('./weather.jsx'));
+const GetSingleWeather = lazy(() => import('../components/weatherSingle.jsx').then(module => ({ default: module.GetSingleWeather })));
+const ThreeHourForecastData = lazy(() => import('../components/3HourForecastData.jsx').then(module => ({ default: module.ThreeHourForecastData })));
+const ShowMap = lazy(() => import('../components/showMap'));
+const SingleThreeHourForecastData = lazy(() => import('../components/Single3HourForecastData').then(module => ({ default: module.SingleThreeHourForecastData })));
+const ErrorPage = lazy(() => import('./error'));
+const Recommendations = lazy(() => import('./recommendations'));
+const DailyWeatherData = lazy(() => import('../components/dailyWeather').then(module => ({ default: module.DailyWeatherData })));
+const Changelog = lazy(() => import('./changelog.jsx'));
 
 export default function App() {
   return (
     <>
       <Router>
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/about" element={<About />} />
-          <Route exact path="/map/:mapType" element={<ShowMap />} />
-          <Route exact path="/weather" element={<Weather />} />
-          <Route exact path="/advancedWeather" element={<AdvancedWeather />} />
-          <Route exact path="/weather/:city" element={<GetSingleWeather />} /> (// * Changes url according to city)
-          <Route exact path="/weatherCountry/:countryCode/:city" element={<GetSingleWeather />} />
-          <Route exact path="/weatherLocation/:latitude/:longitude" element={<GetSingleWeather/>} />
-          <Route exact path="/3HourForecast/:lat/:lon" element={<ThreeHourForecastData />} />
-          <Route exact path="/dailyWeather/:lat/:lon" element={<DailyWeatherData />} />
-          <Route exact path="/Single3HourForecast/:index/:lat/:lon" element={<SingleThreeHourForecastData />} />
-          <Route exact path="/recommendations" element={<Recommendations />} />
-          <Route exact path="/changelog" element={<Changelog />} />
-          <Route exact path="*" element={<Error />} /> (// * Displays error page, '*' is a wildcard to display when nothing else is found)
-        </Routes>
+        <Suspense fallback={<div className="text-white flex h-screen bg-black"></div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/map/:mapType" element={<ShowMap />} />
+            <Route path="/weather" element={<Weather />} />
+            {/* Changes url according to city */}
+            <Route path="/weather/:city" element={<GetSingleWeather />} />
+            <Route path="/weatherCountry/:countryCode/:city" element={<GetSingleWeather />} />
+            <Route path="/weatherLocation/:latitude/:longitude" element={<GetSingleWeather/>} />
+            <Route path="/3HourForecast/:lat/:lon" element={<ThreeHourForecastData />} />
+            <Route path="/dailyWeather/:lat/:lon" element={<DailyWeatherData />} />
+            <Route path="/Single3HourForecast/:index/:lat/:lon" element={<SingleThreeHourForecastData />} />
+            <Route path="/recommendations" element={<Recommendations />} />
+            <Route path="/changelog" element={<Changelog />} />
+            {/* Displays error page, '*' is a wildcard to display when nothing else is found */}
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </Suspense>
       </Router>
       <Analytics />
       <SpeedInsights />

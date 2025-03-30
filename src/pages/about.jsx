@@ -1,10 +1,39 @@
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
+import { useEffect } from 'react';
+
+function ExternalLink({ href, children }) {
+  return (
+    <a 
+      href={href} 
+      className="underline duration-300 font-bold hover:text-cyan-300"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  );
+}
 
 export default function About() {
-  document.title = "Worther - About";
+  useEffect(() => {
+    document.title = "Worther - About";
+  }, []);
 
-  const clickableTextStyling = 'underline duration-300 font-bold hover:text-cyan-300'
+  const technologies = [
+    { name: 'React', url: 'https://reactjs.org/' },
+    { name: 'React Router', url: 'https://reactrouter.com/en/main' },
+    { name: 'React Icons', url: 'https://react-icons.github.io/react-icons' },
+    { name: 'React Leaflet', url: 'https://react-leaflet.js.org/' },
+    { name: 'Axios', url: 'https://axios-http.com/docs/intro' },
+    { name: 'Tailwind CSS', url: 'https://tailwindcss.com/' }
+  ];
+  
+  const apis = [
+    { name: 'OpenStreetMap API', url: 'https://wiki.openstreetmap.org/wiki/API' },
+    { name: 'Rainviewer API', url: 'https://www.rainviewer.com/api.html' },
+    { name: 'OpenWeatherMap API', url: 'https://openweathermap.org/api' }
+  ];
   
   return (
     <div className="flex flex-col min-h-screen text-white overflow-hidden bg-black">
@@ -17,10 +46,20 @@ export default function About() {
             The weather app with current weather of the whole world.
           </p>
           <p className="md:text-3xl text-2xl mt-8">
-            Built using <a href="https://reactjs.org/" className={clickableTextStyling}>React</a>, <a href="https://reactrouter.com/en/main" className={clickableTextStyling}>React Router</a>, <a href="https://react-icons.github.io/react-icons" className={clickableTextStyling}>React Icons</a>, <a href="https://react-leaflet.js.org/" className={clickableTextStyling}>React Leaflet</a>, <a href="https://axios-http.com/docs/intro" className={clickableTextStyling}>Axios</a>, & <a href="https://tailwindcss.com/" className={clickableTextStyling}>Tailwind CSS</a>.
+            Built using {technologies.map((tech, index) => (
+              <span key={index}>
+                <ExternalLink href={tech.url}>{tech.name}</ExternalLink>
+                {index < technologies.length - 1 ? ', ' : ''}
+              </span>
+            ))}
           </p>
           <p className="md:text-3xl text-2xl mt-8">
-            APIs used: <a href="https://wiki.openstreetmap.org/wiki/API" className={clickableTextStyling}>OpenStreetMap API</a>, <a href="https://www.rainviewer.com/api.html" className={clickableTextStyling}>Rainviewer API</a>, <a href="https://openweathermap.org/api" className={clickableTextStyling}>OpenWeatherMap API</a>
+            APIs used: {apis.map((api, index) => (
+              <span key={index}>
+                <ExternalLink href={api.url}>{api.name}</ExternalLink>
+                {index < apis.length - 1 ? ', ' : ''}
+              </span>
+            ))}
           </p>
           <p className="md:absolute mt-5 text-base md:bottom-12 -bottom-2 left-1.5">
           <span className='underline'>Disclaimer:</span> Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
