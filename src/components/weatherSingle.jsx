@@ -2,8 +2,6 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShowWeather, SunriseSunsetTimes } from "./utils/weatherVariables";
-import { Header } from "./utils/header";
-import { Footer } from "./utils/footer";
 
 export const GetSingleWeather = () => {
 
@@ -17,6 +15,7 @@ export const GetSingleWeather = () => {
     const [ times, setTimes ] = useState([]);
     const [ blocked, setBlocked ] = useState();
     const [ connectionError, setConnectionError ] = useState();
+    const [ loading, setLoading ] = useState(true);
 
     const handleSubmit3Hour = useCallback((e) => {
       e.preventDefault();
@@ -37,6 +36,8 @@ export const GetSingleWeather = () => {
     }, [location.name]);
 
     useEffect(() => {
+      setLoading(true);
+
       axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
       (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`) :
       (latitude === undefined && longitude === undefined) ?
@@ -79,67 +80,59 @@ export const GetSingleWeather = () => {
         setTimes(timesObj)
       
         setLoaded(true);
+        setLoading(false);
       })
       .catch(error => {
         const errorState = {
           loaded: false,
-          blocked: error.response?.data.cod === 429,
+          blocked: error.response?.status === 429,
           connectionError: error.response?.data.code === 'ERR_NETWORK'
         };
         
         setLoaded(errorState.loaded);
         setBlocked(errorState.blocked);
         setConnectionError(errorState.connectionError);
+        setLoading(false);
       });
     }, [city, countryCode, latitude, longitude]);   
 
     const localSunriseSunsetTimes = useMemo(() => {
-      if (times && times.sunrise && times.sunset && times.timeZone) {
-      return SunriseSunsetTimes(times);
+      if (times && times.sunrise && times.sunset && times.timeZone !== undefined) {
+        return SunriseSunsetTimes(times);
       }
       return null;
     }, [times]);
 
     return(
-      loaded ? (
-        <ShowWeather 
-          connectionError = {connectionError} 
-          choice = {'normal'} 
-          mainWeather = {weather.mainWeather} 
-          description = {weather.description} 
-          name = {location.name} 
-          country = {location.country} 
-          temperature = {weather.temperature} 
-          tempFeel = {weather.tempFeel} 
-          tempMax = {weather.tempMax} 
-          tempMin = {weather.tempMin} 
-          humidity = {weather.humidity} 
-          windSpeed={weather.windSpeed} 
-          pressure = {weather.pressure} 
-          visibility = {weather.visibility} 
-          windDegrees = {weather.windDegrees} 
-          loaded = {loaded} 
-          blocked={blocked} 
-          handleSubmit3Hour={handleSubmit3Hour} 
-          handleSubmitDaily={handleSubmitDaily} 
-          sunrise={weather.sunrise} 
-          sunset={weather.sunset} 
-          timeUpdatedUNIX={weather.timeUpdatedUNIX} 
-          rain={weather.rain} 
-          times={times} 
-          city={city} 
-          timeZone={weather.timeZone}
-          localSunriseSunsetTimes={localSunriseSunsetTimes}
-        />
-      ) : (
-        <div className="flex flex-col min-h-screen text-white overflow-hidden bg-black">
-          <Header/>
-          <main className="flex flex-col md:items-center justify-center flex-grow">
-            <p className="uppercase font-bold md:text-3xl text-xl md:mb-14 mt-8 md:mt-0">
-              Loading...
-            </p>
-          </main>
-          <Footer />
-        </div>
-      ))
+      <ShowWeather 
+        connectionError = {connectionError} 
+        choice = {'normal'} 
+        mainWeather = {weather.mainWeather} 
+        description = {weather.description} 
+        name = {location.name} 
+        country = {location.country} 
+        temperature = {weather.temperature} 
+        tempFeel = {weather.tempFeel} 
+        tempMax = {weather.tempMax} 
+        tempMin = {weather.tempMin} 
+        humidity = {weather.humidity} 
+        windSpeed={weather.windSpeed} 
+        pressure = {weather.pressure} 
+        visibility = {weather.visibility} 
+        windDegrees = {weather.windDegrees} 
+        loaded = {loaded} 
+        blocked={blocked} 
+        handleSubmit3Hour={handleSubmit3Hour} 
+        handleSubmitDaily={handleSubmitDaily} 
+        sunrise={weather.sunrise} 
+        sunset={weather.sunset} 
+        timeUpdatedUNIX={weather.timeUpdatedUNIX} 
+        rain={weather.rain} 
+        times={times} 
+        city={city} 
+        timeZone={weather.timeZone}
+        localSunriseSunsetTimes={localSunriseSunsetTimes}
+        loading={loading}
+      />
+    );
   };
