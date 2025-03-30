@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo } from 'react';
+import {useEffect, useState, useMemo, memo } from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { Header } from './utils/header';
@@ -6,7 +6,7 @@ import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 
-export const DailyWeatherData = () => {
+export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
 
   const [ location, setLocation ] = useState([]);
@@ -162,4 +162,6 @@ export const DailyWeatherData = () => {
       <Footer />
     </div>
   )
-}
+});
+
+DailyWeatherData.displayName = 'DailyWeatherData';

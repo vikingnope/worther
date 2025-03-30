@@ -1,9 +1,9 @@
-import {useEffect, useState, useCallback, useMemo } from 'react';
+import {useEffect, useState, useCallback, useMemo, memo } from 'react';
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShowWeather } from './utils/weatherVariables';
 
-export const SingleThreeHourForecastData = () => {
+export const SingleThreeHourForecastData = memo(() => {
   const { index, lat, lon } = useParams();
   const numericIndex = parseInt(index, 10); // Convert index to a number
 
@@ -123,4 +123,6 @@ export const SingleThreeHourForecastData = () => {
       lon = {lon}
     />  
   )
-}
+});
+
+SingleThreeHourForecastData.displayName = 'SingleThreeHourForecastData';
