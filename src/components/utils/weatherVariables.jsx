@@ -100,9 +100,9 @@ const weatherIconsMap = {
 export const WeatherIcons = memo((props) => {
   const currentHourConversion = useMemo(() => {
     const d = new Date();
-    const baseHour = props.page === 'single' ? d.getHours() : props.hourConversion;
+    const baseHour = props.hourConversion || d.getHours();
     return Math.round(((baseHour * 3600 + d.getTimezoneOffset() * 60) + props.timeZone) / 3600);
-  }, [props.page, props.timeZone, props.hourConversion]);
+  }, [props.timeZone, props.hourConversion]);
   
   const size = useMemo(() => 
     props.page === 'single' ? 200 : props.page === 'multiple' ? 50 : 85, 
@@ -324,6 +324,7 @@ export const ShowWeather = memo((props) => {
           timeZone={props.timeZone}
           sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
           sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
+          hourConversion={props.hourConversion}
           page="single"
         />
       </section>
