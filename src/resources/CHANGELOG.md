@@ -30,6 +30,7 @@
 - Fixed bug with icon not showing as night on Single 3 Hour Forecast page
 - Changed fixes to resolves in PR template
 - Bump react & react-dom from 19.0.0 to 19.1.0
+- Actually fixed bug with icon not showing as night on Single 3 Hour Forecast page
 
 ---
 

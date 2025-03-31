@@ -1,6 +1,6 @@
 import {useEffect, useState, useMemo, memo } from 'react';
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes } from './utils/weatherVariables';
@@ -13,6 +13,8 @@ export const DailyWeatherData = memo(() => {
   const [ weather, setWeather ] = useState([]);
   const [ times, setTimes ] = useState([]);
   const [ error, setError ] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Worther - Daily Weather - " + (location.name || "");
@@ -197,7 +199,7 @@ export const DailyWeatherData = memo(() => {
               </>
             }
           </div>
-          <button className="rounded-md h-8 text-xl my-16 font-bold w-24 mx-auto border" onClick={() => window.history.back()}>Go Back</button>
+          <button className="rounded-md h-8 text-xl my-16 font-bold w-24 mx-auto border" onClick={() => navigate(-1)}>Go Back</button>
       </div>
       <Footer />
     </div>
