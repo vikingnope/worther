@@ -13,6 +13,7 @@ export const SingleThreeHourForecastData = memo(() => {
   const [ loaded, setLoaded ] = useState();
   const [ blocked, setBlocked ] = useState();
   const [ connectionError, setConnectionError ] = useState();
+  const [ loading, setLoading ] = useState(true);
 
   const history = useNavigate();
 
@@ -27,6 +28,7 @@ export const SingleThreeHourForecastData = memo(() => {
   }, [location.name]);
 
   useEffect(() => {
+    setLoading(true);
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
       for (const [i, weatherAPI] of response.data.list.entries()) {
@@ -67,17 +69,19 @@ export const SingleThreeHourForecastData = memo(() => {
       setLocation(locationObj);
 
       setLoaded(true);
+      setLoading(false);
     })
     .catch(error => {
       const errorState = {
         loaded: false,
-        blocked: error.response?.data.cod === 429,
+        blocked: error.response?.status === 429,
         connectionError: error.response?.data.code === 'ERR_NETWORK'
       };
       
       setLoaded(errorState.loaded);
       setBlocked(errorState.blocked);
       setConnectionError(errorState.connectionError);
+      setLoading(false);
     });
   }, [index, numericIndex, lat, lon]);
 
@@ -137,6 +141,7 @@ export const SingleThreeHourForecastData = memo(() => {
       lat = {lat} 
       lon = {lon}
       localSunriseSunsetTimes={localSunriseSunsetTimes}
+      loading={loading}
     />  
   )
 });
