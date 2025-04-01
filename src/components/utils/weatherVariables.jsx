@@ -373,11 +373,8 @@ export const ShowWeather = memo((props) => {
     <div className="text-white bg-black flex flex-col min-h-screen">
       <Header />
       {props.loaded ? (
-        props.mainWeather ? (
+        props.mainWeather && 
           <WeatherDisplay />
-        ) : (
-          <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} />
-        )
       ) : props.blocked ? (
         <ErrorDisplay message="The API is currently blocked" />
       ) : props.connectionError ? (
