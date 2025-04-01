@@ -143,7 +143,7 @@ export const ThreeHourForecastData = memo(() => {
                       </div>
                       <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
                         Wind Speed: {weather.windSpeed} m/s ({<WindForce windSpeed={weather.windSpeed} />})
-                        <div className="lg:mt-1">Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</div>
+                        <div className="lg:mt-1 lg:pl-2">Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</div>
                       </div>
                       <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
                         Precipitation: {Math.round(weather.precipitation)}%
