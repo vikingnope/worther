@@ -109,7 +109,7 @@ export const ThreeHourForecastData = memo(() => {
           <p className='text-3xl font-bold my-5 underline lg:text-4xl'>3 Hour Forecast Data - {location.name}</p>
           {(weather.length > 0) ? (
             Object.entries(groupedWeatherByDay).map(([day, dayWeather]) => (
-              <div key={day} className="mb-4">
+              <div key={day}>
                 <h2 className="text-3xl font-bold py-3 bg-neutral-800 border-b-2">{day}</h2>
                 {dayWeather.map((weather) => {
                   const hourConversion = Math.round((((weather.timeNormalHour * 3600) + (new Date().getTimezoneOffset() * 60)) + location.timeZone) / 3600);
@@ -118,7 +118,7 @@ export const ThreeHourForecastData = memo(() => {
                       aria-label={`Weather forecast for ${day} at ${(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:${weather.timeNormalMinutes}, ${weather.description}`}
                       key={weather.index} 
                       onClick={(e) => handleSubmit(e, weather.index)} 
-                      className='duration-300 hover:cursor-pointer hover:bg-cyan-800 lg:grid lg:grid-cols-7 lg:gap-2 lg:items-center flex flex-col border-b-2 text-white h-fit w-screen py-px'
+                      className='duration-300 hover:cursor-pointer hover:bg-cyan-800 lg:grid lg:grid-cols-7 lg:gap-2 lg:items-center flex flex-col border-b-2 text-white h-fit w-screen py-3'
                     >
                       <div className="lg:justify-self-center mx-auto">
                         <WeatherIcons 

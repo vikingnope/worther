@@ -33,6 +33,7 @@
 - Actually fixed bug with icon not showing as night on Single 3 Hour Forecast page
 - Fixed alignment of divs in 3-Hour Forecast page
 - Fixed loading not showing on Single 3-Hour forecast page
+- Styling changes 3-hour Forecast page
 
 ---
 
