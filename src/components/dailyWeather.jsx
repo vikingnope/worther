@@ -21,7 +21,7 @@ export const DailyWeatherData = memo(() => {
   }, [location.name]);
 
   useEffect(() => {
-    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
+    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
       const locationObj = {
         name: response.data.city.name,
@@ -88,7 +88,7 @@ export const DailyWeatherData = memo(() => {
       setTimes(timesObj)
     })
     .catch(error => {
-      if (process.env.NODE_ENV !== 'production') {
+      if (import.meta.env.MODE !== 'production') {
         console.error('Weather data fetch error:', error);
       }
       if (error.response?.status === 429) {
