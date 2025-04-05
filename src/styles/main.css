@@ -72,6 +72,12 @@
 }
 
 /* Global scrollbar styles */
+/* Firefox scrollbar styling */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #888 rgb(20, 19, 19);
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 7px;
