@@ -39,7 +39,7 @@ export default function Changelog() {
     return (
         <div className="text-white overflow-hidden flex flex-col min-h-screen bg-black">
             <Header/>
-            <div className="flex flex-col flex-grow mb-5">
+            <div className="flex flex-col grow mb-5">
                 <h1 className='text-6xl font-bold underline my-10 text-center'>Changelog</h1>
                 <div className='markdown'>
                     {loading && <p className='text-center'>Loading...</p>}

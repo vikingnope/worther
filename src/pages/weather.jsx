@@ -71,17 +71,17 @@ export default function Weather () {
   return(
     <div className='text-white overflow-hidden bg-black flex flex-col min-h-screen'>
       <Header/>
-      <div className="text-center flex-grow flex flex-col justify-center items-center">
+      <div className="text-center grow flex flex-col justify-center items-center">
         <p className={`text-7xl mb-16 font-bold underline ${searchMode === 'simple' ? 'text-teal-500' : 'text-red-500'}`}>
           {searchMode === 'simple' ? 'Current Weather' : 'Advanced Current Weather'}
         </p>
         
         {searchMode === 'simple' ? (
           <form onSubmit={handleSubmit}>
-            <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-none rounded-md bg-weatherButtons'>
+            <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-hidden rounded-md bg-weatherButtons'>
               <FaCity size='17' className='inline mr-1.5 mb-1'/>
               <input
-                  className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-none bg-weatherButtons"
+                  className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-hidden bg-weatherButtons"
                   type="text"
                   id="weatherButtons"
                   value={city}
@@ -113,7 +113,7 @@ export default function Weather () {
               classNames={{
                   control: () => "border rounded-md w-56 h-9 px-2 mx-auto mb-5 text-white bg-weatherButtons font-bold",
                   input: () => "text-white font-bold",
-                  menu: () => "mt-1 rounded-sm border shadow-lg text-white bg-weatherButtons font-bold",
+                  menu: () => "mt-1 rounded-xs border shadow-lg text-white bg-weatherButtons font-bold",
                   option: ({ isFocused, isSelected }) => 
                       `px-3 py-2 ${
                           isFocused ? 'bg-[#363740] text-white' : 'bg-weatherButtons text-white'
@@ -125,10 +125,10 @@ export default function Weather () {
               id="country"
               placeholder='Choose Country'
             />
-            <div className='w-56 h-9 text-base font-bold border indent-1.5 outline-none mx-auto rounded-md bg-weatherButtons'>
+            <div className='w-56 h-9 text-base font-bold border indent-1.5 outline-hidden mx-auto rounded-md bg-weatherButtons'>
               <FaCity size='17' className='inline mr-1.5 mb-1'/>
               <input
-                  className="rounded-r-md w-48 text-base font-bold indent-1.5 outline-none h-8 bg-weatherButtons"
+                  className="rounded-r-md w-48 text-base font-bold indent-1.5 outline-hidden h-8 bg-weatherButtons"
                   type="text"
                   id="weatherButtons"
                   value={city}

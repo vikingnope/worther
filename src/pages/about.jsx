@@ -38,7 +38,7 @@ export default function About() {
   return (
     <div className="flex flex-col min-h-screen text-white overflow-hidden bg-black">
       <Header/>
-      <main className="flex flex-col md:items-center justify-center flex-grow">
+      <main className="flex flex-col md:items-center justify-center grow">
           <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14 mt-8 md:mt-0">
             Welcome to Worther!
           </p>

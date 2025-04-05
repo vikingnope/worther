@@ -122,7 +122,7 @@ export default function ShowMap(props) {
         return( 
             <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
                 <Header/>
-                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='flex-grow'>
+                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='grow'>
                     <ScaleControl position="bottomleft" />
                     <CustomZoomControl mapType={mapType} />
                     <CustomAttributionControl mapType={mapType} />
