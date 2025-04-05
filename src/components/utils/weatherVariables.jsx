@@ -411,7 +411,7 @@ export const WeatherPopupContent = memo((props) => {
     setIsLoadingWeather(true);
     try {
         // Replace with your actual weather API endpoint
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${props.userPos.latitude}&lon=${props.userPos.longitude}&units=metric&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${props.userPos.latitude}&lon=${props.userPos.longitude}&units=metric&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`);
         if (!response.ok) {
           const errorText = await response.text();
           throw new Error(`Weather data fetch failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`);

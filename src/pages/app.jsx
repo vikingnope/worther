@@ -10,11 +10,11 @@ const About = lazy(() => import('./about.jsx'));
 const Weather = lazy(() => import('./weather.jsx'));
 const GetSingleWeather = lazy(() => import('../components/weatherSingle.jsx').then(module => ({ default: module.GetSingleWeather })));
 const ThreeHourForecastData = lazy(() => import('../components/3HourForecastData.jsx').then(module => ({ default: module.ThreeHourForecastData })));
-const ShowMap = lazy(() => import('../components/showMap'));
-const SingleThreeHourForecastData = lazy(() => import('../components/Single3HourForecastData').then(module => ({ default: module.SingleThreeHourForecastData })));
-const ErrorPage = lazy(() => import('./error'));
-const Recommendations = lazy(() => import('./recommendations'));
-const DailyWeatherData = lazy(() => import('../components/dailyWeather').then(module => ({ default: module.DailyWeatherData })));
+const ShowMap = lazy(() => import('../components/showMap.jsx'));
+const SingleThreeHourForecastData = lazy(() => import('../components/Single3HourForecastData.jsx').then(module => ({ default: module.SingleThreeHourForecastData })));
+const ErrorPage = lazy(() => import('./error.jsx'));
+const Recommendations = lazy(() => import('./recommendations.jsx'));
+const DailyWeatherData = lazy(() => import('../components/dailyWeather.jsx').then(module => ({ default: module.DailyWeatherData })));
 const Changelog = lazy(() => import('./changelog.jsx'));
 
 export default function App() {

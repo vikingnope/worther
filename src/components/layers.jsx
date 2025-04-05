@@ -8,7 +8,7 @@ export const CloudLayer = memo((props) => {
     {
       (props.show) ?
         <TileLayer
-        url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
+        url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
         maxZoom={16}
@@ -28,7 +28,7 @@ export const WindSpeedLayer = memo((props) => {
     {
       (props.show) ?
         <TileLayer
-        url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
+        url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
         maxZoom={16}
@@ -48,7 +48,7 @@ export const TemperatureLayer = memo((props) => {
     {
       (props.show) ?
         <TileLayer
-        url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`}
+        url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex = {3}
         maxZoom={16}

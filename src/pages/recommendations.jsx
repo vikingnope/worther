@@ -55,7 +55,7 @@ export default function Recommendations () {
 
   useEffect(() => {
     const fetchWind = async () => {
-      const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`);
+      const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`);
       const windObj = {
         speed: windData.data.wind.speed,
         degrees: windData.data.wind.deg
