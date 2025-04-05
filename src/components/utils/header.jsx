@@ -40,7 +40,7 @@ export const Header = memo(() => {
                     onClick={handleClick} 
                     draggable='false' 
                     src={Logo} 
-                    className="-mt-2.5 hover:scale-90 transition-all duration-200 ease-in-out cursor-pointer ml-2.5 scale-75 rounded-full shadow-md" 
+                    className="-mt-2.5 transition-all duration-200 ease-in-out cursor-pointer ml-2.5 scale-75 rounded-full shadow-md" 
                     alt="logo" 
                     width="65" 
                     height="65" 
