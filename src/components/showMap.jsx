@@ -40,11 +40,39 @@ const CustomPopupStyle = ({ mapType }) => {
       // Style the close button
       const closeButtons = document.querySelectorAll('.leaflet-popup-close-button');
       closeButtons.forEach(button => {
+        // Base styling for close button
+        button.style.transition = 'all 0.2s ease';
+        button.style.cursor = 'pointer';
+        button.style.width = '20px';
+        button.style.height = '20px';
+        button.style.display = 'flex';
+        button.style.justifyContent = 'center';
+        button.style.alignItems = 'center';
+        button.style.fontWeight = 'bold';
+        button.style.right = '7px';
+        button.style.top = '12px';
+        
         if (mapType === 'light') {
           button.style.color = '#000000';
         } else {
           button.style.color = '#ffffff';
         }
+        
+        // Add hover effects to make the X itself animate
+        button.onmouseover = () => {
+          button.style.transform = 'scale(1.2)';
+          // Use a darker shade of the current color instead of blue
+          button.style.color = mapType === 'light' 
+            ? '#333333' // Darker shade for light mode
+            : '#aaaaaa'; // Darker shade for dark mode
+          button.style.fontWeight = 'bolder';
+        };
+        
+        button.onmouseout = () => {
+          button.style.transform = 'scale(1)';
+          button.style.color = mapType === 'light' ? '#000000' : '#ffffff';
+          button.style.fontWeight = 'bold';
+        };
       });
     }
     
