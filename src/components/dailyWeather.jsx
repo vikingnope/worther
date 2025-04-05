@@ -124,7 +124,7 @@ export const DailyWeatherData = memo(() => {
   }, [weather, location.timeZone]);
 
   return (
-    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-linear-to-b from-gray-950 via-blue-950 to-gray-950'>
+    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-gradient-to-b from-black via-blue-950 to-black'>
       <Header/>
       <div className="text-center text-white grow flex flex-col">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center relative my-8">
