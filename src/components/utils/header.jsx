@@ -1,9 +1,10 @@
-import logo from '../../resources/logoSmall.png';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { memo, useState, useEffect, useCallback } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Logo from "./../../resources/logoSmallRounded.png";
+// import { useMediaQuery } from 'react-responsive';
+import { useDeviceDetect } from "../../hooks/useDeviceDetect.js";
+import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
 import { Dropdown } from './mobileDropdown';
-import { Link } from 'react-router-dom';
-import { memo, useCallback } from 'react';
-import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants';
 
 const NavigationLink = memo(({ text, path, currentLocation }) => {
     const active = (currentLocation === path) ? 'text-green-300' : 'text-white';
@@ -38,7 +39,7 @@ export const Header = memo(() => {
     return (
         <header className="inset-x-0 top-0 bg-neutral-800 h-min w-full border-y border-zinc-600 select-none">
             <section className="relative mt-2">
-                <img onClick={handleClick} draggable='false' src={logo} className="-mt-2.5 border-3 hover:scale-90 hover:border-cyan-300 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" width="65" height="65" aria-label="Navigate to home page"/>
+                <img onClick={handleClick} draggable='false' src={Logo} className="-mt-2.5 border-3 hover:scale-90 hover:border-cyan-300 duration-150 cursor-pointer ml-2.5 scale-75 rounded-full" alt="logo" width="65" height="65" aria-label="Navigate to home page"/>
             </section>
 
             <nav className="absolute right-0 top-2.5 flex">

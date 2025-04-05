@@ -1,8 +1,9 @@
-import { MdOutlineSegment } from 'react-icons/md';
-import { useState, useRef, useEffect, memo } from 'react';
-import { MdArrowLeft, MdOutlineArrowDropDown } from 'react-icons/md';
-import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
+import Logo from "./../../resources/logoSmallRounded.png";
+import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
+import { MdOutlineSegment } from 'react-icons/md';
+import { MdArrowLeft, MdOutlineArrowDropDown } from 'react-icons/md';
 
 const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
 
