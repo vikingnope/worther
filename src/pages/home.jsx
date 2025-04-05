@@ -8,7 +8,7 @@ import { FaMapMarkedAlt, FaCloudSunRain, FaListUl, FaInfoCircle } from 'react-ic
 const SITE_MAP = [
     { text: 'Map', path: '/map/light', icon: <FaMapMarkedAlt className="text-4xl mb-3 text-blue-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Interactive weather maps with various layers' },
     { text: 'Weather', path: '/weather', icon: <FaCloudSunRain className="text-4xl mb-3 text-yellow-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Detailed weather forecasts and conditions' },
-    { text: 'Recommendations', path: '/recommendations', icon: <FaListUl className="text-4xl mb-3 text-green-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Weather-based recommendations' },
+    { text: 'Recommendations', path: '/recommendations', icon: <FaListUl className="text-4xl mb-3 text-green-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Weather-based beach recommendations' },
     { text: 'About', path: '/about', icon: <FaInfoCircle className="text-4xl mb-3 text-purple-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Learn more about Worther' }
 ];
 
