@@ -1,3 +1,5 @@
+## 1.1.0 (Major)
+
 ## 1.0.8 (Minor)
 
 - Enhanced the Daily Weather page to display averaged weather metrics (precipitation, humidity, wind) across all data points
