@@ -251,7 +251,7 @@ export default function Recommendations () {
 
           {/* Map display with improved styling */}
           <section ref={mapSectionRef} className="flex justify-center mb-10 px-4 w-full">
-            <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-700 w-full" style={{ minHeight: '300px' }}>
+            <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-700 w-full max-w-7xl mx-auto" style={{ minHeight: '300px' }}>
               <MapContainer 
                 center={[35.940125, 14.374125]} 
                 zoom={(isDesktop) ? 11 : 10} 
