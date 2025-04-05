@@ -92,6 +92,22 @@
   background: #555;
 }
 
+/* Hide scrollbar styles for horizontal scrolling containers */
+.hide-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+.hide-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+}
+
 ::-moz-selection { /* Code for Firefox */
   color: #83838a;
   background: #1c1c1a;

@@ -166,32 +166,16 @@ export const DailyWeatherData = memo(() => {
                   </div>
                 </div>
                 <div className="flex xl:grid xl:grid-flow-col xl:auto-cols-fr gap-6 w-full overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
-                  <style jsx>{`
-                    .hide-scrollbar::-webkit-scrollbar {
-                      height: 4px;
-                    }
-                    .hide-scrollbar::-webkit-scrollbar-track {
-                      background: transparent;
-                    }
-                    .hide-scrollbar::-webkit-scrollbar-thumb {
-                      background: rgba(59, 130, 246, 0.5);
-                      border-radius: 4px;
-                    }
-                    .hide-scrollbar {
-                      scrollbar-width: thin;
-                      scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
-                    }
-                  `}</style>
-                {weather.map((weather, index) => {
-                  const dayConversion = localDayConversions[weather.date];
+                  {weather.map((weather, index) => {
+                    const dayConversion = localDayConversions[weather.date];
 
-                  return (
-                    <div 
-                      key={index} 
-                      className='flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-6 py-4 xl:py-6 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[900px] snap-center'
-                      role="article" 
-                      aria-label={`Weather forecast for ${dayConversion}`}
-                    >
+                    return (
+                      <div 
+                        key={index} 
+                        className='flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-6 py-4 xl:py-6 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[900px] snap-center'
+                        role="article" 
+                        aria-label={`Weather forecast for ${dayConversion}`}
+                      >
                         {/* Day header section */}
                         <div className="shrink-0 mx-auto mt-1 xl:mt-2 mb-3 xl:mb-6 text-center">
                           <p className='font-bold text-2xl xl:text-3xl block mb-1 xl:mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-300 animate-text'>{dayConversion}</p>
