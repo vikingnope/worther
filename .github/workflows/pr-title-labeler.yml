@@ -31,7 +31,7 @@ jobs:
             const titlePrefixMappings = {
               'Bug': 'fix',
               'Feature': 'feat',
-              'UI/UX': 'ui',
+              'UI/UX': 'ui/ux',
               'Data Processing': 'data',
               'Optimisation': 'perf',
               'Security': 'security',

@@ -2,6 +2,7 @@
 
 - Bumped version to 1.1.0
 - Migrated to Vite from deprecated Create React App (CRA)
+- Updated workflow labeller to update ui titles to ui/ux instead of ui
 
 ## 1.0.8 (Minor)
 
