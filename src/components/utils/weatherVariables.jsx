@@ -443,17 +443,63 @@ export const WeatherPopupContent = memo((props) => {
       return null;
   }, [currentLocationWeather]);
 
+  // Determine styles based on map type for map page
+  const popupStyles = useMemo(() => {
+    if (props.page === 'map') {
+      return props.mapType === 'light' 
+        ? { 
+            background: '#ffffff', 
+            color: '#000000',
+            buttonBg: '#e0e0e0',
+            buttonHoverBg: '#c0c0c0',
+            buttonText: '#000000'
+          }
+        : { 
+            background: '#1a1a1a', 
+            color: '#ffffff',
+            buttonBg: '#333333',
+            buttonHoverBg: '#444444',
+            buttonText: '#ffffff'
+          };
+    }
+    return {}; // Default styles for non-map pages
+  }, [props.page, props.mapType]);
+
   if (isLoadingWeather) {
-      return <div className="text-center p-2">Loading weather data...</div>;
+      return (
+        <div 
+          className="text-center p-2" 
+          style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
+        >
+          Loading weather data...
+        </div>
+      );
   }
   
   if (!currentLocationWeather) {
       return (
-          <div className="p-2">
+          <div 
+            className="p-2"
+            style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
+          >
               <p>Failed to load weather data</p>
               <button 
                   onClick={fetchWeatherForCurrentLocation}
-                  className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-sm hover:bg-blue-600"
+                  className="mt-2 px-3 py-1 rounded-sm hover:bg-blue-600"
+                  style={props.page === 'map' ? { 
+                    backgroundColor: popupStyles.buttonBg,
+                    color: popupStyles.buttonText,
+                  } : { backgroundColor: '#3b82f6', color: 'white' }}
+                  onMouseOver={(e) => {
+                    if (props.page === 'map') {
+                      e.currentTarget.style.backgroundColor = popupStyles.buttonHoverBg;
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (props.page === 'map') {
+                      e.currentTarget.style.backgroundColor = popupStyles.buttonBg;
+                    }
+                  }}
               >
                   Retry
               </button>
@@ -462,7 +508,10 @@ export const WeatherPopupContent = memo((props) => {
   }
   
   return (
-      <div className="p-2 max-w-xs">
+      <div 
+        className="p-2 max-w-xs"
+        style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
+      >
           <h3 className="font-bold text-lg">{currentLocationWeather.name}</h3>
           <div className="flex items-center">
               {currentLocationWeather.weather?.[0] && (
@@ -474,7 +523,7 @@ export const WeatherPopupContent = memo((props) => {
                       sunriseHour={localSunriseSunsetTimes?.sunriseHour}
                       sunsetHour={localSunriseSunsetTimes?.sunsetHour}
                       page="multiple"
-                      color="black"
+                      color={props.page === 'map' ? popupStyles.color : (props.color || 'white')}
                   />
               )}
               <span className="text-2xl ml-2">{Math.round(currentLocationWeather.main?.temp || 0)}°C</span>
@@ -495,13 +544,15 @@ export const WeatherPopupContent = memo((props) => {
               <div>Sunrise: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunriseHour, localSunriseSunsetTimes.sunriseMinute) : '--:--'}</div>
               <div>Sunset: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunsetHour, localSunriseSunsetTimes.sunsetMinute) : '--:--'}</div>
           </div>
-          <Link 
-              className='block mt-3 text-center font-bold text-sm underline' 
-              style={{ color: 'inherit' }} 
-              to={'/weatherLocation/' + props.userPos.latitude + '/' + props.userPos.longitude}
-          >
-              View detailed forecast
-          </Link>
+          {props.page === 'map' && (
+            <Link 
+                className='block mt-3 text-center font-bold text-sm underline' 
+                style={{ color: 'inherit' }} 
+                to={'/weatherLocation/' + props.userPos.latitude + '/' + props.userPos.longitude}
+            >
+                View detailed forecast
+            </Link>
+          )}
       </div>
   );
 });

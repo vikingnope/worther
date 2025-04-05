@@ -11,6 +11,52 @@ import markerDot from "../resources/location-dot.png";
 import { MapMode } from './utils/mapMode';
 import { WeatherPopupContent } from './utils/weatherVariables';
 
+// Custom component to style popup containers based on map mode
+const CustomPopupStyle = ({ mapType }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    // Apply initial styling to any existing popups
+    stylePopups();
+    
+    // Add event listener to style popups when they're created
+    map.on('popupopen', stylePopups);
+    
+    function stylePopups() {
+      // Find all popup containers and style them
+      const popupContainers = document.querySelectorAll('.leaflet-popup-content-wrapper, .leaflet-popup-tip');
+      
+      popupContainers.forEach(element => {
+        if (mapType === 'light') {
+          // Light mode - default is already white
+          element.style.backgroundColor = '#ffffff';
+          element.style.color = '#000000';
+        } else {
+          // Dark mode
+          element.style.backgroundColor = '#1a1a1a';
+          element.style.color = '#ffffff';
+        }
+      });
+      
+      // Style the close button
+      const closeButtons = document.querySelectorAll('.leaflet-popup-close-button');
+      closeButtons.forEach(button => {
+        if (mapType === 'light') {
+          button.style.color = '#000000';
+        } else {
+          button.style.color = '#ffffff';
+        }
+      });
+    }
+    
+    return () => {
+      map.off('popupopen', stylePopups);
+    };
+  }, [mapType, map]);
+  
+  return null; // This component doesn't render anything, just applies styling
+};
+
 // Custom component to style zoom control based on map mode
 const CustomZoomControl = ({ mapType }) => {
   const map = useMap();
@@ -126,6 +172,7 @@ export default function ShowMap(props) {
                     <ScaleControl position="bottomleft" />
                     <CustomZoomControl mapType={mapType} />
                     <CustomAttributionControl mapType={mapType} />
+                    <CustomPopupStyle mapType={mapType} />
                     <TileLayer 
                         zIndex={1}
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -148,6 +195,9 @@ export default function ShowMap(props) {
                             <Popup>
                                 <WeatherPopupContent 
                                     userPos={userPos}
+                                    color={mapType === 'light' ? 'black' : 'white'}
+                                    mapType={mapType}
+                                    page={'map'}
                                 />
                             </Popup> 
                         </Marker>
