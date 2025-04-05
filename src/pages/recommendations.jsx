@@ -206,7 +206,7 @@ export default function Recommendations () {
   };
 
   return(
-    <div className='text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black'>
         <Header/>
         <div className="text-center flex flex-col grow">
           <h1 className="md:text-6xl text-4xl font-bold mt-5 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">
