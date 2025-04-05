@@ -21,7 +21,7 @@ export default function App() {
   return (
     <>
       <Router>
-        <Suspense fallback={<div className="text-white flex h-screen bg-black"></div>}>
+        <Suspense fallback={<div className="text-white flex h-screen bg-gradient-to-b from-black via-blue-950 to-black"></div>}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
