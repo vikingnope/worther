@@ -18,6 +18,20 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    proxy: {
+      // Add proxy configuration for API calls if needed
+      // '/api': {
+      //   target: 'your-api-url',
+      //   changeOrigin: true,
+      //   secure: false,
+      // }
+    },
+    headers: {
+      // Add headers to allow cross-site cookies
+      'Set-Cookie': [
+        'SameSite=None; Secure',
+      ],
+    },
   },
   base: '/', // Changed from './' to '/' for proper absolute paths
   publicDir: 'public', // Explicitly set the public directory
