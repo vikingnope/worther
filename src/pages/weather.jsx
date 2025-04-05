@@ -98,7 +98,7 @@ export default function Weather () {
                 <button 
                   disabled={!city} 
                   type="submit" 
-                  className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                  className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'}`}
                 >
                   <BiSearchAlt size='22' />
                   Search
@@ -150,7 +150,7 @@ export default function Weather () {
                 <button 
                   disabled={!country || !city} 
                   type="submit" 
-                  className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!country || !city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                  className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!country || !city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'}`}
                 >
                   <BiSearchAlt size='22' />
                   Search
@@ -162,7 +162,7 @@ export default function Weather () {
               <form onSubmit={handleSubmitLocation} className="mt-4">
                 <button 
                   type="submit" 
-                  className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md"
+                  className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md cursor-pointer"
                 >
                   <IoLocationSharp size='22' />
                   Use My Current Location
