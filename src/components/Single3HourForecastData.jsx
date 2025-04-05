@@ -1,6 +1,6 @@
 import {useEffect, useState, useCallback, useMemo, memo } from 'react';
 import axios from "axios";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
 
 export const SingleThreeHourForecastData = memo(() => {
@@ -14,14 +14,6 @@ export const SingleThreeHourForecastData = memo(() => {
   const [ blocked, setBlocked ] = useState();
   const [ connectionError, setConnectionError ] = useState();
   const [ loading, setLoading ] = useState(true);
-
-  const history = useNavigate();
-
-  const handleSubmit = useCallback((e) => {
-    e.preventDefault();
-
-    history('/weather/' +  location.name + '/' + location.lat + '/' + location.lon);
-  }, [history, location.lat, location.lon, location.name]);
 
   useEffect(() => {
     document.title = "Worther - 3 Hour Weather - " + location.name;
@@ -133,8 +125,7 @@ export const SingleThreeHourForecastData = memo(() => {
       visibility = {weather.visibility} 
       windDegrees = {weather.windDegrees} 
       loaded = {loaded} 
-      blocked={blocked} 
-      handleSubmit={handleSubmit} 
+      blocked={blocked}
       timeUpdatedUNIX={weather.timeUpdatedUNIX} 
       timeZone={location.timeZone} 
       city={location.name} 

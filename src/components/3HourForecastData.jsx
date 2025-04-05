@@ -5,6 +5,7 @@ import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce, SunriseSunsetTimes } from './utils/weatherVariables';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
+import { FaArrowLeft } from "react-icons/fa6";
 
 export const ThreeHourForecastData = memo(() => {
   const { lat, lon } = useParams();
@@ -16,6 +17,16 @@ export const ThreeHourForecastData = memo(() => {
   const [ loading, setLoading ] = useState(true);
 
   const history = useNavigate();
+
+  const handleNavigateBack = useCallback(() => {
+    // Go back to single weather page with current location
+    if (location.lat && location.lon) {
+      history(`/weatherLocation/${location.lat}/${location.lon}`);
+    } else {
+      // Fallback to history back if location coordinates are not available
+      history(-1);
+    }
+  }, [history, location.lat, location.lon]);
 
   const handleSubmit = useCallback((e, index) => {
     e.preventDefault();
@@ -106,7 +117,19 @@ export const ThreeHourForecastData = memo(() => {
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-gradient-to-b from-black via-blue-950 to-black'>
       <Header/>
       <div className="text-center text-white grow flex flex-col px-4 md:px-6 lg:px-8">
-          <p className='text-3xl font-bold my-5 bg-clip-text text-transparent bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 lg:text-4xl animate-text tracking-tight'>{location.name ? `3 Hour Forecast - ${location.name}` : "Loading..."}</p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center relative my-8">
+            <section className="mb-6">
+              <button 
+                className="flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium cursor-pointer group mb-4 sm:mb-0 sm:absolute sm:left-4 md:left-8 self-start mx-4 sm:mx-0"
+                onClick={handleNavigateBack}
+                aria-label="Go back to the weather page"
+              >
+                <FaArrowLeft className="h-5 w-5 mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
+                Back to Weather
+              </button>
+            </section>
+            <p className='text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 lg:text-4xl animate-text tracking-tight'>{location.name ? `3 Hour Forecast - ${location.name}` : "Loading..."}</p>
+          </div>
           {(weather.length > 0) ? (
             Object.entries(groupedWeatherByDay).map(([day, dayWeather]) => (
               <div key={day} className="mb-6">
