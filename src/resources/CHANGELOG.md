@@ -35,6 +35,7 @@
 - Fixed loading not showing on Single 3-Hour forecast page
 - Styling changes 3-hour Forecast page
 - Changed package manager to pnpm
+- Fixed alignments of divs in daily weather page for large devices
 
 ---
 

@@ -5,6 +5,7 @@ import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
+import { FaArrowLeft } from "react-icons/fa6";
 
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
@@ -123,72 +124,135 @@ export const DailyWeatherData = memo(() => {
   }, [weather, location.timeZone]);
 
   return (
-    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
+    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-gradient-to-b from-gray-950 via-blue-950 to-gray-950'>
       <Header/>
       <div className="text-center text-white flex-grow flex flex-col">
-        <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data {location.name?.trim() ? `- ${location.name}` : ''} </p>
-          <div className="lg:flex lg:flex-row my-auto">
+        <div className="flex items-center justify-center relative my-8">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="absolute left-4 md:left-8 flex items-center text-white hover:text-blue-500 transition-colors duration-300 group"
+            aria-label="Go back to previous page"
+          >
+            <FaArrowLeft className="mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
+            <span className="font-medium">Back</span>
+          </button>
+          <p className='text-4xl font-bold underline'>Daily Forecast Data {location.name?.trim() ? `- ${location.name}` : ''} </p>
+        </div>
+          <div className="lg:grid lg:grid-cols-1 gap-4 px-4 lg:px-8 w-full max-w-full overflow-x-auto pb-6">
             {(weather.length > 0) ?
               (
-                weather.map((weather, index) => {
+                <div className="lg:grid lg:grid-flow-col lg:auto-cols-fr gap-6 w-full">
+                {weather.map((weather, index) => {
                   const dayConversion = localDayConversions[weather.date];
 
                   return (
                     <div 
                       key={index} 
-                      className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto px-2' 
+                      className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-full w-full lg:mx-0 mx-auto px-6 py-6 justify-between overflow-hidden break-words bg-neutral-900 lg:hover:bg-neutral-800 lg:hover:shadow-xl lg:hover:shadow-slate-700/20 transition-all'
                       role="article" 
                       aria-label={`Weather forecast for ${dayConversion}`}
                     >
-                        <p className="mx-auto mt-10">
-                          <WeatherIcons 
-                            mainWeather={weather.weather.main} 
-                            windSpeed={weather.windSpeed} 
-                            description={weather.weather.description} 
-                            timeZone={times.timeZone} 
-                            sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
-                            sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
-                            page={'daily'}
-                          />
-                        </p>
-                        <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
-                        <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.weather.description.toUpperCase()}</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Temp: {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Speed: {weather.windSpeed.toFixed(2)} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {Math.round(weather.windDegrees)}°</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Precipitation: {Math.round(weather.precipitation)}%</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Humidity: {Math.round(weather.humidity)}%</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
-                        (weather.visibility / 1000).toFixed(2) + 'km' :
-                        weather.visibility + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                        </p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>
-                          <BsFillSunriseFill size={40} className="inline mr-2"/>
-                          Sunrise: {localSunriseSunsetTimes ? 
-                            `${localSunriseSunsetTimes.sunriseHour > 23 
-                                ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') 
-                                : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')
-                              }:${String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')}` 
-                            : 'N/A'} 
+                        {/* Day header section */}
+                        <div className="flex-shrink-0 mx-auto mt-2 mb-4 text-center">
+                          <p className='font-bold text-2xl block underline mb-1 text-blue-500'>{dayConversion}</p>
+                          <span className="inline-block h-1 w-20 rounded bg-blue-500 mb-6"></span>
+                          <div className="mb-4">
+                            <WeatherIcons 
+                              mainWeather={weather.weather.main} 
+                              windSpeed={weather.windSpeed} 
+                              description={weather.weather.description} 
+                              timeZone={times.timeZone} 
+                              sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
+                              sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
+                              page={'daily'}
+                            />
+                          </div>
+                          <p className='mx-auto font-bold text-xl block text-yellow-400 mb-4'>{weather.weather.description.toUpperCase()}</p>
+                        </div>
+                        
+                        {/* Temperature section with highlight */}
+                        <div className="bg-neutral-800 rounded-lg p-4 mb-6 shadow-inner">
+                          <p className='mx-auto text-xl mb-1 text-center'>
+                            <span className="text-2xl font-semibold">
+                              {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C
+                            </span>
+                          </p>
+                          <p className="text-gray-400 text-center text-sm">Temperature Range</p>
+                        </div>
+                        
+                        {/* Wind data section */}
+                        <div className="flex flex-col mb-6 border-b border-neutral-800 pb-5">
+                          <h3 className="text-lg font-semibold mb-3 text-gray-300">Wind Conditions</h3>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="text-center">
+                              <p className='text-lg'>{weather.windSpeed.toFixed(2)} m/s</p>
+                              <p className='text-yellow-400 text-sm'>({<WindForce windSpeed={weather.windSpeed} />})</p>
+                            </div>
+                            <div className="text-center">
+                              <p className='text-lg'>{<WindDirection windDegrees={weather.windDegrees}/>}</p>
+                              <p className='text-yellow-400 text-sm'>@ {Math.round(weather.windDegrees)}°</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Other weather data section */}
+                        <div className="grid grid-cols-2 gap-4 mb-6">
+                          <div className="text-center">
+                            <p className='text-lg'>{Math.round(weather.precipitation)}%</p>
+                            <p className='text-sm text-gray-400'>Precipitation</p>
+                          </div>
+                          <div className="text-center">
+                            <p className='text-lg'>{Math.round(weather.humidity)}%</p>
+                            <p className='text-sm text-gray-400'>Humidity</p>
+                          </div>
+                          <div className="text-center col-span-2">
+                            <p className='text-lg'>
+                              {(weather.visibility >= 1000) ?
+                              (weather.visibility / 1000).toFixed(2) + ' km' :
+                              weather.visibility + ' m'}
+                            </p>
+                            <p className='text-sm text-blue-400'>({<VisibilityDesc visibility={weather.visibility}/>})</p>
+                          </div>
+                        </div>
+                        
+                        {/* Sunrise/Sunset section */}
+                        <div className="flex flex-col mt-auto border-t border-neutral-800 pt-5">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className='text-center'>
+                              <BsFillSunriseFill size={25} className="inline text-orange-300 mb-2"/>
+                              <p className='text-sm text-gray-300'>Sunrise</p>
+                              <p className='text-base'>
+                                {localSunriseSunsetTimes ? 
+                                  `${localSunriseSunsetTimes.sunriseHour > 23 
+                                      ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') 
+                                      : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')
+                                    }:${String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')}` 
+                                  : 'N/A'} 
+                              </p>
+                            </div>
+                            <div className='text-center'>
+                              <BsFillSunsetFill size={25} className="inline text-orange-400 mb-2"/>
+                              <p className='text-sm text-gray-300'>Sunset</p>
+                              <p className='text-base'>
+                                {localSunriseSunsetTimes ? 
+                                  `${localSunriseSunsetTimes.sunsetHour < 0 
+                                      ? String(localSunriseSunsetTimes.sunsetHour + 24).padStart(2, '0') 
+                                      : String(localSunriseSunsetTimes.sunsetHour).padStart(2, '0')
+                                    }:${String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')}` 
+                                  : 'N/A'} 
+                              </p>
+                            </div>
+                          </div>
                           {times.timeZone !== undefined && (
-                            <span> (<TimeZoneShow timeZone={times.timeZone}/>)</span>
+                            <p className='text-center text-xs mt-2 text-gray-400'>
+                              Time Zone: <TimeZoneShow timeZone={times.timeZone}/>
+                            </p>
                           )}
-                        </p>
-                        <p className='mx-auto lg:my-10 my-5 text-xl block'>
-                          <BsFillSunsetFill size={40} className="inline mr-2"/>
-                          Sunset: {localSunriseSunsetTimes ? 
-                            `${localSunriseSunsetTimes.sunsetHour < 0 
-                                ? String(localSunriseSunsetTimes.sunsetHour + 24).padStart(2, '0') 
-                                : String(localSunriseSunsetTimes.sunsetHour).padStart(2, '0')
-                              }:${String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')}` 
-                            : 'N/A'} 
-                          {times.timeZone !== undefined && (
-                            <span> (<TimeZoneShow timeZone={times.timeZone}/>)</span>
-                          )}
-                        </p>
+                        </div>
                     </div>
                   );
-                })
+                })}
+                </div>
               ) :
               <>
                 {error ? (
@@ -199,7 +263,6 @@ export const DailyWeatherData = memo(() => {
               </>
             }
           </div>
-          <button className="rounded-md h-8 text-xl my-16 font-bold w-24 mx-auto border" onClick={() => navigate(-1)}>Go Back</button>
       </div>
       <Footer />
     </div>
