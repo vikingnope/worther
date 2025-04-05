@@ -13,6 +13,7 @@ import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunris
 import { GiWindsock } from "react-icons/gi"; // * wind sock icon
 import { FaArrowLeft } from "react-icons/fa"; // * back arrow icon
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+import { BsFillCloudSlashFill } from 'react-icons/bs';
 
 // Weather icons mapping configuration
 const weatherIconsMap = {
@@ -519,15 +520,24 @@ export const ShowWeather = memo((props) => {
     </div>
   ));
 
-  const ErrorDisplay = ({ message }) => (
-    <div className="bg-gray-900 min-h-screen flex flex-col items-center justify-center px-4 py-12">
-      <div className="bg-gray-800 rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-        <p className="text-3xl font-bold mb-6">{message}</p>
+  const ErrorDisplay = ({ message, countryName }) => (
+    <div className="text-white bg-gradient-to-b from-black via-blue-950 to-black overflow-hidden flex flex-col min-h-screen items-center justify-center px-4 py-12">
+      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-8 max-w-md w-full text-center border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+        <div className="mb-8">
+          <BsFillCloudSlashFill size={60} className="mx-auto text-blue-400 mb-4" />
+          <p className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">{message}</p>
+          {countryName && (
+            <p className="text-xl text-gray-300 mt-2">
+              Country: <span className="font-medium">{countryName}</span>
+            </p>
+          )}
+          <p className="text-gray-400 mt-3">Unable to retrieve weather data</p>
+        </div>
         <Link 
-          className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 font-medium" 
+          className="inline-block px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer" 
           to="/weather"
         >
-          Go Back
+          Return to Weather Search
         </Link>
       </div>
     </div>
@@ -555,7 +565,11 @@ export const ShowWeather = memo((props) => {
           </div>
         </div>
       ) : !props.mainWeather ? (
-        <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} />
+        props.isAdvancedSearch ? (
+          <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} countryName={props.countryName} />
+        ) : (
+          <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} />
+        )
       ) : (
         <ErrorDisplay message="An unknown error occurred" />
       )}

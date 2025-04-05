@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShowWeather, SunriseSunsetTimes } from "./utils/weatherVariables";
+import countryList from 'react-select-country-list';
 
 export const GetSingleWeather = memo(() => {
   const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url
@@ -15,6 +16,18 @@ export const GetSingleWeather = memo(() => {
   const [ blocked, setBlocked ] = useState();
   const [ connectionError, setConnectionError ] = useState();
   const [ loading, setLoading ] = useState(true);
+  const [ countryName, setCountryName ] = useState();
+
+  // If we have a country code, get the country name
+  useEffect(() => {
+    if (countryCode) {
+      const countries = countryList().getData();
+      const country = countries.find(c => c.value === countryCode);
+      if (country) {
+        setCountryName(country.label);
+      }
+    }
+  }, [countryCode]);
 
   const handleSubmit3Hour = useCallback((e) => {
     e.preventDefault();
@@ -130,6 +143,8 @@ export const GetSingleWeather = memo(() => {
       timeZone={weather.timeZone}
       localSunriseSunsetTimes={localSunriseSunsetTimes}
       loading={loading}
+      isAdvancedSearch={countryCode !== undefined}
+      countryName={countryName}
     />
   );
 });
