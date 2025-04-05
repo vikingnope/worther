@@ -69,96 +69,155 @@ export default function Weather () {
   }, [searchMode]);
 
   return(
-    <div className='text-white overflow-hidden bg-black flex flex-col min-h-screen'>
+    <div className='text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black flex flex-col min-h-screen'>
       <Header/>
-      <div className="text-center grow flex flex-col justify-center items-center">
-        <p className={`text-7xl mb-16 font-bold underline ${searchMode === 'simple' ? 'text-teal-500' : 'text-red-500'}`}>
-          {searchMode === 'simple' ? 'Current Weather' : 'Advanced Current Weather'}
-        </p>
+      <main className="grow flex flex-col items-center justify-center px-4 py-8">
+        <section className="text-center mb-8 w-full max-w-lg">
+          <h1 className={`text-5xl md:text-7xl mb-4 font-bold bg-clip-text text-transparent bg-gradient-to-r ${searchMode === 'simple' ? 'from-teal-400 to-blue-500' : 'from-red-400 to-purple-500'}`}>
+            {searchMode === 'simple' ? 'Weather Search' : 'Advanced Search'}
+          </h1>
+          <p className="text-xl text-gray-300 mb-8">
+            {searchMode === 'simple' ? 'Find current conditions and forecasts for any city' : 'Specify country for more accurate results'}
+          </p>
         
-        {searchMode === 'simple' ? (
-          <form onSubmit={handleSubmit}>
-            <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-hidden rounded-md bg-weather-buttons'>
-              <FaCity size='17' className='inline mr-1.5 mb-1'/>
-              <input
-                  className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-hidden bg-weather-buttons"
-                  type="text"
-                  id="weatherButtons"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value.toUpperCase())}
-                  placeholder='Enter City'
-              />
+          <div className="bg-gradient-to-r from-gray-900 to-slate-900 rounded-xl shadow-lg p-6 border border-blue-900 hover:border-blue-700 transition-all duration-300">
+            {searchMode === 'simple' ? (
+              <form onSubmit={handleSubmit} className="flex flex-col items-center">
+                <div className='w-full max-w-xs relative group mb-4'>
+                  <div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400'>
+                    <FaCity size='17' />
+                  </div>
+                  <input
+                    className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value.toUpperCase())}
+                    placeholder='Enter City'
+                  />
+                </div>
+                <button 
+                  disabled={!city} 
+                  type="submit" 
+                  className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                >
+                  <BiSearchAlt size='22' />
+                  Search
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleAdvancedSubmit} className="flex flex-col items-center">
+                <div className='w-full max-w-xs mb-4'>
+                  <Select 
+                    value={country}
+                    onChange={(val) => [setCountry(val), setCountryCode(val.value)]}
+                    options={options}
+                    placeholder='Choose Country'
+                    unstyled
+                    styles={{
+                      menu: (base) => ({
+                        ...base,
+                        width: '100%',
+                        maxWidth: '20rem',
+                        zIndex: 50
+                      }),
+                    }}
+                    classNames={{
+                      control: () => "bg-black/50 border border-gray-700 rounded-lg py-2 px-3 text-white w-full transition-all duration-300 hover:border-gray-500",
+                      input: () => "text-white",
+                      menu: () => "mt-1 rounded-lg border border-gray-700 shadow-lg bg-gray-900 text-white",
+                      option: ({ isFocused, isSelected }) => 
+                        `px-3 py-2 ${
+                          isFocused ? 'bg-blue-900' : ''
+                        } ${
+                          isSelected ? 'bg-blue-700' : ''
+                        } hover:bg-blue-800 transition-colors duration-150`,
+                      placeholder: () => 'text-gray-400'
+                    }}
+                  />
+                </div>
+                <div className='w-full max-w-xs relative group mb-4'>
+                  <div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400'>
+                    <FaCity size='17' />
+                  </div>
+                  <input
+                    className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value.toUpperCase())}
+                    placeholder='Enter City'
+                  />
+                </div>
+                <button 
+                  disabled={!country || !city} 
+                  type="submit" 
+                  className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!country || !city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white'}`}
+                >
+                  <BiSearchAlt size='22' />
+                  Search
+                </button>
+              </form>
+            )}
+            
+            {searchMode === 'simple' && (userPos.latitude !== undefined && userPos.longitude !== undefined) && (
+              <form onSubmit={handleSubmitLocation} className="mt-4">
+                <button 
+                  type="submit" 
+                  className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md"
+                >
+                  <IoLocationSharp size='22' />
+                  Use My Current Location
+                </button>
+              </form>
+            )}
+          </div>
+          
+          <button 
+            onClick={toggleSearchMode} 
+            className="mt-6 text-blue-400 hover:text-blue-300 underline font-medium transition-colors duration-300"
+          >
+            {searchMode === 'simple' ? 'Switch to Advanced Search' : 'Switch to Simple Search'}
+          </button>
+        </section>
+        
+        <section className="w-full max-w-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl border border-gray-700 p-4 shadow-md">
+              <h2 className="font-bold text-xl mb-2 text-blue-400">Weather Features</h2>
+              <ul className="text-gray-300 space-y-2">
+                <li className="flex items-center gap-2">
+                  <span className="text-green-400">✓</span> Current conditions
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-green-400">✓</span> 5-day forecast
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-green-400">✓</span> Temperature, humidity, wind
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-green-400">✓</span> Precipitation chance
+                </li>
+              </ul>
             </div>
-            <button disabled={!city} type="submit" className='rounded-md block w-24 h-7 mt-3 border mx-auto bg-weather-buttons cursor-pointer'>
-              <BiSearchAlt size='22' className='inline mr-1.5 mb-0.5'/>
-              Search
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleAdvancedSubmit}>
-            <Select 
-              value={country}
-              onChange={(val) => [setCountry(val), setCountryCode(val.value)]}
-              options={options}
-              unstyled
-              styles={{
-                menu: (base) => ({
-                    ...base,
-                    width: '14rem',
-                    position: 'absolute',
-                    left: '50%',
-                    transform: 'translateX(-50%)'
-                }),
-              }}
-              classNames={{
-                  control: () => "border rounded-md w-56 h-9 px-2 mx-auto mb-5 text-white bg-weather-buttons font-bold",
-                  input: () => "text-white font-bold",
-                  menu: () => "mt-1 rounded-xs border shadow-lg text-white bg-weather-buttons font-bold",
-                  option: ({ isFocused, isSelected }) => 
-                      `px-3 py-2 ${
-                          isFocused ? 'bg-[#363740] text-white' : 'bg-weather-buttons text-white'
-                      } ${
-                          isSelected ? 'bg-[#3e404a] text-white' : ''
-                      }`,
-                  placeholder: () => 'text-gray-400 font-bold'
-              }}
-              id="country"
-              placeholder='Choose Country'
-            />
-            <div className='w-56 h-9 text-base font-bold border indent-1.5 outline-hidden mx-auto rounded-md bg-weather-buttons'>
-              <FaCity size='17' className='inline mr-1.5 mb-1'/>
-              <input
-                  className="rounded-r-md w-48 text-base font-bold indent-1.5 outline-hidden h-8 bg-weather-buttons"
-                  type="text"
-                  id="weatherButtons"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value.toUpperCase())}
-                  placeholder='Enter City'
-              />
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl border border-gray-700 p-4 shadow-md">
+              <h2 className="font-bold text-xl mb-2 text-blue-400">Search Tips</h2>
+              <ul className="text-gray-300 space-y-2">
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400">→</span> 
+                  <span>Use advanced search for cities with common names</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400">→</span> 
+                  <span>Location search provides the most accurate results</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400">→</span> 
+                  <span>City names should be in English</span>
+                </li>
+              </ul>
             </div>
-            <button disabled={!country || !city} type="submit" className='rounded-md border block w-24 h-7 mx-auto mt-3 bg-weather-buttons cursor-pointer'>
-              <BiSearchAlt size='22' className='inline mr-1.5 mb-px'/>
-              Search
-            </button>
-          </form>
-        )}
-        
-        {searchMode === 'simple' && (userPos.latitude !== undefined && userPos.longitude !== undefined) && (
-          <form onSubmit={handleSubmitLocation}>
-            <button type="submit" className='rounded-md border block w-56 h-7 mt-3 bg-weather-buttons cursor-pointer'>
-              <IoLocationSharp size='22' className='inline mr-1.5 mb-0.5'/>
-              Search with my location
-            </button>
-          </form>
-        )}
-        
-        <button 
-          onClick={toggleSearchMode} 
-          className='mt-3 underline w-max cursor-pointer'
-        >
-          {searchMode === 'simple' ? 'Advanced Search' : 'Simple Search'}
-        </button>
-      </div>
+          </div>
+        </section>
+      </main>
       <Footer />
     </div>
   )
