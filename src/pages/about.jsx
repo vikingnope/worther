@@ -2,6 +2,7 @@ import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useEffect } from 'react';
 import packageJson from '../../package.json';
+import { Link } from 'react-router-dom';
 
 function ExternalLink({ href, children }) {
   return (
@@ -77,7 +78,7 @@ export default function About() {
             <span className='font-semibold text-cyan-300'>Disclaimer:</span> Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
           </p>
           <p className="mt-4 md:mt-0 p-4 bg-black/30 rounded-lg backdrop-blur-sm border border-gray-800 text-center">
-            Version <span className="text-cyan-300 font-semibold">{packageJson.version}</span>
+            Version <Link to="/changelog" className="text-cyan-300 font-semibold underline">{packageJson.version}</Link>
           </p>
         </div>
       </main>
