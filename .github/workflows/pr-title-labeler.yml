@@ -93,7 +93,7 @@ jobs:
               let currentTitle = context.payload.pull_request.title;
               
               // Check if current title has any prefix (including non-standard ones)
-              const prefixMatch = currentTitle.match(/^([a-zA-Z]+):\s*(.*)/);
+              const prefixMatch = currentTitle.match(/^([a-zA-Z/]+):\s*(.*)/);
               
               if (prefixMatch) {
                 const titleContent = prefixMatch[2];
