@@ -1,3 +1,8 @@
+## 1.1.0 (Major)
+
+- Bumped version to 1.1.0
+- Design changes throughout webpage
+
 ## 1.0.8 (Minor)
 
 - Enhanced the Daily Weather page to display averaged weather metrics (precipitation, humidity, wind) across all data points
@@ -35,7 +40,7 @@
 - Fixed loading not showing on Single 3-Hour forecast page
 - Styling changes 3-hour Forecast page
 - Changed package manager to pnpm
-- Fixed alignments of divs in daily weather page for large devices
+- Added chore report on github
 
 ---
 
