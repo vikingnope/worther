@@ -38,7 +38,7 @@ export default function About() {
   ];
   
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black to-gray-900">
+    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
       <Header/>
       <main className="flex flex-col items-center justify-center grow px-6 md:px-12 py-10">
         <div className="max-w-4xl w-full backdrop-blur-sm bg-black/30 rounded-xl p-8 shadow-lg border border-gray-800">
