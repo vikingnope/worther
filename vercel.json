@@ -6,12 +6,29 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
-        },
-        {
-          "key": "Set-Cookie",
-          "value": "__vercel_live_token=*; SameSite=None; Secure"
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/*.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "build": {
+    "env": {
+      "COOKIE_SECURE": "true",
+      "COOKIE_SAMESITE": "none"
+    }
+  },
+  "images": {
+    "domains": [
+      "vercel.app"
+    ]
+  },
+  "cookies": {
+    "sameSite": "none",
+    "secure": true
+  }
 }
