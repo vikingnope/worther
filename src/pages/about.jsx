@@ -37,37 +37,49 @@ export default function About() {
   ];
   
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-black">
+    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black to-gray-900">
       <Header/>
-      <main className="flex flex-col md:items-center justify-center grow">
-          <p className="uppercase font-bold md:text-7xl text-5xl md:mb-14 mt-8 md:mt-0">
+      <main className="flex flex-col items-center justify-center grow px-6 md:px-12 py-10">
+        <div className="max-w-4xl w-full backdrop-blur-sm bg-black/30 rounded-xl p-8 shadow-lg border border-gray-800">
+          <h1 className="uppercase font-bold text-5xl md:text-7xl mb-8 text-center bg-gradient-to-r from-cyan-300 to-blue-500 text-transparent bg-clip-text">
             Welcome to Worther!
-          </p>
-          <p className="md:text-3xl text-2xl mt-8">
+          </h1>
+          
+          <p className="text-xl md:text-3xl my-8 text-center leading-relaxed">
             The weather app with current weather of the whole world.
           </p>
-          <p className="md:text-3xl text-2xl mt-8">
-            Built using {technologies.map((tech, index) => (
-              <span key={index}>
-                <ExternalLink href={tech.url}>{tech.name}</ExternalLink>
-                {index < technologies.length - 1 ? ', ' : ''}
-              </span>
-            ))}
+          
+          <div className="mt-12 mb-8">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-cyan-300">Built with</h2>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {technologies.map((tech, index) => (
+                <span key={index} className="bg-gray-800 px-4 py-2 rounded-full hover:bg-gray-700 transition-colors">
+                  <ExternalLink href={tech.url}>{tech.name}</ExternalLink>
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          <div className="mb-10">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-cyan-300">APIs used</h2>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {apis.map((api, index) => (
+                <span key={index} className="bg-gray-800 px-4 py-2 rounded-full hover:bg-gray-700 transition-colors">
+                  <ExternalLink href={api.url}>{api.name}</ExternalLink>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-8 max-w-4xl w-full flex flex-col md:flex-row justify-between text-sm text-gray-300">
+          <p className="p-4 bg-black/30 rounded-lg backdrop-blur-sm border border-gray-800">
+            <span className='font-semibold text-cyan-300'>Disclaimer:</span> Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
           </p>
-          <p className="md:text-3xl text-2xl mt-8">
-            APIs used: {apis.map((api, index) => (
-              <span key={index}>
-                <ExternalLink href={api.url}>{api.name}</ExternalLink>
-                {index < apis.length - 1 ? ', ' : ''}
-              </span>
-            ))}
+          <p className="mt-4 md:mt-0 p-4 bg-black/30 rounded-lg backdrop-blur-sm border border-gray-800 text-center">
+            Version <span className="text-cyan-300 font-semibold">{packageJson.version}</span>
           </p>
-          <p className="md:absolute mt-5 text-base md:bottom-12 -bottom-2 left-1.5">
-          <span className='underline'>Disclaimer:</span> Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
-          </p>
-          <p className="md:absolute text-base underline md:bottom-12 md:right-1.5 md:left-auto my-5 md:my-0">
-            Version {packageJson.version}
-          </p>
+        </div>
       </main>
       <Footer />
     </div>
