@@ -346,16 +346,18 @@ export const ShowWeather = memo((props) => {
           <div className="mb-4 md:mb-0 md:mr-8 relative">
             <div className="absolute inset-0 bg-blue-600/10 blur-2xl rounded-full"></div>
             <div className="relative">
-              <WeatherIcons 
-                mainWeather={props.mainWeather}
-                windSpeed={props.windSpeed}
-                description={props.description}
-                timeZone={props.timeZone}
-                sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
-                sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
-                hourConversion={props.hourConversion}
-                page="single"
-              />
+              <div className="h-[200px] flex items-center justify-center">
+                <WeatherIcons 
+                  mainWeather={props.mainWeather}
+                  windSpeed={props.windSpeed}
+                  description={props.description}
+                  timeZone={props.timeZone}
+                  sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
+                  sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
+                  hourConversion={props.hourConversion}
+                  page="single"
+                />
+              </div>
             </div>
           </div>
           

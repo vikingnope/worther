@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo, memo } from 'react';
+import {useEffect, useState, useMemo, memo, useRef } from 'react';
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
@@ -6,6 +6,20 @@ import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from "react-icons/fa6";
+import { LiaLocationArrowSolid } from "react-icons/lia";
+
+// WindArrow component for displaying wind direction
+const WindArrow = ({ degrees }) => {
+  return (
+    <LiaLocationArrowSolid 
+      className="h-6 w-6 text-red-400" 
+      style={{ 
+        transform: `rotate(${(degrees + 180) % 360}deg)`,
+        transition: 'transform 0.5s ease-in-out'
+      }} 
+    />
+  );
+};
 
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
@@ -188,14 +202,16 @@ export const DailyWeatherData = memo(() => {
                         <div className="mb-6 xl:mb-8 relative flex justify-center">
                           <div className="absolute inset-0 bg-emerald-600/10 blur-xl rounded-full"></div>
                           <div className="relative transform hover:scale-110 transition-transform duration-300">
-                            <WeatherIcons 
-                              mainWeather={weather.weather.main} 
-                              windSpeed={weather.windSpeed} 
-                              description={weather.weather.description} 
-                              timeZone={times.timeZone} 
-                              sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
-                              sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
-                            />
+                            <div className="h-[120px] flex items-center justify-center">
+                              <WeatherIcons 
+                                mainWeather={weather.weather.main} 
+                                windSpeed={weather.windSpeed} 
+                                description={weather.weather.description} 
+                                timeZone={times.timeZone} 
+                                sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
+                                sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
+                              />
+                            </div>
                           </div>
                         </div>
                         
@@ -213,13 +229,19 @@ export const DailyWeatherData = memo(() => {
                         <div className="flex flex-col mb-4 xl:mb-8 border-b border-gray-800/30 pb-3 xl:pb-6">
                           <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">Wind Conditions</h3>
                           <div className="grid grid-cols-2 gap-2 xl:gap-3">
-                            <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                            <div className="flex flex-col items-center justify-center text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
                               <p className='text-base xl:text-lg mb-0 xl:mb-1'>{weather.windSpeed.toFixed(2)} m/s</p>
                               <p className='text-yellow-400 text-xs xl:text-sm'>({<WindForce windSpeed={weather.windSpeed} />})</p>
                             </div>
-                            <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                              <p className='text-base xl:text-lg mb-0 xl:mb-1'>{<WindDirection windDegrees={weather.windDegrees}/>}</p>
-                              <p className='text-yellow-400 text-xs xl:text-sm'>@ {Math.round(weather.windDegrees)}°</p>
+                            <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 relative">
+                              <div className="flex items-center justify-center mb-1">
+                                <div className="h-10 w-10 rounded-full bg-gray-700/70 flex items-center justify-center mb-1 wind-arrow-container">
+                                  <WindArrow degrees={weather.windDegrees} />
+                                </div>
+                              </div>
+                              <p className='text-base xl:text-lg mb-0 xl:mb-1 flex items-center justify-center'>
+                                {<WindDirection windDegrees={weather.windDegrees}/>} <span className='text-yellow-400 text-xs xl:text-sm ml-1'>@ {Math.round(weather.windDegrees)}°</span>
+                              </p>
                             </div>
                           </div>
                         </div>

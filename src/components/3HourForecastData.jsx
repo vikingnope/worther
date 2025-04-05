@@ -122,16 +122,18 @@ export const ThreeHourForecastData = memo(() => {
                       className='bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 hover:border-cyan-700 shadow-md hover:shadow-cyan-900/30 transition-all duration-300 hover:-translate-y-1 rounded-lg lg:grid lg:grid-cols-7 lg:gap-2 lg:items-center flex flex-col text-white p-3 md:p-4 cursor-pointer'
                     >
                       <div className="lg:justify-self-center mx-auto">
-                        <WeatherIcons 
-                          mainWeather={weather.mainWeather} 
-                          windSpeed={weather.windSpeed} 
-                          description={weather.description} 
-                          timeZone={times.timeZone} 
-                          sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
-                          sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
-                          hourConversion={hourConversion} 
-                          page={isDesktopView ? 'multiple' : 'multiple-mobile'}
-                        />
+                        <div className="h-[85px] flex items-center justify-center">
+                          <WeatherIcons 
+                            mainWeather={weather.mainWeather} 
+                            windSpeed={weather.windSpeed} 
+                            description={weather.description} 
+                            timeZone={times.timeZone} 
+                            sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
+                            sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
+                            hourConversion={hourConversion} 
+                            page={isDesktopView ? 'multiple' : 'multiple-mobile'}
+                          />
+                        </div>
                       </div>
                       <div className='font-bold text-xl mx-auto lg:justify-self-center text-cyan-300'>
                         {(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes}
