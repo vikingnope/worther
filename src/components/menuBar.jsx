@@ -49,15 +49,15 @@ const OptionsMethod = memo((props) => {
     // Memoize the input class
     const inputClassName = useMemo(() => 
         (props.mode === 'dark') 
-            ? "border-b border-neutral-500 bg-neutral-800 h-7 text-base font-bold indent-1.5 outline-none w-full" 
-            : "border-b border-black bg-white h-7 text-base font-bold indent-1.5 outline-none w-full text-black",
+            ? "border-b border-neutral-500 bg-neutral-800 h-7 text-base font-bold indent-1.5 outline-hidden w-full" 
+            : "border-b border-black bg-white h-7 text-base font-bold indent-1.5 outline-hidden w-full text-black",
     [props.mode]);
 
     // Memoize the range input class
     const rangeClassName = useMemo(() => 
         (props.mode === 'dark') 
-            ? "z-50 w-48 m-2 h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-neutral-600 to-white accent-white" 
-            : "z-50 w-48 m-2 h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-gray-100 to-gray-400 accent-black",
+            ? "z-50 w-48 m-2 h-2 rounded-lg appearance-none cursor-pointer bg-linear-to-r from-neutral-600 to-white accent-white" 
+            : "z-50 w-48 m-2 h-2 rounded-lg appearance-none cursor-pointer bg-linear-to-r from-gray-100 to-gray-400 accent-black",
     [props.mode]);
 
     return(

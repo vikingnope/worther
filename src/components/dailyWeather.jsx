@@ -5,6 +5,7 @@ import { Header } from './utils/header';
 import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
+import { FaArrowLeft } from "react-icons/fa6";
 
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
@@ -123,72 +124,161 @@ export const DailyWeatherData = memo(() => {
   }, [weather, location.timeZone]);
 
   return (
-    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
+    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-linear-to-b from-gray-950 via-blue-950 to-gray-950'>
       <Header/>
-      <div className="text-center text-white flex-grow flex flex-col">
-        <p className='text-4xl font-bold my-5 underline'>Daily Forecast Data {location.name?.trim() ? `- ${location.name}` : ''} </p>
-          <div className="lg:flex lg:flex-row my-auto">
+      <div className="text-center text-white grow flex flex-col">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center relative my-8">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="text-white hover:text-blue-500 transition-colors duration-300 group mb-4 sm:mb-0 sm:absolute sm:left-4 md:left-8 flex items-center self-start mx-4 sm:mx-0 cursor-pointer"
+            aria-label="Go back to previous page"
+          >
+            <FaArrowLeft className="mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
+            <span className="font-medium">Back</span>
+          </button>
+          <p className='text-4xl font-bold underline'>Daily Forecast Data {location.name?.trim() ? `- ${location.name}` : ''} </p>
+        </div>
+          <div className="xl:grid xl:grid-cols-1 gap-4 px-4 xl:px-8 w-full max-w-full pb-6">
             {(weather.length > 0) ?
               (
-                weather.map((weather, index) => {
+                <>
+                <div className="hidden sm:flex sm:mb-4 sm:items-center sm:justify-center xl:hidden">
+                  <div className="bg-blue-600/30 text-white text-xs px-3 py-1 rounded-full flex items-center">
+                    <span className="animate-pulse">⟵</span>
+                    <span className="mx-2">Scroll to view more days</span>
+                    <span className="animate-pulse">⟶</span>
+                  </div>
+                </div>
+                <div className="flex xl:grid xl:grid-flow-col xl:auto-cols-fr gap-6 w-full overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
+                  <style jsx>{`
+                    .hide-scrollbar::-webkit-scrollbar {
+                      height: 4px;
+                    }
+                    .hide-scrollbar::-webkit-scrollbar-track {
+                      background: transparent;
+                    }
+                    .hide-scrollbar::-webkit-scrollbar-thumb {
+                      background: rgba(59, 130, 246, 0.5);
+                      border-radius: 4px;
+                    }
+                    .hide-scrollbar {
+                      scrollbar-width: thin;
+                      scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+                    }
+                  `}</style>
+                {weather.map((weather, index) => {
                   const dayConversion = localDayConversions[weather.date];
 
                   return (
                     <div 
                       key={index} 
-                      className='flex flex-col duration-300 lg:border-2 border-y-2 lg:rounded-xl text-white h-fit lg:w-80 w-full lg:m-auto mx-auto px-2' 
+                      className='flex flex-col duration-300 xl:border-2 border-y-2 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-6 py-4 xl:py-6 justify-between overflow-hidden break-words bg-neutral-900 xl:hover:bg-neutral-700 xl:hover:shadow-xl xl:hover:shadow-slate-700/20 transition-all xl:min-h-[900px] snap-center'
                       role="article" 
                       aria-label={`Weather forecast for ${dayConversion}`}
                     >
-                        <p className="mx-auto mt-10">
-                          <WeatherIcons 
-                            mainWeather={weather.weather.main} 
-                            windSpeed={weather.windSpeed} 
-                            description={weather.weather.description} 
-                            timeZone={times.timeZone} 
-                            sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
-                            sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
-                            page={'daily'}
-                          />
-                        </p>
-                        <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block underline'>{dayConversion}</p>
-                        <p className='mx-auto lg:mt-10 mt-5 font-bold text-2xl block'>{weather.weather.description.toUpperCase()}</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Temp: {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Speed: {weather.windSpeed.toFixed(2)} m/s ({<WindForce windSpeed={weather.windSpeed} />})</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Wind Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {Math.round(weather.windDegrees)}°</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Precipitation: {Math.round(weather.precipitation)}%</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Humidity: {Math.round(weather.humidity)}%</p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>Visibility: {(weather.visibility >= 1000) ?
-                        (weather.visibility / 1000).toFixed(2) + 'km' :
-                        weather.visibility + 'm'} ({<VisibilityDesc visibility={weather.visibility}/>})
-                        </p>
-                        <p className='mx-auto lg:mt-10 mt-5 text-xl block'>
-                          <BsFillSunriseFill size={40} className="inline mr-2"/>
-                          Sunrise: {localSunriseSunsetTimes ? 
-                            `${localSunriseSunsetTimes.sunriseHour > 23 
-                                ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') 
-                                : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')
-                              }:${String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')}` 
-                            : 'N/A'} 
+                        {/* Day header section */}
+                        <div className="shrink-0 mx-auto mt-1 xl:mt-2 mb-3 xl:mb-6 text-center">
+                          <p className='font-bold text-2xl xl:text-3xl block underline mb-1 xl:mb-2 text-blue-500'>{dayConversion}</p>
+                          <span className="inline-block h-1 w-24 rounded-sm bg-blue-500 mb-4 xl:mb-8"></span>
+                          <div className="mb-3 xl:mb-6">
+                            <WeatherIcons 
+                              mainWeather={weather.weather.main} 
+                              windSpeed={weather.windSpeed} 
+                              description={weather.weather.description} 
+                              timeZone={times.timeZone} 
+                              sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
+                              sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
+                              page={'daily'}
+                            />
+                          </div>
+                          <p className='mx-auto font-bold text-lg xl:text-xl block text-yellow-400 mb-3 xl:mb-6'>{weather.weather.description.toUpperCase()}</p>
+                        </div>
+                        
+                        {/* Temperature section with highlight */}
+                        <div className="bg-neutral-800 rounded-lg p-3 xl:p-6 mb-4 xl:mb-8 shadow-inner">
+                          <p className='mx-auto text-lg xl:text-xl mb-1 xl:mb-2 text-center'>
+                            <span className="text-2xl xl:text-3xl font-semibold">
+                              {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C
+                            </span>
+                          </p>
+                          <p className="text-gray-400 text-center text-xs xl:text-sm">Temperature Range</p>
+                        </div>
+                        
+                        {/* Wind data section */}
+                        <div className="flex flex-col mb-4 xl:mb-8 border-b border-neutral-800 pb-3 xl:pb-6">
+                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-gray-300">Wind Conditions</h3>
+                          <div className="grid grid-cols-2 gap-2 xl:gap-3">
+                            <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                              <p className='text-base xl:text-lg mb-0 xl:mb-1'>{weather.windSpeed.toFixed(2)} m/s</p>
+                              <p className='text-yellow-400 text-xs xl:text-sm'>({<WindForce windSpeed={weather.windSpeed} />})</p>
+                            </div>
+                            <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                              <p className='text-base xl:text-lg mb-0 xl:mb-1'>{<WindDirection windDegrees={weather.windDegrees}/>}</p>
+                              <p className='text-yellow-400 text-xs xl:text-sm'>@ {Math.round(weather.windDegrees)}°</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Other weather data section */}
+                        <div className="grid grid-cols-2 gap-2 xl:gap-4 mb-4 xl:mb-8">
+                          <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                            <p className='text-base xl:text-lg mb-0 xl:mb-1'>{Math.round(weather.precipitation)}%</p>
+                            <p className='text-xs xl:text-sm text-gray-400'>Precipitation</p>
+                          </div>
+                          <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                            <p className='text-base xl:text-lg mb-0 xl:mb-1'>{Math.round(weather.humidity)}%</p>
+                            <p className='text-xs xl:text-sm text-gray-400'>Humidity</p>
+                          </div>
+                          <div className="text-center col-span-2 bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                            <p className='text-base xl:text-lg mb-0 xl:mb-1'>
+                              {(weather.visibility >= 1000) ?
+                              (weather.visibility / 1000).toFixed(2) + ' km' :
+                              weather.visibility + ' m'}
+                            </p>
+                            <p className='text-xs xl:text-sm text-blue-400'>({<VisibilityDesc visibility={weather.visibility}/>})</p>
+                          </div>
+                        </div>
+                        
+                        {/* Sunrise/Sunset section */}
+                        <div className="flex flex-col mt-auto border-t border-neutral-800 pt-3 xl:pt-6">
+                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-center text-gray-300">Day & Night</h3>
+                          <div className="grid grid-cols-2 gap-2 xl:gap-4">
+                            <div className='text-center bg-neutral-800 p-2 xl:p-4 rounded-lg'>
+                              <BsFillSunriseFill size={24} className="inline text-orange-300 mb-1 xl:mb-2"/>
+                              <p className='text-xs xl:text-sm text-gray-300 mb-0 xl:mb-1'>Sunrise</p>
+                              <p className='text-sm xl:text-base font-medium'>
+                                {localSunriseSunsetTimes ? 
+                                  `${localSunriseSunsetTimes.sunriseHour > 23 
+                                      ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') 
+                                      : String(localSunriseSunsetTimes.sunriseHour).padStart(2, '0')
+                                    }:${String(localSunriseSunsetTimes.sunriseMinute).padStart(2, '0')}` 
+                                  : 'N/A'} 
+                              </p>
+                            </div>
+                            <div className='text-center bg-neutral-800 p-2 xl:p-4 rounded-lg'>
+                              <BsFillSunsetFill size={24} className="inline text-orange-400 mb-1 xl:mb-2"/>
+                              <p className='text-xs xl:text-sm text-gray-300 mb-0 xl:mb-1'>Sunset</p>
+                              <p className='text-sm xl:text-base font-medium'>
+                                {localSunriseSunsetTimes ? 
+                                  `${localSunriseSunsetTimes.sunsetHour < 0 
+                                      ? String(localSunriseSunsetTimes.sunsetHour + 24).padStart(2, '0') 
+                                      : String(localSunriseSunsetTimes.sunsetHour).padStart(2, '0')
+                                    }:${String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')}` 
+                                  : 'N/A'} 
+                              </p>
+                            </div>
+                          </div>
                           {times.timeZone !== undefined && (
-                            <span> (<TimeZoneShow timeZone={times.timeZone}/>)</span>
+                            <p className='text-center text-xs mt-2 xl:mt-3 text-gray-400'>
+                              Time Zone: <TimeZoneShow timeZone={times.timeZone}/>
+                            </p>
                           )}
-                        </p>
-                        <p className='mx-auto lg:my-10 my-5 text-xl block'>
-                          <BsFillSunsetFill size={40} className="inline mr-2"/>
-                          Sunset: {localSunriseSunsetTimes ? 
-                            `${localSunriseSunsetTimes.sunsetHour < 0 
-                                ? String(localSunriseSunsetTimes.sunsetHour + 24).padStart(2, '0') 
-                                : String(localSunriseSunsetTimes.sunsetHour).padStart(2, '0')
-                              }:${String(localSunriseSunsetTimes.sunsetMinute).padStart(2, '0')}` 
-                            : 'N/A'} 
-                          {times.timeZone !== undefined && (
-                            <span> (<TimeZoneShow timeZone={times.timeZone}/>)</span>
-                          )}
-                        </p>
+                        </div>
                     </div>
                   );
-                })
+                })}
+                </div>
+                </>
               ) :
               <>
                 {error ? (
@@ -199,7 +289,6 @@ export const DailyWeatherData = memo(() => {
               </>
             }
           </div>
-          <button className="rounded-md h-8 text-xl my-16 font-bold w-24 mx-auto border" onClick={() => navigate(-1)}>Go Back</button>
       </div>
       <Footer />
     </div>

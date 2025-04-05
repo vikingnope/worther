@@ -105,7 +105,7 @@ export const ThreeHourForecastData = memo(() => {
   return (
     <div className='text-white overflow-hidden flex flex-col min-h-screen bg-black'>
       <Header/>
-      <div className="text-center text-white flex-grow flex flex-col">
+      <div className="text-center text-white grow flex flex-col">
           <p className='text-3xl font-bold my-5 underline lg:text-4xl'>3 Hour Forecast Data - {location.name}</p>
           {(weather.length > 0) ? (
             Object.entries(groupedWeatherByDay).map(([day, dayWeather]) => (
