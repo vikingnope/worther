@@ -127,22 +127,6 @@ export default function Home() {
                 </section>
             </main>
             <Footer />
-            
-            {/* Add animation styles */}
-            <style jsx="true">{`
-                @keyframes textShine {
-                    0% {
-                        background-position: 0% 50%;
-                    }
-                    100% {
-                        background-position: 100% 50%;
-                    }
-                }
-                .animate-text {
-                    background-size: 200% 200%;
-                    animation: textShine 4s linear infinite;
-                }
-            `}</style>
         </div>
     )
 }

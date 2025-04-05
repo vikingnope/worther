@@ -124,6 +124,24 @@
   }
 }
 
+/* Text gradient animation for the Worther title */
+@keyframes textShine {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-text {
+  background-size: 200% 200%;
+  animation: textShine 6s ease-in-out infinite;
+}
+
 /* Custom popup styles */
 .custom-popup .leaflet-popup-content-wrapper {
   background: rgba(35, 35, 50, 0.9);
