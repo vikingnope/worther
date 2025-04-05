@@ -16,6 +16,10 @@ import { TiWarningOutline } from "react-icons/ti";
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
   const map = useMap();
+
+  useEffect(() => {
+    document.title = "Worther - Beach Recommendations";
+  }, []);
   
   useEffect(() => {
     const currentZoom = map.getZoom();
