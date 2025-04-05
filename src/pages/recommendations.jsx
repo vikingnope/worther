@@ -128,7 +128,7 @@ export default function Recommendations () {
   const [ wind, setWind ] = useState([]);
   const [ suitability, setSuitability ] = useState([]);
   const [loading, setLoading] = useState(true);
-  const isDesktop = useDeviceDetect(768); // 768px is the breakpoint for desktop (i.e. md size in tailwindcss)
+  const isDesktop = useDeviceDetect(1280); // 1280px (xl) is the breakpoint for desktop (i.e. md size in tailwindcss)
   
   // State for focused beach location
   const [focusLocation, setFocusLocation] = useState(null);
