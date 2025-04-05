@@ -312,12 +312,12 @@ export const ShowWeather = memo((props) => {
   const WeatherDisplay = memo(() => (
     <div className="grow flex flex-col justify-center max-w-4xl mx-auto w-full px-4 py-6">
       {/* Back button - moved to top left */}
-      <section className="mb-6">
+      <section className='-mb-2'>
         <button 
-          className="flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-200 font-medium cursor-pointer" 
+          className="flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium cursor-pointer group mb-3 sm:mb-0 sm:absolute self-start mx-4 sm:mx-0"
           onClick={props.choice === "normal" ? handleSubmitNormal : handleSubmitAdvanced}
         >
-          <FaArrowLeft className="h-5 w-5 mr-1" />
+          <FaArrowLeft className="h-5 w-5 mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
           Back to Last Page
         </button>
       </section>
