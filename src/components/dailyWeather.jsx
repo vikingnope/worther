@@ -128,14 +128,16 @@ export const DailyWeatherData = memo(() => {
       <Header/>
       <div className="text-center text-white grow flex flex-col">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center relative my-8">
-          <button 
-            onClick={() => navigate(-1)} 
-            className="text-white hover:text-blue-500 transition-colors duration-300 group mb-4 sm:mb-0 sm:absolute sm:left-4 md:left-8 flex items-center self-start mx-4 sm:mx-0 cursor-pointer"
-            aria-label="Go back to previous page"
-          >
-            <FaArrowLeft className="mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
-            <span className="font-medium">Back</span>
-          </button>
+          <section className="mb-6">
+            <button 
+              className="flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium cursor-pointer group mb-4 sm:mb-0 sm:absolute sm:left-4 md:left-8 self-start mx-4 sm:mx-0"
+              onClick={() => navigate(-1)}
+              aria-label="Go back to the last page"
+            >
+              <FaArrowLeft className="h-5 w-5 mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
+              Back to Last Page
+            </button>
+          </section>
           <p className='text-4xl font-bold underline'>Daily Forecast Data {location.name?.trim() ? `- ${location.name}` : ''} </p>
         </div>
           <div className="xl:grid xl:grid-cols-1 gap-4 px-4 xl:px-8 w-full max-w-full pb-6">
@@ -178,8 +180,8 @@ export const DailyWeatherData = memo(() => {
                     >
                         {/* Day header section */}
                         <div className="shrink-0 mx-auto mt-1 xl:mt-2 mb-3 xl:mb-6 text-center">
-                          <p className='font-bold text-2xl xl:text-3xl block underline mb-1 xl:mb-2 text-blue-500'>{dayConversion}</p>
-                          <span className="inline-block h-1 w-24 rounded-sm bg-blue-500 mb-4 xl:mb-8"></span>
+                          <p className='font-bold text-2xl xl:text-3xl block underline mb-1 xl:mb-2 text-emerald-400'>{dayConversion}</p>
+                          <span className="inline-block h-1 w-24 rounded-sm bg-emerald-500 mb-4 xl:mb-8"></span>
                           <div className="mb-3 xl:mb-6">
                             <WeatherIcons 
                               mainWeather={weather.weather.main} 
@@ -191,7 +193,6 @@ export const DailyWeatherData = memo(() => {
                               page={'daily'}
                             />
                           </div>
-                          <p className='mx-auto font-bold text-lg xl:text-xl block text-yellow-400 mb-3 xl:mb-6'>{weather.weather.description.toUpperCase()}</p>
                         </div>
                         
                         {/* Temperature section with highlight */}
