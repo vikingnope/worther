@@ -174,15 +174,20 @@ export const DailyWeatherData = memo(() => {
                   return (
                     <div 
                       key={index} 
-                      className='flex flex-col duration-300 xl:border-2 border-y-2 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-6 py-4 xl:py-6 justify-between overflow-hidden break-words bg-neutral-900 xl:hover:bg-neutral-700 xl:hover:shadow-xl xl:hover:shadow-slate-700/20 transition-all xl:min-h-[900px] snap-center'
+                      className='flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-6 py-4 xl:py-6 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[900px] snap-center'
                       role="article" 
                       aria-label={`Weather forecast for ${dayConversion}`}
                     >
                         {/* Day header section */}
                         <div className="shrink-0 mx-auto mt-1 xl:mt-2 mb-3 xl:mb-6 text-center">
-                          <p className='font-bold text-2xl xl:text-3xl block underline mb-1 xl:mb-2 text-emerald-400'>{dayConversion}</p>
-                          <span className="inline-block h-1 w-24 rounded-sm bg-emerald-500 mb-4 xl:mb-8"></span>
-                          <div className="mb-3 xl:mb-6">
+                          <p className='font-bold text-2xl xl:text-3xl block mb-1 xl:mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-300 animate-text'>{dayConversion}</p>
+                          <span className="inline-block h-1 w-24 rounded-sm bg-gradient-to-r from-emerald-500 to-cyan-400 mb-4 xl:mb-8"></span>
+                        </div>
+
+                        {/* Weather Icon - Moved to the middle */}
+                        <div className="mb-6 xl:mb-8 relative flex justify-center">
+                          <div className="absolute inset-0 bg-emerald-600/10 blur-xl rounded-full"></div>
+                          <div className="relative transform hover:scale-110 transition-transform duration-300">
                             <WeatherIcons 
                               mainWeather={weather.weather.main} 
                               windSpeed={weather.windSpeed} 
@@ -190,15 +195,14 @@ export const DailyWeatherData = memo(() => {
                               timeZone={times.timeZone} 
                               sunriseHour={localSunriseSunsetTimes?.sunriseHour} 
                               sunsetHour={localSunriseSunsetTimes?.sunsetHour} 
-                              page={'daily'}
                             />
                           </div>
                         </div>
                         
                         {/* Temperature section with highlight */}
-                        <div className="bg-neutral-800 rounded-lg p-3 xl:p-6 mb-4 xl:mb-8 shadow-inner">
+                        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3 xl:p-6 mb-4 xl:mb-8 shadow-inner border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
                           <p className='mx-auto text-lg xl:text-xl mb-1 xl:mb-2 text-center'>
-                            <span className="text-2xl xl:text-3xl font-semibold">
+                            <span className="text-2xl xl:text-3xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
                               {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C
                             </span>
                           </p>
@@ -206,14 +210,14 @@ export const DailyWeatherData = memo(() => {
                         </div>
                         
                         {/* Wind data section */}
-                        <div className="flex flex-col mb-4 xl:mb-8 border-b border-neutral-800 pb-3 xl:pb-6">
-                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-gray-300">Wind Conditions</h3>
+                        <div className="flex flex-col mb-4 xl:mb-8 border-b border-gray-800/30 pb-3 xl:pb-6">
+                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">Wind Conditions</h3>
                           <div className="grid grid-cols-2 gap-2 xl:gap-3">
-                            <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                            <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
                               <p className='text-base xl:text-lg mb-0 xl:mb-1'>{weather.windSpeed.toFixed(2)} m/s</p>
                               <p className='text-yellow-400 text-xs xl:text-sm'>({<WindForce windSpeed={weather.windSpeed} />})</p>
                             </div>
-                            <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                            <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
                               <p className='text-base xl:text-lg mb-0 xl:mb-1'>{<WindDirection windDegrees={weather.windDegrees}/>}</p>
                               <p className='text-yellow-400 text-xs xl:text-sm'>@ {Math.round(weather.windDegrees)}°</p>
                             </div>
@@ -222,15 +226,15 @@ export const DailyWeatherData = memo(() => {
                         
                         {/* Other weather data section */}
                         <div className="grid grid-cols-2 gap-2 xl:gap-4 mb-4 xl:mb-8">
-                          <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
                             <p className='text-base xl:text-lg mb-0 xl:mb-1'>{Math.round(weather.precipitation)}%</p>
                             <p className='text-xs xl:text-sm text-gray-400'>Precipitation</p>
                           </div>
-                          <div className="text-center bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
                             <p className='text-base xl:text-lg mb-0 xl:mb-1'>{Math.round(weather.humidity)}%</p>
                             <p className='text-xs xl:text-sm text-gray-400'>Humidity</p>
                           </div>
-                          <div className="text-center col-span-2 bg-neutral-800 p-2 xl:p-4 rounded-lg">
+                          <div className="text-center col-span-2 bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
                             <p className='text-base xl:text-lg mb-0 xl:mb-1'>
                               {(weather.visibility >= 1000) ?
                               (weather.visibility / 1000).toFixed(2) + ' km' :
@@ -241,10 +245,10 @@ export const DailyWeatherData = memo(() => {
                         </div>
                         
                         {/* Sunrise/Sunset section */}
-                        <div className="flex flex-col mt-auto border-t border-neutral-800 pt-3 xl:pt-6">
-                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-center text-gray-300">Day & Night</h3>
+                        <div className="flex flex-col mt-auto border-t border-gray-800/30 pt-3 xl:pt-6">
+                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-300">Day & Night</h3>
                           <div className="grid grid-cols-2 gap-2 xl:gap-4">
-                            <div className='text-center bg-neutral-800 p-2 xl:p-4 rounded-lg'>
+                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
                               <BsFillSunriseFill size={24} className="inline text-orange-300 mb-1 xl:mb-2"/>
                               <p className='text-xs xl:text-sm text-gray-300 mb-0 xl:mb-1'>Sunrise</p>
                               <p className='text-sm xl:text-base font-medium'>
@@ -256,7 +260,7 @@ export const DailyWeatherData = memo(() => {
                                   : 'N/A'} 
                               </p>
                             </div>
-                            <div className='text-center bg-neutral-800 p-2 xl:p-4 rounded-lg'>
+                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
                               <BsFillSunsetFill size={24} className="inline text-orange-400 mb-1 xl:mb-2"/>
                               <p className='text-xs xl:text-sm text-gray-300 mb-0 xl:mb-1'>Sunset</p>
                               <p className='text-sm xl:text-base font-medium'>
@@ -285,7 +289,18 @@ export const DailyWeatherData = memo(() => {
                 {error ? (
                   <p className="text-white mx-auto font-bold text-xl" role="alert" aria-live="polite">{error}</p>
                 ) : (
-                  <p className="text-white mx-auto font-bold text-xl" role="status" aria-live="polite">Loading...</p>
+                  <div className="flex flex-grow items-center justify-center">
+                    <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-xl border border-blue-900/30 shadow-lg max-w-md w-full backdrop-blur-sm">
+                      <div className="animate-pulse flex flex-col items-center">
+                        <div className="h-16 w-16 rounded-full bg-blue-700/70 mb-5 animate-spin flex items-center justify-center">
+                          <div className="h-12 w-12 rounded-full bg-blue-900/70"></div>
+                        </div>
+                        <div className="h-7 w-64 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md mb-4"></div>
+                        <div className="h-5 w-48 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md"></div>
+                        <p className="mt-5 text-gray-400 font-medium">Loading forecast data...</p>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </>
             }
