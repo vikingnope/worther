@@ -14,13 +14,13 @@ assignees: ''
 - [ ] Technical debt reduction
 - [ ] Testing improvement
 - [ ] Build/CI pipeline work
-- [ ] Other maintenance task
+- [ ] Other maintenance tasks
 
 ### Chore Description
 A clear and concise description of what needs to be done.
 
 ### Motivation
-Why is this chore necessary? What problems will it solve or improvements will it bring?
+Why is this chore necessary? What problems will it solve, or what improvements will it bring?
 
 ### Scope
 - [ ] Frontend
@@ -48,7 +48,7 @@ Clear list of requirements for this chore to be considered complete:
 - <!-- e.g., "Documentation updated to reflect changes" -->
 
 ### Implementation Notes
-Any specific details about how this chore should be implemented, tools to use, or areas to be careful about.
+Any details about how this chore should be implemented, tools to use, or areas to be careful about.
 
 ### Related Issues/PRs
 Link to any related issues or pull requests.
