@@ -21,7 +21,7 @@ export default function Home() {
     return (
         <div className='flex flex-col min-h-screen text-white overflow-hidden bg-black'>
             <Header/>
-            <main className="flex-grow text-center flex flex-col items-center justify-center">
+            <main className="grow text-center flex flex-col items-center justify-center">
                 <h1 className="uppercase font-bold md:text-8xl text-5xl text-green-500">
                     Worther
                 </h1>

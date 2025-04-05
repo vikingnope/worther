@@ -124,9 +124,9 @@ export const DailyWeatherData = memo(() => {
   }, [weather, location.timeZone]);
 
   return (
-    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-gradient-to-b from-gray-950 via-blue-950 to-gray-950'>
+    <div className='text-white overflow-hidden flex flex-col min-h-screen bg-linear-to-b from-gray-950 via-blue-950 to-gray-950'>
       <Header/>
-      <div className="text-center text-white flex-grow flex flex-col">
+      <div className="text-center text-white grow flex flex-col">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center relative my-8">
           <button 
             onClick={() => navigate(-1)} 
@@ -153,9 +153,9 @@ export const DailyWeatherData = memo(() => {
                       aria-label={`Weather forecast for ${dayConversion}`}
                     >
                         {/* Day header section */}
-                        <div className="flex-shrink-0 mx-auto mt-2 mb-6 text-center">
+                        <div className="shrink-0 mx-auto mt-2 mb-6 text-center">
                           <p className='font-bold text-3xl block underline mb-2 text-blue-500'>{dayConversion}</p>
-                          <span className="inline-block h-1 w-24 rounded bg-blue-500 mb-8"></span>
+                          <span className="inline-block h-1 w-24 rounded-sm bg-blue-500 mb-8"></span>
                           <div className="mb-6">
                             <WeatherIcons 
                               mainWeather={weather.weather.main} 

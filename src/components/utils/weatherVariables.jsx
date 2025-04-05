@@ -309,7 +309,7 @@ export const ShowWeather = memo((props) => {
   }, [history, props.lat, props.lon]);
 
   const WeatherDisplay = memo(() => (
-    <div className="text-center flex-grow flex flex-col justify-center">
+    <div className="text-center grow flex flex-col justify-center">
       {props.dayConversion &&
         <section className="mb-10 mt-7">
           <p className="mx-auto font-bold text-4xl underline">{props.dayConversion}</p>
@@ -453,7 +453,7 @@ export const WeatherPopupContent = memo((props) => {
               <p>Failed to load weather data</p>
               <button 
                   onClick={fetchWeatherForCurrentLocation}
-                  className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="mt-2 px-3 py-1 bg-blue-500 text-white rounded-sm hover:bg-blue-600"
               >
                   Retry
               </button>
