@@ -1,8 +1,6 @@
 import React, { memo, useState, useEffect, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from "./../../resources/logoSmallRounded.png";
-// import { useMediaQuery } from 'react-responsive';
-import { useDeviceDetect } from "../../hooks/useDeviceDetect.js";
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
 import { Dropdown } from './mobileDropdown';
 
