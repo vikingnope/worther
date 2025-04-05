@@ -25,5 +25,5 @@ export default defineConfig({
       },
     },
   },
-  assetsInclude: ["**/*.csv"],
+  assetsInclude: ["**/*.csv", "**/*.md"],
 });
