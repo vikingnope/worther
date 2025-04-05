@@ -29,6 +29,7 @@
   "images": {
     "domains": [
       "vercel.app"
-    ]
+    ],
+    "sizes": [256, 512, 1024, 2048]
   }
 }
