@@ -4,6 +4,7 @@
 - Migrated to Vite from deprecated Create React App (CRA)
 - Updated workflow labeller to update ui titles to ui/ux instead of ui
 - Fixed title labeller not recognising '/'
+- Fixed Vercel 404 Page showing instead of custom 404 page
 
 ## 1.0.8 (Minor)
 
