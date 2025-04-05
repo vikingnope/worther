@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
-import { MdOutlineSegment } from 'react-icons/md';
-import { MdArrowLeft } from 'react-icons/md';
+import { MdArrowLeft, MdOutlineSegment } from 'react-icons/md';
 
 const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
     const active = (currentLocation === path) ? 'text-cyan-300' : 'text-gray-200';
@@ -91,7 +90,7 @@ export const Dropdown = memo((props) => {
             <div className='mr-1'>
                 <button 
                     onClick={toggleMenu} 
-                    className='flex mt-0.5 text-gray-200 hover:text-cyan-300 transition-colors duration-200'
+                    className='flex mt-0.5 text-gray-200 hover:text-cyan-300 transition-colors duration-200 cursor-pointer'
                     aria-label={opened ? 'Close navigation menu' : 'Open navigation menu'}
                 >
                     <MdOutlineSegment size='42' />
