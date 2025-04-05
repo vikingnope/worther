@@ -71,6 +71,7 @@
   opacity: 0.3;
 }
 
+/* Global scrollbar styles */
 /* width */
 ::-webkit-scrollbar {
   width: 7px;
@@ -106,6 +107,43 @@
 .hide-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+}
+
+/* Hide scrollbar completely while preserving functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Style for changelog scrollbar with specific behavior */
+.changelog-scroll {
+  /* Firefox scrollbar styling */
+  scrollbar-width: thin !important; 
+  scrollbar-color: rgba(136, 136, 136, 0.3) transparent !important;
+}
+.changelog-scroll:hover {
+  /* Firefox scrollbar styling on hover */
+  scrollbar-color: #888 transparent !important;
+}
+
+/* Override the global WebKit scrollbar styling specifically for changelog-scroll */
+.changelog-scroll::-webkit-scrollbar-track {
+  background: transparent !important; /* Always transparent */
+}
+.changelog-scroll::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.3) !important; /* Faint thumb by default */
+  border-radius: 5px;
+}
+.changelog-scroll::-webkit-scrollbar-thumb:hover {
+  background: #888 !important; /* Only visible when directly hovering on thumb */
+}
+
+/* Remove any hover effects from parent elements */
+.changelog-scroll:hover::-webkit-scrollbar-track {
+  background: transparent !important; /* Force transparent even on container hover */
 }
 
 ::-moz-selection { /* Code for Firefox */

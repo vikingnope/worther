@@ -80,9 +80,8 @@ export default function Changelog() {
           </p>
           
           <div className="bg-black/30 p-6 rounded-xl border border-gray-800 markdown-body">
-            <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 pb-4">
+            <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 pb-4 changelog-scroll">
               <ReactMarkdown 
-                children={markdown} 
                 remarkPlugins={[remarkGfm]}
                 components={{
                   h1: ({node, ...props}) => <h1 className="text-3xl font-bold my-6 pb-3 border-b border-gray-700 text-blue-400 leading-relaxed" {...props} />,
@@ -96,7 +95,9 @@ export default function Changelog() {
                   blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-gray-600 pl-4 italic text-gray-400 my-3" {...props} />,
                   strong: ({node, ...props}) => <strong className="font-bold text-white" {...props} />,
                 }}
-              />
+              >
+                {markdown}
+              </ReactMarkdown>
             </div>
             <div className="mt-6 pt-4 border-t border-gray-800 text-gray-500 text-sm text-right">
               Last checked for updates: {new Date(lastUpdated).toLocaleTimeString()}
