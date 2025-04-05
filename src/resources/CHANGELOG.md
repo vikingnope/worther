@@ -35,6 +35,7 @@
 - Fixed loading not showing on Single 3-Hour forecast page
 - Styling changes 3-hour Forecast page
 - Changed package manager to pnpm
+- Added chore report on github
 
 ---
 
