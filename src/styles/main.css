@@ -102,28 +102,6 @@
   background: #1c1c1a;
 }
 
-/* Pulsing animation for selected beach marker */
-.pulse-marker {
-  animation: pulse 1.5s infinite;
-  transform-origin: center;
-  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
 /* Text gradient animation for the Worther title */
 @keyframes textShine {
   0% {

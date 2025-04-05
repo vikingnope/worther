@@ -7,7 +7,6 @@ import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from './layers';
-import markerDot from "../resources/location-dot.png";
 import { MapMode } from './utils/mapMode';
 import { WeatherPopupContent } from './utils/weatherVariables';
 
@@ -156,12 +155,18 @@ export default function ShowMap(props) {
         }  
     }, []);
 
-    const markerIconConst = useMemo(() => L.icon({
-        iconUrl: markerDot,
-        iconRetinaUrl: markerDot,
-        iconAnchor: [13, 14],
-        popupAnchor: [0, -13],
-        iconSize: [26.5, 28]
+    const markerIconConst = useMemo(() => L.divIcon({
+      className: '',
+      html: `
+        <div class="relative">
+          <div class="absolute w-8 h-8 bg-blue-300 bg-opacity-15 rounded-full animate-pulse"></div>
+          <div class="absolute w-6 h-6 bg-blue-300 bg-opacity-25 rounded-full top-1 left-1"></div>
+          <div class="absolute w-3 h-3 bg-blue-500 rounded-full top-2.5 left-2.5 shadow-md"></div>
+        </div>
+      `,
+      iconAnchor: [16, 16], // Center of the marker
+      popupAnchor: [0, -16], // Above the marker
+      iconSize: [32, 32]
     }), []);
 
     const map = useCallback((markerShow, zoomLevel) => {

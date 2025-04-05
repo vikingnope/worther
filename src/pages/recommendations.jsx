@@ -3,15 +3,15 @@ import { Footer } from "../components/utils/footer";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
-import markerDotBlue from "../resources/location-dot.png";
 import { useState, useEffect, useMemo, useRef } from "react";
+import ReactDOM from "react-dom/client";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
-import markerDotRed from "../resources/location-dot-red.png";
 import { useDeviceDetect } from "../hooks/useDeviceDetect";
 import 'leaflet/dist/leaflet.css';
 import { FaArrowLeft, FaRegEye } from "react-icons/fa6";
 import { TiWarningOutline } from "react-icons/ti";
+import { LiaLocationArrowSolid } from "react-icons/lia";
 
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
@@ -68,6 +68,60 @@ function MapFocuser({ focusLocation, resetFocus, isDesktop }) {
   return null;
 }
 
+// Add a new component to track map state
+function MapStateTracker({ isDesktop, setIsMapModified }) {
+  const map = useMap();
+  const defaultCenter = [35.940125, 14.374125];
+  const defaultZoom = isDesktop ? 11 : 10;
+  
+  // Check if the map is in its default state
+  const checkMapState = () => {
+    if (!map) return;
+    
+    const currentCenter = map.getCenter();
+    const currentZoom = map.getZoom();
+    
+    // Allow for small differences in center position (rounding errors)
+    const centerDiff = Math.abs(currentCenter.lat - defaultCenter[0]) + 
+                       Math.abs(currentCenter.lng - defaultCenter[1]);
+    
+    // Map is in default state if zoom is default (exact match) and center is approximately default
+    // Using a more generous tolerance for center position
+    const isDefault = (currentZoom === defaultZoom && centerDiff < 0.05);
+    
+    // Update state only if there's a change
+    setIsMapModified(!isDefault);
+  };
+  
+  useEffect(() => {
+    if (!map) return;
+    
+    // Add a slight delay for initial check after map is fully initialized
+    const timer = setTimeout(() => {
+      checkMapState();
+    }, 100);
+    
+    // Add event listeners for map movements
+    map.on('zoomend', checkMapState);
+    map.on('moveend', checkMapState);
+    map.on('load', checkMapState);
+    
+    return () => {
+      clearTimeout(timer);
+      map.off('zoomend', checkMapState);
+      map.off('moveend', checkMapState);
+      map.off('load', checkMapState);
+    };
+  }, [map, defaultZoom]);
+  
+  // Reset check when defaultZoom changes (device type changes)
+  useEffect(() => {
+    checkMapState();
+  }, [defaultZoom, isDesktop]);
+  
+  return null;
+}
+
 export default function Recommendations () {
   const { readString } = usePapaParse();
   const [ data, setData ] = useState([]);
@@ -80,40 +134,88 @@ export default function Recommendations () {
   const [focusLocation, setFocusLocation] = useState(null);
   const [resetFocus, setResetFocus] = useState(false);
   const [selectedBeach, setSelectedBeach] = useState(null); // Track selected beach
+  const [isMapModified, setIsMapModified] = useState(false); // Track if map is in modified state
   const mapRef = useRef(null);
   const mapSectionRef = useRef(null); // Ref for the map section to scroll to
 
+  // Add this function to handle map clicks
+  const handleMapClick = () => {
+    if (selectedBeach) {
+      setSelectedBeach(null);
+      setFocusLocation(null);
+    }
+  };
+  
+  // Function to reset map view
+  const resetMapView = () => {
+    // Close any open popups
+    if (mapRef.current) {
+      mapRef.current.closePopup();
+    }
+    
+    setSelectedBeach(null);
+    setFocusLocation(null);
+    setResetFocus(true);
+    setTimeout(() => setResetFocus(false), 100);
+  };
+
+  // Create CSS classes for our markers
+  useEffect(() => {
+    // Add CSS for the pulse animation
+    const style = document.createElement('style');
+    style.textContent = `
+      .pulse-animation {
+        animation: pulse-animation 1.5s infinite;
+      }
+      
+      @keyframes pulse-animation {
+        0% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   const markerIcons = useMemo(() => ({
-    recommended: L.icon({
-      iconUrl: markerDotBlue,
-      iconRetinaUrl: markerDotBlue,
-      iconAnchor: [13, 14],
-      popupAnchor: [0, -13],
-      iconSize: [26.5, 28]
+    recommended: L.divIcon({
+      className: '',
+      html: `<div class="bg-blue-400 w-4 h-4 rounded-full shadow-md"></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -10],
     }),
-    unsuitable: L.icon({
-      iconUrl: markerDotRed,
-      iconRetinaUrl: markerDotRed,
-      iconAnchor: [13, 14],
-      popupAnchor: [0, -13],
-      iconSize: [26.5, 28]
+    unsuitable: L.divIcon({
+      className: '',
+      html: `<div class="bg-red-500 w-4 h-4 rounded-full shadow-md"></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -10],
     }),
     // Add larger versions of the icons for the selected beach
-    selectedRecommended: L.icon({
-      iconUrl: markerDotBlue,
-      iconRetinaUrl: markerDotBlue,
-      iconAnchor: [18, 19],
-      popupAnchor: [0, -18],
-      iconSize: [37, 39],
-      className: 'pulse-marker'
+    selectedRecommended: L.divIcon({
+      className: '',
+      html: `<div class="bg-blue-400 w-6 h-6 rounded-full shadow-lg pulse-animation"></div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+      popupAnchor: [0, -14],
     }),
-    selectedUnsuitable: L.icon({
-      iconUrl: markerDotRed,
-      iconRetinaUrl: markerDotRed,
-      iconAnchor: [18, 19],
-      popupAnchor: [0, -18],
-      iconSize: [37, 39],
-      className: 'pulse-marker'
+    selectedUnsuitable: L.divIcon({
+      className: '',
+      html: `<div class="bg-red-500 w-6 h-6 rounded-full shadow-lg pulse-animation"></div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+      popupAnchor: [0, -14],
     })
   }), []);
 
@@ -205,6 +307,8 @@ export default function Recommendations () {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  wind.degrees = 240
+  
   return(
     <div className='flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black'>
         <Header/>
@@ -264,6 +368,9 @@ export default function Recommendations () {
               >
                 <ZoomController isDesktop={isDesktop} />
                 <MapFocuser focusLocation={focusLocation} resetFocus={resetFocus} isDesktop={isDesktop} />
+                <MapClickHandler onMapClick={handleMapClick} />
+                <MapStateTracker isDesktop={isDesktop} setIsMapModified={setIsMapModified} />
+                <WindDirectionControl windDegrees={wind.degrees} windSpeed={wind.speed} />
                 <TileLayer zIndex={1}
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
                     url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
@@ -299,14 +406,11 @@ export default function Recommendations () {
             </div>
           </section>
 
-          {focusLocation && (
+          {/* Only show Reset Map View button when map is in a modified state */}
+          {isMapModified && (
             <div className="mx-auto mb-6">
               <button 
-                onClick={() => {
-                  setFocusLocation(null);
-                  setResetFocus(true);
-                  setTimeout(() => setResetFocus(false), 100);
-                }}
+                onClick={resetMapView}
                 className="bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors duration-300 flex items-center cursor-pointer"
               >
                 <FaArrowLeft className="mr-2" />
@@ -369,4 +473,84 @@ export default function Recommendations () {
         <Footer />
     </div>
   )
+}
+
+// Add a new component to handle map clicks
+function MapClickHandler({ onMapClick }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (!map) return;
+    
+    map.on('click', onMapClick);
+    
+    return () => {
+      map.off('click', onMapClick);
+    };
+  }, [map, onMapClick]);
+  
+  return null;
+}
+
+// Wind direction arrow control for the map
+function WindDirectionControl({ windDegrees }) {
+  const map = useMap();
+  const controlRef = useRef();
+  
+  useEffect(() => {
+    // Create custom Leaflet control for wind direction
+    if (!map) return;
+    
+    const windControl = L.control({ position: 'topright' });
+    
+    windControl.onAdd = function() {
+      const div = L.DomUtil.create('div', 'leaflet-control wind-direction-control');
+      div.innerHTML = `
+          <div class="h-14 w-14 flex items-center justify-center bg-gray-700/90 rounded-full border border-gray-600 wind-arrow-container"></div>
+      `;
+      
+      // Prevent map interactions from propagating through the control
+      L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div);
+      
+      controlRef.current = div;
+      return div;
+    };
+    
+    windControl.addTo(map);
+    
+    return () => {
+      if (map && windControl) {
+        windControl.remove();
+      }
+    };
+  }, [map]);
+  
+  useEffect(() => {
+    if (!controlRef.current || windDegrees === undefined) return;
+    
+    // Create React element for LiaLocationArrowSolid
+    const iconContainer = controlRef.current.querySelector('.wind-arrow-container');
+    if (iconContainer) {
+      // Clean up previous render if any
+      while (iconContainer.firstChild) {
+        iconContainer.removeChild(iconContainer.firstChild);
+      }
+      
+      // Create the React icon element and render it
+      const iconElement = document.createElement('div');
+      iconElement.className = 'wind-arrow';
+      iconContainer.appendChild(iconElement);
+      
+      // Render the React component into the container
+      const root = ReactDOM.createRoot(iconElement);
+      root.render(<LiaLocationArrowSolid className="h-9 w-9 text-red-400" />);
+      
+      // Apply rotation style
+      iconElement.style.transform = `rotate(${(windDegrees + 180) % 360}deg)`;
+      iconElement.style.transition = 'transform 0.5s ease-in-out';
+    }
+  }, [windDegrees, controlRef.current]);
+  
+  return null;
 }
