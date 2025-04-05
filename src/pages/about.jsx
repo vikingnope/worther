@@ -1,6 +1,7 @@
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useEffect } from 'react';
+import packageJson from '../../package.json';
 
 function ExternalLink({ href, children }) {
   return (
@@ -65,7 +66,7 @@ export default function About() {
           <span className='underline'>Disclaimer:</span> Any location data used is only sent to the weather API when search by location is chosen, on the map it is only kept on the client side. Analytics are also sent to a server.
           </p>
           <p className="md:absolute text-base underline md:bottom-12 md:right-1.5 md:left-auto my-5 md:my-0">
-            Version 1.0.8
+            Version {packageJson.version}
           </p>
       </main>
       <Footer />
