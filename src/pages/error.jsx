@@ -1,31 +1,27 @@
-import { Header } from '../components/utils/header';
-import { Footer } from '../components/utils/footer';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Header } from "../components/utils/header";
+import { Footer } from "../components/utils/footer";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function ErrorPage() {
-    
-    useEffect(() => {
-        document.title = "Worther - Error 404";
-    }, []);
+  useEffect(() => {
+    document.title = "Worther - Error";
+  }, []);
 
-    return (
-        <div className='text-white overflow-hidden bg-black'>
-            <Header/>
-            <main className="text-center flex min-h-screen flex-col items-center justify-center">
-                <h1 className="font-bold text-5xl text-purple-400 mb-12">
-                    Oops! This page has gone on holiday. It might return when it feels like it!
-                </h1>
-
-                <h2 className="font-bold text-3xl text-amber-400">
-                    Error 404: The URL you have entered has not been found.
-                </h2>
-
-                <Link to='/' className="uppercase underline font-bold text-2xl mt-20 hover:text-cyan-300 duration-300" aria-label="Return to home page">
-                    Go home
-                </Link>
-            </main>
-            <Footer />
+  return (
+    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
+      <Header />
+      <main className="flex justify-center items-center grow">
+        <div className="text-center p-6 max-w-lg">
+          <h1 className="text-6xl md:text-7xl font-bold mb-4 text-red-500">404</h1>
+          <p className="text-2xl mb-8">Page not found</p>
+          <p className="mb-8 text-gray-300">Sorry, we couldn't find the page you're looking for. It might have been moved or deleted.</p>
+          <Link to="/" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300">
+            Back to Home
+          </Link>
         </div>
-    );
+      </main>
+      <Footer />
+    </div>
+  );
 }
