@@ -29,7 +29,7 @@ export const SingleThreeHourForecastData = memo(() => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`)    
+    axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
       for (const [i, weatherAPI] of response.data.list.entries()) {
         if (i === numericIndex) {

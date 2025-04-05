@@ -36,10 +36,10 @@ export const GetSingleWeather = memo(() => {
     setLoading(true);
 
     axios.get((countryCode === undefined && latitude === undefined && longitude === undefined) ?
-    (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`) :
+    (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`) :
     (latitude === undefined && longitude === undefined) ?
-    (`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`) :
-    (`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}&units=metric`))
+    (`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`) :
+    (`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`))
     .then(response => {
       const weatherObj = {
         humidity: response.data.main.humidity,
