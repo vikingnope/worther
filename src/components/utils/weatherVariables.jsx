@@ -347,14 +347,14 @@ export const ShowWeather = memo((props) => {
       {props.choice === "normal" &&
         <div className="flex mx-auto">
           <form onSubmit={props.handleSubmit3Hour}>
-            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show 3 hour forecast</button>
+            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300 cursor-pointer">Show 3 hour forecast</button>
           </form>
           <form onSubmit={props.handleSubmitDaily} className="ml-10">
-            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show daily forecast</button>
+            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300 cursor-pointer">Show daily forecast</button>
           </form>
         </div>
       }
-      <button className="rounded-md border h-8 text-xl my-8 font-bold w-24 mx-auto" onClick={props.choice ==="normal" ? handleSubmitNormal : handleSubmitAdvanced} >Go Back</button>
+      <button className="rounded-md border h-8 text-xl my-8 font-bold w-24 mx-auto cursor-pointer" onClick={props.choice ==="normal" ? handleSubmitNormal : handleSubmitAdvanced} >Go Back</button>
       {props.choice === "normal" ?
         <p className="flex mx-auto underline mb-7">Last Updated: {timeUpdatedHourConversion.toString().padStart(2, '0')}:{timeUpdated.timeUpdatedMinute} (<TimeZoneShow timeZone={props.timeZone} />)</p> :
         <p className="flex mx-auto underline mb-7">Last Updated: {currentHourConversion?.toString().padStart(2, '0')}:{props.currentTime.minute} (<TimeZoneShow timeZone={props.timeZone} />)</p>

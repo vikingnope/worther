@@ -78,10 +78,10 @@ export default function Weather () {
         
         {searchMode === 'simple' ? (
           <form onSubmit={handleSubmit}>
-            <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-hidden rounded-md bg-weatherButtons'>
+            <div className='w-56 h-7.5 text-base font-bold border indent-1.5 outline-hidden rounded-md bg-weather-buttons'>
               <FaCity size='17' className='inline mr-1.5 mb-1'/>
               <input
-                  className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-hidden bg-weatherButtons"
+                  className="rounded-r-md w-48 h-7 text-base font-bold indent-1.5 outline-hidden bg-weather-buttons"
                   type="text"
                   id="weatherButtons"
                   value={city}
@@ -89,7 +89,7 @@ export default function Weather () {
                   placeholder='Enter City'
               />
             </div>
-            <button disabled={!city} type="submit" className='rounded-md block w-24 h-7 mt-3 border mx-auto bg-weatherButtons'>
+            <button disabled={!city} type="submit" className='rounded-md block w-24 h-7 mt-3 border mx-auto bg-weather-buttons cursor-pointer'>
               <BiSearchAlt size='22' className='inline mr-1.5 mb-0.5'/>
               Search
             </button>
@@ -111,12 +111,12 @@ export default function Weather () {
                 }),
               }}
               classNames={{
-                  control: () => "border rounded-md w-56 h-9 px-2 mx-auto mb-5 text-white bg-weatherButtons font-bold",
+                  control: () => "border rounded-md w-56 h-9 px-2 mx-auto mb-5 text-white bg-weather-buttons font-bold",
                   input: () => "text-white font-bold",
-                  menu: () => "mt-1 rounded-xs border shadow-lg text-white bg-weatherButtons font-bold",
+                  menu: () => "mt-1 rounded-xs border shadow-lg text-white bg-weather-buttons font-bold",
                   option: ({ isFocused, isSelected }) => 
                       `px-3 py-2 ${
-                          isFocused ? 'bg-[#363740] text-white' : 'bg-weatherButtons text-white'
+                          isFocused ? 'bg-[#363740] text-white' : 'bg-weather-buttons text-white'
                       } ${
                           isSelected ? 'bg-[#3e404a] text-white' : ''
                       }`,
@@ -125,10 +125,10 @@ export default function Weather () {
               id="country"
               placeholder='Choose Country'
             />
-            <div className='w-56 h-9 text-base font-bold border indent-1.5 outline-hidden mx-auto rounded-md bg-weatherButtons'>
+            <div className='w-56 h-9 text-base font-bold border indent-1.5 outline-hidden mx-auto rounded-md bg-weather-buttons'>
               <FaCity size='17' className='inline mr-1.5 mb-1'/>
               <input
-                  className="rounded-r-md w-48 text-base font-bold indent-1.5 outline-hidden h-8 bg-weatherButtons"
+                  className="rounded-r-md w-48 text-base font-bold indent-1.5 outline-hidden h-8 bg-weather-buttons"
                   type="text"
                   id="weatherButtons"
                   value={city}
@@ -136,7 +136,7 @@ export default function Weather () {
                   placeholder='Enter City'
               />
             </div>
-            <button disabled={!country || !city} type="submit" className='rounded-md border block w-24 h-7 mx-auto mt-3 bg-weatherButtons'>
+            <button disabled={!country || !city} type="submit" className='rounded-md border block w-24 h-7 mx-auto mt-3 bg-weather-buttons cursor-pointer'>
               <BiSearchAlt size='22' className='inline mr-1.5 mb-px'/>
               Search
             </button>
@@ -145,7 +145,7 @@ export default function Weather () {
         
         {searchMode === 'simple' && (userPos.latitude !== undefined && userPos.longitude !== undefined) && (
           <form onSubmit={handleSubmitLocation}>
-            <button type="submit" className='rounded-md border block w-56 h-7 mt-3 bg-weatherButtons'>
+            <button type="submit" className='rounded-md border block w-56 h-7 mt-3 bg-weather-buttons cursor-pointer'>
               <IoLocationSharp size='22' className='inline mr-1.5 mb-0.5'/>
               Search with my location
             </button>
