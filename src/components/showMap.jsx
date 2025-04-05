@@ -175,12 +175,12 @@ export default function ShowMap(props) {
                     <CustomPopupStyle mapType={mapType} />
                     <TileLayer 
                         zIndex={1}
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
                         url={(mapType === 'light') ?
-                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" :
+                            "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" :
                             "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
                         }
-                        subdomains={(mapType === 'light') ? "abc" : "abcd"}
+                        subdomains={(mapType === 'light') ? "abcd" : "abcd"}
                     />
                     <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
                     <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity}/>
