@@ -31,20 +31,35 @@ function ZoomController({ isDesktop }) {
 }
 
 // Component to focus map on a specific location
-function MapFocuser({ focusLocation, resetFocus }) {
+function MapFocuser({ focusLocation, resetFocus, isDesktop }) {
   const map = useMap();
   
   useEffect(() => {
     if (focusLocation) {
-      map.setView([focusLocation.lat, focusLocation.lon], 14);
+      // Use a smaller zoom level on mobile for better visibility
+      const zoomLevel = isDesktop ? 14 : 13;
+      
+      // Add a slight delay to ensure map is ready
+      setTimeout(() => {
+        map.setView([focusLocation.lat, focusLocation.lon], zoomLevel, {
+          animate: true,
+          pan: {
+            duration: 1
+          }
+        });
+      }, 100);
     }
-  }, [focusLocation, map]);
+  }, [focusLocation, map, isDesktop]);
 
   useEffect(() => {
     if (resetFocus) {
-      map.setView([35.940125, 14.374125], 11);
+      // Set different default views based on device
+      const defaultZoom = isDesktop ? 11 : 10;
+      map.setView([35.940125, 14.374125], defaultZoom, {
+        animate: true
+      });
     }
-  }, [resetFocus, map]);
+  }, [resetFocus, map, isDesktop]);
   
   return null;
 }
@@ -62,6 +77,7 @@ export default function Recommendations () {
   const [resetFocus, setResetFocus] = useState(false);
   const [selectedBeach, setSelectedBeach] = useState(null); // Track selected beach
   const mapRef = useRef(null);
+  const mapSectionRef = useRef(null); // Ref for the map section to scroll to
 
   const markerIcons = useMemo(() => ({
     recommended: L.icon({
@@ -180,6 +196,11 @@ export default function Recommendations () {
     return directions[index];
   }
 
+  // Helper function to scroll to map section
+  const scrollToMap = () => {
+    mapSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return(
     <div className='text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black flex flex-col min-h-screen'>
         <Header/>
@@ -225,20 +246,20 @@ export default function Recommendations () {
           )}
 
           {/* Map display with improved styling */}
-          <section className="flex justify-center mb-10 px-4">
-            <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-700">
+          <section ref={mapSectionRef} className="flex justify-center mb-10 px-4 w-full">
+            <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-700 w-full" style={{ minHeight: '300px' }}>
               <MapContainer 
                 center={[35.940125, 14.374125]} 
                 zoom={(isDesktop) ? 11 : 10} 
                 minZoom={10} 
-                className="md:h-[75vh] w-[110vh] h-[60vh]" 
+                style={{ height: '60vh', width: '100%', minHeight: '300px' }}
                 maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} 
                 maxBoundsViscosity={1} 
                 doubleClickZoom={false}
                 ref={mapRef}
               >
                 <ZoomController isDesktop={isDesktop} />
-                <MapFocuser focusLocation={focusLocation} resetFocus={resetFocus} />
+                <MapFocuser focusLocation={focusLocation} resetFocus={resetFocus} isDesktop={isDesktop} />
                 <TileLayer zIndex={1}
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
@@ -305,6 +326,7 @@ export default function Recommendations () {
                     onClick={() => {
                       setFocusLocation(beach);
                       setSelectedBeach(beach);
+                      scrollToMap(); // Scroll to map when beach card is clicked
                     }}
                     className={`rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 
                       ${suitability[index] === "Recommended" 
