@@ -17,7 +17,8 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  base: './',
+  base: '/', // Changed from './' to '/' for proper absolute paths
+  publicDir: 'public', // Explicitly set the public directory
   optimizeDeps: {
     esbuildOptions: {
       loader: {
