@@ -136,11 +136,6 @@ export default function Changelog() {
     }
   };
 
-  // Get color based on release type
-  const getTypeColor = (type) => {
-    return type === 'Major' ? 'text-amber-400' : 'text-blue-400';
-  };
-
   // Get badge based on release type
   const getTypeBadge = (type) => {
     return type === 'Major' 
