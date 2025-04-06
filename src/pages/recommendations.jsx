@@ -21,6 +21,37 @@ const DESKTOP_ZOOM = 11;
 const MOBILE_ZOOM = 10;
 const MAP_BOUNDS = [[36.177098, 14.014540], [35.641324, 14.802748]];
 
+// Helper function to create marker icon HTML with direct color values
+// Moved outside component to prevent recreation on each render
+const createMarkerIconHtml = (bgColor, gradientFrom, gradientTo, borderColor, size, glowOpacity, blurSize) => {
+  const dotSize = size * 0.36; // Calculate inner dot size proportionally
+  const pixelSize = size * 5; // Base pixel size for the marker
+  const dotPixelSize = dotSize * 5; // Pixel size for the white dot
+  
+  // Direct color mapping
+  const colorMap = {
+    'blue-300': '#93c5fd',
+    'blue-400': '#60a5fa',
+    'blue-500': '#3b82f6',
+    'blue-600': '#2563eb',
+    'blue-200': '#bfdbfe',
+    'red-300': '#fca5a5',
+    'red-400': '#f87171',
+    'red-500': '#ef4444',
+    'red-600': '#dc2626',
+    'red-200': '#fecaca'
+  };
+  
+  return `
+    <div style="position: relative; width: ${pixelSize}px; height: ${pixelSize}px;">
+      <div style="position: absolute; inset: 0; background-color: ${colorMap[bgColor]}; opacity: 0.${glowOpacity}; border-radius: 50%; filter: blur(${blurSize === 'sm' ? '4px' : '8px'});"></div>
+      <div style="position: relative; width: 100%; height: 100%; background: linear-gradient(to bottom right, ${colorMap[gradientFrom]}, ${colorMap[gradientTo]}); border-radius: 50%; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border: 1px solid ${colorMap[borderColor]}; display: flex; align-items: center; justify-content: center; ${size > 4 ? 'animation: pulse-animation 1.5s infinite;' : ''}">
+        <div style="width: ${dotPixelSize}px; height: ${dotPixelSize}px; border-radius: 50%; background-color: white; opacity: ${size > 4 ? '0.9' : '0.8'};"></div>
+      </div>
+    </div>
+  `;
+};
+
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
   const map = useMap();
@@ -176,12 +207,12 @@ export default function Recommendations () {
   const mapSectionRef = useRef(null); // Ref for the map section to scroll to
 
   // Add this function to handle map clicks
-  const handleMapClick = () => {
+  const handleMapClick = useCallback(() => {
     if (selectedBeachNum) {
       setSelectedBeachNum(null);
       setFocusLocation(null);
     }
-  };
+  }, [selectedBeachNum]);
   
   // Function to reset map view
   const resetMapView = () => {
@@ -202,36 +233,6 @@ export default function Recommendations () {
     }
     
     setTimeout(() => setResetFocus(false), 100);
-  };
-
-  // Helper function to create marker icon HTML with direct color values
-  const createMarkerIconHtml = (bgColor, gradientFrom, gradientTo, borderColor, size, glowOpacity, blurSize) => {
-    const dotSize = size * 0.36; // Calculate inner dot size proportionally
-    const pixelSize = size * 5; // Base pixel size for the marker
-    const dotPixelSize = dotSize * 5; // Pixel size for the white dot
-    
-    // Direct color mapping
-    const colorMap = {
-      'blue-300': '#93c5fd',
-      'blue-400': '#60a5fa',
-      'blue-500': '#3b82f6',
-      'blue-600': '#2563eb',
-      'blue-200': '#bfdbfe',
-      'red-300': '#fca5a5',
-      'red-400': '#f87171',
-      'red-500': '#ef4444',
-      'red-600': '#dc2626',
-      'red-200': '#fecaca'
-    };
-    
-    return `
-      <div style="position: relative; width: ${pixelSize}px; height: ${pixelSize}px;">
-        <div style="position: absolute; inset: 0; background-color: ${colorMap[bgColor]}; opacity: 0.${glowOpacity}; border-radius: 50%; filter: blur(${blurSize === 'sm' ? '4px' : '8px'});"></div>
-        <div style="position: relative; width: 100%; height: 100%; background: linear-gradient(to bottom right, ${colorMap[gradientFrom]}, ${colorMap[gradientTo]}); border-radius: 50%; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border: 1px solid ${colorMap[borderColor]}; display: flex; align-items: center; justify-content: center; ${size > 4 ? 'animation: pulse-animation 1.5s infinite;' : ''}">
-          <div style="width: ${dotPixelSize}px; height: ${dotPixelSize}px; border-radius: 50%; background-color: white; opacity: ${size > 4 ? '0.9' : '0.8'};"></div>
-        </div>
-      </div>
-    `;
   };
 
   const markerIcons = useMemo(() => ({
@@ -376,10 +377,10 @@ export default function Recommendations () {
     return "Strong Breeze"; // Beaufort 6+
   }
 
-  // Helper function to scroll to map section
-  const scrollToMap = () => {
+  // Helper function to scroll to map section, memoized to prevent rerender
+  const scrollToMap = useCallback(() => {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   // Handle button visibility with animation transitions
   useEffect(() => {
