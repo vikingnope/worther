@@ -207,6 +207,7 @@ html {
   /* Firefox scrollbar styling */
   scrollbar-width: thin !important; 
   scrollbar-color: rgba(136, 136, 136, 0.3) transparent !important;
+  scroll-behavior: smooth;
 }
 .changelog-scroll:hover {
   /* Firefox scrollbar styling on hover */
@@ -228,6 +229,22 @@ html {
 /* Remove any hover effects from parent elements */
 .changelog-scroll:hover::-webkit-scrollbar-track {
   background: transparent !important; /* Force transparent even on container hover */
+}
+
+/* Changelog sidebar specific styling */
+.changelog-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+.changelog-sidebar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.changelog-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(14, 116, 144, 0.5);
+  border-radius: 4px;
+}
+.changelog-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(14, 116, 144, 0.7);
 }
 
 ::-moz-selection { /* Code for Firefox */
