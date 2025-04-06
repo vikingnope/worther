@@ -3,7 +3,7 @@ import { Footer } from "../components/utils/footer";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
@@ -14,6 +14,12 @@ import { TiWarningOutline } from "react-icons/ti";
 import { LiaLocationArrowSolid } from "react-icons/lia";
 import { WindDirection } from "../components/utils/weatherVariables";
 import { CustomZoomControl, CustomAttributionControl } from "../components/utils/mapElements";
+
+// Map configuration constants
+const MAP_CENTER = [35.940125, 14.374125];
+const DESKTOP_ZOOM = 11;
+const MOBILE_ZOOM = 10;
+const MAP_BOUNDS = [[36.177098, 14.014540], [35.641324, 14.802748]];
 
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
@@ -61,8 +67,7 @@ function MapFocuser({ focusLocation, resetFocus, isDesktop }) {
   useEffect(() => {
     if (resetFocus) {
       // Set different default views based on device
-      const defaultZoom = isDesktop ? 11 : 10;
-      map.setView([35.940125, 14.374125], defaultZoom, {
+      map.setView(MAP_CENTER, isDesktop ? DESKTOP_ZOOM : MOBILE_ZOOM, {
         animate: true
       });
     }
@@ -74,24 +79,22 @@ function MapFocuser({ focusLocation, resetFocus, isDesktop }) {
 // Add a new component to track map state
 function MapStateTracker({ isDesktop, setIsMapModified }) {
   const map = useMap();
-  const defaultCenter = [35.940125, 14.374125];
-  const defaultZoom = isDesktop ? 11 : 10;
   const initialStateRef = useRef(true); // Reference to track initial state
   
   // Check if the map is in its default state
-  const checkMapState = () => {
+  const checkMapState = useCallback(() => {
     if (!map) return;
     
     const currentCenter = map.getCenter();
     const currentZoom = map.getZoom();
     
     // Allow for small differences in center position (rounding errors)
-    const centerDiff = Math.abs(currentCenter.lat - defaultCenter[0]) + 
-                       Math.abs(currentCenter.lng - defaultCenter[1]);
+    const centerDiff = Math.abs(currentCenter.lat - MAP_CENTER[0]) + 
+                       Math.abs(currentCenter.lng - MAP_CENTER[1]);
     
     // Map is in default state if zoom is default (exact match) and center is approximately default
     // Using a more generous tolerance for center position for laptops especially
-    const isDefault = (currentZoom === defaultZoom && centerDiff < 0.1);
+    const isDefault = (currentZoom === (isDesktop ? DESKTOP_ZOOM : MOBILE_ZOOM) && centerDiff < 0.1);
     
     // Update state only if there's a change
     setIsMapModified(!isDefault);
@@ -100,10 +103,10 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
     if (!isDefault && initialStateRef.current) {
       initialStateRef.current = false;
     }
-  };
+  }, [map, setIsMapModified, isDesktop]);
   
   // Force reset map modified state when resetMapView is called
-  const forceResetMapState = () => {
+  const forceResetMapState = useCallback(() => {
     // Set a small delay to ensure the map animation has completed
     setTimeout(() => {
       setIsMapModified(false);
@@ -114,7 +117,7 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
         map.fire('resetComplete');
       }
     }, 500); // Increased delay for more reliable reset
-  };
+  }, [map, setIsMapModified]);
   
   useEffect(() => {
     if (!map) return;
@@ -140,12 +143,12 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
       map.off('resetView', forceResetMapState);
       map.off('resetComplete'); // Clean up this listener too
     };
-  }, [map, defaultZoom, setIsMapModified, checkMapState, forceResetMapState]);
+  }, [map, checkMapState, forceResetMapState]);
   
   // Reset check when defaultZoom changes (device type changes)
   useEffect(() => {
     checkMapState();
-  }, [defaultZoom, isDesktop]);
+  }, [isDesktop]);
   
   return null;
 }
@@ -166,7 +169,7 @@ export default function Recommendations () {
   // State for focused beach location
   const [focusLocation, setFocusLocation] = useState(null);
   const [resetFocus, setResetFocus] = useState(false);
-  const [selectedBeach, setSelectedBeach] = useState(null); // Track selected beach
+  const [selectedBeachNum, setSelectedBeachNum] = useState(null); // Track selected beach by num instead of object
   const [isMapModified, setIsMapModified] = useState(false); // Track if map is in modified state
   const [buttonVisible, setButtonVisible] = useState(false); // Track button visibility for animation
   const mapRef = useRef(null);
@@ -174,8 +177,8 @@ export default function Recommendations () {
 
   // Add this function to handle map clicks
   const handleMapClick = () => {
-    if (selectedBeach) {
-      setSelectedBeach(null);
+    if (selectedBeachNum) {
+      setSelectedBeachNum(null);
       setFocusLocation(null);
     }
   };
@@ -187,7 +190,7 @@ export default function Recommendations () {
       mapRef.current.closePopup();
     }
     
-    setSelectedBeach(null);
+    setSelectedBeachNum(null);
     setFocusLocation(null);
     setResetFocus(true);
     
@@ -303,6 +306,7 @@ export default function Recommendations () {
             const newData = [];
             for (let i = 1; i < results.data.length; i++){
               const resultsData = {
+                num: parseInt(results.data[i][0]), // Add the unique num field
                 name: results.data[i][1],
                 lat: results.data[i][2],
                 lon: results.data[i][3],
@@ -392,31 +396,31 @@ export default function Recommendations () {
   }, [isMapModified]);
 
   const beachMarkers = useMemo(() => (
-    data.map((data, index) => (
+    data.map((beach, index) => (
       <Marker 
         key={index} 
         icon={
-          selectedBeach === data 
+          selectedBeachNum === beach.num 
             ? (suitability[index] === "Recommended" ? markerIcons.selectedRecommended : markerIcons.selectedUnsuitable) 
             : (suitability[index] === "Recommended" ? markerIcons.recommended : markerIcons.unsuitable)
         } 
-        position={[data.lat, data.lon]}
+        position={[beach.lat, beach.lon]}
         eventHandlers={{
           click: () => {
-            setSelectedBeach(data);
-            setFocusLocation(data);
+            setSelectedBeachNum(beach.num);
+            setFocusLocation({lat: beach.lat, lon: beach.lon});
           }
         }}
       >
         <Popup className="custom-popup">
-            <div className="font-bold text-lg border-b pb-1 mb-1">{data.name}</div>
+            <div className="font-bold text-lg border-b pb-1 mb-1">{beach.name}</div>
             <div className={`font-medium ${suitability[index] === "Recommended" ? 'text-green-600' : 'text-red-600'}`}>
               {suitability[index]}
             </div>
         </Popup> 
       </Marker>
     ))
-  ), [data, suitability, selectedBeach, markerIcons]);
+  ), [data, suitability, selectedBeachNum, markerIcons]);
   
   return(
     <div className='flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black'>
@@ -487,11 +491,11 @@ export default function Recommendations () {
               <section ref={mapSectionRef} className="flex justify-center mb-10 px-4 w-full">
                 <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-700 w-full max-w-7xl mx-auto" style={{ minHeight: '300px' }}>
                   <MapContainer 
-                    center={[35.940125, 14.374125]} 
-                    zoom={(isDesktop) ? 11 : 10} 
+                    center={MAP_CENTER} 
+                    zoom={isDesktop ? DESKTOP_ZOOM : MOBILE_ZOOM} 
                     minZoom={10} 
                     style={{ height: '60vh', width: '100%', minHeight: '300px' }}
-                    maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} 
+                    maxBounds={MAP_BOUNDS} 
                     maxBoundsViscosity={1} 
                     doubleClickZoom={false}
                     ref={mapRef}
@@ -534,15 +538,15 @@ export default function Recommendations () {
                     <div 
                       key={index} 
                       onClick={() => {
-                        setFocusLocation(beach);
-                        setSelectedBeach(beach);
+                        setFocusLocation({lat: beach.lat, lon: beach.lon});
+                        setSelectedBeachNum(beach.num);
                         scrollToMap(); // Scroll to map when beach card is clicked
                       }}
                       className={`rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 
                         ${suitability[index] === "Recommended" 
                           ? 'bg-gradient-to-br from-green-900/40 to-emerald-800/40 border border-green-700/50' 
                           : 'bg-gradient-to-br from-red-900/40 to-rose-800/40 border border-red-700/50'}
-                        cursor-pointer relative group ${selectedBeach === beach ? 'ring-2 ring-yellow-400 ring-opacity-70' : ''}`
+                        cursor-pointer relative group ${selectedBeachNum === beach.num ? 'ring-2 ring-yellow-400 ring-opacity-70' : ''}`
                       }
                     >
                       <div className="p-4">
