@@ -9,10 +9,12 @@ import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from './layers';
 import { WeatherPopupContent } from './utils/weatherVariables';
 import { CustomZoomControl, CustomAttributionControl, MapMode } from './utils/mapElements';
+import { useDeviceDetect } from '../hooks/useDeviceDetect';
 
 // Custom component to style popup containers based on map mode
 const CustomPopupStyle = ({ mapType }) => {
   const map = useMap();
+  const isDesktop = useDeviceDetect();
   
   useEffect(() => {
     // Apply initial styling to any existing popups
@@ -37,9 +39,17 @@ const CustomPopupStyle = ({ mapType }) => {
         }
         
         // If this is the popup content wrapper, enforce a consistent width
+        // with smaller sizes for mobile devices
         if (element.classList.contains('leaflet-popup-content-wrapper')) {
-          element.style.minWidth = '280px';
-          element.style.maxWidth = '320px';
+          if (isDesktop) {
+            // Desktop size
+            element.style.minWidth = '280px';
+            element.style.maxWidth = '320px';
+          } else {
+            // Mobile size - smaller width
+            element.style.minWidth = '220px';
+            element.style.maxWidth = '260px';
+          }
           element.style.width = 'auto';
         }
       });
@@ -48,7 +58,12 @@ const CustomPopupStyle = ({ mapType }) => {
       const popupContent = document.querySelectorAll('.leaflet-popup-content');
       popupContent.forEach(content => {
         content.style.width = '100%';
-        content.style.margin = '8px 12px';
+        // Adjust margins on mobile
+        content.style.margin = isDesktop ? '8px 12px' : '6px 8px';
+        // Add smaller font size on mobile
+        if (!isDesktop) {
+          content.style.fontSize = '0.9rem';
+        }
       });
       
       // Style the close button
@@ -57,14 +72,15 @@ const CustomPopupStyle = ({ mapType }) => {
         // Base styling for close button
         button.style.transition = 'all 0.2s ease';
         button.style.cursor = 'pointer';
-        button.style.width = '20px';
-        button.style.height = '20px';
+        button.style.width = isDesktop ? '20px' : '18px';
+        button.style.height = isDesktop ? '20px' : '18px';
         button.style.display = 'flex';
         button.style.justifyContent = 'center';
         button.style.alignItems = 'center';
         button.style.fontWeight = 'bold';
-        button.style.right = '7px';
-        button.style.top = '12px';
+        button.style.right = isDesktop ? '7px' : '5px';
+        button.style.top = isDesktop ? '12px' : '8px';
+        button.style.fontSize = isDesktop ? '16px' : '14px';
         
         if (mapType === 'light') {
           button.style.color = '#000000';
@@ -93,7 +109,7 @@ const CustomPopupStyle = ({ mapType }) => {
     return () => {
       map.off('popupopen', stylePopups);
     };
-  }, [mapType, map]);
+  }, [mapType, map, isDesktop]);
   
   return null; // This component doesn't render anything, just applies styling
 };

@@ -270,6 +270,19 @@ html {
   background: rgba(35, 35, 50, 0.9);
 }
 
+/* Responsive popup sizes */
+@media only screen and (max-width: 768px) {
+  .leaflet-popup-content-wrapper {
+    min-width: 220px !important;
+    max-width: 260px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .leaflet-popup-content {
+    margin: 6px 8px !important;
+  }
+}
+
 /* Beach marker specific colors */
 .beach-marker.recommended-marker {
   box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
