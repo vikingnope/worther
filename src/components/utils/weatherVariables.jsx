@@ -280,7 +280,7 @@ export const WindForce = memo((props) => {
 WindForce.displayName = 'WindForce';
 
 // WindArrow component for displaying wind direction
-const WindArrow = ({ degrees }) => {
+export const WindArrow = memo(({ degrees }) => {
   return (
     <LiaLocationArrowSolid 
       className="h-6 w-6 text-red-400" 
@@ -290,7 +290,9 @@ const WindArrow = ({ degrees }) => {
       }} 
     />
   );
-};
+});
+
+WindArrow.displayName = 'WindArrow';
 
 export const ShowWeather = memo((props) => {
   const timeUpdated = useMemo(() => ({

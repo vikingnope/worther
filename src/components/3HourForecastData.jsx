@@ -3,23 +3,9 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce, SunriseSunsetTimes } from './utils/weatherVariables';
+import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce, SunriseSunsetTimes, WindArrow } from './utils/weatherVariables';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
 import { FaArrowLeft } from "react-icons/fa6";
-import { LiaLocationArrowSolid } from "react-icons/lia"; // * wind direction arrow icon
-
-// WindArrow component for displaying wind direction
-const WindArrow = ({ degrees }) => {
-  return (
-    <LiaLocationArrowSolid 
-      className="h-6 w-6 text-red-400" 
-      style={{ 
-        transform: `rotate(${(degrees + 180) % 360}deg)`,
-        transition: 'transform 0.5s ease-in-out'
-      }} 
-    />
-  );
-};
 
 export const ThreeHourForecastData = memo(() => {
   const { lat, lon } = useParams();
