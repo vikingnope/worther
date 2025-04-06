@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
 import { MdArrowLeft, MdOutlineSegment } from 'react-icons/md';

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { TileLayer } from 'react-leaflet';
-import React, { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo } from "react";
 
 export const CloudLayer = memo((props) => {
   return (

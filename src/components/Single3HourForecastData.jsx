@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback, useMemo, memo } from 'react';
+import {useEffect, useState, useMemo, memo } from 'react';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';

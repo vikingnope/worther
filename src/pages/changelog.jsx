@@ -1,6 +1,6 @@
 import { Header } from "../components/utils/header";
 import { Footer } from "../components/utils/footer";
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import packageJson from "../../package.json";

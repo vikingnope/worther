@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo, memo, useRef } from 'react';
+import {useEffect, useState, useMemo, memo } from 'react';
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
