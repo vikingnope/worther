@@ -47,7 +47,6 @@ export default function Changelog() {
       .then(content => {
         // Validate the content is actually markdown and not HTML
         if (content.includes('<!DOCTYPE html>') || content.startsWith('<html')) {
-          console.warn('Received HTML instead of markdown, ignoring update');
           return;
         }
         
