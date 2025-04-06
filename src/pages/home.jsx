@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { WeatherPopupContent } from '../components/utils/weatherVariables';
 import { FaMapMarkedAlt, FaCloudSunRain, FaListUl, FaInfoCircle } from 'react-icons/fa';
+import { MdLocationOff } from "react-icons/md";
 
 const SITE_MAP = [
     { text: 'Map', path: '/map/light', icon: <FaMapMarkedAlt className="text-4xl mb-3 text-blue-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Interactive weather maps with various layers' },
@@ -15,6 +16,7 @@ const SITE_MAP = [
 export default function Home() {
     const [userPos, setUserPos] = useState({ latitude: undefined, longitude: undefined });
     const [currentDate, setCurrentDate] = useState('');
+    const [locationStatus, setLocationStatus] = useState('loading'); // 'loading', 'denied', 'unavailable', 'available'
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,9 +35,11 @@ export default function Home() {
                         latitude: pos.coords.latitude,
                         longitude: pos.coords.longitude,
                     });
+                    setLocationStatus('available');
                 },
                 (err) => {
                     console.error(`ERROR(${err.code}): ${err.message}`);
+                    setLocationStatus(err.code === 1 ? 'denied' : 'unavailable');
                 },
                 {
                     enableHighAccuracy: true,
@@ -43,6 +47,8 @@ export default function Home() {
                     maximumAge: 0,
                 }
             );
+        } else {
+            setLocationStatus('unavailable');
         }
     }, []);
 
@@ -70,6 +76,31 @@ export default function Home() {
                         {currentDate}
                     </p>
                 </section>
+                
+                {/* Location Status Message */}
+                {(locationStatus === 'denied' || locationStatus === 'unavailable') && (
+                    <section className="w-full max-w-md mb-10">
+                        <div className="bg-gradient-to-r from-red-900/80 via-red-950/80 to-red-900/80 rounded-xl shadow-lg p-5 border border-red-900/50 backdrop-blur-sm">
+                            <div className="flex items-center gap-3 mb-2">
+                                <MdLocationOff className="text-2xl text-red-400" />
+                                <h2 className="text-xl font-bold text-red-300">
+                                    {locationStatus === 'denied' ? 'Location Access Denied' : 'Location Not Available'}
+                                </h2>
+                            </div>
+                            <p className="text-gray-300">
+                                {locationStatus === 'denied' 
+                                    ? 'You have denied location access. To see weather for your current location, please enable location services for this site in your browser settings.'
+                                    : 'Your device cannot determine your current location. You can still search for weather in specific locations.'}
+                            </p>
+                            <Link
+                                to="/weather"
+                                className="w-full mt-3 py-2 flex justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 transition-all rounded-md font-medium cursor-pointer shadow-md"
+                            >
+                                Go to Weather Search
+                            </Link>
+                        </div>
+                    </section>
+                )}
                 
                 {/* Current Weather Widget */}
                 {userPos.latitude && userPos.longitude && (
