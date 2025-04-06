@@ -11,103 +11,106 @@ import { WeatherPopupContent } from './utils/weatherVariables';
 import { CustomZoomControl, CustomAttributionControl, MapMode } from './utils/mapElements';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
 
-// Custom component to style popup containers based on map mode
+// Custom component to style popups based on map mode
 const CustomPopupStyle = ({ mapType }) => {
   const map = useMap();
   const isDesktop = useDeviceDetect();
   
   useEffect(() => {
-    // Apply initial styling to any existing popups
-    stylePopups();
+    if (!map) return;
     
-    // Add event listener to style popups when they're created
-    map.on('popupopen', stylePopups);
+    // Get the map container to scope our selectors
+    const mapContainer = map.getContainer();
     
-    function stylePopups() {
-      // Find all popup containers and style them
-      const popupContainers = document.querySelectorAll('.leaflet-popup-content-wrapper, .leaflet-popup-tip');
+    // Function to style a popup when it opens
+    const stylePopup = (e) => {
+      const popup = e.popup;
+      const popupElement = popup.getElement();
       
-      popupContainers.forEach(element => {
-        if (mapType === 'light') {
-          // Light mode - default is already white
-          element.style.backgroundColor = '#ffffff';
-          element.style.color = '#000000';
-        } else {
-          // Dark mode
-          element.style.backgroundColor = '#1a1a1a';
-          element.style.color = '#ffffff';
-        }
+      if (!popupElement || !mapContainer.contains(popupElement)) return;
+      
+      // Find elements within this specific popup
+      const contentWrapper = popupElement.querySelector('.leaflet-popup-content-wrapper');
+      const popupTip = popupElement.querySelector('.leaflet-popup-tip');
+      const popupContent = popupElement.querySelector('.leaflet-popup-content');
+      const closeButton = popupElement.querySelector('.leaflet-popup-close-button');
+      
+      // Style the popup elements
+      if (contentWrapper && popupTip) {
+        const bgColor = mapType === 'light' ? '#ffffff' : '#1a1a1a';
+        const textColor = mapType === 'light' ? '#000000' : '#ffffff';
         
-        // If this is the popup content wrapper, enforce a consistent width
-        // with smaller sizes for mobile devices
-        if (element.classList.contains('leaflet-popup-content-wrapper')) {
-          if (isDesktop) {
-            // Desktop size
-            element.style.minWidth = '280px';
-            element.style.maxWidth = '320px';
-          } else {
-            // Mobile size - smaller width
-            element.style.minWidth = '220px';
-            element.style.maxWidth = '260px';
-          }
-          element.style.width = 'auto';
-        }
-      });
+        [contentWrapper, popupTip].forEach(element => {
+          element.style.backgroundColor = bgColor;
+          element.style.color = textColor;
+        });
+      }
       
-      // Ensure popup content also maintains width
-      const popupContent = document.querySelectorAll('.leaflet-popup-content');
-      popupContent.forEach(content => {
-        content.style.width = '100%';
-        // Adjust margins on mobile
-        content.style.margin = isDesktop ? '8px 12px' : '6px 8px';
-        // Add smaller font size on mobile
-        if (!isDesktop) {
-          content.style.fontSize = '0.9rem';
+      // Style the content wrapper with responsive sizing
+      if (contentWrapper) {
+        if (isDesktop) {
+          contentWrapper.style.minWidth = '280px';
+          contentWrapper.style.maxWidth = '320px';
+        } else {
+          contentWrapper.style.minWidth = '220px';
+          contentWrapper.style.maxWidth = '260px';
         }
-      });
+        contentWrapper.style.width = 'auto';
+      }
+      
+      // Style the popup content
+      if (popupContent) {
+        popupContent.style.width = '100%';
+        popupContent.style.margin = isDesktop ? '8px 12px' : '6px 8px';
+        if (!isDesktop) {
+          popupContent.style.fontSize = '0.9rem';
+        }
+      }
       
       // Style the close button
-      const closeButtons = document.querySelectorAll('.leaflet-popup-close-button');
-      closeButtons.forEach(button => {
-        // Base styling for close button
-        button.style.transition = 'all 0.2s ease';
-        button.style.cursor = 'pointer';
-        button.style.width = isDesktop ? '20px' : '18px';
-        button.style.height = isDesktop ? '20px' : '18px';
-        button.style.display = 'flex';
-        button.style.justifyContent = 'center';
-        button.style.alignItems = 'center';
-        button.style.fontWeight = 'bold';
-        button.style.right = isDesktop ? '7px' : '5px';
-        button.style.top = isDesktop ? '12px' : '8px';
-        button.style.fontSize = isDesktop ? '16px' : '14px';
+      if (closeButton) {
+        closeButton.style.transition = 'all 0.2s ease';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.width = isDesktop ? '20px' : '18px';
+        closeButton.style.height = isDesktop ? '20px' : '18px';
+        closeButton.style.display = 'flex';
+        closeButton.style.justifyContent = 'center';
+        closeButton.style.alignItems = 'center';
+        closeButton.style.fontWeight = 'bold';
+        closeButton.style.right = isDesktop ? '7px' : '5px';
+        closeButton.style.top = isDesktop ? '12px' : '8px';
+        closeButton.style.fontSize = isDesktop ? '16px' : '14px';
+        closeButton.style.color = mapType === 'light' ? '#000000' : '#ffffff';
         
-        if (mapType === 'light') {
-          button.style.color = '#000000';
-        } else {
-          button.style.color = '#ffffff';
-        }
-        
-        // Add hover effects to make the X itself animate
-        button.onmouseover = () => {
-          button.style.transform = 'scale(1.2)';
-          // Use a darker shade of the current color instead of blue
-          button.style.color = mapType === 'light' 
-            ? '#333333' // Darker shade for light mode
-            : '#aaaaaa'; // Darker shade for dark mode
-          button.style.fontWeight = 'bolder';
+        // Add hover event listeners
+        closeButton.onmouseover = () => {
+          closeButton.style.transform = 'scale(1.2)';
+          closeButton.style.color = mapType === 'light' ? '#333333' : '#aaaaaa';
+          closeButton.style.fontWeight = 'bolder';
         };
         
-        button.onmouseout = () => {
-          button.style.transform = 'scale(1)';
-          button.style.color = mapType === 'light' ? '#000000' : '#ffffff';
-          button.style.fontWeight = 'bold';
+        closeButton.onmouseout = () => {
+          closeButton.style.transform = 'scale(1)';
+          closeButton.style.color = mapType === 'light' ? '#000000' : '#ffffff';
+          closeButton.style.fontWeight = 'bold';
         };
-      });
-    }
+      }
+    };
+    
+    // Initial styling for any existing popups
+    mapContainer.querySelectorAll('.leaflet-popup').forEach(popupElement => {
+      // Create a mock event object with the popup
+      const popup = popupElement._leaflet_popup;
+      if (popup) {
+        stylePopup({ popup });
+      }
+    });
+    
+    // Add event listener for new popups
+    map.on('popupopen', stylePopup);
     
     return () => {
-      map.off('popupopen', stylePopups);
+      map.off('popupopen', stylePopup);
     };
   }, [mapType, map, isDesktop]);
   
