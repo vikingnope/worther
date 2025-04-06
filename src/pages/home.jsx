@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { WeatherPopupContent } from '../components/utils/weatherVariables';
 import { FaMapMarkedAlt, FaCloudSunRain, FaListUl, FaInfoCircle } from 'react-icons/fa';
 import { MdLocationOff } from "react-icons/md";
+import { BiCurrentLocation } from "react-icons/bi";
 
 const SITE_MAP = [
     { text: 'Map', path: '/map/light', icon: <FaMapMarkedAlt className="text-4xl mb-3 text-blue-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Interactive weather maps with various layers' },
@@ -57,7 +58,7 @@ export default function Home() {
                 },
                 {
                     enableHighAccuracy: true,
-                    timeout: 5000,
+                    timeout: 15000, // Increased from 5000 to 15000 for better reliability
                     maximumAge: 0,
                 }
             );
@@ -90,6 +91,26 @@ export default function Home() {
                         {currentDate}
                     </p>
                 </section>
+                
+                {/* Location Loading Indicator */}
+                {locationStatus === 'loading' && (
+                    <section className="w-full max-w-md mb-10">
+                        <div className="bg-gradient-to-r from-blue-900/80 via-blue-950/80 to-blue-900/80 rounded-xl shadow-lg p-5 border border-blue-900/50 backdrop-blur-sm">
+                            <div className="flex items-center gap-3 mb-2">
+                                <BiCurrentLocation className="text-2xl text-blue-400 animate-pulse" />
+                                <h2 className="text-xl font-bold text-blue-300">
+                                    Detecting Your Location...
+                                </h2>
+                            </div>
+                            <div className="flex items-center justify-center py-3">
+                                <div className="w-10 h-10 border-t-2 border-b-2 border-blue-400 rounded-full animate-spin"></div>
+                            </div>
+                            <p className="text-gray-300 text-center">
+                                Please wait while we determine your location for local weather information
+                            </p>
+                        </div>
+                    </section>
+                )}
                 
                 {/* Location Status Message */}
                 {(locationStatus === 'denied' || locationStatus === 'unavailable') && (
