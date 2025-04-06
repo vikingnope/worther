@@ -660,14 +660,26 @@ export const WeatherPopupContent = memo((props) => {
             color: '#000000',
             buttonBg: '#e0e0e0',
             buttonHoverBg: '#c0c0c0',
-            buttonText: '#000000'
+            buttonText: '#000000',
+            heading: '#1e40af', // Deep blue for headings in light mode
+            description: '#6d28d9', // Purple for weather description in light mode
+            labelColor: '#4b5563', // Gray-600 for labels in light mode
+            valueColor: '#111827', // Gray-900 for values in light mode
+            linkBg: '#2563eb', // Blue-600 for link in light mode
+            linkHoverBg: '#1d4ed8' // Blue-700 for link hover in light mode
           }
         : { 
             background: '#1a1a1a', 
             color: '#ffffff',
             buttonBg: '#333333',
             buttonHoverBg: '#444444',
-            buttonText: '#ffffff'
+            buttonText: '#ffffff',
+            heading: '#38bdf8', // Light blue for headings in dark mode
+            description: '#fcd34d', // Yellow-300 for description in dark mode
+            labelColor: '#9ca3af', // Gray-400 for labels in dark mode
+            valueColor: '#ffffff', // White for values in dark mode
+            linkBg: '#1d4ed8', // Blue-700 for link in dark mode
+            linkHoverBg: '#2563eb' // Blue-600 for link hover in dark mode
           };
     }
     return {}; // Default styles for non-map pages
@@ -676,7 +688,7 @@ export const WeatherPopupContent = memo((props) => {
   if (isLoadingWeather) {
       return (
         <div 
-          className="text-center p-2" 
+          className="text-center p-3 font-medium" 
           style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
         >
           Loading weather data...
@@ -687,13 +699,13 @@ export const WeatherPopupContent = memo((props) => {
   if (!currentLocationWeather) {
       return (
           <div 
-            className="p-2"
+            className="p-3"
             style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
           >
-              <p>Failed to load weather data</p>
+              <p className="font-medium text-base mb-2">Failed to load weather data</p>
               <button 
                   onClick={fetchWeatherForCurrentLocation}
-                  className="mt-2 px-3 py-1 rounded-sm hover:bg-blue-600"
+                  className="mt-2 px-3 py-1.5 rounded-md font-medium hover:bg-blue-600 transition-colors"
                   style={props.page === 'map' ? { 
                     backgroundColor: popupStyles.buttonBg,
                     color: popupStyles.buttonText,
@@ -717,11 +729,19 @@ export const WeatherPopupContent = memo((props) => {
   
   return (
       <div 
-        className="p-2 max-w-xs"
+        className="p-3 max-w-xs"
         style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
       >
-          <h3 className="font-bold text-lg">{currentLocationWeather.name}</h3>
-          <div className="flex items-center">
+          {/* Location name with enhanced font */}
+          <h3 
+            className="font-bold text-xl mb-1.5 tracking-tight"
+            style={props.page === 'map' ? { color: popupStyles.heading } : { color: 'text-cyan-300' }}
+          >
+            {currentLocationWeather.name}
+          </h3>
+          
+          {/* Temperature and weather icon section */}
+          <div className="flex items-center mb-2">
               {currentLocationWeather.weather?.[0] && (
                   <WeatherIcons
                       mainWeather={currentLocationWeather.weather[0].main}
@@ -734,28 +754,139 @@ export const WeatherPopupContent = memo((props) => {
                       color={props.page === 'map' ? popupStyles.color : (props.color || 'white')}
                   />
               )}
-              <span className="text-2xl ml-2">{Math.round(currentLocationWeather.main?.temp || 0)}°C</span>
+              <span 
+                className="text-3xl font-bold ml-2"
+                style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+              >
+                {Math.round(currentLocationWeather.main?.temp || 0)}°C
+              </span>
           </div>
-          <p className="capitalize">{currentLocationWeather.weather?.[0]?.description}</p>
-          <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-              <div>Humidity: {currentLocationWeather.main?.humidity ?? '--'}%</div>
-              <div>Wind: {currentLocationWeather.wind?.speed 
-                ? (
-                    <>
-                      {Math.round(currentLocationWeather.wind.speed)} m/s (<WindForce windSpeed={currentLocationWeather.wind.speed} />)
-                    </>
-                  ) 
-                : '--'}
+          
+          {/* Weather description with improved styling */}
+          <p 
+            className="capitalize font-medium text-lg mb-3"
+            style={props.page === 'map' ? { color: popupStyles.description } : { color: 'text-yellow-300' }}
+          >
+            {currentLocationWeather.weather?.[0]?.description || "Unknown"}
+          </p>
+          
+          {/* Weather details with better organization and font styling */}
+          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2.5">
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Humidity
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.main?.humidity ?? '--'}%
+                </span>
               </div>
-              <div>Pressure: {currentLocationWeather.main?.pressure ? `${currentLocationWeather.main.pressure} hPa` : '--'}</div>
-              <div>Visibility: <br/>{currentLocationWeather.visibility ? (currentLocationWeather.visibility >= 1000 ? `${currentLocationWeather.visibility / 1000} km` : `${currentLocationWeather.visibility} m`) : '--'}</div>
-              <div>Sunrise: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunriseHour, localSunriseSunsetTimes.sunriseMinute) : '--:--'}</div>
-              <div>Sunset: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunsetHour, localSunriseSunsetTimes.sunsetMinute) : '--:--'}</div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Wind
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.wind?.speed 
+                    ? `${Math.round(currentLocationWeather.wind.speed)} m/s` 
+                    : '--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Pressure
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.main?.pressure ? `${currentLocationWeather.main.pressure} hPa` : '--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Visibility
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.visibility 
+                    ? (currentLocationWeather.visibility >= 1000 
+                        ? `${currentLocationWeather.visibility / 1000} km` 
+                        : `${currentLocationWeather.visibility} m`) 
+                    : '--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Sunrise
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {localSunriseSunsetTimes 
+                    ? formatTimeDisplay(localSunriseSunsetTimes.sunriseHour, localSunriseSunsetTimes.sunriseMinute) 
+                    : '--:--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Sunset
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {localSunriseSunsetTimes 
+                    ? formatTimeDisplay(localSunriseSunsetTimes.sunsetHour, localSunriseSunsetTimes.sunsetMinute) 
+                    : '--:--'}
+                </span>
+              </div>
           </div>
+          
+          {/* View detailed forecast link for map page */}
           {props.page === 'map' && (
             <Link 
-                className='block mt-3 text-center font-bold text-sm underline' 
-                style={{ color: 'inherit' }} 
+                className='block mt-4 text-center font-bold text-sm py-1.5 transition-colors rounded-md' 
+                style={{ 
+                  color: 'white',
+                  backgroundColor: popupStyles.linkBg,
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = popupStyles.linkHoverBg;
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = popupStyles.linkBg;
+                }}
                 to={'/weatherLocation/' + props.userPos.latitude + '/' + props.userPos.longitude}
             >
                 View detailed forecast

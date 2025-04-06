@@ -35,6 +35,20 @@ const CustomPopupStyle = ({ mapType }) => {
           element.style.backgroundColor = '#1a1a1a';
           element.style.color = '#ffffff';
         }
+        
+        // If this is the popup content wrapper, enforce a consistent width
+        if (element.classList.contains('leaflet-popup-content-wrapper')) {
+          element.style.minWidth = '280px';
+          element.style.maxWidth = '320px';
+          element.style.width = 'auto';
+        }
+      });
+      
+      // Ensure popup content also maintains width
+      const popupContent = document.querySelectorAll('.leaflet-popup-content');
+      popupContent.forEach(content => {
+        content.style.width = '100%';
+        content.style.margin = '8px 12px';
       });
       
       // Style the close button
