@@ -267,71 +267,86 @@ export default function Recommendations () {
     })
   }), []);
 
-  useEffect(() => {
-    const fetchWind = async () => {
-      try {
-        const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`);
-        const windObj = {
-          speed: windData.data.wind.speed,
-          degrees: windData.data.wind.deg
-        }
-        setWind(windObj);
-      } catch (error) {
-        console.error("Error fetching wind data:", error);
-        // Handle different error types
-        if (error.response) {
-          // API responded with an error status
-          if (error.response.status === 401 || error.response.status === 403) {
-            setBlocked(true);
-          } else {
-            setDataError(true);
-          }
-        } else if (error.request) {
-          // No response received from the server
-          setConnectionError(true);
+  // Move fetchWind outside useEffect so it can be reused
+  const fetchWind = async () => {
+    try {
+      const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`);
+      const windObj = {
+        speed: windData.data.wind.speed,
+        degrees: windData.data.wind.deg
+      }
+      setWind(windObj);
+    } catch (error) {
+      console.error("Error fetching wind data:", error);
+      // Handle different error types
+      if (error.response) {
+        // API responded with an error status
+        if (error.response.status === 401 || error.response.status === 403) {
+          setBlocked(true);
         } else {
-          // Error in setting up the request
           setDataError(true);
         }
-      }
-    }
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch(beaches);
-        const text = await response.text();
-    
-        readString(text, {
-          worker: true,
-          complete: (results) => {
-            const newData = [];
-            for (let i = 1; i < results.data.length; i++){
-              const resultsData = {
-                num: parseInt(results.data[i][0]), // Add the unique num field
-                name: results.data[i][1],
-                lat: results.data[i][2],
-                lon: results.data[i][3],
-                degreesStart: results.data[i][4],
-                degreesEnd: results.data[i][5]
-              }
-              newData.push(resultsData);
-            }
-            setData(newData);
-            setLoading(false);
-          },
-          error: (error) => {
-            console.error("CSV parsing error:", error);
-            setDataError(true);
-            setLoading(false);
-          }
-        });
-      } catch (error) {
-        console.error("Error fetching beach data:", error);
+      } else if (error.request) {
+        // No response received from the server
         setConnectionError(true);
-        setLoading(false);
+      } else {
+        // Error in setting up the request
+        setDataError(true);
       }
     }
+  }
 
+  // Move fetchData outside useEffect so it can be reused
+  const fetchData = async () => {
+    try {
+      const response = await fetch(beaches);
+      const text = await response.text();
+  
+      readString(text, {
+        worker: true,
+        complete: (results) => {
+          const newData = [];
+          for (let i = 1; i < results.data.length; i++){
+            const resultsData = {
+              num: parseInt(results.data[i][0]), // Add the unique num field
+              name: results.data[i][1],
+              lat: results.data[i][2],
+              lon: results.data[i][3],
+              degreesStart: results.data[i][4],
+              degreesEnd: results.data[i][5]
+            }
+            newData.push(resultsData);
+          }
+          setData(newData);
+          setLoading(false);
+        },
+        error: (error) => {
+          console.error("CSV parsing error:", error);
+          setDataError(true);
+          setLoading(false);
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching beach data:", error);
+      setConnectionError(true);
+      setLoading(false);
+    }
+  }
+
+  // Function to handle refreshing data
+  const refreshData = () => {
+    // Reset error states
+    setBlocked(false);
+    setConnectionError(false);
+    setDataError(false);
+    // Set loading state
+    setLoading(true);
+    // Fetch data again
+    fetchWind();
+    fetchData();
+  };
+
+  useEffect(() => {
     fetchWind();
     fetchData();
   }, [readString]);
@@ -433,11 +448,11 @@ export default function Recommendations () {
           
           {/* Show appropriate error messages or the actual content */}
           {blocked ? (
-            <ErrorDisplay message="The API is currently blocked" details="Unable to retrieve wind data" />
+            <ErrorDisplay message="The API is currently blocked" details="Unable to retrieve wind data" refreshData={refreshData} />
           ) : connectionError ? (
-            <ErrorDisplay message="Please check your internet connection" details="Cannot connect to weather or map services" />
+            <ErrorDisplay message="Please check your internet connection" details="Cannot connect to weather or map services" refreshData={refreshData} />
           ) : dataError ? (
-            <ErrorDisplay message="Error loading beach data" details="There was a problem retrieving beach information" />
+            <ErrorDisplay message="Error loading beach data" details="There was a problem retrieving beach information" refreshData={refreshData} />
           ) : loading ? (
             <div className="flex-grow flex flex-col items-center justify-center p-4">
               <div className="bg-gradient-to-br from-slate-900 to-gray-900 p-8 rounded-xl border border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-sm max-w-md">
@@ -609,9 +624,11 @@ function WindDirectionControl({ windDegrees }) {
     if (!map) return;
     
     const windControl = L.control({ position: 'topright' });
+
+    let div = null;
     
     windControl.onAdd = function() {
-      const div = L.DomUtil.create('div', 'leaflet-control wind-direction-control');
+      div = L.DomUtil.create('div', 'leaflet-control wind-direction-control');
       setContainer(div);
       
       // Prevent map interactions from propagating through the control
@@ -625,6 +642,10 @@ function WindDirectionControl({ windDegrees }) {
     
     return () => {
       if (map && windControl) {
+        if (div) {
+          L.DomEvent.disableClickPropagation(div);
+          L.DomEvent.disableScrollPropagation(div);
+        }
         windControl.remove();
         setContainer(null);
       }
@@ -648,7 +669,7 @@ function WindDirectionControl({ windDegrees }) {
 }
 
 // Error display component
-const ErrorDisplay = ({ message, details }) => (
+const ErrorDisplay = ({ message, details, refreshData }) => (
   <div className="text-white flex flex-col items-center justify-center px-4 py-12 max-w-3xl mx-auto">
     <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-8 text-center border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
       <div className="mb-8">
@@ -662,10 +683,10 @@ const ErrorDisplay = ({ message, details }) => (
         <p className="text-gray-400 mt-3">Unable to retrieve beach recommendation data</p>
       </div>
       <button 
-        onClick={() => window.location.reload()}
+        onClick={refreshData}
         className="inline-block px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
       >
-        Refresh Page
+        Refresh Data
       </button>
     </div>
   </div>
