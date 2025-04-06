@@ -140,7 +140,7 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
       map.off('resetView', forceResetMapState);
       map.off('resetComplete'); // Clean up this listener too
     };
-  }, [map, defaultZoom]);
+  }, [map, defaultZoom, setIsMapModified]);
   
   // Reset check when defaultZoom changes (device type changes)
   useEffect(() => {
@@ -157,6 +157,11 @@ export default function Recommendations () {
   const [ suitability, setSuitability ] = useState([]);
   const [loading, setLoading] = useState(true);
   const isDesktop = useDeviceDetect(1280); // 1280px (xl) is the breakpoint for desktop (i.e. md size in tailwindcss)
+  
+  // Add error state variables
+  const [blocked, setBlocked] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
+  const [dataError, setDataError] = useState(false);
   
   // State for focused beach location
   const [focusLocation, setFocusLocation] = useState(null);
@@ -260,36 +265,66 @@ export default function Recommendations () {
 
   useEffect(() => {
     const fetchWind = async () => {
-      const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`);
-      const windObj = {
-        speed: windData.data.wind.speed,
-        degrees: windData.data.wind.deg
+      try {
+        const windData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=Birkirkara&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`);
+        const windObj = {
+          speed: windData.data.wind.speed,
+          degrees: windData.data.wind.deg
+        }
+        setWind(windObj);
+      } catch (error) {
+        console.error("Error fetching wind data:", error);
+        // Handle different error types
+        if (error.response) {
+          // API responded with an error status
+          if (error.response.status === 401 || error.response.status === 403) {
+            setBlocked(true);
+          } else {
+            setDataError(true);
+          }
+        } else if (error.request) {
+          // No response received from the server
+          setConnectionError(true);
+        } else {
+          // Error in setting up the request
+          setDataError(true);
+        }
       }
-      setWind(windObj);
     }
 
     const fetchData = async () => {
-      const response = await fetch(beaches);
-      const text = await response.text();
-  
-      readString(text, {
-        worker: true,
-        complete: (results) => {
-          const newData = [];
-          for (let i = 1; i < results.data.length; i++){
-            const resultsData = {
-              name: results.data[i][1],
-              lat: results.data[i][2],
-              lon: results.data[i][3],
-              degreesStart: results.data[i][4],
-              degreesEnd: results.data[i][5]
+      try {
+        const response = await fetch(beaches);
+        const text = await response.text();
+    
+        readString(text, {
+          worker: true,
+          complete: (results) => {
+            const newData = [];
+            for (let i = 1; i < results.data.length; i++){
+              const resultsData = {
+                name: results.data[i][1],
+                lat: results.data[i][2],
+                lon: results.data[i][3],
+                degreesStart: results.data[i][4],
+                degreesEnd: results.data[i][5]
+              }
+              newData.push(resultsData);
             }
-            newData.push(resultsData);
+            setData(newData);
+            setLoading(false);
+          },
+          error: (error) => {
+            console.error("CSV parsing error:", error);
+            setDataError(true);
+            setLoading(false);
           }
-          setData(newData);
-          setLoading(false);
-        },
-      });
+        });
+      } catch (error) {
+        console.error("Error fetching beach data:", error);
+        setConnectionError(true);
+        setLoading(false);
+      }
     }
 
     fetchWind();
@@ -354,6 +389,33 @@ export default function Recommendations () {
       return () => clearTimeout(timer);
     }
   }, [isMapModified]);
+
+  const beachMarkers = useMemo(() => (
+    data.map((data, index) => (
+      <Marker 
+        key={index} 
+        icon={
+          selectedBeach === data 
+            ? (suitability[index] === "Recommended" ? markerIcons.selectedRecommended : markerIcons.selectedUnsuitable) 
+            : (suitability[index] === "Recommended" ? markerIcons.recommended : markerIcons.unsuitable)
+        } 
+        position={[data.lat, data.lon]}
+        eventHandlers={{
+          click: () => {
+            setSelectedBeach(data);
+            setFocusLocation(data);
+          }
+        }}
+      >
+        <Popup className="custom-popup">
+            <div className="font-bold text-lg border-b pb-1 mb-1">{data.name}</div>
+            <div className={`font-medium ${suitability[index] === "Recommended" ? 'text-green-600' : 'text-red-600'}`}>
+              {suitability[index]}
+            </div>
+        </Popup> 
+      </Marker>
+    ))
+  ), [data, suitability, selectedBeach, markerIcons]);
   
   return(
     <div className='flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black'>
@@ -362,161 +424,152 @@ export default function Recommendations () {
           <h1 className="md:text-6xl text-4xl font-bold mt-5 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">
             Beach Recommendations
           </h1>
-          <p className="text-gray-300 max-w-3xl mx-auto mb-8 px-4">
-            Based on current wind conditions, we recommend the following beaches for swimming and water activities
-          </p>
           
-          {/* Wind information panel */}
-          <div className="bg-gray-800/60 backdrop-blur-sm rounded-xl mx-auto px-6 py-4 mb-6 flex flex-wrap justify-center gap-8 max-w-4xl shadow-lg">
-            <div className="flex flex-col items-center">
-              <span className="text-gray-400 text-sm">Wind Speed</span>
-              <span className="text-2xl font-bold text-white">{wind.speed?.toFixed(1) || '...'} m/s</span>
-              <span className="text-yellow-400 font-medium">{getWindDescription(wind.speed)}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-gray-400 text-sm">Direction</span>
-              <span className="text-2xl font-bold text-white">{wind.degrees !== undefined ? <WindDirection windDegrees={wind.degrees} /> : '...'}</span>
-              <span className="text-yellow-400 font-medium">{wind.degrees?.toFixed(0) || '...'}°</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-gray-400 text-sm">Status</span>
-              <span className={`text-2xl font-bold ${wind.speed >= 8 ? 'text-red-500' : 'text-green-500'}`}>
-                {wind.speed >= 8 ? 'Warning' : 'Safe'}
-              </span>
-              <span className="text-yellow-400 font-medium">Conditions</span>
-            </div>
-          </div>
-
-          {/* Warning display */}
-          {wind.speed >= 8 && (
-            <div className="mx-auto px-4 mb-6 max-w-3xl">
-              <div className="bg-gradient-to-r from-red-900/70 to-orange-800/70 backdrop-blur-sm border border-red-700 text-white p-4 rounded-lg shadow-lg flex items-center">
-                <TiWarningOutline className="h-10 w-10 mr-3 text-red-300 flex-shrink-0" />
-                <p className="text-xl font-medium">
-                  Warning: Since wind is Force 5 or greater it is not recommended to swim!
-                </p>
+          {/* Show appropriate error messages or the actual content */}
+          {blocked ? (
+            <ErrorDisplay message="The API is currently blocked" details="Unable to retrieve wind data" />
+          ) : connectionError ? (
+            <ErrorDisplay message="Please check your internet connection" details="Cannot connect to weather or map services" />
+          ) : dataError ? (
+            <ErrorDisplay message="Error loading beach data" details="There was a problem retrieving beach information" />
+          ) : loading ? (
+            <div className="flex-grow flex flex-col items-center justify-center p-4">
+              <div className="bg-gradient-to-br from-slate-900 to-gray-900 p-8 rounded-xl border border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-sm max-w-md">
+                <div className="animate-pulse flex flex-col items-center">
+                  <div className="h-14 w-14 rounded-full bg-blue-700/70 mb-5 animate-spin"></div>
+                  <div className="h-7 w-64 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md mb-4"></div>
+                  <div className="h-5 w-48 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md"></div>
+                  <p className="mt-5 text-gray-400 font-medium">Loading beach and weather data...</p>
+                </div>
               </div>
             </div>
-          )}
-
-          {/* Map display with improved styling */}
-          <section ref={mapSectionRef} className="flex justify-center mb-10 px-4 w-full">
-            <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-700 w-full max-w-7xl mx-auto" style={{ minHeight: '300px' }}>
-              <MapContainer 
-                center={[35.940125, 14.374125]} 
-                zoom={(isDesktop) ? 11 : 10} 
-                minZoom={10} 
-                style={{ height: '60vh', width: '100%', minHeight: '300px' }}
-                maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} 
-                maxBoundsViscosity={1} 
-                doubleClickZoom={false}
-                ref={mapRef}
-              >
-                <ZoomController isDesktop={isDesktop} />
-                <CustomZoomControl mapType="light" />
-                <CustomAttributionControl mapType="light" />
-                <MapFocuser focusLocation={focusLocation} resetFocus={resetFocus} isDesktop={isDesktop} />
-                <MapClickHandler onMapClick={handleMapClick} />
-                <MapStateTracker isDesktop={isDesktop} setIsMapModified={setIsMapModified} />
-                <WindDirectionControl windDegrees={wind.degrees} />
-                <TileLayer zIndex={1}
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                    url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
-                    subdomains={"abcd"}
-                />
-                {
-                  data.map((data, index) => (
-                    <Marker 
-                      key={index} 
-                      icon={
-                        selectedBeach === data 
-                          ? (suitability[index] === "Recommended" ? markerIcons.selectedRecommended : markerIcons.selectedUnsuitable) 
-                          : (suitability[index] === "Recommended" ? markerIcons.recommended : markerIcons.unsuitable)
-                      } 
-                      position={[data.lat, data.lon]}
-                      eventHandlers={{
-                        click: () => {
-                          setSelectedBeach(data);
-                          setFocusLocation(data);
-                        }
-                      }}
-                    >
-                      <Popup className="custom-popup">
-                          <div className="font-bold text-lg border-b pb-1 mb-1">{data.name}</div>
-                          <div className={`font-medium ${suitability[index] === "Recommended" ? 'text-green-600' : 'text-red-600'}`}>
-                            {suitability[index]}
-                          </div>
-                      </Popup> 
-                    </Marker>
-                  ))
-                }
-              </MapContainer>
-            </div>
-          </section>
-
-          {/* Only show Reset Map View button when map is in a modified state */}
-          <div className="mx-auto mb-6 h-10">
-            <button 
-              onClick={resetMapView}
-              className={`bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg shadow-md flex items-center cursor-pointer
-                         hover:scale-105 active:scale-95 transition-all duration-300 absolute left-1/2 transform -translate-x-1/2 
-                         ${buttonVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
-            >
-              <FaArrowLeft className="mr-2" />
-              Reset Map View
-            </button>
-          </div>
-
-          {/* Beach list with improved cards */}
-          <section className="px-4 pb-12">
-            <h2 className="text-2xl font-bold mb-6 text-yellow-400">Beach Conditions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
-              {loading ? (
-                <div className="col-span-full text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-400 mb-2"></div>
-                  <p>Loading beach data...</p>
+          ) : (
+            <>
+              <p className="text-gray-300 max-w-3xl mx-auto mb-8 px-4">
+                Based on current wind conditions, we recommend the following beaches for swimming and water activities
+              </p>
+              
+              {/* Wind information panel */}
+              <div className="bg-gray-800/60 backdrop-blur-sm rounded-xl mx-auto px-6 py-4 mb-6 flex flex-wrap justify-center gap-8 max-w-4xl shadow-lg">
+                <div className="flex flex-col items-center">
+                  <span className="text-gray-400 text-sm">Wind Speed</span>
+                  <span className="text-2xl font-bold text-white">{wind.speed?.toFixed(1) || '...'} m/s</span>
+                  <span className="text-yellow-400 font-medium">{getWindDescription(wind.speed)}</span>
                 </div>
-              ) : (
-                data.map((beach, index) => (
-                  <div 
-                    key={index} 
-                    onClick={() => {
-                      setFocusLocation(beach);
-                      setSelectedBeach(beach);
-                      scrollToMap(); // Scroll to map when beach card is clicked
-                    }}
-                    className={`rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 
-                      ${suitability[index] === "Recommended" 
-                        ? 'bg-gradient-to-br from-green-900/40 to-emerald-800/40 border border-green-700/50' 
-                        : 'bg-gradient-to-br from-red-900/40 to-rose-800/40 border border-red-700/50'}
-                      cursor-pointer relative group ${selectedBeach === beach ? 'ring-2 ring-yellow-400 ring-opacity-70' : ''}`
-                    }
+                <div className="flex flex-col items-center">
+                  <span className="text-gray-400 text-sm">Direction</span>
+                  <span className="text-2xl font-bold text-white">{wind.degrees !== undefined ? <WindDirection windDegrees={wind.degrees} /> : '...'}</span>
+                  <span className="text-yellow-400 font-medium">{wind.degrees?.toFixed(0) || '...'}°</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <span className="text-gray-400 text-sm">Status</span>
+                  <span className={`text-2xl font-bold ${wind.speed >= 8 ? 'text-red-500' : 'text-green-500'}`}>
+                    {wind.speed >= 8 ? 'Warning' : 'Safe'}
+                  </span>
+                  <span className="text-yellow-400 font-medium">Conditions</span>
+                </div>
+              </div>
+
+              {/* Warning display */}
+              {wind.speed >= 8 && (
+                <div className="mx-auto px-4 mb-6 max-w-3xl">
+                  <div className="bg-gradient-to-r from-red-900/70 to-orange-800/70 backdrop-blur-sm border border-red-700 text-white p-4 rounded-lg shadow-lg flex items-center">
+                    <TiWarningOutline className="h-10 w-10 mr-3 text-red-300 flex-shrink-0" />
+                    <p className="text-xl font-medium">
+                      Warning: Since wind is Force 5 or greater it is not recommended to swim!
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Map display with improved styling */}
+              <section ref={mapSectionRef} className="flex justify-center mb-10 px-4 w-full">
+                <div className="rounded-xl overflow-hidden shadow-2xl border border-gray-700 w-full max-w-7xl mx-auto" style={{ minHeight: '300px' }}>
+                  <MapContainer 
+                    center={[35.940125, 14.374125]} 
+                    zoom={(isDesktop) ? 11 : 10} 
+                    minZoom={10} 
+                    style={{ height: '60vh', width: '100%', minHeight: '300px' }}
+                    maxBounds={[[36.177098, 14.014540], [35.641324,14.802748]]} 
+                    maxBoundsViscosity={1} 
+                    doubleClickZoom={false}
+                    ref={mapRef}
                   >
-                    <div className="p-4">
-                      <div className="flex items-center mb-2">
-                        <div className={`w-3 h-3 rounded-full mr-2 ${suitability[index] === "Recommended" ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                        <h3 className="font-bold text-lg truncate">{beach.name}</h3>
-                      </div>
-                      <div className={`mt-2 py-1 px-3 inline-block rounded-full text-sm font-medium ${
-                        suitability[index] === "Recommended" 
-                          ? 'bg-green-800/60 text-green-200' 
-                          : 'bg-red-800/60 text-red-200'
-                      }`}>
-                        {suitability[index]}
-                      </div>
-                      
-                      {/* Hover overlay */}
-                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="bg-white/20 backdrop-blur-sm p-2 rounded-full">
-                          <FaRegEye className="h-6 w-6" />
+                    <ZoomController isDesktop={isDesktop} />
+                    <CustomZoomControl mapType="light" />
+                    <CustomAttributionControl mapType="light" />
+                    <MapFocuser focusLocation={focusLocation} resetFocus={resetFocus} isDesktop={isDesktop} />
+                    <MapClickHandler onMapClick={handleMapClick} />
+                    <MapStateTracker isDesktop={isDesktop} setIsMapModified={setIsMapModified} />
+                    <WindDirectionControl windDegrees={wind.degrees} />
+                    <TileLayer zIndex={1}
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                        url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
+                        subdomains={"abcd"}
+                    />
+                    {beachMarkers}
+                  </MapContainer>
+                </div>
+              </section>
+
+              {/* Only show Reset Map View button when map is in a modified state */}
+              <div className="mx-auto mb-6 h-10">
+                <button 
+                  onClick={resetMapView}
+                  className={`bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg shadow-md flex items-center cursor-pointer
+                             hover:scale-105 active:scale-95 transition-all duration-300 absolute left-1/2 transform -translate-x-1/2 
+                             ${buttonVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+                >
+                  <FaArrowLeft className="mr-2" />
+                  Reset Map View
+                </button>
+              </div>
+
+              {/* Beach list with improved cards */}
+              <section className="px-4 pb-12">
+                <h2 className="text-2xl font-bold mb-6 text-yellow-400">Beach Conditions</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
+                  {data.map((beach, index) => (
+                    <div 
+                      key={index} 
+                      onClick={() => {
+                        setFocusLocation(beach);
+                        setSelectedBeach(beach);
+                        scrollToMap(); // Scroll to map when beach card is clicked
+                      }}
+                      className={`rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 
+                        ${suitability[index] === "Recommended" 
+                          ? 'bg-gradient-to-br from-green-900/40 to-emerald-800/40 border border-green-700/50' 
+                          : 'bg-gradient-to-br from-red-900/40 to-rose-800/40 border border-red-700/50'}
+                        cursor-pointer relative group ${selectedBeach === beach ? 'ring-2 ring-yellow-400 ring-opacity-70' : ''}`
+                      }
+                    >
+                      <div className="p-4">
+                        <div className="flex items-center mb-2">
+                          <div className={`w-3 h-3 rounded-full mr-2 ${suitability[index] === "Recommended" ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                          <h3 className="font-bold text-lg truncate">{beach.name}</h3>
+                        </div>
+                        <div className={`mt-2 py-1 px-3 inline-block rounded-full text-sm font-medium ${
+                          suitability[index] === "Recommended" 
+                            ? 'bg-green-800/60 text-green-200' 
+                            : 'bg-red-800/60 text-red-200'
+                        }`}>
+                          {suitability[index]}
+                        </div>
+                        
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <div className="bg-white/20 backdrop-blur-sm p-2 rounded-full">
+                            <FaRegEye className="h-6 w-6" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </section>
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
         </div>
         <Footer />
     </div>
@@ -587,3 +640,27 @@ function WindDirectionControl({ windDegrees }) {
     container
   );
 }
+
+// Error display component
+const ErrorDisplay = ({ message, details }) => (
+  <div className="text-white flex flex-col items-center justify-center px-4 py-12 max-w-3xl mx-auto">
+    <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-8 text-center border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+      <div className="mb-8">
+        <TiWarningOutline size={60} className="mx-auto text-red-400 mb-4" />
+        <p className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-amber-300">{message}</p>
+        {details && (
+          <p className="text-xl text-gray-300 mt-2">
+            {details}
+          </p>
+        )}
+        <p className="text-gray-400 mt-3">Unable to retrieve beach recommendation data</p>
+      </div>
+      <button 
+        onClick={() => window.location.reload()}
+        className="inline-block px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
+      >
+        Refresh Page
+      </button>
+    </div>
+  </div>
+);
