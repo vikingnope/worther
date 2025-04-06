@@ -1,89 +1,18 @@
 import { Header } from "../components/utils/header";
 import { Footer } from "../components/utils/footer";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import packageJson from "../../package.json";
 import CHANGELOG from '../resources/CHANGELOG.md?raw';
 
 export default function Changelog() {
-  const [markdown, setMarkdown] = useState(CHANGELOG);
-  const [lastUpdated, setLastUpdated] = useState(Date.now());
-
-  const markdownRef = useRef(markdown);
-  
-  // Update ref when markdown changes
-  useEffect(() => {
-    markdownRef.current = markdown;
-  }, [markdown]);
-  
-  const reloadChangelog = useCallback(() => {
-    // We already have the static import, so we don't need to fetch if running in development
-    if (import.meta.env.DEV) {
-      return; // Skip fetching in development mode
-    }
-    
-    // Use fetch API with the correct public path for the changelog
-    fetch('./src/resources/CHANGELOG.md', { 
-      cache: 'no-store', // Ensure we don't use cached version
-      headers: { 'Cache-Control': 'no-cache' } 
-    })
-      .then(response => {
-        if (!response.ok) {
-          // Fallback to root-relative path if the first path fails
-          return fetch('/CHANGELOG.md', { 
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' } 
-          });
-        }
-        return response;
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch changelog: ${response.status}`);
-        }
-        return response.text();
-      })
-      .then(content => {
-        // Validate the content is actually markdown and not HTML
-        if (content.includes('<!DOCTYPE html>') || content.startsWith('<html')) {
-          return;
-        }
-        
-        // Only update if content has changed and looks like markdown
-        if (content !== markdownRef.current && 
-            (content.includes('#') || content.includes('- ') || content.includes('* '))) {
-          setMarkdown(content);
-          setLastUpdated(Date.now());
-        }
-      })
-      .catch(err => {
-        console.error('Failed to reload changelog:', err);
-        // In case of error, we still have the default content from the static import
-      });
-  }, []);
+  const [markdown] = useState(CHANGELOG);
 
   // Initial setup and document title
   useEffect(() => {
     document.title = "Worther - Changelog";
-    
-    // Check for updates when the page visibility changes (user comes back to the tab)
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        reloadChangelog();
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    // Periodic check for updates (every 60 seconds)
-    const intervalId = setInterval(reloadChangelog, 60000);
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      clearInterval(intervalId);
-    };
-  }, [reloadChangelog]);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
@@ -116,9 +45,6 @@ export default function Changelog() {
               >
                 {markdown}
               </ReactMarkdown>
-            </div>
-            <div className="mt-6 pt-4 border-t border-gray-800 text-gray-500 text-sm text-right">
-              Last checked for updates: {new Date(lastUpdated).toLocaleTimeString()}
             </div>
           </div>
         </div>
