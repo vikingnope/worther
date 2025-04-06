@@ -18,7 +18,11 @@ export default function Changelog() {
   }, [markdown]);
   
   const reloadChangelog = useCallback(() => {
-     // Use fetch API with the correct public pat
+    // We already have the static import, so we don't need to fetch if running in development
+    if (import.meta.env.DEV) {
+      return; // Skip fetching in development mode
+    }
+    
     // Use fetch API with the correct public path for the changelog
     fetch('./src/resources/CHANGELOG.md', { 
       cache: 'no-store', // Ensure we don't use cached version
@@ -41,15 +45,22 @@ export default function Changelog() {
         return response.text();
       })
       .then(content => {
-        // Only update if content has changed
-        if (content !== markdownRef.current) {
+        // Validate the content is actually markdown and not HTML
+        if (content.includes('<!DOCTYPE html>') || content.startsWith('<html')) {
+          console.warn('Received HTML instead of markdown, ignoring update');
+          return;
+        }
+        
+        // Only update if content has changed and looks like markdown
+        if (content !== markdownRef.current && 
+            (content.includes('#') || content.includes('- ') || content.includes('* '))) {
           setMarkdown(content);
           setLastUpdated(Date.now());
         }
       })
       .catch(err => {
         console.error('Failed to reload changelog:', err);
-        // In case of error, we still want to show the default content
+        // In case of error, we still have the default content from the static import
       });
   }, []);
 
