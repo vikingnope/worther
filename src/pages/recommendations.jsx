@@ -75,6 +75,7 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
   const map = useMap();
   const defaultCenter = [35.940125, 14.374125];
   const defaultZoom = isDesktop ? 11 : 10;
+  const initialStateRef = useRef(true); // Reference to track initial state
   
   // Check if the map is in its default state
   const checkMapState = () => {
@@ -88,11 +89,30 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
                        Math.abs(currentCenter.lng - defaultCenter[1]);
     
     // Map is in default state if zoom is default (exact match) and center is approximately default
-    // Using a more generous tolerance for center position
-    const isDefault = (currentZoom === defaultZoom && centerDiff < 0.05);
+    // Using a more generous tolerance for center position for laptops especially
+    const isDefault = (currentZoom === defaultZoom && centerDiff < 0.1);
     
     // Update state only if there's a change
     setIsMapModified(!isDefault);
+    
+    // Reset initial state marker once we've confirmed the map has moved from default
+    if (!isDefault && initialStateRef.current) {
+      initialStateRef.current = false;
+    }
+  };
+  
+  // Force reset map modified state when resetMapView is called
+  const forceResetMapState = () => {
+    // Set a small delay to ensure the map animation has completed
+    setTimeout(() => {
+      setIsMapModified(false);
+      initialStateRef.current = true;
+      
+      // Dispatch custom event to notify Leaflet that reset is complete
+      if (map) {
+        map.fire('resetComplete');
+      }
+    }, 500); // Increased delay for more reliable reset
   };
   
   useEffect(() => {
@@ -101,18 +121,23 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
     // Add a slight delay for initial check after map is fully initialized
     const timer = setTimeout(() => {
       checkMapState();
-    }, 100);
+    }, 300);
     
     // Add event listeners for map movements
     map.on('zoomend', checkMapState);
     map.on('moveend', checkMapState);
     map.on('load', checkMapState);
     
+    // Custom event for reset button click
+    map.on('resetView', forceResetMapState);
+    
     return () => {
       clearTimeout(timer);
       map.off('zoomend', checkMapState);
       map.off('moveend', checkMapState);
       map.off('load', checkMapState);
+      map.off('resetView', forceResetMapState);
+      map.off('resetComplete'); // Clean up this listener too
     };
   }, [map, defaultZoom]);
   
@@ -159,6 +184,14 @@ export default function Recommendations () {
     setSelectedBeach(null);
     setFocusLocation(null);
     setResetFocus(true);
+    
+    // Fire the custom event to ensure MapStateTracker knows about the reset
+    if (mapRef.current) {
+      setTimeout(() => {
+        mapRef.current._leaflet_id && mapRef.current.fire('resetView');
+      }, 100);
+    }
+    
     setTimeout(() => setResetFocus(false), 100);
   };
 
@@ -169,27 +202,47 @@ export default function Recommendations () {
     document.title = "Worther - Beach Recommendations";
   }, []);
 
+  // Helper function to create marker icon HTML with direct color values
+  const createMarkerIconHtml = (bgColor, gradientFrom, gradientTo, borderColor, size, glowOpacity, blurSize) => {
+    const dotSize = size * 0.36; // Calculate inner dot size proportionally
+    const pixelSize = size * 5; // Base pixel size for the marker
+    const dotPixelSize = dotSize * 5; // Pixel size for the white dot
+    
+    // Direct color mapping
+    const colorMap = {
+      'blue-300': '#93c5fd',
+      'blue-400': '#60a5fa',
+      'blue-500': '#3b82f6',
+      'blue-600': '#2563eb',
+      'blue-200': '#bfdbfe',
+      'red-300': '#fca5a5',
+      'red-400': '#f87171',
+      'red-500': '#ef4444',
+      'red-600': '#dc2626',
+      'red-200': '#fecaca'
+    };
+    
+    return `
+      <div style="position: relative; width: ${pixelSize}px; height: ${pixelSize}px;">
+        <div style="position: absolute; inset: 0; background-color: ${colorMap[bgColor]}; opacity: 0.${glowOpacity}; border-radius: 50%; filter: blur(${blurSize === 'sm' ? '4px' : '8px'});"></div>
+        <div style="position: relative; width: 100%; height: 100%; background: linear-gradient(to bottom right, ${colorMap[gradientFrom]}, ${colorMap[gradientTo]}); border-radius: 50%; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border: 1px solid ${colorMap[borderColor]}; display: flex; align-items: center; justify-content: center; ${size > 4 ? 'animation: pulse-animation 1.5s infinite;' : ''}">
+          <div style="width: ${dotPixelSize}px; height: ${dotPixelSize}px; border-radius: 50%; background-color: white; opacity: ${size > 4 ? '0.9' : '0.8'};"></div>
+        </div>
+      </div>
+    `;
+  };
+
   const markerIcons = useMemo(() => ({
     recommended: L.divIcon({
       className: '',
-      html: `<div class="relative">
-        <div class="absolute inset-0 bg-blue-400/50 rounded-full blur-sm"></div>
-        <div class="relative bg-gradient-to-br from-blue-300 to-blue-500 w-4 h-4 rounded-full shadow-lg border border-blue-200/30 flex items-center justify-center">
-          <div class="w-1.5 h-1.5 rounded-full bg-white/80"></div>
-        </div>
-      </div>`,
+      html: createMarkerIconHtml('blue-400', 'blue-300', 'blue-500', 'blue-200', 3.5, '50', 'sm'),
       iconSize: [20, 20],
       iconAnchor: [10, 10],
       popupAnchor: [0, -10],
     }),
     unsuitable: L.divIcon({
       className: '',
-      html: `<div class="relative">
-        <div class="absolute inset-0 bg-red-500/50 rounded-full blur-sm"></div>
-        <div class="relative bg-gradient-to-br from-red-400 to-red-600 w-4 h-4 rounded-full shadow-lg border border-red-300/30 flex items-center justify-center">
-          <div class="w-1.5 h-1.5 rounded-full bg-white/80"></div>
-        </div>
-      </div>`,
+      html: createMarkerIconHtml('red-500', 'red-400', 'red-600', 'red-300', 3.5, '50', 'sm'),
       iconSize: [20, 20],
       iconAnchor: [10, 10],
       popupAnchor: [0, -10],
@@ -197,24 +250,14 @@ export default function Recommendations () {
     // Add larger versions of the icons for the selected beach
     selectedRecommended: L.divIcon({
       className: '',
-      html: `<div class="relative">
-        <div class="absolute inset-0 bg-blue-400/60 rounded-full blur-md"></div>
-        <div class="relative bg-gradient-to-br from-blue-300 to-blue-600 w-7 h-7 rounded-full shadow-xl border border-blue-200/50 flex items-center justify-center pulse-animation">
-          <div class="w-2.5 h-2.5 rounded-full bg-white/90"></div>
-        </div>
-      </div>`,
+      html: createMarkerIconHtml('blue-400', 'blue-300', 'blue-600', 'blue-200', 6, '60', 'md'),
       iconSize: [34, 34],
       iconAnchor: [17, 17],
       popupAnchor: [0, -17],
     }),
     selectedUnsuitable: L.divIcon({
       className: '',
-      html: `<div class="relative">
-        <div class="absolute inset-0 bg-red-500/60 rounded-full blur-md"></div>
-        <div class="relative bg-gradient-to-br from-red-400 to-red-600 w-7 h-7 rounded-full shadow-xl border border-red-300/50 flex items-center justify-center pulse-animation">
-          <div class="w-2.5 h-2.5 rounded-full bg-white/90"></div>
-        </div>
-      </div>`,
+      html: createMarkerIconHtml('red-500', 'red-400', 'red-600', 'red-300', 6, '60', 'md'),
       iconSize: [34, 34],
       iconAnchor: [17, 17],
       popupAnchor: [0, -17],
