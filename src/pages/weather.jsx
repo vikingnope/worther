@@ -187,31 +187,29 @@ export default function Weather () {
             )}
             
             {searchMode === 'simple' && (
-              <>
-                {userPos.latitude !== undefined && userPos.longitude !== undefined ? (
-                  <form onSubmit={handleSubmitLocation} className="mt-4">
-                    <button 
-                      type="submit" 
-                      className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md cursor-pointer"
-                    >
-                      <IoLocationSharp size='22' />
-                      Use My Current Location
-                    </button>
-                  </form>
-                ) : (
-                  geoError && (
-                    <div className="mt-4 p-3 bg-gray-800/70 border border-orange-700 rounded-lg text-sm max-w-xs mx-auto">
-                      <div className="flex items-start gap-2">
-                        <MdErrorOutline className="text-orange-500 mt-0.5 flex-shrink-0" size="18" />
-                        <div>
-                          <p className="text-orange-300 font-semibold mb-1">Location unavailable</p>
-                          <p className="text-gray-300">{getGeoErrorMessage(geoError)}</p>
-                        </div>
+              userPos.latitude !== undefined && userPos.longitude !== undefined ? (
+                <form onSubmit={handleSubmitLocation} className="mt-4">
+                  <button 
+                    type="submit" 
+                    className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md cursor-pointer"
+                  >
+                    <IoLocationSharp size='22' />
+                    Use My Current Location
+                  </button>
+                </form>
+              ) : (
+                geoError && (
+                  <div className="mt-4 p-3 bg-gray-800/70 border border-orange-700 rounded-lg text-sm max-w-xs mx-auto">
+                    <div className="flex items-start gap-2">
+                      <MdErrorOutline className="text-orange-500 mt-0.5 flex-shrink-0" size="18" />
+                      <div>
+                        <p className="text-orange-300 font-semibold mb-1">Location unavailable</p>
+                        <p className="text-gray-300">{getGeoErrorMessage(geoError)}</p>
                       </div>
                     </div>
-                  )
-                )}
-              </>
+                  </div>
+                )
+              )
             )}
           </div>
           
