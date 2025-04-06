@@ -14,6 +14,7 @@ import { GiWindsock } from "react-icons/gi"; // * wind sock icon
 import { FaArrowLeft } from "react-icons/fa"; // * back arrow icon
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { BsFillCloudSlashFill } from 'react-icons/bs';
+import { LiaLocationArrowSolid } from "react-icons/lia"; // * wind direction arrow icon
 
 // Weather icons mapping configuration
 const weatherIconsMap = {
@@ -278,6 +279,19 @@ export const WindForce = memo((props) => {
 
 WindForce.displayName = 'WindForce';
 
+// WindArrow component for displaying wind direction
+const WindArrow = ({ degrees }) => {
+  return (
+    <LiaLocationArrowSolid 
+      className="h-6 w-6 text-red-400" 
+      style={{ 
+        transform: `rotate(${(degrees + 180) % 360}deg)`,
+        transition: 'transform 0.5s ease-in-out'
+      }} 
+    />
+  );
+};
+
 export const ShowWeather = memo((props) => {
   const timeUpdated = useMemo(() => ({
     timeUpdatedHour: String(new Date(props.timeUpdatedUNIX * 1000).getHours()).padStart(2, '0'),
@@ -450,9 +464,14 @@ export const ShowWeather = memo((props) => {
             
             <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
               <GiWindsock size={32} className="mr-3 text-cyan-400" />
-              <div>
+              <div className="flex-1">
                 <p className="font-medium text-cyan-300">Wind Direction</p>
-                <p className="text-lg font-bold"><WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°</p>
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mr-3 wind-arrow-container">
+                    <WindArrow degrees={props.windDegrees} />
+                  </div>
+                  <p className="text-lg font-bold"><WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°</p>
+                </div>
               </div>
             </div>
             

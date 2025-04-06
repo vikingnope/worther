@@ -6,6 +6,20 @@ import { Footer } from './utils/footer';
 import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce, SunriseSunsetTimes } from './utils/weatherVariables';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
 import { FaArrowLeft } from "react-icons/fa6";
+import { LiaLocationArrowSolid } from "react-icons/lia"; // * wind direction arrow icon
+
+// WindArrow component for displaying wind direction
+const WindArrow = ({ degrees }) => {
+  return (
+    <LiaLocationArrowSolid 
+      className="h-6 w-6 text-red-400" 
+      style={{ 
+        transform: `rotate(${(degrees + 180) % 360}deg)`,
+        transition: 'transform 0.5s ease-in-out'
+      }} 
+    />
+  );
+};
 
 export const ThreeHourForecastData = memo(() => {
   const { lat, lon } = useParams();
@@ -172,7 +186,12 @@ export const ThreeHourForecastData = memo(() => {
                       </div>
                       <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
                         Wind Speed: <span className="font-semibold text-green-400">{weather.windSpeed} m/s</span> ({<WindForce windSpeed={weather.windSpeed} />})
-                        <div className="lg:mt-1 lg:pl-2">Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</div>
+                        <div className="flex items-center lg:mt-1 lg:pl-2">
+                          <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mr-2 wind-arrow-container">
+                            <WindArrow degrees={weather.windDegrees} />
+                          </div>
+                          <span>Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                        </div>
                       </div>
                       <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
                         Precipitation: <span className="font-semibold text-blue-400">{Math.round(weather.precipitation)}%</span>
