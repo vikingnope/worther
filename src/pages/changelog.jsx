@@ -1,6 +1,6 @@
 import { Header } from "../components/utils/header";
 import { Footer } from "../components/utils/footer";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import packageJson from "../../package.json";
@@ -10,7 +10,15 @@ export default function Changelog() {
   const [markdown, setMarkdown] = useState(CHANGELOG);
   const [lastUpdated, setLastUpdated] = useState(Date.now());
 
+  const markdownRef = useRef(markdown);
+  
+  // Update ref when markdown changes
+  useEffect(() => {
+    markdownRef.current = markdown;
+  }, [markdown]);
+  
   const reloadChangelog = useCallback(() => {
+     // Use fetch API with the correct public pat
     // Use fetch API with the correct public path for the changelog
     fetch('./src/resources/CHANGELOG.md', { 
       cache: 'no-store', // Ensure we don't use cached version
@@ -34,7 +42,7 @@ export default function Changelog() {
       })
       .then(content => {
         // Only update if content has changed
-        if (content !== markdown) {
+        if (content !== markdownRef.current) {
           setMarkdown(content);
           setLastUpdated(Date.now());
         }
@@ -43,7 +51,7 @@ export default function Changelog() {
         console.error('Failed to reload changelog:', err);
         // In case of error, we still want to show the default content
       });
-  }, [markdown]);
+  }, []);
 
   // Initial setup and document title
   useEffect(() => {
@@ -80,7 +88,7 @@ export default function Changelog() {
           </p>
           
           <div className="bg-black/30 p-6 rounded-xl border border-gray-800 markdown-body">
-            <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 pb-4 changelog-scroll">
+            <div className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 pb-4 changelog-scroll" aria-label="Changelog content">
               <ReactMarkdown 
                 remarkPlugins={[remarkGfm]}
                 components={{
