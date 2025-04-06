@@ -175,7 +175,7 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
   // Reset check when defaultZoom changes (device type changes)
   useEffect(() => {
     checkMapState();
-  }, [isDesktop]);
+  }, [isDesktop, checkMapState]);
   
   return null;
 }
