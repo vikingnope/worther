@@ -7,62 +7,112 @@ import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from './layers';
-import markerDot from "../resources/location-dot.png";
-import { MapMode } from './utils/mapMode';
 import { WeatherPopupContent } from './utils/weatherVariables';
+import { CustomZoomControl, CustomAttributionControl, MapMode } from './utils/mapElements';
+import { useDeviceDetect } from '../hooks/useDeviceDetect';
 
-// Custom component to style zoom control based on map mode
-const CustomZoomControl = ({ mapType }) => {
+// Custom component to style popups based on map mode
+const CustomPopupStyle = ({ mapType }) => {
   const map = useMap();
+  const isDesktop = useDeviceDetect();
   
   useEffect(() => {
-    // Find all zoom control elements and style them according to map type
-    const zoomInButton = document.querySelector('.leaflet-control-zoom-in');
-    const zoomOutButton = document.querySelector('.leaflet-control-zoom-out');
+    if (!map) return;
     
-    if (zoomInButton && zoomOutButton) {
-        if (mapType === 'light') {
-        // Light mode - dark buttons/light background
-        zoomInButton.style.color = 'black';
-        zoomInButton.style.backgroundColor = '#fff';
-        zoomOutButton.style.color = 'black';
-        zoomOutButton.style.backgroundColor = '#fff';
-        } else {
-        // Dark mode - light buttons/dark background
-        zoomInButton.style.color = 'white';
-        zoomInButton.style.backgroundColor = '#333';
-        zoomOutButton.style.color = 'white';
-        zoomOutButton.style.backgroundColor = '#333';
-        }
-    }
-  }, [mapType, map]);
-  
-  return null; // This component doesn't render anything, just applies styling
-};
-
-// Custom component to style attribution control based on map mode
-const CustomAttributionControl = ({ mapType }) => {
-  const map = useMap();
-  
-  useEffect(() => {
-    // Find attribution control element and style according to map type
-    const attributionElement = document.querySelector('.leaflet-control-attribution');
+    // Get the map container to scope our selectors
+    const mapContainer = map.getContainer();
     
-    if (attributionElement) {
-      if (mapType === 'light') {
-        // Light mode
-        attributionElement.style.color = 'black';
-        attributionElement.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
-      } else {
-        // Dark mode
-        attributionElement.style.color = 'white';
-        attributionElement.style.backgroundColor = 'rgba(60, 60, 60, 0.8)';
+    // Function to style a popup when it opens
+    const stylePopup = (e) => {
+      const popup = e.popup;
+      const popupElement = popup.getElement();
+      
+      if (!popupElement || !mapContainer.contains(popupElement)) return;
+      
+      // Find elements within this specific popup
+      const contentWrapper = popupElement.querySelector('.leaflet-popup-content-wrapper');
+      const popupTip = popupElement.querySelector('.leaflet-popup-tip');
+      const popupContent = popupElement.querySelector('.leaflet-popup-content');
+      const closeButton = popupElement.querySelector('.leaflet-popup-close-button');
+      
+      // Style the popup elements
+      if (contentWrapper && popupTip) {
+        const bgColor = mapType === 'light' ? '#ffffff' : '#1a1a1a';
+        const textColor = mapType === 'light' ? '#000000' : '#ffffff';
+        
+        [contentWrapper, popupTip].forEach(element => {
+          element.style.backgroundColor = bgColor;
+          element.style.color = textColor;
+        });
       }
       
-      // Add rounded corner only to the top-left
-      attributionElement.style.borderTopLeftRadius = '4px';
-    }
-  }, [mapType, map]);
+      // Style the content wrapper with responsive sizing
+      if (contentWrapper) {
+        if (isDesktop) {
+          contentWrapper.style.minWidth = '280px';
+          contentWrapper.style.maxWidth = '320px';
+        } else {
+          contentWrapper.style.minWidth = '220px';
+          contentWrapper.style.maxWidth = '260px';
+        }
+        contentWrapper.style.width = 'auto';
+      }
+      
+      // Style the popup content
+      if (popupContent) {
+        popupContent.style.width = '100%';
+        popupContent.style.margin = isDesktop ? '8px 12px' : '6px 8px';
+        if (!isDesktop) {
+          popupContent.style.fontSize = '0.9rem';
+        }
+      }
+      
+      // Style the close button
+      if (closeButton) {
+        closeButton.style.transition = 'all 0.2s ease';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.width = isDesktop ? '20px' : '18px';
+        closeButton.style.height = isDesktop ? '20px' : '18px';
+        closeButton.style.display = 'flex';
+        closeButton.style.justifyContent = 'center';
+        closeButton.style.alignItems = 'center';
+        closeButton.style.fontWeight = 'bold';
+        closeButton.style.right = isDesktop ? '7px' : '5px';
+        closeButton.style.top = isDesktop ? '12px' : '8px';
+        closeButton.style.fontSize = isDesktop ? '16px' : '14px';
+        closeButton.style.color = mapType === 'light' ? '#000000' : '#ffffff';
+        
+        // Add hover event listeners
+        closeButton.onmouseover = () => {
+          closeButton.style.transform = 'scale(1.2)';
+          closeButton.style.color = mapType === 'light' ? '#333333' : '#aaaaaa';
+          closeButton.style.fontWeight = 'bolder';
+        };
+        
+        closeButton.onmouseout = () => {
+          closeButton.style.transform = 'scale(1)';
+          closeButton.style.color = mapType === 'light' ? '#000000' : '#ffffff';
+          closeButton.style.fontWeight = 'bold';
+        };
+      }
+    };
+    
+    // Initial styling for any existing popups
+    mapContainer.querySelectorAll('.leaflet-popup').forEach(popupElement => {
+      // Create a mock event object with the popup
+      const popup = popupElement._leaflet_popup;
+      if (popup) {
+        stylePopup({ popup });
+      }
+    });
+    
+    // Add event listener for new popups
+    map.on('popupopen', stylePopup);
+    
+    return () => {
+      map.off('popupopen', stylePopup);
+    };
+  }, [mapType, map, isDesktop]);
   
   return null; // This component doesn't render anything, just applies styling
 };
@@ -110,30 +160,37 @@ export default function ShowMap(props) {
         }  
     }, []);
 
-    const markerIconConst = useMemo(() => L.icon({
-        iconUrl: markerDot,
-        iconRetinaUrl: markerDot,
-        iconAnchor: [13, 14],
-        popupAnchor: [0, -13],
-        iconSize: [26.5, 28]
+    const markerIconConst = useMemo(() => L.divIcon({
+      className: '',
+      html: `
+        <div class="relative">
+          <div class="absolute w-8 h-8 bg-blue-300 bg-opacity-15 rounded-full animate-pulse"></div>
+          <div class="absolute w-6 h-6 bg-blue-300 bg-opacity-25 rounded-full top-1 left-1"></div>
+          <div class="absolute w-3 h-3 bg-blue-500 rounded-full top-2.5 left-2.5 shadow-md"></div>
+        </div>
+      `,
+      iconAnchor: [16, 16], // Center of the marker
+      popupAnchor: [0, -16], // Above the marker
+      iconSize: [32, 32]
     }), []);
 
     const map = useCallback((markerShow, zoomLevel) => {
         return( 
             <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
                 <Header/>
-                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='flex-grow'>
+                <MapContainer center={(userPos.latitude && userPos.longitude) ? [userPos.latitude, userPos.longitude] : [45, 10]} zoom={zoomLevel} minZoom={2} maxBounds={[[-180, -180], [180, 180]]} maxBoundsViscosity={0.75} doubleClickZoom={false} className='grow'>
                     <ScaleControl position="bottomleft" />
                     <CustomZoomControl mapType={mapType} />
                     <CustomAttributionControl mapType={mapType} />
+                    <CustomPopupStyle mapType={mapType} />
                     <TileLayer 
                         zIndex={1}
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
                         url={(mapType === 'light') ?
-                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" :
+                            "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" :
                             "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
                         }
-                        subdomains={(mapType === 'light') ? "abc" : "abcd"}
+                        subdomains={(mapType === 'light') ? "abcd" : "abcd"}
                     />
                     <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
                     <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity}/>
@@ -148,6 +205,9 @@ export default function ShowMap(props) {
                             <Popup>
                                 <WeatherPopupContent 
                                     userPos={userPos}
+                                    color={mapType === 'light' ? 'black' : 'white'}
+                                    mapType={mapType}
+                                    page={'map'}
                                 />
                             </Popup> 
                         </Marker>

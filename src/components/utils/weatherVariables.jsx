@@ -11,6 +11,10 @@ import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
 import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke, WiDust } from 'react-icons/wi'; // * humidity icon, wind icon, barometer, smoke icon
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs' // * sunrise icon, sunset icon
 import { GiWindsock } from "react-icons/gi"; // * wind sock icon
+import { FaArrowLeft } from "react-icons/fa"; // * back arrow icon
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+import { BsFillCloudSlashFill } from 'react-icons/bs';
+import { LiaLocationArrowSolid } from "react-icons/lia"; // * wind direction arrow icon
 
 // Weather icons mapping configuration
 const weatherIconsMap = {
@@ -275,6 +279,21 @@ export const WindForce = memo((props) => {
 
 WindForce.displayName = 'WindForce';
 
+// WindArrow component for displaying wind direction
+export const WindArrow = memo(({ degrees }) => {
+  return (
+    <LiaLocationArrowSolid 
+      className="h-6 w-6 text-red-400" 
+      style={{ 
+        transform: `rotate(${(degrees + 180) % 360}deg)`,
+        transition: 'transform 0.5s ease-in-out'
+      }} 
+    />
+  );
+});
+
+WindArrow.displayName = 'WindArrow';
+
 export const ShowWeather = memo((props) => {
   const timeUpdated = useMemo(() => ({
     timeUpdatedHour: String(new Date(props.timeUpdatedUNIX * 1000).getHours()).padStart(2, '0'),
@@ -309,68 +328,246 @@ export const ShowWeather = memo((props) => {
   }, [history, props.lat, props.lon]);
 
   const WeatherDisplay = memo(() => (
-    <div className="text-center flex-grow flex flex-col justify-center">
-      {props.dayConversion &&
-        <section className="mb-10 mt-7">
-          <p className="mx-auto font-bold text-4xl underline">{props.dayConversion}</p>
-          <p className="font-bold text-4xl mx-auto underline mt-5">{(props.hourConversion > 23 ? props.hourConversion - 24 : props.hourConversion < 0 ? props.hourConversion + 24 : props.hourConversion).toString().padStart(2, '0')}:{props.timeNormalMinutes} (<TimeZoneShow timeZone={props.timeZone} />)</p>
-        </section>
-      }
-      <section className="mb-4 mx-auto">
-        <WeatherIcons 
-          mainWeather={props.mainWeather}
-          windSpeed={props.windSpeed}
-          description={props.description}
-          timeZone={props.timeZone}
-          sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
-          sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
-          hourConversion={props.hourConversion}
-          page="single"
-        />
+    <div className="grow flex flex-col justify-center max-w-4xl mx-auto w-full px-4 py-6">
+      {/* Back button - moved to top left */}
+      <section className='-mb-2'>
+        <button 
+          className="flex items-center text-blue-400 hover:text-cyan-300 transition-colors duration-300 font-medium cursor-pointer group mb-3 sm:mb-0 sm:absolute self-start mx-4 sm:mx-0"
+          onClick={props.choice === "normal" ? handleSubmitNormal : handleSubmitAdvanced}
+        >
+          <FaArrowLeft className="h-5 w-5 mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
+          Back to Last Page
+        </button>
       </section>
-      <section className="text-lg">
-        <p className="underline text-3xl font-bold">{props.name}, {props.country}</p>
-        <p className="font-bold text-3xl mt-4">{props.description.toUpperCase()}</p>
-        <p className="mt-1"><FaTemperatureHigh size={20} className="inline mr-2" />Temperature: {Math.round(props.temperature)}°C</p>
-        <p>Feels like: {Math.round(props.tempFeel)}°C</p>
-        <p>Min: {Math.round(props.tempMin)}°C   Max: {Math.round(props.tempMax)}°C</p>
-        <p><WiHumidity size={27} className="inline" />Humidity: {props.humidity}%</p>
-        <p><WiStrongWind size={27} className="inline mr-2" />Wind Speed: {props.windSpeed} m/s (<WindForce windSpeed={props.windSpeed} />)   <GiWindsock size={23} className="inline mr-2" />Wind Direction: <WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°</p>
-        {props.precipitation !== undefined && <p>Precipitation: {props.precipitation}%</p>}
-        <p><WiBarometer size={30} className="inline mr-1" />Pressure: {props.pressure} hPa</p>
-        <p>Visibility: {props.visibility >= 1000 ? `${props.visibility / 1000}km` : `${props.visibility}m`} (<VisibilityDesc visibility={props.visibility} />)</p>
-        {props.localSunriseSunsetTimes &&
-          <p><BsFillSunriseFill size={25} className="inline mr-2" />Sunrise: {(props.localSunriseSunsetTimes.sunriseHour > 23 ? props.localSunriseSunsetTimes.sunriseHour - 24 : props.localSunriseSunsetTimes.sunriseHour).toString().padStart(2, '0')}:{props.localSunriseSunsetTimes.sunriseMinute.toString().padStart(2, '0')} (<TimeZoneShow timeZone={props.timeZone} />)   <BsFillSunsetFill size={25} className="inline mr-2" />Sunset: {(props.localSunriseSunsetTimes.sunsetHour < 0 ? props.localSunriseSunsetTimes.sunsetHour + 24 : props.localSunriseSunsetTimes.sunsetHour).toString().padStart(2, '0')}:{props.localSunriseSunsetTimes.sunsetMinute.toString().padStart(2, '0')} (<TimeZoneShow timeZone={props.timeZone} />)</p>
-        }
-        {props.rain !== undefined && <p>Rain in last hour: {props.rain} mm</p>}
+      
+      {/* Location and time information */}
+      <section className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">{props.name}, {props.country}</h1>
+        
+        {props.dayConversion && (
+          <div className="mt-3">
+            <p className="text-2xl font-medium text-white/90">{props.dayConversion}</p>
+            <p className="text-xl mt-1 text-white/80">
+              {(props.hourConversion > 23 ? props.hourConversion - 24 : props.hourConversion < 0 ? props.hourConversion + 24 : props.hourConversion).toString().padStart(2, '0')}:{props.timeNormalMinutes} 
+              <span className="text-gray-400 ml-2">(<TimeZoneShow timeZone={props.timeZone} />)</span>
+            </p>
+          </div>
+        )}
       </section>
-      {props.choice === "normal" &&
-        <div className="flex mx-auto">
-          <form onSubmit={props.handleSubmit3Hour}>
-            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show 3 hour forecast</button>
-          </form>
-          <form onSubmit={props.handleSubmitDaily} className="ml-10">
-            <button type="submit" className="text-lg underline mt-5 font-bold hover:text-cyan-300 duration-300">Show daily forecast</button>
-          </form>
+      
+      {/* Main weather display card */}
+      <section className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-6 mb-8 border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+        <div className="flex flex-col md:flex-row items-center mb-4">
+          {/* Weather icon */}
+          <div className="mb-4 md:mb-0 md:mr-8 relative">
+            <div className="absolute inset-0 bg-blue-600/10 blur-2xl rounded-full"></div>
+            <div className="relative">
+              <div className="h-[200px] flex items-center justify-center">
+                <WeatherIcons 
+                  mainWeather={props.mainWeather}
+                  windSpeed={props.windSpeed}
+                  description={props.description}
+                  timeZone={props.timeZone}
+                  sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
+                  sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
+                  hourConversion={props.hourConversion}
+                  page="single"
+                />
+              </div>
+            </div>
+          </div>
+          
+          {/* Temperature information */}
+          <div className="text-center md:text-left">
+            <p className="font-bold text-3xl mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">{props.description.toUpperCase()}</p>
+            <div className="flex items-center justify-center md:justify-start">
+              <FaTemperatureHigh size={28} className="mr-3 text-amber-400" />
+              <span className="text-6xl font-bold text-white">{Math.round(props.temperature)}°C</span>
+            </div>
+            <p className="mt-2 text-xl text-white/90">Feels like: {Math.round(props.tempFeel)}°C</p>
+            <div className="flex mt-2 justify-center md:justify-start gap-5">
+              <span className="flex items-center text-blue-300">
+                <IoIosArrowDown className="h-5 w-5 mr-1 text-blue-300" />
+                Min: {Math.round(props.tempMin)}°C
+              </span>
+              <span className="flex items-center text-red-300">
+                <IoIosArrowUp className="h-5 w-5 mr-1 text-red-300" />
+                Max: {Math.round(props.tempMax)}°C
+              </span>
+            </div>
+          </div>
         </div>
-      }
-      <button className="rounded-md border h-8 text-xl my-8 font-bold w-24 mx-auto" onClick={props.choice ==="normal" ? handleSubmitNormal : handleSubmitAdvanced} >Go Back</button>
-      {props.choice === "normal" ?
-        <p className="flex mx-auto underline mb-7">Last Updated: {timeUpdatedHourConversion.toString().padStart(2, '0')}:{timeUpdated.timeUpdatedMinute} (<TimeZoneShow timeZone={props.timeZone} />)</p> :
-        <p className="flex mx-auto underline mb-7">Last Updated: {currentHourConversion?.toString().padStart(2, '0')}:{props.currentTime.minute} (<TimeZoneShow timeZone={props.timeZone} />)</p>
-      }
+      </section>
+      
+      {/* Detailed weather information section */}
+      <section className="bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-6 mb-8 border border-blue-900/30 backdrop-blur-sm">
+        <h2 className="text-xl font-bold mb-5 pb-2 border-b border-blue-900/50 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">Weather Details</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Column 1 */}
+          <div className="space-y-4">
+            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+              <WiHumidity size={38} className="mr-3 text-blue-400" />
+              <div>
+                <p className="font-medium text-blue-300">Humidity</p>
+                <p className="text-lg font-bold">{props.humidity}%</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+              <WiBarometer size={38} className="mr-3 text-purple-400" />
+              <div>
+                <p className="font-medium text-purple-300">Pressure</p>
+                <p className="text-lg font-bold">{props.pressure} hPa</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+              <BsCloudFog size={32} className="mr-3 text-gray-400" />
+              <div>
+                <p className="font-medium text-gray-300">Visibility</p>
+                <p className="text-lg font-bold">
+                  {props.visibility >= 1000 ? `${props.visibility / 1000}km` : `${props.visibility}m`}
+                  <span className="text-sm text-gray-400 ml-1 font-normal">(<VisibilityDesc visibility={props.visibility} />)</span>
+                </p>
+              </div>
+            </div>
+            
+            {props.rain !== undefined && (
+              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                <BsFillCloudRainFill size={32} className="mr-3 text-blue-300" />
+                <div>
+                  <p className="font-medium text-blue-200">Rain (last hour)</p>
+                  <p className="text-lg font-bold">{props.rain} mm</p>
+                </div>
+              </div>
+            )}
+            
+            {props.precipitation !== undefined && (
+              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                <BsFillCloudDrizzleFill size={32} className="mr-3 text-blue-200" />
+                <div>
+                  <p className="font-medium text-blue-100">Precipitation</p>
+                  <p className="text-lg font-bold">{props.precipitation}%</p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Column 2 */}
+          <div className="space-y-4">
+            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+              <WiStrongWind size={38} className="mr-3 text-teal-400" />
+              <div>
+                <p className="font-medium text-teal-300">Wind</p>
+                <p className="text-lg font-bold">{props.windSpeed} m/s <span className="text-sm text-gray-400 font-normal">(<WindForce windSpeed={props.windSpeed} />)</span></p>
+              </div>
+            </div>
+            
+            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+              <GiWindsock size={32} className="mr-3 text-cyan-400" />
+              <div className="flex-1">
+                <p className="font-medium text-cyan-300">Wind Direction</p>
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mr-3 wind-arrow-container">
+                    <WindArrow degrees={props.windDegrees} />
+                  </div>
+                  <p className="text-lg font-bold"><WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°</p>
+                </div>
+              </div>
+            </div>
+            
+            {props.localSunriseSunsetTimes && (
+              <>
+                <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                  <BsFillSunriseFill size={32} className="mr-3 text-yellow-400" />
+                  <div>
+                    <p className="font-medium text-yellow-300">Sunrise</p>
+                    <p className="text-lg font-bold">
+                      {formatTimeDisplay(props.localSunriseSunsetTimes.sunriseHour, props.localSunriseSunsetTimes.sunriseMinute)}
+                      <span className="text-sm text-gray-400 ml-1 font-normal">(<TimeZoneShow timeZone={props.timeZone} />)</span>
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                  <BsFillSunsetFill size={32} className="mr-3 text-orange-400" />
+                  <div>
+                    <p className="font-medium text-orange-300">Sunset</p>
+                    <p className="text-lg font-bold">
+                      {formatTimeDisplay(props.localSunriseSunsetTimes.sunsetHour, props.localSunriseSunsetTimes.sunsetMinute)}
+                      <span className="text-sm text-gray-400 ml-1 font-normal">(<TimeZoneShow timeZone={props.timeZone} />)</span>
+                    </p>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+      
+      {/* Forecast buttons section */}
+      {props.choice === "normal" && (
+        <section className="mb-8">
+          <div className="flex flex-wrap justify-center gap-4">
+            <form onSubmit={props.handleSubmit3Hour}>
+              <button 
+                type="submit" 
+                className="px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
+              >
+                3 Hour Forecast
+              </button>
+            </form>
+            
+            <form onSubmit={props.handleSubmitDaily}>
+              <button 
+                type="submit" 
+                className="px-6 py-3 bg-gradient-to-r from-indigo-700 to-indigo-600 hover:from-indigo-600 hover:to-indigo-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
+              >
+                Daily Forecast
+              </button>
+            </form>
+          </div>
+        </section>
+      )}
+      
+      {/* Navigation and update info */}
+      <section className="text-center mt-auto">
+        <p className="text-gray-400 text-sm">
+          Last Updated: {props.choice === "normal" 
+            ? `${timeUpdatedHourConversion.toString().padStart(2, '0')}:${timeUpdated.timeUpdatedMinute}`
+            : `${currentHourConversion?.toString().padStart(2, '0')}:${props.currentTime.minute}`
+          } (<TimeZoneShow timeZone={props.timeZone} />)
+        </p>
+      </section>
     </div>
   ));
 
-  const ErrorDisplay = ({ message }) => (
-    <div className="text-center bg-black min-h-screen flex flex-col justify-center">
-      <p className="text-3xl uppercase font-bold">{message}</p>
-      <Link className="text-xl mt-8 underline uppercase font-bold hover:text-cyan-300 duration-300" to="/weather">Go Back</Link>
+  const ErrorDisplay = ({ message, countryName }) => (
+    <div className="text-white bg-gradient-to-b from-black via-blue-950 to-black overflow-hidden flex flex-col min-h-screen items-center justify-center px-4 py-12">
+      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-8 max-w-md w-full text-center border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+        <div className="mb-8">
+          <BsFillCloudSlashFill size={60} className="mx-auto text-blue-400 mb-4" />
+          <p className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">{message}</p>
+          {countryName && (
+            <p className="text-xl text-gray-300 mt-2">
+              Country: <span className="font-medium">{countryName}</span>
+            </p>
+          )}
+          <p className="text-gray-400 mt-3">Unable to retrieve weather data</p>
+        </div>
+        <Link 
+          className="inline-block px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer" 
+          to="/weather"
+        >
+          Return to Weather Search
+        </Link>
+      </div>
     </div>
   );
 
   return (
-    <div className="text-white bg-black flex flex-col min-h-screen">
+    <div className="text-white bg-gradient-to-b from-black via-blue-950 to-black overflow-hidden flex flex-col min-h-screen">
       <Header />
       {props.loaded ? (
         props.mainWeather && 
@@ -380,11 +577,22 @@ export const ShowWeather = memo((props) => {
       ) : props.connectionError ? (
         <ErrorDisplay message="Please check your internet connection" />
       ) : props.loading ? (
-        <div className="text-center bg-black min-h-screen flex flex-col justify-center">
-          <p className="font-bold text-3xl">Loading...</p>
+        <div className="flex-grow flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-slate-900 to-gray-900 p-8 rounded-xl border border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-sm w-full max-w-md">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="h-14 w-14 rounded-full bg-blue-700/70 mb-5 animate-spin"></div>
+              <div className="h-7 w-64 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md mb-4"></div>
+              <div className="h-5 w-48 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md"></div>
+              <p className="mt-5 text-gray-400 font-medium">Loading weather data...</p>
+            </div>
+          </div>
         </div>
       ) : !props.mainWeather ? (
-        <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} />
+        props.isAdvancedSearch ? (
+          <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} countryName={props.countryName} />
+        ) : (
+          <ErrorDisplay message={`The city you have entered ('${props.city}') has not been found`} />
+        )
       ) : (
         <ErrorDisplay message="An unknown error occurred" />
       )}
@@ -443,17 +651,75 @@ export const WeatherPopupContent = memo((props) => {
       return null;
   }, [currentLocationWeather]);
 
+  // Determine styles based on map type for map page
+  const popupStyles = useMemo(() => {
+    if (props.page === 'map') {
+      return props.mapType === 'light' 
+        ? { 
+            background: '#ffffff', 
+            color: '#000000',
+            buttonBg: '#e0e0e0',
+            buttonHoverBg: '#c0c0c0',
+            buttonText: '#000000',
+            heading: '#1e40af', // Deep blue for headings in light mode
+            description: '#6d28d9', // Purple for weather description in light mode
+            labelColor: '#4b5563', // Gray-600 for labels in light mode
+            valueColor: '#111827', // Gray-900 for values in light mode
+            linkBg: '#2563eb', // Blue-600 for link in light mode
+            linkHoverBg: '#1d4ed8' // Blue-700 for link hover in light mode
+          }
+        : { 
+            background: '#1a1a1a', 
+            color: '#ffffff',
+            buttonBg: '#333333',
+            buttonHoverBg: '#444444',
+            buttonText: '#ffffff',
+            heading: '#38bdf8', // Light blue for headings in dark mode
+            description: '#fcd34d', // Yellow-300 for description in dark mode
+            labelColor: '#9ca3af', // Gray-400 for labels in dark mode
+            valueColor: '#ffffff', // White for values in dark mode
+            linkBg: '#1d4ed8', // Blue-700 for link in dark mode
+            linkHoverBg: '#2563eb' // Blue-600 for link hover in dark mode
+          };
+    }
+    return {}; // Default styles for non-map pages
+  }, [props.page, props.mapType]);
+
   if (isLoadingWeather) {
-      return <div className="text-center p-2">Loading weather data...</div>;
+      return (
+        <div 
+          className="text-center p-3 font-medium" 
+          style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
+        >
+          Loading weather data...
+        </div>
+      );
   }
   
   if (!currentLocationWeather) {
       return (
-          <div className="p-2">
-              <p>Failed to load weather data</p>
+          <div 
+            className="p-3"
+            style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
+          >
+              <p className="font-medium text-base mb-2">Failed to load weather data</p>
               <button 
                   onClick={fetchWeatherForCurrentLocation}
-                  className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="mt-2 px-3 py-1.5 rounded-md font-medium hover:bg-blue-600 transition-colors"
+                  style={props.page === 'map' ? { 
+                    backgroundColor: popupStyles.buttonBg,
+                    color: popupStyles.buttonText,
+                  } : { backgroundColor: '#3b82f6', color: 'white' }}
+                  onMouseOver={(e) => {
+                    if (props.page === 'map') {
+                      e.currentTarget.style.backgroundColor = popupStyles.buttonHoverBg;
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (props.page === 'map') {
+                      e.currentTarget.style.backgroundColor = popupStyles.buttonBg;
+                    }
+                  }}
               >
                   Retry
               </button>
@@ -462,9 +728,20 @@ export const WeatherPopupContent = memo((props) => {
   }
   
   return (
-      <div className="p-2 max-w-xs">
-          <h3 className="font-bold text-lg">{currentLocationWeather.name}</h3>
-          <div className="flex items-center">
+      <div 
+        className="p-3 max-w-xs"
+        style={props.page === 'map' ? { color: popupStyles.color, background: popupStyles.background } : {}}
+      >
+          {/* Location name with enhanced font */}
+          <h3 
+            className="font-bold text-xl mb-1.5 tracking-tight"
+            style={props.page === 'map' ? { color: popupStyles.heading } : { color: 'text-cyan-300' }}
+          >
+            {currentLocationWeather.name}
+          </h3>
+          
+          {/* Temperature and weather icon section */}
+          <div className="flex items-center mb-2">
               {currentLocationWeather.weather?.[0] && (
                   <WeatherIcons
                       mainWeather={currentLocationWeather.weather[0].main}
@@ -474,34 +751,147 @@ export const WeatherPopupContent = memo((props) => {
                       sunriseHour={localSunriseSunsetTimes?.sunriseHour}
                       sunsetHour={localSunriseSunsetTimes?.sunsetHour}
                       page="multiple"
-                      color="black"
+                      color={props.page === 'map' ? popupStyles.color : (props.color || 'white')}
                   />
               )}
-              <span className="text-2xl ml-2">{Math.round(currentLocationWeather.main?.temp || 0)}°C</span>
+              <span 
+                className="text-3xl font-bold ml-2"
+                style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+              >
+                {Math.round(currentLocationWeather.main?.temp || 0)}°C
+              </span>
           </div>
-          <p className="capitalize">{currentLocationWeather.weather?.[0]?.description}</p>
-          <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
-              <div>Humidity: {currentLocationWeather.main?.humidity ?? '--'}%</div>
-              <div>Wind: {currentLocationWeather.wind?.speed 
-                ? (
-                    <>
-                      {Math.round(currentLocationWeather.wind.speed)} m/s (<WindForce windSpeed={currentLocationWeather.wind.speed} />)
-                    </>
-                  ) 
-                : '--'}
-              </div>
-              <div>Pressure: {currentLocationWeather.main?.pressure ? `${currentLocationWeather.main.pressure} hPa` : '--'}</div>
-              <div>Visibility: <br/>{currentLocationWeather.visibility ? (currentLocationWeather.visibility >= 1000 ? `${currentLocationWeather.visibility / 1000} km` : `${currentLocationWeather.visibility} m`) : '--'}</div>
-              <div>Sunrise: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunriseHour, localSunriseSunsetTimes.sunriseMinute) : '--:--'}</div>
-              <div>Sunset: {localSunriseSunsetTimes ? formatTimeDisplay(localSunriseSunsetTimes.sunsetHour, localSunriseSunsetTimes.sunsetMinute) : '--:--'}</div>
-          </div>
-          <Link 
-              className='block mt-3 text-center font-bold text-sm underline' 
-              style={{ color: 'inherit' }} 
-              to={'/weatherLocation/' + props.userPos.latitude + '/' + props.userPos.longitude}
+          
+          {/* Weather description with improved styling */}
+          <p 
+            className="capitalize font-medium text-lg mb-3"
+            style={props.page === 'map' ? { color: popupStyles.description } : { color: 'text-yellow-300' }}
           >
-              View detailed forecast
-          </Link>
+            {currentLocationWeather.weather?.[0]?.description || "Unknown"}
+          </p>
+          
+          {/* Weather details with better organization and font styling */}
+          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2.5">
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Humidity
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.main?.humidity ?? '--'}%
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Wind
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.wind?.speed 
+                    ? `${Math.round(currentLocationWeather.wind.speed)} m/s` 
+                    : '--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Pressure
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.main?.pressure ? `${currentLocationWeather.main.pressure} hPa` : '--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Visibility
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {currentLocationWeather.visibility 
+                    ? (currentLocationWeather.visibility >= 1000 
+                        ? `${currentLocationWeather.visibility / 1000} km` 
+                        : `${currentLocationWeather.visibility} m`) 
+                    : '--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Sunrise
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {localSunriseSunsetTimes 
+                    ? formatTimeDisplay(localSunriseSunsetTimes.sunriseHour, localSunriseSunsetTimes.sunriseMinute) 
+                    : '--:--'}
+                </span>
+              </div>
+              
+              <div className="font-medium">
+                <span 
+                  className="text-sm block mb-0.5"
+                  style={props.page === 'map' ? { color: popupStyles.labelColor } : { color: 'text-gray-300' }}
+                >
+                  Sunset
+                </span>
+                <span 
+                  className="text-base"
+                  style={props.page === 'map' ? { color: popupStyles.valueColor } : { color: 'white' }}
+                >
+                  {localSunriseSunsetTimes 
+                    ? formatTimeDisplay(localSunriseSunsetTimes.sunsetHour, localSunriseSunsetTimes.sunsetMinute) 
+                    : '--:--'}
+                </span>
+              </div>
+          </div>
+          
+          {/* View detailed forecast link for map page */}
+          {props.page === 'map' && (
+            <Link 
+                className='block mt-4 text-center font-bold text-sm py-1.5 transition-colors rounded-md' 
+                style={{ 
+                  color: 'white',
+                  backgroundColor: popupStyles.linkBg,
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = popupStyles.linkHoverBg;
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = popupStyles.linkBg;
+                }}
+                to={'/weatherLocation/' + props.userPos.latitude + '/' + props.userPos.longitude}
+            >
+                View detailed forecast
+            </Link>
+          )}
       </div>
   );
 });

@@ -5,6 +5,10 @@
 - Updated workflow labeller to update ui titles to ui/ux instead of ui
 - Fixed title labeller not recognising '/'
 - Fixed Vercel 404 Page showing instead of custom 404 page
+- Major design changes throughout all pages to a more modern UI (new colours, new icons, new search functionality, better error handling, etc...)
+- Upgraded to TailwindCSS v4
+
+---
 
 ## 1.0.8 (Minor)
 

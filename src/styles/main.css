@@ -1,6 +1,113 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --border-width-*: initial;
+  --border-width-0: 0;
+  --border-width-2: 2px;
+  --border-width-3: 3px;
+  --border-width-4: 4px;
+  --border-width-6: 6px;
+  --border-width-8: 8px;
+  --border-width: 1px;
+
+  --color-weather-buttons: #2f3037;
+  
+  /* Color variables for map markers */
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-200: #bfdbfe;
+  
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-200: #fecaca;
+}
+
+/* 
+  Add custom animations for the Reset Map View button
+*/
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes smoothIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.animate-smoothIn {
+  animation: smoothIn 0.5s ease-in-out forwards;
+}
+
+/* Add transition utility for all properties to ensure smooth fade-out */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+/* Pulse animation for map markers */
+.pulse-animation {
+  animation: pulse-animation 1.5s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* Sparkle animation for marker elements */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
 
 .leaflet-control { z-index: 0 !important}
 .leaflet-pane { z-index: 0 !important}
@@ -42,6 +149,13 @@
   opacity: 0.3;
 }
 
+/* Global scrollbar styles */
+/* Firefox scrollbar styling */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #888 rgb(20, 19, 19);
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 7px;
@@ -63,6 +177,59 @@
   background: #555;
 }
 
+/* Hide scrollbar styles for horizontal scrolling containers */
+.hide-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+.hide-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+}
+
+/* Hide scrollbar completely while preserving functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Style for changelog scrollbar with specific behavior */
+.changelog-scroll {
+  /* Firefox scrollbar styling */
+  scrollbar-width: thin !important; 
+  scrollbar-color: rgba(136, 136, 136, 0.3) transparent !important;
+}
+.changelog-scroll:hover {
+  /* Firefox scrollbar styling on hover */
+  scrollbar-color: #888 transparent !important;
+}
+
+/* Override the global WebKit scrollbar styling specifically for changelog-scroll */
+.changelog-scroll::-webkit-scrollbar-track {
+  background: transparent !important; /* Always transparent */
+}
+.changelog-scroll::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.3) !important; /* Faint thumb by default */
+  border-radius: 5px;
+}
+.changelog-scroll::-webkit-scrollbar-thumb:hover {
+  background: #888 !important; /* Only visible when directly hovering on thumb */
+}
+
+/* Remove any hover effects from parent elements */
+.changelog-scroll:hover::-webkit-scrollbar-track {
+  background: transparent !important; /* Force transparent even on container hover */
+}
+
 ::-moz-selection { /* Code for Firefox */
   color: #83838a;
   background: #1c1c1a;
@@ -71,5 +238,57 @@
 ::selection {
   color: #83838a;
   background: #1c1c1a;
+}
+
+/* Text gradient animation for the Worther title */
+@keyframes textShine {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-text {
+  background-size: 200% 200%;
+  animation: textShine 6s ease-in-out infinite;
+}
+
+/* Custom popup styles */
+.custom-popup .leaflet-popup-content-wrapper {
+  background: rgba(35, 35, 50, 0.9);
+  color: #fff;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: rgba(35, 35, 50, 0.9);
+}
+
+/* Responsive popup sizes */
+@media only screen and (max-width: 768px) {
+  .leaflet-popup-content-wrapper {
+    min-width: 220px !important;
+    max-width: 260px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .leaflet-popup-content {
+    margin: 6px 8px !important;
+  }
+}
+
+/* Beach marker specific colors */
+.beach-marker.recommended-marker {
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.beach-marker.unsuitable-marker {
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
 }
 

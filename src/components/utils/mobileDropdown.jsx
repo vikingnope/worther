@@ -1,18 +1,15 @@
-import React, { useState, useEffect, useRef, memo } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from "./../../resources/logoSmallRounded.png";
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
-import { MdOutlineSegment } from 'react-icons/md';
-import { MdArrowLeft, MdOutlineArrowDropDown } from 'react-icons/md';
+import { MdArrowLeft, MdOutlineSegment } from 'react-icons/md';
 
 const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
-
-    const active = (currentLocation === path) ? 'text-green-300' : 'text-white';
+    const active = (currentLocation === path) ? 'text-cyan-300' : 'text-gray-200';
 
     return(
         <Link 
             to={path} 
-            className={`h-14 flex justify-center px-3 items-center gap-2 uppercase text-2xl border-y-2 border-x-3 border-zinc-600 bg-stone-900 my-auto ${active}`}
+            className={`h-14 flex justify-center px-3 items-center gap-2 uppercase text-2xl bg-black/40 backdrop-blur-sm my-auto ${active} hover:text-cyan-300 transition-colors duration-200 border-b border-cyan-900/30`}
             aria-label={`Navigate to ${text}`}
             onClick={onNavigate}
         >
@@ -93,15 +90,12 @@ export const Dropdown = memo((props) => {
             <div className='mr-1'>
                 <button 
                     onClick={toggleMenu} 
-                    className='flex mt-0.5'
+                    className='flex mt-0.5 text-gray-200 hover:text-cyan-300 transition-colors duration-200 cursor-pointer'
                     aria-label={opened ? 'Close navigation menu' : 'Open navigation menu'}
                 >
                     <MdOutlineSegment size='42' />
-                    <div className='mt-1 -ml-2'>
-                    {(opened) ?
-                        <MdOutlineArrowDropDown size='35' /> :
+                    <div className={`mt-1 -ml-2 transition-transform duration-300 ease-in-out ${opened ? '-rotate-90' : 'rotate-0'}`}>
                         <MdArrowLeft size='35' />
-                    }
                     </div>
                 </button>
             </div>
@@ -109,7 +103,7 @@ export const Dropdown = memo((props) => {
             {(opened || visible) && (
                 <nav className={'absolute right-1 z-50 mt-1.5'}>
                     <div 
-                        className={`flex flex-col rounded-lg bg-neutral-800 border border-zinc-600 
+                        className={`flex flex-col rounded-lg bg-black/40 backdrop-blur-md shadow-lg overflow-hidden divide-y divide-cyan-900/30
                             transition-all duration-300 ease-in-out origin-top
                             ${animating ? 'opacity-100 transform translate-y-0 scale-100' : 'opacity-0 transform -translate-y-2 scale-95'}`}
                     >
