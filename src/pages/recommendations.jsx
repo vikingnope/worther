@@ -13,6 +13,7 @@ import { FaArrowLeft, FaRegEye } from "react-icons/fa6";
 import { TiWarningOutline } from "react-icons/ti";
 import { LiaLocationArrowSolid } from "react-icons/lia";
 import { WindDirection } from "../components/utils/weatherVariables";
+import { CustomZoomControl, CustomAttributionControl } from "../components/utils/mapElements";
 
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
@@ -419,6 +420,8 @@ export default function Recommendations () {
                 ref={mapRef}
               >
                 <ZoomController isDesktop={isDesktop} />
+                <CustomZoomControl mapType="light" />
+                <CustomAttributionControl mapType="light" />
                 <MapFocuser focusLocation={focusLocation} resetFocus={resetFocus} isDesktop={isDesktop} />
                 <MapClickHandler onMapClick={handleMapClick} />
                 <MapStateTracker isDesktop={isDesktop} setIsMapModified={setIsMapModified} />
