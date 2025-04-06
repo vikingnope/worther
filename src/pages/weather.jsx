@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { BiSearchAlt } from 'react-icons/bi';
 import { IoLocationSharp } from 'react-icons/io5';
 import { FaCity } from 'react-icons/fa';
+import { MdErrorOutline } from 'react-icons/md';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
  
@@ -19,6 +20,7 @@ export default function Weather () {
   const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
   const [country, setCountry] = useState();
   const [countryCode, setCountryCode] = useState('');
+  const [geoError, setGeoError] = useState(null);
 
   const history = useNavigate();
 
@@ -48,9 +50,14 @@ export default function Weather () {
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
           });
+          setGeoError(null);
         },
         (err) => {
           console.error(`ERROR(${err.code}): ${err.message}`);
+          setGeoError({
+            code: err.code,
+            message: err.message
+          });
         },
         {
           enableHighAccuracy: true,
@@ -58,6 +65,11 @@ export default function Weather () {
           maximumAge: 0,
         }
       );
+    } else {
+      setGeoError({
+        code: 0,
+        message: "Geolocation is not supported by this browser."
+      });
     }
   }, []);
 
@@ -67,6 +79,22 @@ export default function Weather () {
     setCountry(undefined);
     setCountryCode('');
   }, [searchMode]);
+
+  // Helper function to get user-friendly error message
+  const getGeoErrorMessage = (error) => {
+    if (!error) return null;
+    
+    switch(error.code) {
+      case 1:
+        return "Location access was denied. Please enable location permissions in your browser settings to use this feature.";
+      case 2:
+        return "Unable to determine your current location. The signal might be weak or timed out.";
+      case 3:
+        return "Location request timed out. Please try again later.";
+      default:
+        return error.message || "An error occurred while trying to get your location.";
+    }
+  };
 
   return(
     <div className='text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black flex flex-col min-h-screen'>
@@ -91,7 +119,7 @@ export default function Weather () {
                     className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                     type="text"
                     value={city}
-                    onChange={(e) => setCity(e.target.value.toUpperCase())}
+                    onChange={(e) => setCity(e.target.value)}
                     placeholder='Enter City'
                   />
                 </div>
@@ -143,7 +171,7 @@ export default function Weather () {
                     className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                     type="text"
                     value={city}
-                    onChange={(e) => setCity(e.target.value.toUpperCase())}
+                    onChange={(e) => setCity(e.target.value)}
                     placeholder='Enter City'
                   />
                 </div>
@@ -158,16 +186,32 @@ export default function Weather () {
               </form>
             )}
             
-            {searchMode === 'simple' && (userPos.latitude !== undefined && userPos.longitude !== undefined) && (
-              <form onSubmit={handleSubmitLocation} className="mt-4">
-                <button 
-                  type="submit" 
-                  className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md cursor-pointer"
-                >
-                  <IoLocationSharp size='22' />
-                  Use My Current Location
-                </button>
-              </form>
+            {searchMode === 'simple' && (
+              <>
+                {userPos.latitude !== undefined && userPos.longitude !== undefined ? (
+                  <form onSubmit={handleSubmitLocation} className="mt-4">
+                    <button 
+                      type="submit" 
+                      className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md cursor-pointer"
+                    >
+                      <IoLocationSharp size='22' />
+                      Use My Current Location
+                    </button>
+                  </form>
+                ) : (
+                  geoError && (
+                    <div className="mt-4 p-3 bg-gray-800/70 border border-orange-700 rounded-lg text-sm max-w-xs mx-auto">
+                      <div className="flex items-start gap-2">
+                        <MdErrorOutline className="text-orange-500 mt-0.5 flex-shrink-0" size="18" />
+                        <div>
+                          <p className="text-orange-300 font-semibold mb-1">Location unavailable</p>
+                          <p className="text-gray-300">{getGeoErrorMessage(geoError)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                )}
+              </>
             )}
           </div>
           
