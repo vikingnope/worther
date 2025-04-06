@@ -102,7 +102,7 @@ export default function Home() {
                                     Detecting Your Location...
                                 </h2>
                             </div>
-                            <div className="flex items-center justify-center py-3">
+                            <div className="flex items-center justify-center py-3" role="status" aria-live="polite">
                                 <div className="w-10 h-10 border-t-2 border-b-2 border-blue-400 rounded-full animate-spin"></div>
                             </div>
                             <p className="text-gray-300 text-center">
@@ -157,9 +157,9 @@ export default function Home() {
                 
                 {/* Navigation Cards */}
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full max-w-6xl mb-12">
-                    {SITE_MAP.map((item, index) => (
+                    {SITE_MAP.map((item) => (
                         <Link 
-                            key={index} 
+                            key={item.path} 
                             to={item.path} 
                             className="group flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-900 to-gray-900 rounded-xl border border-gray-800 shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_30px_rgba(0,128,255,0.2)] transition-all duration-300 hover:-translate-y-1 text-center"
                             aria-label={`Navigate to ${item.text}`}
