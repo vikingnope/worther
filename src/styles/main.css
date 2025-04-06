@@ -86,6 +86,16 @@
   }
 }
 
+/* Sparkle animation for marker elements */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
 .leaflet-control { z-index: 0 !important}
 .leaflet-pane { z-index: 0 !important}
 .leaflet-top, .leaflet-bottom {z-index: 0 !important}
@@ -245,5 +255,14 @@ html {
 
 .custom-popup .leaflet-popup-tip {
   background: rgba(35, 35, 50, 0.9);
+}
+
+/* Beach marker specific colors */
+.beach-marker.recommended-marker {
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.beach-marker.unsuitable-marker {
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
 }
 

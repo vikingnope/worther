@@ -172,14 +172,24 @@ export default function Recommendations () {
   const markerIcons = useMemo(() => ({
     recommended: L.divIcon({
       className: '',
-      html: `<div class="bg-blue-400 w-4 h-4 rounded-full shadow-md"></div>`,
+      html: `<div class="relative">
+        <div class="absolute inset-0 bg-blue-400/50 rounded-full blur-sm"></div>
+        <div class="relative bg-gradient-to-br from-blue-300 to-blue-500 w-4 h-4 rounded-full shadow-lg border border-blue-200/30 flex items-center justify-center">
+          <div class="w-1.5 h-1.5 rounded-full bg-white/80"></div>
+        </div>
+      </div>`,
       iconSize: [20, 20],
       iconAnchor: [10, 10],
       popupAnchor: [0, -10],
     }),
     unsuitable: L.divIcon({
       className: '',
-      html: `<div class="bg-red-500 w-4 h-4 rounded-full shadow-md"></div>`,
+      html: `<div class="relative">
+        <div class="absolute inset-0 bg-red-500/50 rounded-full blur-sm"></div>
+        <div class="relative bg-gradient-to-br from-red-400 to-red-600 w-4 h-4 rounded-full shadow-lg border border-red-300/30 flex items-center justify-center">
+          <div class="w-1.5 h-1.5 rounded-full bg-white/80"></div>
+        </div>
+      </div>`,
       iconSize: [20, 20],
       iconAnchor: [10, 10],
       popupAnchor: [0, -10],
@@ -187,17 +197,27 @@ export default function Recommendations () {
     // Add larger versions of the icons for the selected beach
     selectedRecommended: L.divIcon({
       className: '',
-      html: `<div class="bg-blue-400 w-6 h-6 rounded-full shadow-lg pulse-animation"></div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
-      popupAnchor: [0, -14],
+      html: `<div class="relative">
+        <div class="absolute inset-0 bg-blue-400/60 rounded-full blur-md"></div>
+        <div class="relative bg-gradient-to-br from-blue-300 to-blue-600 w-7 h-7 rounded-full shadow-xl border border-blue-200/50 flex items-center justify-center pulse-animation">
+          <div class="w-2.5 h-2.5 rounded-full bg-white/90"></div>
+        </div>
+      </div>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
+      popupAnchor: [0, -17],
     }),
     selectedUnsuitable: L.divIcon({
       className: '',
-      html: `<div class="bg-red-500 w-6 h-6 rounded-full shadow-lg pulse-animation"></div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
-      popupAnchor: [0, -14],
+      html: `<div class="relative">
+        <div class="absolute inset-0 bg-red-500/60 rounded-full blur-md"></div>
+        <div class="relative bg-gradient-to-br from-red-400 to-red-600 w-7 h-7 rounded-full shadow-xl border border-red-300/50 flex items-center justify-center pulse-animation">
+          <div class="w-2.5 h-2.5 rounded-full bg-white/90"></div>
+        </div>
+      </div>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
+      popupAnchor: [0, -17],
     })
   }), []);
 
