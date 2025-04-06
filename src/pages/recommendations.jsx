@@ -12,6 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import { FaArrowLeft, FaRegEye } from "react-icons/fa6";
 import { TiWarningOutline } from "react-icons/ti";
 import { LiaLocationArrowSolid } from "react-icons/lia";
+import { WindDirection } from "../components/utils/weatherVariables";
 
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
@@ -295,19 +296,10 @@ export default function Recommendations () {
     return "Strong";
   }
 
-  // Helper function to convert wind degrees to cardinal direction
-  const getWindDirection = (degrees) => {
-    const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
-    const index = Math.round(degrees / 22.5) % 16;
-    return directions[index];
-  }
-
   // Helper function to scroll to map section
   const scrollToMap = () => {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  wind.degrees = 240
   
   return(
     <div className='flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black'>
@@ -329,7 +321,7 @@ export default function Recommendations () {
             </div>
             <div className="flex flex-col items-center">
               <span className="text-gray-400 text-sm">Direction</span>
-              <span className="text-2xl font-bold text-white">{getWindDirection(wind.degrees) || '...'}</span>
+              <span className="text-2xl font-bold text-white">{wind.degrees !== undefined ? <WindDirection windDegrees={wind.degrees} /> : '...'}</span>
               <span className="text-yellow-400 font-medium">{wind.degrees?.toFixed(0) || '...'}°</span>
             </div>
             <div className="flex flex-col items-center">
