@@ -13,6 +13,20 @@ const SITE_MAP = [
     { text: 'About', path: '/about', icon: <FaInfoCircle className="text-4xl mb-3 text-purple-400 group-hover:text-cyan-300 transition-colors duration-300" />, description: 'Learn more about Worther' }
 ];
 
+const FEATURES = [
+    { title: 'Accurate Forecasts', color: 'text-yellow-400', description: 'Get detailed 3-hour and daily weather forecasts with all the metrics you need.' },
+    { title: 'Interactive Maps', color: 'text-green-400', description: 'Explore interactive weather maps with multiple layers and real-time updates.' },
+    { title: 'Weather Recommendations', color: 'text-purple-400', description: 'Receive personalized recommendations based on current and forecasted weather.' },
+    { title: 'Location Awareness', color: 'text-pink-400', description: 'Quickly access weather data for your current location with a single click.' }
+];
+
+const FeatureCard = ({ title, color, description }) => (
+    <div className="bg-black/40 p-5 rounded-lg backdrop-blur-sm border border-gray-800/50 hover:border-gray-700/50 transition-colors duration-300">
+        <h3 className={`font-bold text-lg ${color} mb-2`}>{title}</h3>
+        <p className="text-gray-300">{description}</p>
+    </div>
+);
+
 export default function Home() {
     const [userPos, setUserPos] = useState({ latitude: undefined, longitude: undefined });
     const [currentDate, setCurrentDate] = useState('');
@@ -142,22 +156,14 @@ export default function Home() {
                     <div className="relative bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 rounded-xl p-7 border border-blue-900/30 shadow-lg backdrop-blur-sm">
                         <h2 className="text-2xl font-bold mb-5 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">Why Use Worther?</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div className="bg-black/40 p-5 rounded-lg backdrop-blur-sm border border-gray-800/50 hover:border-gray-700/50 transition-colors duration-300">
-                                <h3 className="font-bold text-lg text-yellow-400 mb-2">Accurate Forecasts</h3>
-                                <p className="text-gray-300">Get detailed 3-hour and daily weather forecasts with all the metrics you need.</p>
-                            </div>
-                            <div className="bg-black/40 p-5 rounded-lg backdrop-blur-sm border border-gray-800/50 hover:border-gray-700/50 transition-colors duration-300">
-                                <h3 className="font-bold text-lg text-green-400 mb-2">Interactive Maps</h3>
-                                <p className="text-gray-300">Explore interactive weather maps with multiple layers and real-time updates.</p>
-                            </div>
-                            <div className="bg-black/40 p-5 rounded-lg backdrop-blur-sm border border-gray-800/50 hover:border-gray-700/50 transition-colors duration-300">
-                                <h3 className="font-bold text-lg text-purple-400 mb-2">Weather Recommendations</h3>
-                                <p className="text-gray-300">Receive personalized recommendations based on current and forecasted weather.</p>
-                            </div>
-                            <div className="bg-black/40 p-5 rounded-lg backdrop-blur-sm border border-gray-800/50 hover:border-gray-700/50 transition-colors duration-300">
-                                <h3 className="font-bold text-lg text-pink-400 mb-2">Location Awareness</h3>
-                                <p className="text-gray-300">Quickly access weather data for your current location with a single click.</p>
-                            </div>
+                            {FEATURES.map((feature, index) => (
+                                <FeatureCard 
+                                    key={index}
+                                    title={feature.title}
+                                    color={feature.color}
+                                    description={feature.description}
+                                />
+                            ))}
                         </div>
                     </div>
                 </section>
