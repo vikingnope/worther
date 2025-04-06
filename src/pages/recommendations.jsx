@@ -55,10 +55,6 @@ const createMarkerIconHtml = (bgColor, gradientFrom, gradientTo, borderColor, si
 // Component to control zoom based on device detection
 function ZoomController({ isDesktop }) {
   const map = useMap();
-
-  useEffect(() => {
-    document.title = "Worther - Beach Recommendations";
-  }, []);
   
   useEffect(() => {
     const currentZoom = map.getZoom();
@@ -205,6 +201,10 @@ export default function Recommendations () {
   const [buttonVisible, setButtonVisible] = useState(false); // Track button visibility for animation
   const mapRef = useRef(null);
   const mapSectionRef = useRef(null); // Ref for the map section to scroll to
+
+  useEffect(() => {
+    document.title = "Worther - Beach Recommendations";
+  }, []);
 
   // Add this function to handle map clicks
   const handleMapClick = useCallback(() => {
