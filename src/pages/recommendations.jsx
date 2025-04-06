@@ -196,13 +196,6 @@ export default function Recommendations () {
     setTimeout(() => setResetFocus(false), 100);
   };
 
-// Create CSS classes for our markers
-  useEffect(() => {
-    // This effect was previously used for CSS pulse animation
-    // The CSS has been moved to main.css file for better separation of concerns
-    document.title = "Worther - Beach Recommendations";
-  }, []);
-
   // Helper function to create marker icon HTML with direct color values
   const createMarkerIconHtml = (bgColor, gradientFrom, gradientTo, borderColor, size, glowOpacity, blurSize) => {
     const dotSize = size * 0.36; // Calculate inner dot size proportionally
