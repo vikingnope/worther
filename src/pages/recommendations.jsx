@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 import L from 'leaflet';
 import { useState, useEffect, useMemo, useRef } from "react";
-import ReactDOM from "react-dom/client";
+import { createPortal } from "react-dom";
 import axios from "axios";
 import beaches from "../resources/beaches.csv";
 import { useDeviceDetect } from "../hooks/useDeviceDetect";
@@ -488,7 +488,7 @@ function MapClickHandler({ onMapClick }) {
 // Wind direction arrow control for the map
 function WindDirectionControl({ windDegrees }) {
   const map = useMap();
-  const controlRef = useRef();
+  const [container, setContainer] = useState(null);
   
   useEffect(() => {
     // Create custom Leaflet control for wind direction
@@ -498,15 +498,12 @@ function WindDirectionControl({ windDegrees }) {
     
     windControl.onAdd = function() {
       const div = L.DomUtil.create('div', 'leaflet-control wind-direction-control');
-      div.innerHTML = `
-          <div class="h-14 w-14 flex items-center justify-center bg-gray-700/90 rounded-full border border-gray-600 wind-arrow-container"></div>
-      `;
+      setContainer(div);
       
       // Prevent map interactions from propagating through the control
       L.DomEvent.disableClickPropagation(div);
       L.DomEvent.disableScrollPropagation(div);
       
-      controlRef.current = div;
       return div;
     };
     
@@ -515,35 +512,23 @@ function WindDirectionControl({ windDegrees }) {
     return () => {
       if (map && windControl) {
         windControl.remove();
+        setContainer(null);
       }
     };
   }, [map]);
   
-  useEffect(() => {
-    if (!controlRef.current || windDegrees === undefined) return;
-    
-    // Create React element for LiaLocationArrowSolid
-    const iconContainer = controlRef.current.querySelector('.wind-arrow-container');
-    if (iconContainer) {
-      // Clean up previous render if any
-      while (iconContainer.firstChild) {
-        iconContainer.removeChild(iconContainer.firstChild);
-      }
-      
-      // Create the React icon element and render it
-      const iconElement = document.createElement('div');
-      iconElement.className = 'wind-arrow';
-      iconContainer.appendChild(iconElement);
-      
-      // Render the React component into the container
-      const root = ReactDOM.createRoot(iconElement);
-      root.render(<LiaLocationArrowSolid className="h-9 w-9 text-red-400" />);
-      
-      // Apply rotation style
-      iconElement.style.transform = `rotate(${(windDegrees + 180) % 360}deg)`;
-      iconElement.style.transition = 'transform 0.5s ease-in-out';
-    }
-  }, [windDegrees, controlRef.current]);
+  // Only render the portal when container is available
+  if (!container || windDegrees === undefined) return null;
   
-  return null;
+  return createPortal(
+    <div className="h-14 w-14 flex items-center justify-center bg-gray-700/90 rounded-full border border-gray-600">
+      <div style={{ 
+        transform: `rotate(${(windDegrees + 180) % 360}deg)`,
+        transition: 'transform 0.5s ease-in-out'
+      }}>
+        <LiaLocationArrowSolid className="h-9 w-9 text-red-400" />
+      </div>
+    </div>,
+    container
+  );
 }
