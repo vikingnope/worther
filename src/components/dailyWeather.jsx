@@ -130,7 +130,7 @@ export const DailyWeatherData = memo(() => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center relative my-8">
           <section className="mb-6">
             <button 
-              className="flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium cursor-pointer group mb-4 sm:mb-0 sm:absolute sm:left-4 md:left-8 self-start mx-4 sm:mx-0"
+              className="flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium cursor-pointer group mb-4 md:mb-0 md:absolute md:left-4 lg:left-12 self-start mx-4 md:mx-0"
               onClick={() => navigate(-1)}
               aria-label="Go back to the last page"
             >
