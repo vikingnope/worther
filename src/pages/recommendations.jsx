@@ -140,7 +140,7 @@ function MapStateTracker({ isDesktop, setIsMapModified }) {
       map.off('resetView', forceResetMapState);
       map.off('resetComplete'); // Clean up this listener too
     };
-  }, [map, defaultZoom, setIsMapModified]);
+  }, [map, defaultZoom, setIsMapModified, checkMapState, forceResetMapState]);
   
   // Reset check when defaultZoom changes (device type changes)
   useEffect(() => {
@@ -362,13 +362,14 @@ export default function Recommendations () {
     }
   }, [wind, loading, data])
 
-  // Helper function to determine wind strength description
   const getWindDescription = (speed) => {
-    if (speed < 2) return "Calm";
-    if (speed < 4) return "Light";
-    if (speed < 6) return "Moderate";
-    if (speed < 8) return "Fresh";
-    return "Strong";
+    if (speed < 0.5) return "Calm"; // Beaufort 0
+    if (speed < 1.5) return "Light Air"; // Beaufort 1
+    if (speed < 3.3) return "Light Breeze"; // Beaufort 2
+    if (speed < 5.5) return "Gentle Breeze"; // Beaufort 3
+    if (speed < 7.9) return "Moderate Breeze"; // Beaufort 4
+    if (speed < 10.7) return "Fresh Breeze"; // Beaufort 5
+    return "Strong Breeze"; // Beaufort 6+
   }
 
   // Helper function to scroll to map section
