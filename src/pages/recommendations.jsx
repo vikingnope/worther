@@ -45,7 +45,7 @@ function MapFocuser({ focusLocation, resetFocus, isDesktop }) {
       const zoomLevel = isDesktop ? 14 : 13;
       
       // Add a slight delay to ensure map is ready
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         map.setView([focusLocation.lat, focusLocation.lon], zoomLevel, {
           animate: true,
           pan: {
@@ -53,6 +53,7 @@ function MapFocuser({ focusLocation, resetFocus, isDesktop }) {
           }
         });
       }, 100);
+      return () => clearTimeout(timer);
     }
   }, [focusLocation, map, isDesktop]);
 

@@ -145,7 +145,7 @@ export const DailyWeatherData = memo(() => {
               (
                 <>
                 <div className="hidden sm:flex sm:mb-4 sm:items-center sm:justify-center xl:hidden">
-                  <div className="bg-blue-600/30 text-white text-xs px-3 py-1 rounded-full flex items-center">
+                  <div className="bg-blue-600/30 text-white text-xs px-3 py-1 rounded-full flex items-center" aria-label="Scroll to view more days">
                     <span className="animate-pulse">⟵</span>
                     <span className="mx-2">Scroll to view more days</span>
                     <span className="animate-pulse">⟶</span>
