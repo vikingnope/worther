@@ -137,6 +137,7 @@ export default function Recommendations () {
   const [resetFocus, setResetFocus] = useState(false);
   const [selectedBeach, setSelectedBeach] = useState(null); // Track selected beach
   const [isMapModified, setIsMapModified] = useState(false); // Track if map is in modified state
+  const [buttonVisible, setButtonVisible] = useState(false); // Track button visibility for animation
   const mapRef = useRef(null);
   const mapSectionRef = useRef(null); // Ref for the map section to scroll to
 
@@ -161,32 +162,11 @@ export default function Recommendations () {
     setTimeout(() => setResetFocus(false), 100);
   };
 
-  // Create CSS classes for our markers
+// Create CSS classes for our markers
   useEffect(() => {
-    // Add CSS for the pulse animation
-    const style = document.createElement('style');
-    style.textContent = `
-      .pulse-animation {
-        animation: pulse-animation 1.5s infinite;
-      }
-      
-      @keyframes pulse-animation {
-        0% {
-          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6);
-        }
-        70% {
-          box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-        }
-        100% {
-          box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    return () => {
-      document.head.removeChild(style);
-    };
+    // This effect was previously used for CSS pulse animation
+    // The CSS has been moved to main.css file for better separation of concerns
+    document.title = "Worther - Beach Recommendations";
   }, []);
 
   const markerIcons = useMemo(() => ({
@@ -262,8 +242,9 @@ export default function Recommendations () {
   useEffect(() => {
     if (loading === false && wind.speed !== undefined && wind.degrees !== undefined) {
       try {
+        let newSuitability = [];
         if (wind.speed >= 8) {
-            setSuitability(data.map(() => "Unsuitable"));
+            newSuitability = data.map(() => "Unsuitable");
         } else if (wind.speed >= 0 && data.length > 0) {
             for (const item of data) {
                 let suitableObj2 = "";
@@ -279,12 +260,13 @@ export default function Recommendations () {
                     suitableObj2 = "Recommended";
                 }
 
-                setSuitability(suitability => [...suitability, suitableObj2]);
+                newSuitability.push(suitableObj2);
             }
         }
-    } catch (error) {
-        console.error(error);
-    }
+        setSuitability(newSuitability);
+      } catch (error) {
+          console.error(error);
+      }
     }
   }, [wind, loading, data])
 
@@ -301,6 +283,20 @@ export default function Recommendations () {
   const scrollToMap = () => {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Handle button visibility with animation transitions
+  useEffect(() => {
+    if (isMapModified) {
+      // Show button immediately when map is modified
+      setButtonVisible(true);
+    } else {
+      // When map returns to default, add delay before removing the button from DOM
+      const timer = setTimeout(() => {
+        setButtonVisible(false);
+      }, 300); // Wait for fade-out animation to complete
+      return () => clearTimeout(timer);
+    }
+  }, [isMapModified]);
   
   return(
     <div className='flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black'>
@@ -363,7 +359,7 @@ export default function Recommendations () {
                 <MapFocuser focusLocation={focusLocation} resetFocus={resetFocus} isDesktop={isDesktop} />
                 <MapClickHandler onMapClick={handleMapClick} />
                 <MapStateTracker isDesktop={isDesktop} setIsMapModified={setIsMapModified} />
-                <WindDirectionControl windDegrees={wind.degrees} windSpeed={wind.speed} />
+                <WindDirectionControl windDegrees={wind.degrees} />
                 <TileLayer zIndex={1}
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
                     url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
@@ -400,17 +396,17 @@ export default function Recommendations () {
           </section>
 
           {/* Only show Reset Map View button when map is in a modified state */}
-          {isMapModified && (
-            <div className="mx-auto mb-6">
-              <button 
-                onClick={resetMapView}
-                className="bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg transition-colors duration-300 flex items-center cursor-pointer"
-              >
-                <FaArrowLeft className="mr-2" />
-                Reset Map View
-              </button>
-            </div>
-          )}
+          <div className="mx-auto mb-6 h-10">
+            <button 
+              onClick={resetMapView}
+              className={`bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg shadow-md flex items-center cursor-pointer
+                         hover:scale-105 active:scale-95 transition-all duration-300 absolute left-1/2 transform -translate-x-1/2 
+                         ${buttonVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+            >
+              <FaArrowLeft className="mr-2" />
+              Reset Map View
+            </button>
+          </div>
 
           {/* Beach list with improved cards */}
           <section className="px-4 pb-12">
