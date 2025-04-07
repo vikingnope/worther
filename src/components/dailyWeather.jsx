@@ -135,7 +135,9 @@ export const DailyWeatherData = memo(() => {
           { main: data.weather.main, description: data.weather.description };
         
         // Determine the type of the most prominent condition
-        const prominentConditionType = classifyWeatherCondition(mostProminentConditionId);
+        const prominentConditionType = mostProminentConditionId !== null ? 
+          classifyWeatherCondition(mostProminentConditionId) : 
+          WEATHER_PHENOMENA.PARTLY_CLOUDY;
         
         // Create warning messages based on phenomena
         const warnings = [];
