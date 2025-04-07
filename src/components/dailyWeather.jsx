@@ -8,18 +8,6 @@ import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoWarningOutline } from "react-icons/io5";
 
-// Helper function to determine weather condition type from ID
-const getWeatherConditionType = (conditionId) => {
-  if (conditionId == null) return 'partly-cloudy'; // Handle null/undefined with a reasonable default that ensures an icon
-  if (conditionId >= 200 && conditionId < 300) return 'thunder';
-  if (conditionId >= 300 && conditionId < 400) return 'drizzle';
-  if (conditionId >= 500 && conditionId < 600) return 'rain';
-  if (conditionId >= 600 && conditionId < 700) return 'snow';
-  if (conditionId >= 700 && conditionId < 800) return 'atmosphere';
-  if (conditionId === 800) return 'clear';
-  return 'clouds'; // Default for 801-899 (clouds)
-};
-
 // Weather phenomena types for consistent tracking
 const WEATHER_PHENOMENA = {
   THUNDER: 'thunder',
@@ -29,17 +17,19 @@ const WEATHER_PHENOMENA = {
   FOG: 'atmosphere',
   CLEAR: 'clear',
   CLOUDS: 'clouds',
+  PARTLY_CLOUDY: 'partly-cloudy', // Added for null condition handling
 };
 
-// Map weather condition IDs to phenomena types
-const getPhenomenonType = (conditionId) => {
+// Unified function to classify weather conditions based on condition ID
+const classifyWeatherCondition = (conditionId) => {
+  if (conditionId == null) return WEATHER_PHENOMENA.PARTLY_CLOUDY; // Handle null/undefined
   if (conditionId >= 200 && conditionId < 300) return WEATHER_PHENOMENA.THUNDER;
   if (conditionId >= 300 && conditionId < 400) return WEATHER_PHENOMENA.DRIZZLE;
   if (conditionId >= 500 && conditionId < 600) return WEATHER_PHENOMENA.RAIN;
   if (conditionId >= 600 && conditionId < 700) return WEATHER_PHENOMENA.SNOW;
   if (conditionId >= 700 && conditionId < 800) return WEATHER_PHENOMENA.FOG;
   if (conditionId === 800) return WEATHER_PHENOMENA.CLEAR;
-  return WEATHER_PHENOMENA.CLOUDS;
+  return WEATHER_PHENOMENA.CLOUDS; // Default for 801-899 (clouds)
 };
 
 export const DailyWeatherData = memo(() => {
@@ -102,7 +92,7 @@ export const DailyWeatherData = memo(() => {
           dailyData[date].weatherConditions[condition.id].count += 1;
           
           // Track weather phenomena using the single object
-          const phenomenonType = getPhenomenonType(condition.id);
+          const phenomenonType = classifyWeatherCondition(condition.id);
           if (!dailyData[date].phenomena[phenomenonType]) {
             dailyData[date].phenomena[phenomenonType] = {
               count: 0,
@@ -145,7 +135,7 @@ export const DailyWeatherData = memo(() => {
           { main: data.weather.main, description: data.weather.description };
         
         // Determine the type of the most prominent condition
-        const prominentConditionType = getWeatherConditionType(mostProminentConditionId);
+        const prominentConditionType = classifyWeatherCondition(mostProminentConditionId);
         
         // Create warning messages based on phenomena
         const warnings = [];
