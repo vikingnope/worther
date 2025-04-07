@@ -75,31 +75,46 @@ export const DailyWeatherData = memo(() => {
             count: 0,
             weatherConditions: {},             // Track all weather conditions with counts
             phenomena: {},                     // Single object to track all weather phenomena
-            weather: weatherAPI.weather[0]     // Store the first condition initially
+            weather: weatherAPI.weather && weatherAPI.weather.length > 0 ? 
+              weatherAPI.weather[0] : 
+              { id: null, main: 'Unknown', description: 'No weather data available' }
           };
         }
 
         // Track all weather conditions that occur during the day
-        for (const condition of weatherAPI.weather) {
-          if (!dailyData[date].weatherConditions[condition.id]) {
-            dailyData[date].weatherConditions[condition.id] = {
+        // Validate weatherAPI.weather is a valid array before iterating
+        if (weatherAPI.weather && Array.isArray(weatherAPI.weather) && weatherAPI.weather.length > 0) {
+          for (const condition of weatherAPI.weather) {
+            if (!dailyData[date].weatherConditions[condition.id]) {
+              dailyData[date].weatherConditions[condition.id] = {
+                count: 0,
+                description: condition.description,
+                main: condition.main,
+                icon: condition.icon
+              };
+            }
+            dailyData[date].weatherConditions[condition.id].count += 1;
+            
+            // Track weather phenomena using the single object
+            const phenomenonType = classifyWeatherCondition(condition.id);
+            if (!dailyData[date].phenomena[phenomenonType]) {
+              dailyData[date].phenomena[phenomenonType] = {
+                count: 0,
+                description: condition.description
+              };
+            }
+            dailyData[date].phenomena[phenomenonType].count += 1;
+          }
+        } else {
+          // Handle case where weather data is missing or invalid
+          const defaultPhenomenonType = WEATHER_PHENOMENA.PARTLY_CLOUDY;
+          if (!dailyData[date].phenomena[defaultPhenomenonType]) {
+            dailyData[date].phenomena[defaultPhenomenonType] = {
               count: 0,
-              description: condition.description,
-              main: condition.main,
-              icon: condition.icon
+              description: 'Unknown weather conditions'
             };
           }
-          dailyData[date].weatherConditions[condition.id].count += 1;
-          
-          // Track weather phenomena using the single object
-          const phenomenonType = classifyWeatherCondition(condition.id);
-          if (!dailyData[date].phenomena[phenomenonType]) {
-            dailyData[date].phenomena[phenomenonType] = {
-              count: 0,
-              description: condition.description
-            };
-          }
-          dailyData[date].phenomena[phenomenonType].count += 1;
+          dailyData[date].phenomena[defaultPhenomenonType].count += 1;
         }
 
         // Update max precipitation probability instead of multiplying
