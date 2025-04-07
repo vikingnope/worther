@@ -10,6 +10,7 @@ import { IoWarningOutline } from "react-icons/io5";
 
 // Helper function to determine weather condition type from ID
 const getWeatherConditionType = (conditionId) => {
+  if (conditionId == null) return 'partly-cloudy'; // Handle null/undefined with a reasonable default that ensures an icon
   if (conditionId >= 200 && conditionId < 300) return 'thunder';
   if (conditionId >= 300 && conditionId < 400) return 'drizzle';
   if (conditionId >= 500 && conditionId < 600) return 'rain';
