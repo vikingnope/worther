@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes, WindArrow } from './utils/weatherVariables';
+import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes, WindCompass } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoWarningOutline } from "react-icons/io5";
@@ -274,21 +274,21 @@ export const DailyWeatherData = memo(() => {
                     return (
                       <div 
                         key={index} 
-                        className='flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-6 py-4 xl:py-6 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[900px] snap-center'
+                        className='flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-4 py-2 xl:py-3 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[750px] snap-center'
                         role="article" 
                         aria-label={`Weather forecast for ${dayConversion}`}
                       >
                         {/* Day header section */}
-                        <div className="shrink-0 mx-auto mt-1 xl:mt-2 mb-3 xl:mb-6 text-center">
-                          <p className='font-bold text-2xl xl:text-3xl block mb-1 xl:mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-300 animate-text'>{dayConversion}</p>
-                          <span className="inline-block h-1 w-24 rounded-sm bg-gradient-to-r from-emerald-500 to-cyan-400 mb-4 xl:mb-8"></span>
+                        <div className="shrink-0 mx-auto mt-1 mb-2 text-center">
+                          <p className='font-bold text-xl xl:text-2xl block mb-1 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-300 animate-text'>{dayConversion}</p>
+                          <span className="inline-block h-1 w-24 rounded-sm bg-gradient-to-r from-emerald-500 to-cyan-400 mb-2"></span>
                         </div>
 
                         {/* Weather Icon - Moved to the middle */}
-                        <div className="mb-6 xl:mb-8 relative flex justify-center">
+                        <div className="mb-3 relative flex justify-center">
                           <div className="absolute inset-0 bg-emerald-600/10 blur-xl rounded-full"></div>
                           <div className="relative transform hover:scale-110 transition-transform duration-300">
-                            <div className="h-[120px] flex items-center justify-center">
+                            <div className="h-[90px] flex items-center justify-center">
                               <WeatherIcons 
                                 mainWeather={weather.weather.main} 
                                 windSpeed={weather.windSpeed} 
@@ -303,11 +303,11 @@ export const DailyWeatherData = memo(() => {
                         
                         {/* Weather warnings section (if present) */}
                         {weather.hasWarnings && (
-                          <div className="mb-4 xl:mb-6">
-                            <div className="bg-amber-900/40 backdrop-blur-sm rounded-lg p-3 xl:p-4 shadow-inner border border-amber-800/50 transition-all duration-300">
+                          <div className="mb-2">
+                            <div className="bg-amber-900/40 backdrop-blur-sm rounded-lg p-2 shadow-inner border border-amber-800/50 transition-all duration-300">
                               <div className="flex items-center justify-center">
-                                <IoWarningOutline className="text-amber-400 text-2xl mr-1" />
-                                <p className="text-amber-200 text-md xl:text-lg">
+                                <IoWarningOutline className="text-amber-400 text-xl mr-1" />
+                                <p className="text-amber-200 text-sm">
                                   {weather.warnings.join(', ')}
                                 </p>
                               </div>
@@ -316,64 +316,57 @@ export const DailyWeatherData = memo(() => {
                         )}
                         
                         {/* Temperature section with highlight */}
-                        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3 xl:p-6 mb-4 xl:mb-8 shadow-inner border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                          <p className='mx-auto text-lg xl:text-xl mb-1 xl:mb-2 text-center'>
-                            <span className="text-2xl xl:text-3xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
+                        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3 mb-3 shadow-inner border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                          <p className='mx-auto text-md mb-0 text-center'>
+                            <span className="text-xl xl:text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
                               {Math.round(weather.tempMin)}°C - {Math.round(weather.tempMax)}°C
                             </span>
                           </p>
-                          <p className="text-gray-400 text-center text-xs xl:text-sm">Temperature Range</p>
+                          <p className="text-gray-400 text-center text-xs">Temperature Range</p>
                         </div>
                         
                         {/* Wind data section */}
-                        <div className="flex flex-col mb-4 xl:mb-8 border-b border-gray-800/30 pb-3 xl:pb-6">
-                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">Wind Conditions</h3>
-                          <div className="grid grid-cols-2 gap-2 xl:gap-3">
-                            <div className="flex flex-col items-center justify-center text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                              <p className='text-base xl:text-lg mb-0 xl:mb-1'>{weather.windSpeed.toFixed(2)} m/s</p>
-                              <p className='text-yellow-400 text-xs xl:text-sm'>({<WindForce windSpeed={weather.windSpeed} />})</p>
+                        <div className="flex flex-col mb-3 border-b border-gray-800/30 pb-3">
+                          <h3 className="text-sm font-semibold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400">Wind Conditions</h3>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex flex-col items-center justify-center text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                              <p className='text-sm mb-0'>{weather.windSpeed.toFixed(2)} m/s</p>
+                              <p className='text-yellow-400 text-xs'>({<WindForce windSpeed={weather.windSpeed} />})</p>
                             </div>
-                            <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 relative">
-                              <div className="flex items-center justify-center mb-1">
-                                <div className="h-10 w-10 rounded-full bg-gray-700/70 flex items-center justify-center mb-1 wind-arrow-container">
-                                  <WindArrow degrees={weather.windDegrees} />
-                                </div>
-                              </div>
-                              <p className='text-base xl:text-lg mb-0 xl:mb-1 flex items-center justify-center'>
-                                {<WindDirection windDegrees={weather.windDegrees}/>} <span className='text-yellow-400 text-xs xl:text-sm ml-1'>@ {Math.round(weather.windDegrees)}°</span>
-                              </p>
+                            <div className="text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 relative">
+                              <WindCompass degrees={weather.windDegrees} />
                             </div>
                           </div>
                         </div>
                         
                         {/* Other weather data section */}
-                        <div className="grid grid-cols-2 gap-2 xl:gap-4 mb-4 xl:mb-8">
-                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                            <p className='text-base xl:text-lg mb-0 xl:mb-1'>{Math.round(weather.precipitation)}%</p>
-                            <p className='text-xs xl:text-sm text-gray-400'>Precipitation</p>
+                        <div className="grid grid-cols-2 gap-2 mb-3">
+                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                            <p className='text-sm mb-0'>{Math.round(weather.precipitation)}%</p>
+                            <p className='text-xs text-gray-400'>Precipitation</p>
                           </div>
-                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                            <p className='text-base xl:text-lg mb-0 xl:mb-1'>{Math.round(weather.humidity)}%</p>
-                            <p className='text-xs xl:text-sm text-gray-400'>Humidity</p>
+                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                            <p className='text-sm mb-0'>{Math.round(weather.humidity)}%</p>
+                            <p className='text-xs text-gray-400'>Humidity</p>
                           </div>
-                          <div className="text-center col-span-2 bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                            <p className='text-base xl:text-lg mb-0 xl:mb-1'>
+                          <div className="text-center col-span-2 bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                            <p className='text-sm mb-0'>
                               {(weather.visibility >= 1000) ?
                               (weather.visibility / 1000).toFixed(2) + ' km' :
                               weather.visibility + ' m'}
                             </p>
-                            <p className='text-xs xl:text-sm text-blue-400'>({<VisibilityDesc visibility={weather.visibility}/>})</p>
+                            <p className='text-xs text-blue-400'>({<VisibilityDesc visibility={weather.visibility}/>})</p>
                           </div>
                         </div>
                         
                         {/* Sunrise/Sunset section */}
-                        <div className="flex flex-col mt-auto border-t border-gray-800/30 pt-3 xl:pt-6">
-                          <h3 className="text-base xl:text-lg font-semibold mb-2 xl:mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-300">Day & Night</h3>
-                          <div className="grid grid-cols-2 gap-2 xl:gap-4">
-                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
-                              <BsFillSunriseFill size={24} className="inline text-orange-300 mb-1 xl:mb-2"/>
-                              <p className='text-xs xl:text-sm text-gray-300 mb-0 xl:mb-1'>Sunrise</p>
-                              <p className='text-sm xl:text-base font-medium'>
+                        <div className="flex flex-col mt-auto border-t border-gray-800/30 pt-2">
+                          <h3 className="text-sm font-semibold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-300">Day & Night</h3>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
+                              <BsFillSunriseFill size={20} className="inline text-orange-300 mb-1"/>
+                              <p className='text-xs text-gray-300 mb-0'>Sunrise</p>
+                              <p className='text-xs font-medium'>
                                 {localSunriseSunsetTimes ? 
                                   `${localSunriseSunsetTimes.sunriseHour > 23 
                                       ? String(localSunriseSunsetTimes.sunriseHour - 24).padStart(2, '0') 
@@ -382,10 +375,10 @@ export const DailyWeatherData = memo(() => {
                                   : 'N/A'} 
                               </p>
                             </div>
-                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 xl:p-4 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
-                              <BsFillSunsetFill size={24} className="inline text-orange-400 mb-1 xl:mb-2"/>
-                              <p className='text-xs xl:text-sm text-gray-300 mb-0 xl:mb-1'>Sunset</p>
-                              <p className='text-sm xl:text-base font-medium'>
+                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
+                              <BsFillSunsetFill size={20} className="inline text-orange-400 mb-1"/>
+                              <p className='text-xs text-gray-300 mb-0'>Sunset</p>
+                              <p className='text-xs font-medium'>
                                 {localSunriseSunsetTimes ? 
                                   `${localSunriseSunsetTimes.sunsetHour < 0 
                                       ? String(localSunriseSunsetTimes.sunsetHour + 24).padStart(2, '0') 
@@ -396,7 +389,7 @@ export const DailyWeatherData = memo(() => {
                             </div>
                           </div>
                           {times.timeZone !== undefined && (
-                            <p className='text-center text-xs mt-2 xl:mt-3 text-gray-400'>
+                            <p className='text-center text-xs mt-1 text-gray-400'>
                               Time Zone: <TimeZoneShow timeZone={times.timeZone}/>
                             </p>
                           )}

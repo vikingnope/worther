@@ -294,6 +294,24 @@ export const WindArrow = memo(({ degrees }) => {
 
 WindArrow.displayName = 'WindArrow';
 
+// WindCompass component for displaying wind direction with a compass-like UI
+export const WindCompass = memo(({ degrees, showLabel = true }) => {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mb-1 wind-arrow-container">
+        <WindArrow degrees={degrees} />
+      </div>
+      {showLabel && (
+        <p className='text-sm mb-0 flex items-center justify-center'>
+          <WindDirection windDegrees={degrees}/> <span className='text-yellow-400 text-xs ml-1'>@ {Math.round(degrees)}°</span>
+        </p>
+      )}
+    </div>
+  );
+});
+
+WindCompass.displayName = 'WindCompass';
+
 export const ShowWeather = memo((props) => {
   const timeUpdated = useMemo(() => ({
     timeUpdatedHour: String(new Date(props.timeUpdatedUNIX * 1000).getHours()).padStart(2, '0'),

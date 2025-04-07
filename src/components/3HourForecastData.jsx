@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce, SunriseSunsetTimes, WindArrow } from './utils/weatherVariables';
+import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce, SunriseSunsetTimes, WindCompass } from './utils/weatherVariables';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
 import { FaArrowLeft } from "react-icons/fa6";
 
@@ -173,10 +173,8 @@ export const ThreeHourForecastData = memo(() => {
                       <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
                         Wind Speed: <span className="font-semibold text-green-400">{weather.windSpeed} m/s</span> ({<WindForce windSpeed={weather.windSpeed} />})
                         <div className="flex items-center lg:mt-1 lg:pl-2">
-                          <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mr-2 wind-arrow-container">
-                            <WindArrow degrees={weather.windDegrees} />
-                          </div>
-                          <span>Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                          <WindCompass degrees={weather.windDegrees} />
+                          <span className="ml-2">Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
                         </div>
                       </div>
                       <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
