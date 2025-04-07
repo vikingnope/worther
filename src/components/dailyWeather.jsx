@@ -25,7 +25,6 @@ export const DailyWeatherData = memo(() => {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
-      console.log(response.data);
       const locationObj = {
         name: response.data.city.name,
         country: response.data.city.country,
