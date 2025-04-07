@@ -19,6 +19,28 @@ const getWeatherConditionType = (conditionId) => {
   return 'clouds'; // Default for 801-899 (clouds)
 };
 
+// Weather phenomena types for consistent tracking
+const WEATHER_PHENOMENA = {
+  THUNDER: 'thunder',
+  RAIN: 'rain',
+  DRIZZLE: 'drizzle',
+  SNOW: 'snow',
+  FOG: 'atmosphere',
+  CLEAR: 'clear',
+  CLOUDS: 'clouds',
+};
+
+// Map weather condition IDs to phenomena types
+const getPhenomenonType = (conditionId) => {
+  if (conditionId >= 200 && conditionId < 300) return WEATHER_PHENOMENA.THUNDER;
+  if (conditionId >= 300 && conditionId < 400) return WEATHER_PHENOMENA.DRIZZLE;
+  if (conditionId >= 500 && conditionId < 600) return WEATHER_PHENOMENA.RAIN;
+  if (conditionId >= 600 && conditionId < 700) return WEATHER_PHENOMENA.SNOW;
+  if (conditionId >= 700 && conditionId < 800) return WEATHER_PHENOMENA.FOG;
+  if (conditionId === 800) return WEATHER_PHENOMENA.CLEAR;
+  return WEATHER_PHENOMENA.CLOUDS;
+};
+
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
 
@@ -60,12 +82,9 @@ export const DailyWeatherData = memo(() => {
             tempMin: weatherAPI.main.temp,
             tempMax: weatherAPI.main.temp,
             count: 0,
-            weatherConditions: {},  // Track all weather conditions with counts
-            hasRain: false,         // Flag for any rain
-            hasThunder: false,      // Flag for any thunder
-            hasSnow: false,         // Flag for any snow
-            hasFog: false,          // Flag for atmospheric conditions
-            weather: weatherAPI.weather[0]  // Store the first condition initially
+            weatherConditions: {},             // Track all weather conditions with counts
+            phenomena: {},                     // Single object to track all weather phenomena
+            weather: weatherAPI.weather[0]     // Store the first condition initially
           };
         }
 
@@ -81,17 +100,15 @@ export const DailyWeatherData = memo(() => {
           }
           dailyData[date].weatherConditions[condition.id].count += 1;
           
-          // Check for specific conditions by ID ranges
-          const id = condition.id;
-          if (id >= 200 && id < 300) {
-            dailyData[date].hasThunder = true;
-          } else if ((id >= 300 && id < 400) || (id >= 500 && id < 600)) {
-            dailyData[date].hasRain = true;
-          } else if (id >= 600 && id < 700) {
-            dailyData[date].hasSnow = true;
-          } else if (id >= 700 && id < 800) {
-            dailyData[date].hasFog = true;
+          // Track weather phenomena using the single object
+          const phenomenonType = getPhenomenonType(condition.id);
+          if (!dailyData[date].phenomena[phenomenonType]) {
+            dailyData[date].phenomena[phenomenonType] = {
+              count: 0,
+              description: condition.description
+            };
           }
+          dailyData[date].phenomena[phenomenonType].count += 1;
         }
 
         // Update max precipitation probability instead of multiplying
@@ -129,12 +146,27 @@ export const DailyWeatherData = memo(() => {
         // Determine the type of the most prominent condition
         const prominentConditionType = getWeatherConditionType(mostProminentConditionId);
         
-        // Create warning messages only for conditions that are not the dominant type
+        // Create warning messages based on phenomena
         const warnings = [];
-        if (data.hasThunder && prominentConditionType !== 'thunder') warnings.push('Thunderstorms possible');
-        if ((data.hasRain && !data.hasThunder) && prominentConditionType !== 'rain' && prominentConditionType !== 'drizzle') warnings.push('Rain expected');
-        if (data.hasSnow && prominentConditionType !== 'snow') warnings.push('Snow expected');
-        if (data.hasFog && prominentConditionType !== 'atmosphere') warnings.push('Reduced visibility possible');
+        
+        // Check for significant weather phenomena that aren't the dominant condition type
+        if (data.phenomena[WEATHER_PHENOMENA.THUNDER]?.count > 0 && prominentConditionType !== WEATHER_PHENOMENA.THUNDER) {
+          warnings.push('Thunderstorms possible');
+        }
+        
+        if ((data.phenomena[WEATHER_PHENOMENA.RAIN]?.count > 0 || data.phenomena[WEATHER_PHENOMENA.DRIZZLE]?.count > 0) && 
+            prominentConditionType !== WEATHER_PHENOMENA.RAIN && 
+            prominentConditionType !== WEATHER_PHENOMENA.DRIZZLE) {
+          warnings.push('Rain expected');
+        }
+        
+        if (data.phenomena[WEATHER_PHENOMENA.SNOW]?.count > 0 && prominentConditionType !== WEATHER_PHENOMENA.SNOW) {
+          warnings.push('Snow expected');
+        }
+        
+        if (data.phenomena[WEATHER_PHENOMENA.FOG]?.count > 0 && prominentConditionType !== WEATHER_PHENOMENA.FOG) {
+          warnings.push('Reduced visibility possible');
+        }
         
         return {
           date,
