@@ -6,7 +6,7 @@ import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes, WindArrow } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from "react-icons/fa6";
-import { BiErrorCircle } from "react-icons/bi";
+import { IoWarningOutline } from "react-icons/io5";
 
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
@@ -260,7 +260,7 @@ export const DailyWeatherData = memo(() => {
                           <div className="mb-4 xl:mb-6">
                             <div className="bg-amber-900/40 backdrop-blur-sm rounded-lg p-3 xl:p-4 shadow-inner border border-amber-800/50 transition-all duration-300">
                               <div className="flex items-center justify-center">
-                                <BiErrorCircle className="text-amber-400 text-2xl mr-1" />
+                                <IoWarningOutline className="text-amber-400 text-2xl mr-1" />
                                 <p className="text-amber-200 text-md xl:text-lg">
                                   {weather.warnings.join(', ')}
                                 </p>
