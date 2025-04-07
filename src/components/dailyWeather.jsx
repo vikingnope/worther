@@ -51,7 +51,7 @@ export const DailyWeatherData = memo(() => {
         const date = new Date(weatherAPI.dt * 1000).toDateString();
         if (!dailyData[date]) {
           dailyData[date] = {
-            precipitation: 1,
+            maxPrecipitation: 0,
             humidity: 0,
             visibility: 0,
             windSpeed: 0,
@@ -94,7 +94,8 @@ export const DailyWeatherData = memo(() => {
           }
         }
 
-        dailyData[date].precipitation *= (1 - weatherAPI.pop);
+        // Update max precipitation probability instead of multiplying
+        dailyData[date].maxPrecipitation = Math.max(dailyData[date].maxPrecipitation, weatherAPI.pop);
         dailyData[date].humidity += weatherAPI.main.humidity;
         dailyData[date].visibility += weatherAPI.visibility;
         dailyData[date].windSpeed += weatherAPI.wind.speed;
@@ -137,7 +138,7 @@ export const DailyWeatherData = memo(() => {
         
         return {
           date,
-          precipitation: Number(((1 - data.precipitation) * 100).toFixed(2)),
+          precipitation: Number((data.maxPrecipitation * 100).toFixed(2)), // Use maxPrecipitation directly
           humidity: Number((data.humidity / data.count).toFixed(2)),
           visibility: Number((data.visibility / data.count).toFixed(2)),
           windSpeed: Number((data.windSpeed / data.count).toFixed(2)),
