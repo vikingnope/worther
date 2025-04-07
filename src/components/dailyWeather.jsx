@@ -8,6 +8,17 @@ import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoWarningOutline } from "react-icons/io5";
 
+// Helper function to determine weather condition type from ID
+const getWeatherConditionType = (conditionId) => {
+  if (conditionId >= 200 && conditionId < 300) return 'thunder';
+  if (conditionId >= 300 && conditionId < 400) return 'drizzle';
+  if (conditionId >= 500 && conditionId < 600) return 'rain';
+  if (conditionId >= 600 && conditionId < 700) return 'snow';
+  if (conditionId >= 700 && conditionId < 800) return 'atmosphere';
+  if (conditionId === 800) return 'clear';
+  return 'clouds'; // Default for 801-899 (clouds)
+};
+
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
 
@@ -115,13 +126,7 @@ export const DailyWeatherData = memo(() => {
           { main: data.weather.main, description: data.weather.description };
         
         // Determine the type of the most prominent condition
-        const prominentConditionType = 
-          mostProminentConditionId >= 200 && mostProminentConditionId < 300 ? 'thunder' :
-          mostProminentConditionId >= 300 && mostProminentConditionId < 400 ? 'drizzle' :
-          mostProminentConditionId >= 500 && mostProminentConditionId < 600 ? 'rain' :
-          mostProminentConditionId >= 600 && mostProminentConditionId < 700 ? 'snow' :
-          mostProminentConditionId >= 700 && mostProminentConditionId < 800 ? 'atmosphere' :
-          mostProminentConditionId === 800 ? 'clear' : 'clouds';
+        const prominentConditionType = getWeatherConditionType(mostProminentConditionId);
         
         // Create warning messages only for conditions that are not the dominant type
         const warnings = [];
