@@ -6,6 +6,31 @@ import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes, WindArrow } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from "react-icons/fa6";
+import { IoWarningOutline } from "react-icons/io5";
+
+// Weather phenomena types for consistent tracking
+const WEATHER_PHENOMENA = {
+  THUNDER: 'thunder',
+  RAIN: 'rain',
+  DRIZZLE: 'drizzle',
+  SNOW: 'snow',
+  FOG: 'atmosphere',
+  CLEAR: 'clear',
+  CLOUDS: 'clouds',
+  PARTLY_CLOUDY: 'partly-cloudy', // Added for null condition handling
+};
+
+// Unified function to classify weather conditions based on condition ID
+const classifyWeatherCondition = (conditionId) => {
+  if (conditionId == null) return WEATHER_PHENOMENA.PARTLY_CLOUDY; // Handle null/undefined
+  if (conditionId >= 200 && conditionId < 300) return WEATHER_PHENOMENA.THUNDER;
+  if (conditionId >= 300 && conditionId < 400) return WEATHER_PHENOMENA.DRIZZLE;
+  if (conditionId >= 500 && conditionId < 600) return WEATHER_PHENOMENA.RAIN;
+  if (conditionId >= 600 && conditionId < 700) return WEATHER_PHENOMENA.SNOW;
+  if (conditionId >= 700 && conditionId < 800) return WEATHER_PHENOMENA.FOG;
+  if (conditionId === 800) return WEATHER_PHENOMENA.CLEAR;
+  return WEATHER_PHENOMENA.CLOUDS; // Default for 801-899 (clouds)
+};
 
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
@@ -39,7 +64,7 @@ export const DailyWeatherData = memo(() => {
         const date = new Date(weatherAPI.dt * 1000).toDateString();
         if (!dailyData[date]) {
           dailyData[date] = {
-            precipitation: weatherAPI.pop * 100,
+            maxPrecipitation: 0,
             humidity: 0,
             visibility: 0,
             windSpeed: 0,
@@ -48,11 +73,52 @@ export const DailyWeatherData = memo(() => {
             tempMin: weatherAPI.main.temp,
             tempMax: weatherAPI.main.temp,
             count: 0,
-            weather: weatherAPI.weather[0]
+            weatherConditions: {},             // Track all weather conditions with counts
+            phenomena: {},                     // Single object to track all weather phenomena
+            weather: weatherAPI.weather && weatherAPI.weather.length > 0 ? 
+              weatherAPI.weather[0] : 
+              { id: null, main: 'Unknown', description: 'No weather data available' }
           };
-        } else {
-          dailyData[date].precipitation = Math.max(dailyData[date].precipitation, weatherAPI.pop * 100);
         }
+
+        // Track all weather conditions that occur during the day
+        // Validate weatherAPI.weather is a valid array before iterating
+        if (weatherAPI.weather && Array.isArray(weatherAPI.weather) && weatherAPI.weather.length > 0) {
+          for (const condition of weatherAPI.weather) {
+            if (!dailyData[date].weatherConditions[condition.id]) {
+              dailyData[date].weatherConditions[condition.id] = {
+                count: 0,
+                description: condition.description,
+                main: condition.main,
+                icon: condition.icon
+              };
+            }
+            dailyData[date].weatherConditions[condition.id].count += 1;
+            
+            // Track weather phenomena using the single object
+            const phenomenonType = classifyWeatherCondition(condition.id);
+            if (!dailyData[date].phenomena[phenomenonType]) {
+              dailyData[date].phenomena[phenomenonType] = {
+                count: 0,
+                description: condition.description
+              };
+            }
+            dailyData[date].phenomena[phenomenonType].count += 1;
+          }
+        } else {
+          // Handle case where weather data is missing or invalid
+          const defaultPhenomenonType = WEATHER_PHENOMENA.PARTLY_CLOUDY;
+          if (!dailyData[date].phenomena[defaultPhenomenonType]) {
+            dailyData[date].phenomena[defaultPhenomenonType] = {
+              count: 0,
+              description: 'Unknown weather conditions'
+            };
+          }
+          dailyData[date].phenomena[defaultPhenomenonType].count += 1;
+        }
+
+        // Update max precipitation probability instead of multiplying
+        dailyData[date].maxPrecipitation = Math.max(dailyData[date].maxPrecipitation, weatherAPI.pop);
         dailyData[date].humidity += weatherAPI.main.humidity;
         dailyData[date].visibility += weatherAPI.visibility;
         dailyData[date].windSpeed += weatherAPI.wind.speed;
@@ -66,16 +132,66 @@ export const DailyWeatherData = memo(() => {
 
       const weatherArray = Object.keys(dailyData).map(date => {
         const data = dailyData[date];
+        
+        // Find the most prominent weather condition based on count
+        let mostProminentConditionId = null;
+        let highestCount = 0;
+        
+        Object.entries(data.weatherConditions).forEach(([conditionId, conditionData]) => {
+          if (conditionData.count > highestCount) {
+            highestCount = conditionData.count;
+            mostProminentConditionId = Number(conditionId);
+          }
+        });
+        
+        // Use the most prominent condition as the main weather condition
+        const prominentCondition = mostProminentConditionId ? 
+          data.weatherConditions[mostProminentConditionId] : 
+          { main: data.weather.main, description: data.weather.description };
+        
+        // Determine the type of the most prominent condition
+        const prominentConditionType = mostProminentConditionId !== null ? 
+          classifyWeatherCondition(mostProminentConditionId) : 
+          WEATHER_PHENOMENA.PARTLY_CLOUDY;
+        
+        // Create warning messages based on phenomena
+        const warnings = [];
+        
+        // Check for significant weather phenomena that aren't the dominant condition type
+        if (data.phenomena[WEATHER_PHENOMENA.THUNDER]?.count > 0 && prominentConditionType !== WEATHER_PHENOMENA.THUNDER) {
+          warnings.push('Thunderstorms possible');
+        }
+        
+        if ((data.phenomena[WEATHER_PHENOMENA.RAIN]?.count > 0 || data.phenomena[WEATHER_PHENOMENA.DRIZZLE]?.count > 0) && 
+            prominentConditionType !== WEATHER_PHENOMENA.RAIN && 
+            prominentConditionType !== WEATHER_PHENOMENA.DRIZZLE) {
+          warnings.push('Rain expected');
+        }
+        
+        if (data.phenomena[WEATHER_PHENOMENA.SNOW]?.count > 0 && prominentConditionType !== WEATHER_PHENOMENA.SNOW) {
+          warnings.push('Snow expected');
+        }
+        
+        if (data.phenomena[WEATHER_PHENOMENA.FOG]?.count > 0 && prominentConditionType !== WEATHER_PHENOMENA.FOG) {
+          warnings.push('Reduced visibility possible');
+        }
+        
         return {
           date,
-          precipitation: data.precipitation,
+          precipitation: Number((data.maxPrecipitation * 100).toFixed(2)), // Use maxPrecipitation directly
           humidity: Number((data.humidity / data.count).toFixed(2)),
           visibility: Number((data.visibility / data.count).toFixed(2)),
           windSpeed: Number((data.windSpeed / data.count).toFixed(2)),
           windDegrees: ((Math.atan2(data.windSin, data.windCos) * 180) / Math.PI + 360) % 360,
           tempMin: data.tempMin,
           tempMax: data.tempMax,
-          weather: data.weather
+          weather: {
+            ...data.weather,
+            main: prominentCondition.main,
+            description: prominentCondition.description
+          },
+          warnings: warnings,
+          hasWarnings: warnings.length > 0
         };
       });
 
@@ -184,6 +300,20 @@ export const DailyWeatherData = memo(() => {
                             </div>
                           </div>
                         </div>
+                        
+                        {/* Weather warnings section (if present) */}
+                        {weather.hasWarnings && (
+                          <div className="mb-4 xl:mb-6">
+                            <div className="bg-amber-900/40 backdrop-blur-sm rounded-lg p-3 xl:p-4 shadow-inner border border-amber-800/50 transition-all duration-300">
+                              <div className="flex items-center justify-center">
+                                <IoWarningOutline className="text-amber-400 text-2xl mr-1" />
+                                <p className="text-amber-200 text-md xl:text-lg">
+                                  {weather.warnings.join(', ')}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         
                         {/* Temperature section with highlight */}
                         <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3 xl:p-6 mb-4 xl:mb-8 shadow-inner border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">

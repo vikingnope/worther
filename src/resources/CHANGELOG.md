@@ -8,6 +8,7 @@
 - Major design changes throughout all pages to a more modern UI (new colours, new icons, new search functionality, better error handling, etc...)
 - Upgraded to TailwindCSS v4
 - Added version history to changelog with auto-scroll functionality
+- Fixed data inaccuracies in logic calculation in daily weather page
 
 ---
 
