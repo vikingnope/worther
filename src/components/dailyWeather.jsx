@@ -6,6 +6,7 @@ import { Footer } from './utils/footer';
 import { WeatherIcons, WindDirection, VisibilityDesc, WindForce, TimeZoneShow, SunriseSunsetTimes, WindArrow } from './utils/weatherVariables';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from "react-icons/fa6";
+import { BiErrorCircle } from "react-icons/bi";
 
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
@@ -24,6 +25,7 @@ export const DailyWeatherData = memo(() => {
   useEffect(() => {
     axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}&units=metric`)    
     .then(response => {
+      console.log(response.data);
       const locationObj = {
         name: response.data.city.name,
         country: response.data.city.country,
@@ -39,7 +41,7 @@ export const DailyWeatherData = memo(() => {
         const date = new Date(weatherAPI.dt * 1000).toDateString();
         if (!dailyData[date]) {
           dailyData[date] = {
-            precipitation: weatherAPI.pop * 100,
+            precipitation: 1,
             humidity: 0,
             visibility: 0,
             windSpeed: 0,
@@ -48,11 +50,41 @@ export const DailyWeatherData = memo(() => {
             tempMin: weatherAPI.main.temp,
             tempMax: weatherAPI.main.temp,
             count: 0,
-            weather: weatherAPI.weather[0]
+            weatherConditions: {},  // Track all weather conditions with counts
+            hasRain: false,         // Flag for any rain
+            hasThunder: false,      // Flag for any thunder
+            hasSnow: false,         // Flag for any snow
+            hasFog: false,          // Flag for atmospheric conditions
+            weather: weatherAPI.weather[0]  // Store the first condition initially
           };
-        } else {
-          dailyData[date].precipitation = Math.max(dailyData[date].precipitation, weatherAPI.pop * 100);
         }
+
+        // Track all weather conditions that occur during the day
+        for (const condition of weatherAPI.weather) {
+          if (!dailyData[date].weatherConditions[condition.id]) {
+            dailyData[date].weatherConditions[condition.id] = {
+              count: 0,
+              description: condition.description,
+              main: condition.main,
+              icon: condition.icon
+            };
+          }
+          dailyData[date].weatherConditions[condition.id].count += 1;
+          
+          // Check for specific conditions by ID ranges
+          const id = condition.id;
+          if (id >= 200 && id < 300) {
+            dailyData[date].hasThunder = true;
+          } else if ((id >= 300 && id < 400) || (id >= 500 && id < 600)) {
+            dailyData[date].hasRain = true;
+          } else if (id >= 600 && id < 700) {
+            dailyData[date].hasSnow = true;
+          } else if (id >= 700 && id < 800) {
+            dailyData[date].hasFog = true;
+          }
+        }
+
+        dailyData[date].precipitation *= (1 - weatherAPI.pop);
         dailyData[date].humidity += weatherAPI.main.humidity;
         dailyData[date].visibility += weatherAPI.visibility;
         dailyData[date].windSpeed += weatherAPI.wind.speed;
@@ -66,16 +98,55 @@ export const DailyWeatherData = memo(() => {
 
       const weatherArray = Object.keys(dailyData).map(date => {
         const data = dailyData[date];
+        
+        // Find the most prominent weather condition based on count
+        let mostProminentConditionId = null;
+        let highestCount = 0;
+        
+        Object.entries(data.weatherConditions).forEach(([conditionId, conditionData]) => {
+          if (conditionData.count > highestCount) {
+            highestCount = conditionData.count;
+            mostProminentConditionId = Number(conditionId);
+          }
+        });
+        
+        // Use the most prominent condition as the main weather condition
+        const prominentCondition = mostProminentConditionId ? 
+          data.weatherConditions[mostProminentConditionId] : 
+          { main: data.weather.main, description: data.weather.description };
+        
+        // Determine the type of the most prominent condition
+        const prominentConditionType = 
+          mostProminentConditionId >= 200 && mostProminentConditionId < 300 ? 'thunder' :
+          mostProminentConditionId >= 300 && mostProminentConditionId < 400 ? 'drizzle' :
+          mostProminentConditionId >= 500 && mostProminentConditionId < 600 ? 'rain' :
+          mostProminentConditionId >= 600 && mostProminentConditionId < 700 ? 'snow' :
+          mostProminentConditionId >= 700 && mostProminentConditionId < 800 ? 'atmosphere' :
+          mostProminentConditionId === 800 ? 'clear' : 'clouds';
+        
+        // Create warning messages only for conditions that are not the dominant type
+        const warnings = [];
+        if (data.hasThunder && prominentConditionType !== 'thunder') warnings.push('Thunderstorms possible');
+        if ((data.hasRain && !data.hasThunder) && prominentConditionType !== 'rain' && prominentConditionType !== 'drizzle') warnings.push('Rain expected');
+        if (data.hasSnow && prominentConditionType !== 'snow') warnings.push('Snow expected');
+        if (data.hasFog && prominentConditionType !== 'atmosphere') warnings.push('Reduced visibility possible');
+        
         return {
           date,
-          precipitation: data.precipitation,
+          precipitation: Number(((1 - data.precipitation) * 100).toFixed(2)),
           humidity: Number((data.humidity / data.count).toFixed(2)),
           visibility: Number((data.visibility / data.count).toFixed(2)),
           windSpeed: Number((data.windSpeed / data.count).toFixed(2)),
           windDegrees: ((Math.atan2(data.windSin, data.windCos) * 180) / Math.PI + 360) % 360,
           tempMin: data.tempMin,
           tempMax: data.tempMax,
-          weather: data.weather
+          weather: {
+            ...data.weather,
+            main: prominentCondition.main,
+            description: prominentCondition.description
+          },
+          warnings: warnings,
+          hasWarnings: warnings.length > 0
         };
       });
 
@@ -184,6 +255,20 @@ export const DailyWeatherData = memo(() => {
                             </div>
                           </div>
                         </div>
+                        
+                        {/* Weather warnings section (if present) */}
+                        {weather.hasWarnings && (
+                          <div className="mb-4 xl:mb-6">
+                            <div className="bg-amber-900/40 backdrop-blur-sm rounded-lg p-3 xl:p-4 shadow-inner border border-amber-800/50 transition-all duration-300">
+                              <div className="flex items-center justify-center">
+                                <BiErrorCircle className="text-amber-400 text-2xl mr-1" />
+                                <p className="text-amber-200 text-md xl:text-lg">
+                                  {weather.warnings.join(', ')}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         
                         {/* Temperature section with highlight */}
                         <div className="bg-black/30 backdrop-blur-sm rounded-lg p-3 xl:p-6 mb-4 xl:mb-8 shadow-inner border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
