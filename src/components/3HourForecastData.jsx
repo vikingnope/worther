@@ -142,10 +142,10 @@ export const ThreeHourForecastData = memo(() => {
                       aria-label={`Weather forecast for ${day} at ${(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:${weather.timeNormalMinutes}, ${weather.description}`}
                       key={weather.index} 
                       onClick={(e) => handleSubmit(e, weather.index)} 
-                      className='bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 hover:border-cyan-700 shadow-md hover:shadow-cyan-900/30 transition-all duration-300 hover:-translate-y-1 rounded-lg lg:grid lg:grid-cols-7 lg:gap-2 lg:items-center flex flex-col text-white p-3 md:p-4 cursor-pointer'
+                      className='bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 hover:border-cyan-700 shadow-md hover:shadow-cyan-900/30 transition-all duration-300 hover:-translate-y-1 rounded-lg lg:grid lg:grid-cols-7 lg:gap-1 lg:items-center flex flex-col text-white p-2 md:p-3 cursor-pointer'
                     >
                       <div className="lg:justify-self-center mx-auto">
-                        <div className="h-[85px] flex items-center justify-center">
+                        <div className="h-[70px] flex items-center justify-center">
                           <WeatherIcons 
                             mainWeather={weather.mainWeather} 
                             windSpeed={weather.windSpeed} 
@@ -158,29 +158,29 @@ export const ThreeHourForecastData = memo(() => {
                           />
                         </div>
                       </div>
-                      <div className='font-bold text-xl mx-auto lg:justify-self-center text-cyan-300'>
+                      <div className='font-bold text-lg mx-auto lg:justify-self-center text-cyan-300'>
                         {(hourConversion > 23) ? String(hourConversion - 24).padStart(2, '0') : (hourConversion < 0) ? (hourConversion + 24) : String(hourConversion).padStart(2, '0')}:{weather.timeNormalMinutes}
-                        <div className="text-base mt-1">
+                        <div className="text-sm mt-0.5">
                           (<TimeZoneShow timeZone={location.timeZone}/>)
                         </div>
                       </div>
-                      <div className='font-bold text-2xl mx-auto lg:justify-self-center mt-3 lg:mt-0 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500'>
+                      <div className='font-bold text-xl mx-auto lg:justify-self-center mt-2 lg:mt-0 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500'>
                         {weather.description.toUpperCase()}
                       </div>
-                      <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
+                      <div className='text-xl md:text-base lg:text-sm mx-auto lg:justify-self-center mt-3 lg:mt-0'>
                         Temp: <span className="font-semibold text-yellow-400">{Math.round(weather.temperature)}°C</span>
                       </div>
-                      <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
-                        Wind Speed: <span className="font-semibold text-green-400">{weather.windSpeed} m/s</span> ({<WindForce windSpeed={weather.windSpeed} />})
-                        <div className="flex items-center lg:mt-1 lg:pl-2">
+                      <div className='text-xl md:text-base lg:text-sm mx-auto lg:justify-self-center mt-3 lg:mt-0'>
+                        <div>Wind Speed: <span className="font-semibold text-green-400">{weather.windSpeed} m/s</span> ({<WindForce windSpeed={weather.windSpeed} />})</div>
+                        <div className="flex items-center justify-center lg:justify-start mt-1">
                           <WindCompass degrees={weather.windDegrees} />
-                          <span className="ml-2">Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                          <span className="ml-2 text-sm md:text-xs lg:text-xs">Direction: {<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
                         </div>
                       </div>
-                      <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0'>
+                      <div className='text-xl md:text-base lg:text-sm mx-auto lg:justify-self-center mt-3 lg:mt-0'>
                         Precipitation: <span className="font-semibold text-blue-400">{Math.round(weather.precipitation)}%</span>
                       </div>
-                      <div className='text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0 mb-3 lg:mb-0'>
+                      <div className='text-xl md:text-base lg:text-sm mx-auto lg:justify-self-center mt-3 lg:mt-0 mb-3 lg:mb-0'>
                         Visibility: <span className="font-semibold">{(weather.visibility >= 1000) ?
                           (weather.visibility / 1000) + 'km' :
                           (weather.visibility) + 'm'}</span> ({<VisibilityDesc visibility={weather.visibility}/>})
