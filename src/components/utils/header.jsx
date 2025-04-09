@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Logo from "./../../resources/logo.png";
+import Logo from "./../../resources/logo_transparent.png";
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
 import { Dropdown } from './mobileDropdown';
 
@@ -35,15 +35,15 @@ export const Header = memo(() => {
 
     return (
         <header className="inset-x-0 top-0 bg-gradient-to-b from-slate-900 to-black h-min w-full shadow-md select-none z-10">
-            <section className="relative py-2">
+            <section className="relative">
                 <img 
                     onClick={handleClick} 
                     draggable='false' 
                     src={Logo} 
                     className="transition-all duration-200 ease-in-out cursor-pointer ml-3.5 rounded shadow-md hover:shadow-lg hover:scale-105"
                     alt="logo" 
-                    width="44" 
-                    height="44" 
+                    width="60" 
+                    height="60" 
                     aria-label="Navigate to home page"
                 />
             </section>
