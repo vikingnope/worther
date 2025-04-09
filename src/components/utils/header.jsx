@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Logo from "./../../resources/logoSmallRounded.png";
+import Logo from "./../../resources/logo.png";
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
 import { Dropdown } from './mobileDropdown';
 
@@ -40,10 +40,10 @@ export const Header = memo(() => {
                     onClick={handleClick} 
                     draggable='false' 
                     src={Logo} 
-                    className="-mt-2.5 transition-all duration-200 ease-in-out cursor-pointer ml-2.5 scale-75 rounded-full shadow-md" 
+                    className="transition-all duration-200 ease-in-out cursor-pointer ml-5 rounded shadow-md" 
                     alt="logo" 
-                    width="65" 
-                    height="65" 
+                    width="52" 
+                    height="52" 
                     aria-label="Navigate to home page"
                 />
             </section>
