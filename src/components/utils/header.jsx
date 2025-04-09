@@ -35,15 +35,15 @@ export const Header = memo(() => {
 
     return (
         <header className="inset-x-0 top-0 bg-gradient-to-b from-slate-900 to-black h-min w-full shadow-md select-none z-10">
-            <section className="relative mt-2">
+            <section className="relative py-2">
                 <img 
                     onClick={handleClick} 
                     draggable='false' 
                     src={Logo} 
-                    className="transition-all duration-200 ease-in-out cursor-pointer ml-5 rounded shadow-md" 
+                    className="transition-all duration-200 ease-in-out cursor-pointer ml-3.5 rounded shadow-md hover:shadow-lg hover:scale-105"
                     alt="logo" 
-                    width="52" 
-                    height="52" 
+                    width="44" 
+                    height="44" 
                     aria-label="Navigate to home page"
                 />
             </section>
