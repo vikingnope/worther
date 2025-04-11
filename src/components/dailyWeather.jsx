@@ -270,14 +270,14 @@ export const DailyWeatherData = memo(() => {
                     <span className="animate-pulse">⟶</span>
                   </div>
                 </div>
-                <div className="flex xl:grid xl:grid-flow-col xl:auto-cols-fr gap-6 w-full overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
+                <div className="flex xl:grid xl:grid-cols-auto xl:grid-flow-col xl:auto-cols-fr gap-4 w-full overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
                   {weather.map((weather, index) => {
                     const dayConversion = localDayConversions[weather.date];
 
                     return (
                       <div 
                         key={index} 
-                        className={`flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-4 py-2 xl:py-3 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[750px] snap-center ${isFirefox ? 'firefox-optimized' : ''}`}
+                        className={`flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 mx-2 xl:mx-0 first:ml-4 xl:first:ml-0 last:mr-4 xl:last:mr-0 px-4 py-2 xl:py-3 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[750px] snap-center ${isFirefox ? 'firefox-optimized' : ''}`}
                         role="article" 
                         aria-label={`Weather forecast for ${dayConversion}`}
                       >
@@ -342,17 +342,17 @@ export const DailyWeatherData = memo(() => {
                           </div>
                         </div>
                         
-                        {/* Other weather data section */}
+                        {/* Other weather data section - Fixed height for consistency */}
                         <div className="grid grid-cols-2 gap-2 mb-3">
-                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 flex flex-col justify-center min-h-[70px]">
                             <p className='text-sm mb-0'>{Math.round(weather.precipitation)}%</p>
                             <p className='text-xs text-gray-400'>Precipitation</p>
                           </div>
-                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                          <div className="text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 flex flex-col justify-center min-h-[70px]">
                             <p className='text-sm mb-0'>{Math.round(weather.humidity)}%</p>
                             <p className='text-xs text-gray-400'>Humidity</p>
                           </div>
-                          <div className="text-center col-span-2 bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                          <div className="text-center col-span-2 bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 min-h-[70px] flex flex-col justify-center">
                             <p className='text-sm mb-0'>
                               {(weather.visibility >= 1000) ?
                               (weather.visibility / 1000).toFixed(2) + ' km' :
@@ -366,7 +366,7 @@ export const DailyWeatherData = memo(() => {
                         <div className="flex flex-col mt-auto border-t border-gray-800/30 pt-2">
                           <h3 className="text-sm font-semibold mb-2 text-center bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-yellow-300">Day & Night</h3>
                           <div className="grid grid-cols-2 gap-2">
-                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
+                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 flex flex-col justify-center min-h-[80px]'>
                               <BsFillSunriseFill size={20} className="inline text-orange-300 mb-1"/>
                               <p className='text-xs text-gray-300 mb-0'>Sunrise</p>
                               <p className='text-xs font-medium'>
@@ -378,7 +378,7 @@ export const DailyWeatherData = memo(() => {
                                   : 'N/A'} 
                               </p>
                             </div>
-                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50'>
+                            <div className='text-center bg-black/30 backdrop-blur-sm p-2 rounded-lg border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50 flex flex-col justify-center min-h-[80px]'>
                               <BsFillSunsetFill size={20} className="inline text-orange-400 mb-1"/>
                               <p className='text-xs text-gray-300 mb-0'>Sunset</p>
                               <p className='text-xs font-medium'>
