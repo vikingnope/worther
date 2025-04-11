@@ -309,3 +309,43 @@ html {
   box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
 }
 
+/* Firefox-specific performance optimizations */
+@-moz-document url-prefix() {
+  .firefox-optimized {
+    /* Reduce or eliminate expensive CSS effects for Firefox */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    
+    /* Use hardware acceleration where available */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    
+    /* Reduce animation complexity */
+    transition-property: transform, border-color !important;
+    transition-duration: 300ms !important;
+  }
+  
+  .firefox-optimized .backdrop-blur-sm {
+    /* Replace blur with opacity for better performance */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  /* Improve scrolling performance */
+  .hide-scrollbar {
+    scrollbar-width: none;
+  }
+
+  /* Optimize text gradients for Firefox */
+  .firefox-optimized .animate-text,
+  .firefox-optimized [class*="bg-clip-text"] {
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    animation: none !important;
+    background-image: none !important;
+    color: rgb(107, 202, 226) !important; /* Use solid color instead of gradient */
+  }
+}
+

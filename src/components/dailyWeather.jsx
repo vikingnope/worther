@@ -20,6 +20,9 @@ const WEATHER_PHENOMENA = {
   PARTLY_CLOUDY: 'partly-cloudy', // Added for null condition handling
 };
 
+// Performance optimization flag for Firefox
+const isFirefox = typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+
 // Unified function to classify weather conditions based on condition ID
 const classifyWeatherCondition = (conditionId) => {
   if (conditionId == null) return WEATHER_PHENOMENA.PARTLY_CLOUDY; // Handle null/undefined
@@ -274,7 +277,7 @@ export const DailyWeatherData = memo(() => {
                     return (
                       <div 
                         key={index} 
-                        className='flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-4 py-2 xl:py-3 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[750px] snap-center'
+                        className={`flex flex-col duration-300 xl:border xl:border-blue-900/50 border-y border-blue-900/30 xl:rounded-xl text-white h-full xl:w-full min-w-[85%] sm:min-w-[60%] md:min-w-[45%] xl:min-w-0 xl:mx-0 mx-2 first:ml-4 last:mr-4 px-4 xl:px-4 py-2 xl:py-3 justify-between overflow-hidden break-words bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 backdrop-blur-sm xl:hover:bg-gradient-to-r xl:hover:from-slate-800 xl:hover:via-blue-950 xl:hover:to-slate-800 xl:hover:shadow-xl xl:hover:shadow-blue-900/20 transition-all xl:min-h-[750px] snap-center ${isFirefox ? 'firefox-optimized' : ''}`}
                         role="article" 
                         aria-label={`Weather forecast for ${dayConversion}`}
                       >
