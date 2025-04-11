@@ -3,9 +3,11 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from './utils/header';
 import { Footer } from './utils/footer';
-import { TimeZoneShow, WeatherIcons, WindDirection, VisibilityDesc, WindForce, SunriseSunsetTimes, WindCompass } from './utils/weatherVariables';
+import { TimeZoneShow, WeatherIcons, WindDirection, WindForce, SunriseSunsetTimes, WindCompass } from './utils/weatherVariables';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaThermometerHalf } from "react-icons/fa";
+import { FaCloudRain, FaEye } from "react-icons/fa6";
+import { WiHumidity } from "react-icons/wi";
 
 export const ThreeHourForecastData = memo(() => {
   const { lat, lon } = useParams();
@@ -171,17 +173,17 @@ export const ThreeHourForecastData = memo(() => {
                       
                       <div className="grid grid-cols-2 gap-x-2 gap-y-3 text-sm mt-auto">
                         <div className='flex items-center'>
-                          <div className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
+                          <FaThermometerHalf className="text-yellow-400 mr-2 text-lg" aria-hidden="true" />
                           <span>Temp: <span className="font-semibold">{Math.round(weather.temperature)}°C</span></span>
                         </div>
                         
                         <div className='flex items-center'>
-                          <div className="w-3 h-3 rounded-full bg-blue-400 mr-2"></div>
+                          <FaCloudRain className="text-blue-400 mr-2 text-lg" aria-hidden="true" />
                           <span>Precip: <span className="font-semibold">{Math.round(weather.precipitation)}%</span></span>
                         </div>
                         
                         <div className='flex items-center'>
-                          <div className="w-3 h-3 rounded-full bg-purple-400 mr-2"></div>
+                          <FaEye className="text-purple-400 mr-2 text-lg" aria-hidden="true" />
                           <span>Vis: <span className="font-semibold">{(weather.visibility >= 1000) ?
                             (weather.visibility / 1000) + 'km' :
                             (weather.visibility) + 'm'}</span>
@@ -189,16 +191,16 @@ export const ThreeHourForecastData = memo(() => {
                         </div>
                         
                         <div className='flex items-center'>
-                          <div className="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
-                          <span>Wind: <span className="font-semibold">{weather.windSpeed} m/s</span></span>
+                          <WiHumidity className="text-green-400 mr-2 text-xl" aria-hidden="true" />
+                          <span>Humid: <span className="font-semibold">{weather.humidity}%</span></span>
                         </div>
                       </div>
                       
                       <div className="mt-3 pt-3 border-t border-gray-700 flex items-center justify-center">
                         <WindCompass degrees={weather.windDegrees} />
                         <span className="ml-3 text-sm">
-                          <span className="block text-gray-400">Wind direction</span>
-                          <span>{<WindDirection windDegrees={weather.windDegrees}/>} @ {weather.windDegrees}°</span>
+                          <span className="block text-gray-400">Wind strength</span>
+                          <span className="font-semibold">{weather.windSpeed} m/s</span>
                           <span className="block text-xs text-gray-400">({<WindForce windSpeed={weather.windSpeed} />})</span>
                         </span>
                       </div>
