@@ -3,8 +3,6 @@ name: PR Milestone Checker
 on:
   pull_request:
     types: [opened, reopened, synchronize, edited, ready_for_review, demilestoned]
-  pull_request_target:
-    types: [demilestoned]
 
 permissions:
   contents: read
