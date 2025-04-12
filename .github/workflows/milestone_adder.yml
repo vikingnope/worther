@@ -1,0 +1,98 @@
+name: PR Milestone Checker
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  check-milestone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR has milestone
+        id: check-milestone
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            
+            // Check if PR has a milestone
+            const pr = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: prNumber
+            });
+            
+            if (pr.data.milestone) {
+              console.log(`PR #${prNumber} already has milestone: ${pr.data.milestone.title}`);
+              return true;
+            }
+            
+            // Get latest milestone
+            const milestones = await github.rest.issues.listMilestones({
+              owner,
+              repo,
+              state: 'open',
+              sort: 'due_on',
+              direction: 'desc'
+            });
+            
+            if (milestones.data.length === 0) {
+              console.log('No milestones found!');
+              core.setFailed('No milestones available to add to PR');
+              return false;
+            }
+            
+            // Sort by creation date (newest first)
+            const sortedMilestones = milestones.data.sort((a, b) => 
+              new Date(b.created_at) - new Date(a.created_at)
+            );
+            
+            const latestMilestone = sortedMilestones[0];
+            console.log(`Latest milestone: ${latestMilestone.title}`);
+            
+            // Update the PR with the latest milestone
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: prNumber,
+              milestone: latestMilestone.number
+            });
+            
+            // Add comment to PR
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: `✅ Automatically added milestone ${latestMilestone.title} to this pull request.`
+            });
+            
+            console.log(`Added milestone ${latestMilestone.title} to PR #${prNumber}`);
+            return true;
+
+  require-milestone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PR has milestone
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            
+            const pr = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: prNumber
+            });
+            
+            if (!pr.data.milestone) {
+              core.setFailed('Pull request must have a milestone before merging');
+            } else {
+              console.log(`PR has milestone: ${pr.data.milestone.title}`);
+            }
