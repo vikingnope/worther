@@ -78,6 +78,7 @@ jobs:
             return true;
 
   require-milestone:
+    needs: check-milestone
     runs-on: ubuntu-latest
     steps:
       - name: Verify PR has milestone
