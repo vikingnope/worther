@@ -11,6 +11,7 @@
 - Fixed data inaccuracies in logic calculation in daily weather page
 - Changed branding (Changed logo and added banner)
 - Updated README
+- Added workflow for milestone adder/checker
 
 ---
 
