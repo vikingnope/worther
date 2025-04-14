@@ -18,9 +18,9 @@ export default function Changelog() {
   const activeVersionTimeoutRef = useRef(null);
   const lastSetVersionRef = useRef(null);
 
-  // Fetch the CHANGELOG.md file content
+  // Fetch the CHANGELOG.md file content from public directory
   useEffect(() => {
-    fetch('/src/resources/CHANGELOG.md')
+    fetch('/CHANGELOG.md')
       .then(response => {
         if (!response.ok) {
           throw new Error(`Failed to load changelog: ${response.status} ${response.statusText}`);
