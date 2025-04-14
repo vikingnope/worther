@@ -465,7 +465,6 @@ OptionsMethod.displayName = 'OptionsMethod';
 export const MenuBar = (props) => {
     const [toggle, setToggle] = useState(false);
 
-    // Memoize the menu button classes
     const menuButtonClass = useMemo(() => {
         const baseClasses = "absolute flex items-center py-2 px-3 rounded-r-lg top-24 z-40 transition-all duration-300";
         
@@ -474,7 +473,6 @@ export const MenuBar = (props) => {
             : `${baseClasses} bg-white text-gray-800 border-y-2 border-r-2 border-gray-300 shadow-lg hover:bg-gray-100`;
     }, [props.mode]);
 
-    // Memoize the options container class
     const optionsContainerClass = useMemo(() => {
         const baseClasses = "absolute mt-24 z-40 w-72 p-4 rounded-lg shadow-lg transition-all duration-300";
         
