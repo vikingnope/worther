@@ -27,13 +27,13 @@ export default function Weather () {
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
 
-    history('/weather/' + city);
+    history('/weather/' + city.trim());
   }, [history, city]);
 
   const handleAdvancedSubmit = useCallback((e) => {
     e.preventDefault();
 
-    history('/weatherCountry/' + countryCode +'/'+ city);
+    history('/weatherCountry/' + countryCode +'/'+ city.trim());
   }, [history, countryCode, city]);
 
   const handleSubmitLocation = useCallback((e) => {
