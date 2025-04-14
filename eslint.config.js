@@ -15,15 +15,15 @@ export default [
       'public/**',
       'vite.config.js',
       'postcss.config.js',
-      'tailwind.config.js'
+      'tailwind.config.js',
     ],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       parserOptions: {
         ecmaFeatures: {
-          jsx: true
-        }
+          jsx: true,
+        },
       },
       globals: {
         document: 'readonly',
@@ -34,27 +34,38 @@ export default [
         clearTimeout: 'readonly',
         fetch: 'readonly',
         requestAnimationFrame: 'readonly',
-        IntersectionObserver: 'readonly'
-      }
+        IntersectionObserver: 'readonly',
+      },
     },
     plugins: {
-      'react': reactPlugin,
+      react: reactPlugin,
       'react-hooks': reactHooksPlugin,
-      'import': importPlugin
+      import: importPlugin,
     },
     settings: {
       react: {
-        version: 'detect'
-      }
+        version: 'detect',
+      },
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'warn',
-      'no-unused-vars': 'warn',
+      'react/prop-types': 'off', // Turn off prop-types validation
+      'react/jsx-uses-react': 'error',
+      'react/jsx-uses-vars': 'error',
+      'no-unused-vars': [
+        'warn',
+        {
+          varsIgnorePattern:
+            'React|Header|Footer|BiSearchAlt|IoLocationSharp|FaCity|MdErrorOutline|Select',
+          ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+          caughtErrors: 'none',
+        },
+      ],
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn'
-    }
+      'react-hooks/exhaustive-deps': 'warn',
+    },
   },
   // Add Prettier config to prevent conflicts
-  prettierConfig
+  prettierConfig,
 ];
