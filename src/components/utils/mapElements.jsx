@@ -508,6 +508,7 @@ export const MenuBar = (props) => {
                     onClick={handleToggle} 
                     className={menuButtonClass}
                     aria-label="Open map options"
+                    aria-expanded="false"
                 >
                     <IoIosArrowBack size='20' className="mr-1" />
                     <span className="font-medium">Menu</span>
@@ -533,6 +534,7 @@ export const MenuBar = (props) => {
                     onLayerOpacityChange={props.onLayerOpacityChange}
                     onClose={handleToggle}
                     className={optionsContainerClass}
+                    aria-expanded="true"
                 />                              
             )}
         </div>
