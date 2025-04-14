@@ -12,6 +12,9 @@
 - Changed branding (Changed logo and added banner)
 - Updated README
 - Added workflow for milestone adder/checker
+- Changed light layer to be coloured
+- Moved menuBar to mapElements
+- Added trim to cities in weather submits
 
 ---
 
