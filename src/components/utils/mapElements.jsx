@@ -257,7 +257,7 @@ const OptionsMethod = memo((props) => {
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
         if (city && city.trim()) {
-            navigate('/weather/' + city);
+            navigate('/weather/' + city.trim());
         }
     }, [navigate, city]);
 
