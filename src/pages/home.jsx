@@ -8,7 +8,6 @@ import { Footer } from '../components/utils/footer';
 import { Header } from '../components/utils/header';
 import { WeatherPopupContent } from '../components/utils/weatherVariables';
 
-
 const SITE_MAP = [
   {
     text: 'Map',

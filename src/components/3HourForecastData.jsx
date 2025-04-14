@@ -17,8 +17,6 @@ import {
   WindArrow,
 } from './utils/weatherVariables';
 
-
-
 export const ThreeHourForecastData = memo(() => {
   const { lat, lon } = useParams();
 

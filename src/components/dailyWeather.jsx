@@ -17,7 +17,6 @@ import {
   WindArrow,
 } from './utils/weatherVariables';
 
-
 // Weather phenomena types for consistent tracking
 const WEATHER_PHENOMENA = {
   THUNDER: 'thunder',
