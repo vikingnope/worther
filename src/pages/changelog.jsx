@@ -44,7 +44,7 @@ export default function Changelog() {
       setActiveVersion(extractedVersions[0].version);
       lastSetVersionRef.current = extractedVersions[0].version;
     }
-  }, [markdown]);
+  }, [markdown, activeVersion]);
 
   // Debounced version setter to prevent rapid changes
   const debouncedSetActiveVersion = useCallback(version => {
@@ -97,7 +97,7 @@ export default function Changelog() {
     }, options);
 
     // Observe all version elements
-    Object.entries(versionElementsRef.current).forEach(([version, element]) => {
+    Object.entries(versionElementsRef.current).forEach(([_version, element]) => {
       if (element) {
         observerRef.current.observe(element);
       }
@@ -111,7 +111,7 @@ export default function Changelog() {
         clearTimeout(activeVersionTimeoutRef.current);
       }
     };
-  }, [versions, versionElementsRef.current, debouncedSetActiveVersion]);
+  }, [versions, debouncedSetActiveVersion, activeVersion]);
 
   // Function to scroll to a specific version
   const scrollToVersion = version => {

@@ -312,8 +312,8 @@ export default function Recommendations() {
     }
   };
 
-  // Move fetchData outside useEffect so it can be reused
-  const fetchData = async () => {
+  // Move fetchData outside useEffect and wrap it in useCallback to prevent it from changing on every render
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(beaches);
       const text = await response.text();
@@ -347,7 +347,7 @@ export default function Recommendations() {
       setConnectionError(true);
       setLoading(false);
     }
-  };
+  }, [readString]);
 
   // Function to handle refreshing data
   const refreshData = () => {
@@ -365,7 +365,7 @@ export default function Recommendations() {
   useEffect(() => {
     fetchWind();
     fetchData();
-  }, [readString]);
+  }, [readString, fetchData]);
 
   useEffect(() => {
     if (loading === false && wind.speed !== undefined && wind.degrees !== undefined) {
