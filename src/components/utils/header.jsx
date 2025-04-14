@@ -1,7 +1,9 @@
 import { memo, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Logo from './../../resources/logo_transparent.png';
+
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
+
+import Logo from './../../resources/logo_transparent.png';
 import { Dropdown } from './mobileDropdown';
 
 const NavigationLink = memo(({ text, path, currentLocation }) => {

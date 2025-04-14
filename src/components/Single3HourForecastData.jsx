@@ -1,6 +1,7 @@
-import { useEffect, useState, useMemo, memo } from 'react';
 import axios from 'axios';
+import { useEffect, useState, useMemo, memo } from 'react';
 import { useParams } from 'react-router-dom';
+
 import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
 
 export const SingleThreeHourForecastData = memo(() => {

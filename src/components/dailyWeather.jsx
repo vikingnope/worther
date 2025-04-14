@@ -1,8 +1,12 @@
-import { useEffect, useState, useMemo, memo } from 'react';
 import axios from 'axios';
+import { useEffect, useState, useMemo, memo } from 'react';
+import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
+import { FaArrowLeft } from 'react-icons/fa6';
+import { IoWarningOutline } from 'react-icons/io5';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Header } from './utils/header';
+
 import { Footer } from './utils/footer';
+import { Header } from './utils/header';
 import {
   WeatherIcons,
   WindDirection,
@@ -12,9 +16,7 @@ import {
   SunriseSunsetTimes,
   WindArrow,
 } from './utils/weatherVariables';
-import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
-import { FaArrowLeft } from 'react-icons/fa6';
-import { IoWarningOutline } from 'react-icons/io5';
+
 
 // Weather phenomena types for consistent tracking
 const WEATHER_PHENOMENA = {

@@ -1,7 +1,7 @@
-import { FaDiscord } from 'react-icons/fa';
-import { BsGithub } from 'react-icons/bs';
-import { IoDocumentTextSharp } from 'react-icons/io5';
 import { memo } from 'react';
+import { BsGithub } from 'react-icons/bs';
+import { FaDiscord } from 'react-icons/fa';
+import { IoDocumentTextSharp } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
 export const Footer = memo(() => {

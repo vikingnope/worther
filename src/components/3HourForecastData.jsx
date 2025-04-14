@@ -1,8 +1,12 @@
-import { useEffect, useState, useMemo, useCallback, memo } from 'react';
 import axios from 'axios';
+import { useEffect, useState, useMemo, useCallback, memo } from 'react';
+import { FaArrowLeft } from 'react-icons/fa6';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Header } from './utils/header';
+
+import { useDeviceDetect } from '../hooks/useDeviceDetect';
+
 import { Footer } from './utils/footer';
+import { Header } from './utils/header';
 import {
   TimeZoneShow,
   WeatherIcons,
@@ -12,8 +16,8 @@ import {
   SunriseSunsetTimes,
   WindArrow,
 } from './utils/weatherVariables';
-import { useDeviceDetect } from '../hooks/useDeviceDetect';
-import { FaArrowLeft } from 'react-icons/fa6';
+
+
 
 export const ThreeHourForecastData = memo(() => {
   const { lat, lon } = useParams();

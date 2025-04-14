@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import axios from 'axios';
+import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
 import countryList from 'react-select-country-list';
+
+import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
 
 export const GetSingleWeather = memo(() => {
   const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url

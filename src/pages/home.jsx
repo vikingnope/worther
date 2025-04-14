@@ -1,11 +1,13 @@
-import { Header } from '../components/utils/header';
-import { Footer } from '../components/utils/footer';
 import { useEffect, useState, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { WeatherPopupContent } from '../components/utils/weatherVariables';
+import { BiCurrentLocation } from 'react-icons/bi';
 import { FaMapMarkedAlt, FaCloudSunRain, FaListUl, FaInfoCircle } from 'react-icons/fa';
 import { MdLocationOff } from 'react-icons/md';
-import { BiCurrentLocation } from 'react-icons/bi';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { Footer } from '../components/utils/footer';
+import { Header } from '../components/utils/header';
+import { WeatherPopupContent } from '../components/utils/weatherVariables';
+
 
 const SITE_MAP = [
   {

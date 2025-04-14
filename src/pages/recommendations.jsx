@@ -1,19 +1,23 @@
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { usePapaParse } from 'react-papaparse';
+
+import axios from 'axios';
 import L from 'leaflet';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import axios from 'axios';
-import beaches from '../resources/beaches.csv';
-import { useDeviceDetect } from '../hooks/useDeviceDetect';
+
+
 import 'leaflet/dist/leaflet.css';
 import { FaArrowLeft, FaRegEye } from 'react-icons/fa6';
-import { TiWarningOutline } from 'react-icons/ti';
 import { LiaLocationArrowSolid } from 'react-icons/lia';
-import { WindDirection } from '../components/utils/weatherVariables';
+import { TiWarningOutline } from 'react-icons/ti';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { usePapaParse } from 'react-papaparse';
+
 import { CustomZoomControl, CustomAttributionControl } from '../components/utils/mapElements';
+import { WindDirection } from '../components/utils/weatherVariables';
+import { useDeviceDetect } from '../hooks/useDeviceDetect';
+import beaches from '../resources/beaches.csv';
 
 // Map configuration constants
 const MAP_CENTER = [35.940125, 14.374125];

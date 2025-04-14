@@ -1,8 +1,9 @@
-import { Header } from '../components/utils/header';
-import { Footer } from '../components/utils/footer';
 import { useEffect } from 'react';
-import packageJson from '../../package.json';
 import { Link } from 'react-router-dom';
+
+import packageJson from '../../package.json';
+import { Footer } from '../components/utils/footer';
+import { Header } from '../components/utils/header';
 
 function ExternalLink({ href, children }) {
   return (

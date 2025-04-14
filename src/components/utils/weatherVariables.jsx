@@ -1,4 +1,5 @@
 import { useMemo, useCallback, useEffect, useState, memo } from 'react';
+import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
 import {
   BsFillSunFill,
   BsFillCloudRainHeavyFill,
@@ -11,7 +12,14 @@ import {
   BsFillCloudSunFill,
   BsFillCloudHazeFill,
 } from 'react-icons/bs'; // * Sunny, Heavy Intensity Rain, Drizzle, Thunder and Rain, Snow, Fog, Light Rain, Overcast Clouds, Scattered Clouds, Haze
-import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
+import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs'; // * sunrise icon, sunset icon
+import { BsFillCloudSlashFill } from 'react-icons/bs';
+import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
+import { FaArrowLeft } from 'react-icons/fa'; // * back arrow icon
+import { GiWindsock } from 'react-icons/gi'; // * wind sock icon
+import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
+import { LiaLocationArrowSolid } from 'react-icons/lia'; // * wind direction arrow icon
+import { MdModeNight } from 'react-icons/md'; // * Night Clear
 import { TbMist, TbWind } from 'react-icons/tb'; // * Mist, Windy Clear
 import {
   WiCloudyWindy,
@@ -29,18 +37,12 @@ import {
   WiNightAltSnow,
   WiNightAltRainWind,
 } from 'react-icons/wi'; // * Windy Cloudy, Windy Scattered/Broken, Windy Light Rain, Windy Snow, Night Fog, Night Windy, Broken/Scattered Clouds Night, Cloudy Night, Light Rain Night, Rain Night, Drizzle Night, Thunderstorm with Rain Night, Night Snow, Windy Rain Night
-import { MdModeNight } from 'react-icons/md'; // * Night Clear
-import { Header } from './header';
-import { Footer } from './footer';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
 import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke, WiDust } from 'react-icons/wi'; // * humidity icon, wind icon, barometer, smoke icon
-import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs'; // * sunrise icon, sunset icon
-import { GiWindsock } from 'react-icons/gi'; // * wind sock icon
-import { FaArrowLeft } from 'react-icons/fa'; // * back arrow icon
-import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
-import { BsFillCloudSlashFill } from 'react-icons/bs';
-import { LiaLocationArrowSolid } from 'react-icons/lia'; // * wind direction arrow icon
+import { useNavigate, Link } from 'react-router-dom';
+
+import { Footer } from './footer';
+import { Header } from './header';
+
 
 // Weather icons mapping configuration
 const weatherIconsMap = {

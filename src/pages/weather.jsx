@@ -1,13 +1,14 @@
-import { Header } from '../components/utils/header';
-import { Footer } from '../components/utils/footer';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { BiSearchAlt } from 'react-icons/bi';
-import { IoLocationSharp } from 'react-icons/io5';
 import { FaCity } from 'react-icons/fa';
+import { IoLocationSharp } from 'react-icons/io5';
 import { MdErrorOutline } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
+
+import { Footer } from '../components/utils/footer';
+import { Header } from '../components/utils/header';
 
 export default function Weather() {
   const options = useMemo(() => countryList().getData(), []);

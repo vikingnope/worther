@@ -1,9 +1,10 @@
-import { Header } from '../components/utils/header';
-import { Footer } from '../components/utils/footer';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+
 import packageJson from '../../package.json';
+import { Footer } from '../components/utils/footer';
+import { Header } from '../components/utils/header';
 import CHANGELOG from '../resources/CHANGELOG.md?raw';
 
 export default function Changelog() {
