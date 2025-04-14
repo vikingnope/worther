@@ -48,6 +48,11 @@ export default [
       react: {
         version: 'detect',
       },
+      'import/resolver': {
+        node: {
+          extensions: ['.js', '.jsx'],
+        },
+      },
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
