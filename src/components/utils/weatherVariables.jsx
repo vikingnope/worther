@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useEffect, useState, memo } from 'react';
-import { AiFillCloud } from 'react-icons/ai'; // * Cloudy
+import { AiFillCloud } from 'react-icons/ai'; // Cloudy
 import {
   BsFillSunFill,
   BsFillCloudRainHeavyFill,
@@ -11,16 +11,16 @@ import {
   BsFillCloudsFill,
   BsFillCloudSunFill,
   BsFillCloudHazeFill,
-} from 'react-icons/bs'; // * Sunny, Heavy Intensity Rain, Drizzle, Thunder and Rain, Snow, Fog, Light Rain, Overcast Clouds, Scattered Clouds, Haze
-import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs'; // * sunrise icon, sunset icon
-import { BsFillCloudSlashFill } from 'react-icons/bs';
-import { FaTemperatureHigh } from 'react-icons/fa'; // * temperature icon
-import { FaArrowLeft } from 'react-icons/fa'; // * back arrow icon
-import { GiWindsock } from 'react-icons/gi'; // * wind sock icon
+  BsFillSunriseFill,
+  BsFillSunsetFill,
+  BsFillCloudSlashFill,
+} from 'react-icons/bs'; // Sunny, Rain, Drizzle, Thunder, Snow, Fog, etc.
+import { FaTemperatureHigh, FaArrowLeft } from 'react-icons/fa'; // Temperature and back arrow icons
+import { GiWindsock } from 'react-icons/gi'; // Wind sock icon
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
-import { LiaLocationArrowSolid } from 'react-icons/lia'; // * wind direction arrow icon
-import { MdModeNight } from 'react-icons/md'; // * Night Clear
-import { TbMist, TbWind } from 'react-icons/tb'; // * Mist, Windy Clear
+import { LiaLocationArrowSolid } from 'react-icons/lia'; // Wind direction arrow icon
+import { MdModeNight } from 'react-icons/md'; // Night Clear
+import { TbMist, TbWind } from 'react-icons/tb'; // Mist, Windy Clear
 import {
   WiCloudyWindy,
   WiDayCloudyWindy,
@@ -36,13 +36,16 @@ import {
   WiNightAltStormShowers,
   WiNightAltSnow,
   WiNightAltRainWind,
-} from 'react-icons/wi'; // * Windy Cloudy, Windy Scattered/Broken, Windy Light Rain, Windy Snow, Night Fog, Night Windy, Broken/Scattered Clouds Night, Cloudy Night, Light Rain Night, Rain Night, Drizzle Night, Thunderstorm with Rain Night, Night Snow, Windy Rain Night
-import { WiHumidity, WiStrongWind, WiBarometer, WiSmoke, WiDust } from 'react-icons/wi'; // * humidity icon, wind icon, barometer, smoke icon
+  WiHumidity,
+  WiStrongWind,
+  WiBarometer,
+  WiSmoke,
+  WiDust,
+} from 'react-icons/wi'; // Weather icons for various conditions
 import { useNavigate, Link } from 'react-router-dom';
 
 import { Footer } from './footer';
 import { Header } from './header';
-
 
 // Weather icons mapping configuration
 const weatherIconsMap = {
@@ -838,6 +841,16 @@ export const WeatherPopupContent = memo(props => {
               e.currentTarget.style.backgroundColor = popupStyles.buttonBg;
             }
           }}
+          onFocus={e => {
+            if (props.page === 'map') {
+              e.currentTarget.style.backgroundColor = popupStyles.buttonHoverBg;
+            }
+          }}
+          onBlur={e => {
+            if (props.page === 'map') {
+              e.currentTarget.style.backgroundColor = popupStyles.buttonBg;
+            }
+          }}
         >
           Retry
         </button>
@@ -1027,6 +1040,12 @@ export const WeatherPopupContent = memo(props => {
             e.currentTarget.style.backgroundColor = popupStyles.linkHoverBg;
           }}
           onMouseOut={e => {
+            e.currentTarget.style.backgroundColor = popupStyles.linkBg;
+          }}
+          onFocus={e => {
+            e.currentTarget.style.backgroundColor = popupStyles.linkHoverBg;
+          }}
+          onBlur={e => {
             e.currentTarget.style.backgroundColor = popupStyles.linkBg;
           }}
           to={'/weatherLocation/' + props.userPos.latitude + '/' + props.userPos.longitude}

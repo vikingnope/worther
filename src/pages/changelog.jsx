@@ -5,7 +5,7 @@ import remarkGfm from 'remark-gfm';
 import packageJson from '../../package.json';
 import { Footer } from '../components/utils/footer';
 import { Header } from '../components/utils/header';
-import CHANGELOG from '../resources/CHANGELOG.md?raw';
+import CHANGELOG from '../resources/CHANGELOG.md';
 
 export default function Changelog() {
   const [markdown] = useState(CHANGELOG);
@@ -291,23 +291,29 @@ export default function Changelog() {
                           key="intro"
                           remarkPlugins={[remarkGfm]}
                           components={{
-                            h1: ({ node, ...props }) => (
+                            h1: ({ node, children, ...props }) => (
                               <h1
                                 className="text-3xl font-bold my-6 pb-3 border-b border-gray-700 text-blue-400 leading-relaxed"
                                 {...props}
-                              />
+                              >
+                                {children || 'Heading'}
+                              </h1>
                             ),
-                            h2: ({ node, ...props }) => (
+                            h2: ({ node, children, ...props }) => (
                               <h2
                                 className="text-2xl font-bold mt-6 mb-4 text-blue-300 leading-relaxed"
                                 {...props}
-                              />
+                              >
+                                {children || 'Heading'}
+                              </h2>
                             ),
-                            h3: ({ node, ...props }) => (
+                            h3: ({ node, children, ...props }) => (
                               <h3
                                 className="text-xl font-semibold mt-5 mb-3 text-cyan-400"
                                 {...props}
-                              />
+                              >
+                                {children || 'Heading'}
+                              </h3>
                             ),
                             p: ({ node, ...props }) => (
                               <p className="my-3 text-gray-200 leading-relaxed" {...props} />
@@ -318,11 +324,14 @@ export default function Changelog() {
                             li: ({ node, ...props }) => (
                               <li className="text-gray-300 pb-1" {...props} />
                             ),
-                            a: ({ node, ...props }) => (
+                            a: ({ node, href, children, ...props }) => (
                               <a
+                                href={href}
                                 className="text-blue-400 hover:text-blue-300 underline"
                                 {...props}
-                              />
+                              >
+                                {children || href || 'Link'}
+                              </a>
                             ),
                             code: ({ node, ...props }) => (
                               <code
@@ -383,11 +392,13 @@ export default function Changelog() {
                           components={{
                             // Skip h2 rendering since we manually handled it above
                             h2: () => null,
-                            h3: ({ node, ...props }) => (
+                            h3: ({ node, children, ...props }) => (
                               <h3
                                 className="text-xl font-semibold mt-5 mb-3 text-cyan-400"
                                 {...props}
-                              />
+                              >
+                                {children || 'Heading'}
+                              </h3>
                             ),
                             p: ({ node, ...props }) => (
                               <p className="my-3 text-gray-200 leading-relaxed" {...props} />
@@ -398,11 +409,14 @@ export default function Changelog() {
                             li: ({ node, ...props }) => (
                               <li className="text-gray-300 pb-1" {...props} />
                             ),
-                            a: ({ node, ...props }) => (
+                            a: ({ node, href, children, ...props }) => (
                               <a
+                                href={href}
                                 className="text-blue-400 hover:text-blue-300 underline"
                                 {...props}
-                              />
+                              >
+                                {children || href || 'Link'}
+                              </a>
                             ),
                             code: ({ node, ...props }) => (
                               <code

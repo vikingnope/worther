@@ -1,7 +1,6 @@
 import L from 'leaflet';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, ScaleControl, useMap } from 'react-leaflet';
-
 import 'leaflet/dist/leaflet.css';
 import { useParams } from 'react-router-dom';
 

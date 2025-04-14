@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { useDeviceDetect } from '../../hooks/useDeviceDetect';
 
-
 /**
  * CustomZoomControl - A reusable component to style the Leaflet zoom controls
  *
@@ -371,7 +370,7 @@ const OptionsMethod = memo(props => {
       {/* Layer opacity control */}
       <div className={rangeContainerClass}>
         <div className="flex items-center justify-between mb-2">
-          <label htmlFor="opacityBar" className={sectionTitleClass}>
+          <label htmlFor="opacitySlider" className={sectionTitleClass}>
             <div className="flex items-center gap-1">
               <BsSliders />
               <span>Layer Opacity</span>
@@ -390,7 +389,7 @@ const OptionsMethod = memo(props => {
         <input
           className={rangeClassName}
           type="range"
-          id="opacityBar"
+          id="opacitySlider"
           value={100 * props.layerOpacity}
           min={0}
           max={100}
@@ -405,13 +404,13 @@ const OptionsMethod = memo(props => {
 
       {/* Weather layer toggles */}
       <div>
-        <label className={sectionTitleClass}>
+        <label htmlFor="mapLayersSection" className={sectionTitleClass}>
           <div className="flex items-center gap-1 mb-2">
             <IoLayers />
             <span>Map Layers</span>
           </div>
         </label>
-        <div className={layerButtonsContainerClass}>
+        <div id="mapLayersSection" className={layerButtonsContainerClass}>
           <button
             onClick={() => props.onShowWindChange?.(!props.showWind)}
             className={getLayerButtonClass(props.showWind)}

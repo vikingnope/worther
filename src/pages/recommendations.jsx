@@ -1,19 +1,16 @@
-import { Header } from '../components/utils/header';
-import { Footer } from '../components/utils/footer';
-
 import axios from 'axios';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-
-
-import 'leaflet/dist/leaflet.css';
 import { FaArrowLeft, FaRegEye } from 'react-icons/fa6';
 import { LiaLocationArrowSolid } from 'react-icons/lia';
 import { TiWarningOutline } from 'react-icons/ti';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 
+import { Footer } from '../components/utils/footer';
+import { Header } from '../components/utils/header';
 import { CustomZoomControl, CustomAttributionControl } from '../components/utils/mapElements';
 import { WindDirection } from '../components/utils/weatherVariables';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
@@ -623,6 +620,17 @@ export default function Recommendations() {
                       setSelectedBeachNum(beach.num);
                       scrollToMap(); // Scroll to map when beach card is clicked
                     }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setFocusLocation({ lat: beach.lat, lon: beach.lon });
+                        setSelectedBeachNum(beach.num);
+                        scrollToMap();
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View ${beach.name} on map - ${suitability[index]}`}
                     className={`rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 
                         ${
                           suitability[index] === 'Recommended'

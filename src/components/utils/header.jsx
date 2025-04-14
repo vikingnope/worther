@@ -51,16 +51,23 @@ export const Header = memo(() => {
   return (
     <header className="inset-x-0 top-0 bg-gradient-to-b from-slate-900 to-black h-min w-full shadow-md select-none z-10">
       <section className="relative">
-        <img
+        <button
           onClick={handleClick}
-          draggable="false"
-          src={Logo}
-          className="transition-all duration-200 ease-in-out cursor-pointer ml-3.5 rounded shadow-md hover:shadow-lg hover:scale-105"
-          alt="logo"
-          width="60"
-          height="60"
+          onKeyDown={e => {
+            if (e.key === 'Enter') handleClick(e);
+          }}
+          className="bg-transparent border-0 cursor-pointer"
           aria-label="Navigate to home page"
-        />
+        >
+          <img
+            draggable="false"
+            src={Logo}
+            className="transition-all duration-200 ease-in-out ml-3.5 rounded shadow-md hover:shadow-lg hover:scale-105"
+            alt="logo"
+            width="60"
+            height="60"
+          />
+        </button>
       </section>
 
       <nav className="absolute right-0 top-2.5 flex">

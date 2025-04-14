@@ -53,6 +53,7 @@ export default [
           extensions: ['.js', '.jsx'],
         },
       },
+      'import/ignore': ['@vercel/analytics/react', '@vercel/speed-insights/react'],
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
@@ -84,7 +85,12 @@ export default [
         },
       ],
       'import/no-duplicates': 'error',
-      'import/no-unresolved': 'error',
+      'import/no-unresolved': [
+        'error',
+        {
+          ignore: ['@vercel/analytics/react', '@vercel/speed-insights/react'],
+        },
+      ],
       'import/first': 'error',
       'import/newline-after-import': ['error', { count: 1 }],
 
