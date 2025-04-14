@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -136,7 +136,7 @@ export default function Changelog() {
   }, [versions, debouncedSetActiveVersion, activeVersion]);
 
   // Function to scroll to a specific version
-  const scrollToVersion = version => {
+  const scrollToVersion = useCallback(version => {
     const element = versionElementsRef.current[version];
     if (element && changelogContentRef.current) {
       // Set active version immediately for better UX
@@ -159,7 +159,7 @@ export default function Changelog() {
         behavior: 'smooth',
       });
     }
-  };
+  }, []);
 
   // Get badge based on release type
   const getTypeBadge = type => {
@@ -167,6 +167,62 @@ export default function Changelog() {
       ? 'bg-amber-900/30 text-amber-300 border border-amber-800/50'
       : 'bg-blue-900/30 text-blue-300 border border-blue-800/50';
   };
+
+  // Memoize the horizontal version buttons
+  const horizontalVersionButtons = useMemo(() => {
+    return versions.map(({ version, type }) => (
+      <button
+        key={version}
+        data-version={version}
+        onClick={() => scrollToVersion(version)}
+        className={`flex items-center px-3 py-1.5 rounded-lg transition-all will-change-transform duration-400 ease-in-out whitespace-nowrap ${
+          activeVersion === version
+            ? 'bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 border-b-2 border-cyan-400 shadow-sm shadow-cyan-900/10 scale-[1.02]'
+            : 'hover:bg-gray-800/40 hover:scale-[1.01]'
+        }`}
+      >
+        <span
+          className={`text-sm font-medium transition-colors duration-400 ease-in-out ${
+            activeVersion === version ? 'text-cyan-300' : 'text-gray-300'
+          }`}
+        >
+          {version}
+        </span>
+        <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${getTypeBadge(type)}`}>
+          {type}
+        </span>
+      </button>
+    ));
+  }, [versions, activeVersion, scrollToVersion]);
+
+  // Memoize the sidebar version buttons
+  const sidebarVersionButtons = useMemo(() => {
+    return versions.map(({ version, type }) => (
+      <li key={version}>
+        <button
+          onClick={() => scrollToVersion(version)}
+          className={`text-left w-full py-2 px-3 rounded-lg transition-all will-change-transform duration-500 ease-in-out ${
+            activeVersion === version
+              ? 'bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 border-l-2 border-cyan-400 pl-2.5 shadow-sm shadow-cyan-900/10 scale-[1.01]'
+              : 'hover:bg-gray-800/40 hover:translate-x-0.5'
+          }`}
+        >
+          <div className="flex items-center">
+            <span
+              className={`text-base font-medium transition-colors duration-400 ease-in-out ${
+                activeVersion === version ? 'text-cyan-300' : 'text-gray-300'
+              }`}
+            >
+              {version}
+            </span>
+            <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${getTypeBadge(type)}`}>
+              {type}
+            </span>
+          </div>
+        </button>
+      </li>
+    ));
+  }, [versions, activeVersion, scrollToVersion]);
 
   // Scroll the horizontal version bar when active version changes
   useEffect(() => {
@@ -222,31 +278,7 @@ export default function Changelog() {
 
         {/* Horizontal version selector - visible on all screens up to xl breakpoint */}
         <div className="flex overflow-x-auto py-2 px-1 mb-6 xl:hidden" ref={horizontalScrollRef}>
-          <div className="flex space-x-2">
-            {versions.map(({ version, type }) => (
-              <button
-                key={version}
-                data-version={version}
-                onClick={() => scrollToVersion(version)}
-                className={`flex items-center px-3 py-1.5 rounded-lg transition-all will-change-transform duration-400 ease-in-out whitespace-nowrap ${
-                  activeVersion === version
-                    ? 'bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 border-b-2 border-cyan-400 shadow-sm shadow-cyan-900/10 scale-[1.02]'
-                    : 'hover:bg-gray-800/40 hover:scale-[1.01]'
-                }`}
-              >
-                <span
-                  className={`text-sm font-medium transition-colors duration-400 ease-in-out ${
-                    activeVersion === version ? 'text-cyan-300' : 'text-gray-300'
-                  }`}
-                >
-                  {version}
-                </span>
-                <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${getTypeBadge(type)}`}>
-                  {type}
-                </span>
-              </button>
-            ))}
-          </div>
+          <div className="flex space-x-2">{horizontalVersionButtons}</div>
         </div>
 
         <div className="flex xl:gap-0">
@@ -258,35 +290,7 @@ export default function Changelog() {
                 <div className="sticky top-6 bg-black/30 p-4 rounded-xl border border-gray-800">
                   <h2 className="text-lg font-bold mb-3 text-cyan-400">Version History</h2>
                   <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-2 changelog-sidebar">
-                    <ul className="space-y-1.5">
-                      {versions.map(({ version, type }) => (
-                        <li key={version}>
-                          <button
-                            onClick={() => scrollToVersion(version)}
-                            className={`text-left w-full py-2 px-3 rounded-lg transition-all will-change-transform duration-500 ease-in-out ${
-                              activeVersion === version
-                                ? 'bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 border-l-2 border-cyan-400 pl-2.5 shadow-sm shadow-cyan-900/10 scale-[1.01]'
-                                : 'hover:bg-gray-800/40 hover:translate-x-0.5'
-                            }`}
-                          >
-                            <div className="flex items-center">
-                              <span
-                                className={`text-base font-medium transition-colors duration-400 ease-in-out ${
-                                  activeVersion === version ? 'text-cyan-300' : 'text-gray-300'
-                                }`}
-                              >
-                                {version}
-                              </span>
-                              <span
-                                className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${getTypeBadge(type)}`}
-                              >
-                                {type}
-                              </span>
-                            </div>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
+                    <ul className="space-y-1.5">{sidebarVersionButtons}</ul>
                   </div>
                 </div>
               </div>
