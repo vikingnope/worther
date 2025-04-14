@@ -8,55 +8,63 @@ import { FaCity } from 'react-icons/fa';
 import { MdErrorOutline } from 'react-icons/md';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
- 
-export default function Weather () {
-  
+
+export default function Weather() {
   const options = useMemo(() => countryList().getData(), []);
 
   const [searchMode, setSearchMode] = useState('simple'); // 'simple' or 'advanced'
-  document.title = searchMode === 'simple' ? "Worther - Weather" : "Worther - Advanced Weather";
+  document.title = searchMode === 'simple' ? 'Worther - Weather' : 'Worther - Advanced Weather';
 
-  const[ city, setCity ] = useState('');
-  const [userPos, setUserPos] = useState({latitude: undefined, longitude: undefined});
+  const [city, setCity] = useState('');
+  const [userPos, setUserPos] = useState({ latitude: undefined, longitude: undefined });
   const [country, setCountry] = useState();
   const [countryCode, setCountryCode] = useState('');
   const [geoError, setGeoError] = useState(null);
 
   const history = useNavigate();
 
-  const handleSubmit = useCallback((e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
 
-    history('/weather/' + city.trim());
-  }, [history, city]);
+      history('/weather/' + city.trim());
+    },
+    [history, city]
+  );
 
-  const handleAdvancedSubmit = useCallback((e) => {
-    e.preventDefault();
+  const handleAdvancedSubmit = useCallback(
+    e => {
+      e.preventDefault();
 
-    history('/weatherCountry/' + countryCode +'/'+ city.trim());
-  }, [history, countryCode, city]);
+      history('/weatherCountry/' + countryCode + '/' + city.trim());
+    },
+    [history, countryCode, city]
+  );
 
-  const handleSubmitLocation = useCallback((e) => {
-    e.preventDefault();
+  const handleSubmitLocation = useCallback(
+    e => {
+      e.preventDefault();
 
-    history('/weatherLocation/' + userPos.latitude + '/' + userPos.longitude);
-  }, [history, userPos.latitude, userPos.longitude]);
+      history('/weatherLocation/' + userPos.latitude + '/' + userPos.longitude);
+    },
+    [history, userPos.latitude, userPos.longitude]
+  );
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        pos => {
           setUserPos({
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
           });
           setGeoError(null);
         },
-        (err) => {
+        err => {
           console.error(`ERROR(${err.code}): ${err.message}`);
           setGeoError({
             code: err.code,
-            message: err.message
+            message: err.message,
           });
         },
         {
@@ -68,7 +76,7 @@ export default function Weather () {
     } else {
       setGeoError({
         code: 0,
-        message: "Geolocation is not supported by this browser."
+        message: 'Geolocation is not supported by this browser.',
       });
     }
   }, []);
@@ -81,119 +89,123 @@ export default function Weather () {
   }, [searchMode]);
 
   // Helper function to get user-friendly error message
-  const getGeoErrorMessage = (error) => {
+  const getGeoErrorMessage = error => {
     if (!error) return null;
-    
-    switch(error.code) {
+
+    switch (error.code) {
       case 1:
-        return "Location access was denied. Please enable location permissions in your browser settings to use this feature.";
+        return 'Location access was denied. Please enable location permissions in your browser settings to use this feature.';
       case 2:
-        return "Unable to determine your current location. The signal might be weak or timed out.";
+        return 'Unable to determine your current location. The signal might be weak or timed out.';
       case 3:
-        return "Location request timed out. Please try again later.";
+        return 'Location request timed out. Please try again later.';
       default:
-        return error.message || "An error occurred while trying to get your location.";
+        return error.message || 'An error occurred while trying to get your location.';
     }
   };
 
-  return(
-    <div className='text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black flex flex-col min-h-screen'>
-      <Header/>
+  return (
+    <div className="text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black flex flex-col min-h-screen">
+      <Header />
       <main className="grow flex flex-col items-center justify-center px-4 py-8">
         <section className="text-center mb-8 w-full max-w-lg">
-          <h1 className={`text-5xl md:text-7xl mb-4 font-bold bg-clip-text text-transparent bg-gradient-to-r ${searchMode === 'simple' ? 'from-teal-400 to-blue-500' : 'from-red-400 to-purple-500'}`}>
+          <h1
+            className={`text-5xl md:text-7xl mb-4 font-bold bg-clip-text text-transparent bg-gradient-to-r ${searchMode === 'simple' ? 'from-teal-400 to-blue-500' : 'from-red-400 to-purple-500'}`}
+          >
             {searchMode === 'simple' ? 'Weather Search' : 'Advanced Search'}
           </h1>
           <p className="text-xl text-gray-300 mb-8">
-            {searchMode === 'simple' ? 'Find current conditions and forecasts for any city' : 'Specify country for more accurate results'}
+            {searchMode === 'simple'
+              ? 'Find current conditions and forecasts for any city'
+              : 'Specify country for more accurate results'}
           </p>
-        
+
           <div className="bg-gradient-to-r from-gray-900 to-slate-900 rounded-xl shadow-lg p-6 border border-blue-900 hover:border-blue-700 transition-all duration-300">
             {searchMode === 'simple' ? (
               <form onSubmit={handleSubmit} className="flex flex-col items-center">
-                <div className='w-full max-w-xs relative group mb-4'>
-                  <div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400'>
-                    <FaCity size='17' />
+                <div className="w-full max-w-xs relative group mb-4">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400">
+                    <FaCity size="17" />
                   </div>
                   <input
                     className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                     type="text"
                     value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    placeholder='Enter City'
+                    onChange={e => setCity(e.target.value)}
+                    placeholder="Enter City"
                   />
                 </div>
-                <button 
-                  disabled={!city} 
-                  type="submit" 
+                <button
+                  disabled={!city}
+                  type="submit"
                   className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'}`}
                 >
-                  <BiSearchAlt size='22' />
+                  <BiSearchAlt size="22" />
                   Search
                 </button>
               </form>
             ) : (
               <form onSubmit={handleAdvancedSubmit} className="flex flex-col items-center">
-                <div className='w-full max-w-xs mb-4'>
-                  <Select 
+                <div className="w-full max-w-xs mb-4">
+                  <Select
                     value={country}
-                    onChange={(val) => [setCountry(val), setCountryCode(val.value)]}
+                    onChange={val => [setCountry(val), setCountryCode(val.value)]}
                     options={options}
-                    placeholder='Choose Country'
+                    placeholder="Choose Country"
                     unstyled
                     styles={{
-                      menu: (base) => ({
+                      menu: base => ({
                         ...base,
                         width: '100%',
                         maxWidth: '20rem',
-                        zIndex: 50
+                        zIndex: 50,
                       }),
                     }}
                     classNames={{
-                      control: () => "bg-black/50 border border-gray-700 rounded-lg py-2 px-3 text-white w-full transition-all duration-300 hover:border-gray-500",
-                      input: () => "text-white",
-                      menu: () => "mt-1 rounded-lg border border-gray-700 shadow-lg bg-gray-900 text-white",
-                      option: ({ isFocused, isSelected }) => 
-                        `px-3 py-2 ${
-                          isFocused ? 'bg-blue-900' : ''
-                        } ${
+                      control: () =>
+                        'bg-black/50 border border-gray-700 rounded-lg py-2 px-3 text-white w-full transition-all duration-300 hover:border-gray-500',
+                      input: () => 'text-white',
+                      menu: () =>
+                        'mt-1 rounded-lg border border-gray-700 shadow-lg bg-gray-900 text-white',
+                      option: ({ isFocused, isSelected }) =>
+                        `px-3 py-2 ${isFocused ? 'bg-blue-900' : ''} ${
                           isSelected ? 'bg-blue-700' : ''
                         } hover:bg-blue-800 transition-colors duration-150`,
-                      placeholder: () => 'text-gray-400'
+                      placeholder: () => 'text-gray-400',
                     }}
                   />
                 </div>
-                <div className='w-full max-w-xs relative group mb-4'>
-                  <div className='absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400'>
-                    <FaCity size='17' />
+                <div className="w-full max-w-xs relative group mb-4">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400">
+                    <FaCity size="17" />
                   </div>
                   <input
                     className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                     type="text"
                     value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    placeholder='Enter City'
+                    onChange={e => setCity(e.target.value)}
+                    placeholder="Enter City"
                   />
                 </div>
-                <button 
-                  disabled={!country || !city} 
-                  type="submit" 
+                <button
+                  disabled={!country || !city}
+                  type="submit"
                   className={`rounded-lg w-full max-w-xs py-3 px-4 flex items-center justify-center gap-2 font-medium transition-all duration-300 ${!country || !city ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'}`}
                 >
-                  <BiSearchAlt size='22' />
+                  <BiSearchAlt size="22" />
                   Search
                 </button>
               </form>
             )}
-            
-            {searchMode === 'simple' && (
-              userPos.latitude !== undefined && userPos.longitude !== undefined ? (
+
+            {searchMode === 'simple' &&
+              (userPos.latitude !== undefined && userPos.longitude !== undefined ? (
                 <form onSubmit={handleSubmitLocation} className="mt-4">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="w-full max-w-xs mx-auto rounded-lg py-3 px-4 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500 text-white flex items-center justify-center gap-2 font-medium transition-all duration-300 shadow-md cursor-pointer"
                   >
-                    <IoLocationSharp size='22' />
+                    <IoLocationSharp size="22" />
                     Use My Current Location
                   </button>
                 </form>
@@ -209,18 +221,17 @@ export default function Weather () {
                     </div>
                   </div>
                 )
-              )
-            )}
+              ))}
           </div>
-          
-          <button 
-            onClick={toggleSearchMode} 
+
+          <button
+            onClick={toggleSearchMode}
             className="mt-6 text-blue-400 hover:text-blue-300 underline font-medium transition-colors duration-300"
           >
             {searchMode === 'simple' ? 'Switch to Advanced Search' : 'Switch to Simple Search'}
           </button>
         </section>
-        
+
         <section className="w-full max-w-2xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl border border-gray-700 p-4 shadow-md">
@@ -244,15 +255,15 @@ export default function Weather () {
               <h2 className="font-bold text-xl mb-2 text-blue-400">Search Tips</h2>
               <ul className="text-gray-300 space-y-2">
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-400">→</span> 
+                  <span className="text-yellow-400">→</span>
                   <span>Use advanced search for cities with common names</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-400">→</span> 
+                  <span className="text-yellow-400">→</span>
                   <span>Location search provides the most accurate results</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-yellow-400">→</span> 
+                  <span className="text-yellow-400">→</span>
                   <span>City names should be in English</span>
                 </li>
               </ul>
@@ -262,5 +273,5 @@ export default function Weather () {
       </main>
       <Footer />
     </div>
-  )
-};
+  );
+}
