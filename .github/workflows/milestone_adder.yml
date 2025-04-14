@@ -20,19 +20,19 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const prNumber = context.payload.pull_request.number;
-            
+
             // Check if PR has a milestone
             const pr = await github.rest.pulls.get({
               owner,
               repo,
               pull_number: prNumber
             });
-            
+
             if (pr.data.milestone) {
               console.log(`PR #${prNumber} already has milestone: ${pr.data.milestone.title}`);
               return true;
             }
-            
+
             // Get latest milestone
             const milestones = await github.rest.issues.listMilestones({
               owner,
@@ -41,21 +41,21 @@ jobs:
               sort: 'due_on',
               direction: 'desc'
             });
-            
+
             if (milestones.data.length === 0) {
               console.log('No milestones found!');
               core.setFailed('No milestones available to add to PR');
               return false;
             }
-            
+
             // Sort by creation date (newest first)
             const sortedMilestones = milestones.data.sort((a, b) => 
               new Date(b.created_at) - new Date(a.created_at)
             );
-            
+
             const latestMilestone = sortedMilestones[0];
             console.log(`Latest milestone: ${latestMilestone.title}`);
-            
+
             // Update the PR with the latest milestone
             await github.rest.issues.update({
               owner,
@@ -63,7 +63,7 @@ jobs:
               issue_number: prNumber,
               milestone: latestMilestone.number
             });
-            
+
             // Add comment to PR
             await github.rest.issues.createComment({
               owner,
@@ -71,7 +71,7 @@ jobs:
               issue_number: prNumber,
               body: `✅ Automatically added milestone ${latestMilestone.title} to this pull request.`
             });
-            
+
             console.log(`Added milestone ${latestMilestone.title} to PR #${prNumber}`);
             return true;
 
@@ -85,13 +85,13 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const prNumber = context.payload.pull_request.number;
-            
+
             const pr = await github.rest.pulls.get({
               owner,
               repo,
               pull_number: prNumber
             });
-            
+
             if (!pr.data.milestone) {
               core.setFailed('Pull request must have a milestone before merging');
             } else {
