@@ -7,9 +7,9 @@ export const SingleThreeHourForecastData = memo(() => {
   const { index, lat, lon } = useParams();
   const numericIndex = parseInt(index, 10); // Convert index to a number
 
-  const [location, setLocation] = useState([]);
-  const [weather, setWeather] = useState([]);
-  const [times, setTimes] = useState([]);
+  const [location, setLocation] = useState({});
+  const [weather, setWeather] = useState({});
+  const [times, setTimes] = useState({});
   const [loaded, setLoaded] = useState();
   const [blocked, setBlocked] = useState();
   const [connectionError, setConnectionError] = useState();

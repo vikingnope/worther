@@ -9,7 +9,7 @@ export const GetSingleWeather = memo(() => {
 
   const history = useNavigate();
 
-  const [location, setLocation] = useState([]);
+  const [location, setLocation] = useState({});
   const [weather, setWeather] = useState([]);
   const [loaded, setLoaded] = useState();
   const [times, setTimes] = useState([]);

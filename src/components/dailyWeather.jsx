@@ -43,9 +43,9 @@ const classifyWeatherCondition = conditionId => {
 export const DailyWeatherData = memo(() => {
   const { lat, lon } = useParams();
 
-  const [location, setLocation] = useState([]);
+  const [location, setLocation] = useState({});
   const [weather, setWeather] = useState([]);
-  const [times, setTimes] = useState([]);
+  const [times, setTimes] = useState({});
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();

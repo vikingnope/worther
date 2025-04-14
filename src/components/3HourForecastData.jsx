@@ -18,9 +18,9 @@ import { FaArrowLeft } from 'react-icons/fa6';
 export const ThreeHourForecastData = memo(() => {
   const { lat, lon } = useParams();
 
-  const [location, setLocation] = useState([]);
+  const [location, setLocation] = useState({});
   const [weather, setWeather] = useState([]);
-  const [times, setTimes] = useState([]);
+  const [times, setTimes] = useState({});
   const isDesktopView = useDeviceDetect();
   const [loading, setLoading] = useState(true);
 
