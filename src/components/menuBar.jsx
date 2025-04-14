@@ -119,7 +119,7 @@ const OptionsMethod = memo((props) => {
                         className={inputClassName}
                         type="text"
                         value={city}
-                        onChange={(e) => setCity(e.target.value.toUpperCase())}
+                        onChange={(e) => setCity(e.target.value)}
                         placeholder="Search city..."
                         aria-label="Search for city"
                     />
