@@ -2,13 +2,12 @@ import { MapContainer, TileLayer, Marker, Popup, ScaleControl, useMap } from 're
 import L from 'leaflet';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { MenuBar } from '../components/menuBar';
 import { Header } from '../components/utils/header';
 import { Footer } from '../components/utils/footer';
 import { useParams } from "react-router-dom";
 import { WindSpeedLayer, TemperatureLayer, CloudLayer, RainViewerData, HybridLayer } from '../components/layers';
 import { WeatherPopupContent } from '../components/utils/weatherVariables';
-import { CustomZoomControl, CustomAttributionControl, MapMode } from '../components/utils/mapElements';
+import { CustomZoomControl, CustomAttributionControl, MapMode, MenuBar } from '../components/utils/mapElements';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
 
 // Custom component to style popups based on map mode
