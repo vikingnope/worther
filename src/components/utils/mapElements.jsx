@@ -275,7 +275,6 @@ const OptionsMethod = memo((props) => {
         }
     }, [props.mode]);
 
-    // Memoize the input class
     const inputClassName = useMemo(() => 
         (props.mode === 'dark') 
             ? "w-full bg-neutral-800 border-b border-neutral-500 focus:border-blue-500 text-white p-2 pl-9 outline-none rounded-t-lg transition-all duration-200" 
