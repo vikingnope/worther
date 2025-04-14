@@ -15,6 +15,7 @@
 - Changed light layer to be coloured
 - Moved menuBar to mapElements
 - Added trim to cities in weather submits
+- Added ESLint & Prettier
 
 ---
 
