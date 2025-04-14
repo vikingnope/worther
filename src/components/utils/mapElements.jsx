@@ -261,7 +261,6 @@ const OptionsMethod = memo((props) => {
         }
     }, [navigate, city]);
 
-    // Memoize the layer toggle button class
     const getLayerButtonClass = useCallback((isActive) => {
         const baseClasses = "flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200";
         
@@ -283,40 +282,27 @@ const OptionsMethod = memo((props) => {
             : "w-full bg-white border-b border-gray-300 focus:border-blue-500 text-black p-2 pl-9 outline-none rounded-t-lg transition-all duration-200",
     [props.mode]);
 
-    // Memoize the input container class
-    const inputContainerClass = useMemo(() => 
-        (props.mode === 'dark')
-            ? "relative mb-4"
-            : "relative mb-4",
-    [props.mode]);
+    const inputContainerClass = "relative mb-4";
 
-    // Memoize the range input class
     const rangeClassName = useMemo(() => 
         (props.mode === 'dark') 
             ? "w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-neutral-700 to-blue-600 accent-blue-500" 
             : "w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-gray-300 to-blue-500 accent-blue-500",
     [props.mode]);
 
-    // Memoize the range container class
     const rangeContainerClass = useMemo(() => 
         (props.mode === 'dark')
             ? "mb-5 p-4 bg-neutral-800 rounded-lg border border-neutral-700"
             : "mb-5 p-4 bg-gray-100 rounded-lg",
     [props.mode]);
 
-    // Memoize the section title class
     const sectionTitleClass = useMemo(() => 
         (props.mode === 'dark')
             ? "text-sm font-medium text-gray-300 mb-2"
             : "text-sm font-medium text-gray-700 mb-2",
     [props.mode]);
 
-    // Memoize the layer buttons container class
-    const layerButtonsContainerClass = useMemo(() => 
-        (props.mode === 'dark')
-            ? "grid grid-cols-2 gap-2"
-            : "grid grid-cols-2 gap-2",
-    [props.mode]);
+    const layerButtonsContainerClass = "grid grid-cols-2 gap-2";
 
     return(
         <div 
@@ -327,15 +313,16 @@ const OptionsMethod = memo((props) => {
         >
             {/* Menu header with close button */}
             <div className="flex items-center justify-between mb-4">
-                <h2 className={props.mode === 'dark' ? "text-lg font-semibold text-white" : "text-lg font-semibold text-gray-800"}>
+                <h2 className={`text-lg font-semibold ${props.mode === 'dark' ? "text-white" : "text-gray-800"}`}>
                     Map Options
                 </h2>
                 <button 
                     onClick={props.onClose} 
-                    className={props.mode === 'dark' 
-                        ? "p-1 rounded-full bg-neutral-700 text-white hover:bg-neutral-600 transition-colors" 
-                        : "p-1 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
-                    }
+                    className={`p-1 rounded-full transition-colors ${
+                        props.mode === 'dark' 
+                            ? "bg-neutral-700 text-white hover:bg-neutral-600" 
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
                     aria-label="Close menu"
                 >
                     <IoClose size='20'/>
