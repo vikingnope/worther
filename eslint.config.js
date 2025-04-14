@@ -55,8 +55,7 @@ export default [
       'no-unused-vars': [
         'warn',
         {
-          varsIgnorePattern:
-            'React|Header|Footer|BiSearchAlt|IoLocationSharp|FaCity|MdErrorOutline|Select',
+          varsIgnorePattern: 'React|^_',
           ignoreRestSiblings: true,
           argsIgnorePattern: '^_',
           caughtErrors: 'none',
