@@ -10,7 +10,7 @@ const About = lazy(() => import('./about.jsx'));
 const Weather = lazy(() => import('./weather.jsx'));
 const GetSingleWeather = lazy(() => import('../components/weatherSingle.jsx').then(module => ({ default: module.GetSingleWeather })));
 const ThreeHourForecastData = lazy(() => import('../components/3HourForecastData.jsx').then(module => ({ default: module.ThreeHourForecastData })));
-const ShowMap = lazy(() => import('../components/showMap.jsx'));
+const ShowMap = lazy(() => import('./map.jsx'));
 const SingleThreeHourForecastData = lazy(() => import('../components/Single3HourForecastData.jsx').then(module => ({ default: module.SingleThreeHourForecastData })));
 const ErrorPage = lazy(() => import('./error.jsx'));
 const Recommendations = lazy(() => import('./recommendations.jsx'));
