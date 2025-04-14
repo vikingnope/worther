@@ -27,8 +27,8 @@
     "preview": "vite preview",
     "lint": "eslint src --ext .js,.jsx",
     "lint:fix": "eslint src --ext .js,.jsx --fix",
-    "format": "prettier --write \"src/**/*.{js,jsx,json,css,md}\"",
-    "format:check": "prettier --check \"src/**/*.{js,jsx,json,css,md}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,json,css,md,html,yml,yaml}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json,css,md,html,yml,yaml}\""
   },
   "devDependencies": {
     "@eslint/js": "^9.24.0",
