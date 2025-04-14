@@ -5,10 +5,9 @@ import remarkGfm from 'remark-gfm';
 import packageJson from '../../package.json';
 import { Footer } from '../components/utils/footer';
 import { Header } from '../components/utils/header';
-import CHANGELOG from '../resources/CHANGELOG.md';
 
 export default function Changelog() {
-  const [markdown] = useState(CHANGELOG);
+  const [markdown, setMarkdown] = useState('');
   const [activeVersion, setActiveVersion] = useState(null);
   const [versions, setVersions] = useState([]);
   const changelogContentRef = useRef(null);
@@ -19,8 +18,30 @@ export default function Changelog() {
   const activeVersionTimeoutRef = useRef(null);
   const lastSetVersionRef = useRef(null);
 
+  // Fetch the CHANGELOG.md file content
+  useEffect(() => {
+    fetch('/src/resources/CHANGELOG.md')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to load changelog: ${response.status} ${response.statusText}`);
+        }
+        return response.text();
+      })
+      .then(text => {
+        setMarkdown(text);
+      })
+      .catch(error => {
+        console.error('Error loading changelog:', error);
+        setMarkdown(
+          '# Error Loading Changelog\n\nUnable to load the changelog content. Please try again later.'
+        );
+      });
+  }, []);
+
   // Parse versions from markdown on component mount
   useEffect(() => {
+    if (!markdown) return;
+
     // Extract version strings and their types from headings like "## 1.1.0 (Major)"
     const versionMatches = markdown.match(/## (\d+\.\d+\.\d+) \(([^)]+)\)/g) || [];
 
