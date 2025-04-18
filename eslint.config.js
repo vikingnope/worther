@@ -17,6 +17,7 @@ export default [
       'vite.config.js',
       'postcss.config.js',
       'tailwind.config.js',
+      'pnpm-lock.yaml',
     ],
     languageOptions: {
       ecmaVersion: 'latest',
