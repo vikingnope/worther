@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
-      - 'src/resources/CHANGELOG.md'
+      - 'public/CHANGELOG.md'
 
 jobs:
   detect-author:
@@ -33,7 +33,7 @@ jobs:
         id: changelog-check
         run: |
           git fetch origin ${{ github.base_ref }}
-          CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "src/resources/CHANGELOG.md" || true)
+          CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "public/CHANGELOG.md" || true)
           echo "changed=$CHANGELOG_CHANGED" >> $GITHUB_OUTPUT
 
   enforce-changelog:

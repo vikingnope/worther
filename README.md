@@ -14,5 +14,4 @@ This project has helped me understand the basics of React, calling APIs in React
 
 <a href="https://www.buymeacoffee.com/vikingnope"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="150"/></a>
 
-
 <a href="https://www.paypal.com/donate/?hosted_button_id=4RJY7V64TUKHQ"><img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" width="180"/></a>

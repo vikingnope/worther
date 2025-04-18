@@ -40,29 +40,29 @@ jobs:
             };
 
             const validPrefixes = Object.values(titlePrefixMappings);
-           
+
             // Determine which labels should be present
             for (const [text, label] of Object.entries(labelMappings)) {
               if (prBody && prBody.includes(`- [x] ${text}`)) {
                 shouldHaveLabels.add(label);
               }
             }
-        
+
             // Get current labels
             const currentLabels = await github.rest.issues.listLabelsOnIssue({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.pull_request.number,
             });
-            
+
             const currentLabelNames = new Set(currentLabels.data.map(l => l.name));
             const allMappedLabels = new Set(Object.values(labelMappings));
-            
+
             // Remove labels that shouldn't be there
             const labelsToRemove = [...currentLabelNames].filter(label => 
               allMappedLabels.has(label) && !shouldHaveLabels.has(label)
             );
-            
+
             for (const label of labelsToRemove) {
               await github.rest.issues.removeLabel({
                 owner: context.repo.owner,
@@ -71,12 +71,12 @@ jobs:
                 name: label
               });
             }
-            
+
             // Add missing labels
             const labelsToAdd = [...shouldHaveLabels].filter(label => 
               !currentLabelNames.has(label)
             );
-            
+
             if (labelsToAdd.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,

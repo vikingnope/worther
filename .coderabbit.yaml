@@ -31,7 +31,7 @@ reviews:
     enabled: true
     auto_incremental_review: true
     authors:
-      - "dependabot[bot]"
+      - 'dependabot[bot]'
     ignore_title_keywords: []
     labels: []
     drafts: false
@@ -39,9 +39,9 @@ reviews:
   auto_approve:
     enabled: true
     conditions:
-      - author: "dependabot[bot]"
-      - comment_contains: "@coderabbitai approve"
-    comment: "Auto-approved Dependabot PR"
+      - author: 'dependabot[bot]'
+      - comment_contains: '@coderabbitai approve'
+    comment: 'Auto-approved Dependabot PR'
   finishing_touches:
     docstrings:
       enabled: true

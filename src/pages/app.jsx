@@ -1,27 +1,43 @@
 import '../styles/main.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
 import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 // Lazy load all components
 const Home = lazy(() => import('./home.jsx'));
 const About = lazy(() => import('./about.jsx'));
 const Weather = lazy(() => import('./weather.jsx'));
-const GetSingleWeather = lazy(() => import('../components/weatherSingle.jsx').then(module => ({ default: module.GetSingleWeather })));
-const ThreeHourForecastData = lazy(() => import('../components/3HourForecastData.jsx').then(module => ({ default: module.ThreeHourForecastData })));
+const GetSingleWeather = lazy(() =>
+  import('../components/weatherSingle.jsx').then(module => ({ default: module.GetSingleWeather }))
+);
+const ThreeHourForecastData = lazy(() =>
+  import('../components/3HourForecastData.jsx').then(module => ({
+    default: module.ThreeHourForecastData,
+  }))
+);
 const ShowMap = lazy(() => import('./map.jsx'));
-const SingleThreeHourForecastData = lazy(() => import('../components/Single3HourForecastData.jsx').then(module => ({ default: module.SingleThreeHourForecastData })));
+const SingleThreeHourForecastData = lazy(() =>
+  import('../components/Single3HourForecastData.jsx').then(module => ({
+    default: module.SingleThreeHourForecastData,
+  }))
+);
 const ErrorPage = lazy(() => import('./error.jsx'));
 const Recommendations = lazy(() => import('./recommendations.jsx'));
-const DailyWeatherData = lazy(() => import('../components/dailyWeather.jsx').then(module => ({ default: module.DailyWeatherData })));
+const DailyWeatherData = lazy(() =>
+  import('../components/dailyWeather.jsx').then(module => ({ default: module.DailyWeatherData }))
+);
 const Changelog = lazy(() => import('./changelog.jsx'));
 
 export default function App() {
   return (
     <>
       <Router>
-        <Suspense fallback={<div className="text-white flex h-screen bg-gradient-to-b from-black via-blue-950 to-black"></div>}>
+        <Suspense
+          fallback={
+            <div className="text-white flex h-screen bg-gradient-to-b from-black via-blue-950 to-black"></div>
+          }
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -30,10 +46,13 @@ export default function App() {
             {/* Changes url according to city */}
             <Route path="/weather/:city" element={<GetSingleWeather />} />
             <Route path="/weatherCountry/:countryCode/:city" element={<GetSingleWeather />} />
-            <Route path="/weatherLocation/:latitude/:longitude" element={<GetSingleWeather/>} />
+            <Route path="/weatherLocation/:latitude/:longitude" element={<GetSingleWeather />} />
             <Route path="/3HourForecast/:lat/:lon" element={<ThreeHourForecastData />} />
             <Route path="/dailyWeather/:lat/:lon" element={<DailyWeatherData />} />
-            <Route path="/Single3HourForecast/:index/:lat/:lon" element={<SingleThreeHourForecastData />} />
+            <Route
+              path="/Single3HourForecast/:index/:lat/:lon"
+              element={<SingleThreeHourForecastData />}
+            />
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/changelog" element={<Changelog />} />
             {/* Displays error page, '*' is a wildcard to display when nothing else is found */}

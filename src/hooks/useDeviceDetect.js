@@ -7,22 +7,22 @@ import { useState, useEffect } from 'react';
  */
 export const useDeviceDetect = (breakpoint = 1024) => {
   const [isDesktopView, setIsDesktopView] = useState(false);
-  
+
   useEffect(() => {
     // Initial check on mount
     const checkScreenSize = () => {
       setIsDesktopView(window.innerWidth >= breakpoint);
     };
-    
+
     // Set initial value
     checkScreenSize();
-    
+
     // Add event listener for window resize
     window.addEventListener('resize', checkScreenSize);
-    
+
     // Clean up
     return () => window.removeEventListener('resize', checkScreenSize);
   }, [breakpoint]);
-  
+
   return isDesktopView;
 };
