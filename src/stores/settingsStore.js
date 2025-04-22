@@ -4,12 +4,12 @@ import { persist } from 'zustand/middleware';
 const useSettingsStore = create(
   persist(
     set => ({
-      theme: 'light',
+      theme: 'dark',
       units: 'metric',
 
       setTheme: theme => set({ theme }),
       setUnits: units => set({ units }),
-      resetSettings: () => set({ theme: 'light', units: 'metric' }),
+      resetSettings: () => set({ theme: 'dark', units: 'metric' }),
     }),
     {
       name: 'settings-store',
