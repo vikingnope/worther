@@ -57,7 +57,7 @@ export default function Settings() {
                       onClick={() => setTheme('dark')}
                       className={`px-4 py-3 rounded-md font-medium shadow-md transition-all border cursor-pointer ${
                         theme === 'dark'
-                          ? 'bg-gray-950 text-white border-gray-600'
+                          ? 'bg-neutral-900 text-white border-gray-600'
                           : 'bg-gray-800 hover:bg-gray-700 text-gray-300 border-transparent'
                       }`}
                     >
