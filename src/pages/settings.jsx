@@ -55,7 +55,7 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setTheme('dark')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all border ${
+                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all border cursor-pointer ${
                         theme === 'dark'
                           ? 'bg-gray-950 text-white border-gray-600'
                           : 'bg-gray-800 hover:bg-gray-700 text-gray-300 border-transparent'
@@ -68,7 +68,7 @@ export default function Settings() {
                     </button>
                     <button
                       onClick={() => setTheme('light')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all border ${
+                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all border cursor-pointer ${
                         theme === 'light'
                           ? 'bg-white text-black border-transparent'
                           : 'bg-gray-800 hover:bg-gray-700 text-gray-300 border-transparent'
@@ -101,7 +101,7 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setUnits('metric')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all ${
+                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
                         units === 'metric'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
                           : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
@@ -111,7 +111,7 @@ export default function Settings() {
                     </button>
                     <button
                       onClick={() => setUnits('imperial')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all ${
+                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
                         units === 'imperial'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
                           : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
@@ -134,7 +134,7 @@ export default function Settings() {
                   </span>
                   <button
                     onClick={resetSettings}
-                    className="px-4 py-2 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 transition-all rounded-md font-medium shadow-md"
+                    className="px-4 py-2 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 transition-all rounded-md font-medium shadow-md cursor-pointer"
                   >
                     Reset Settings
                   </button>
