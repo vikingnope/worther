@@ -28,6 +28,7 @@ const DailyWeatherData = lazy(() =>
   import('../components/dailyWeather.jsx').then(module => ({ default: module.DailyWeatherData }))
 );
 const Changelog = lazy(() => import('./changelog.jsx'));
+const Settings = lazy(() => import('./settings.jsx'));
 
 export default function App() {
   return (
@@ -55,6 +56,7 @@ export default function App() {
             />
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/changelog" element={<Changelog />} />
+            <Route path="/settings" element={<Settings />} />
             {/* Displays error page, '*' is a wildcard to display when nothing else is found */}
             <Route path="*" element={<ErrorPage />} />
           </Routes>
