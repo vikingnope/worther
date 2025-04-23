@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useMemo, useCallback, useEffect, useState, memo } from 'react';
 import { AiFillCloud } from 'react-icons/ai'; // Cloudy
 import {
@@ -719,18 +720,10 @@ export const WeatherPopupContent = memo(props => {
 
     setIsLoadingWeather(true);
     try {
-      // Replace with your actual weather API endpoint
-      const response = await fetch(
+      const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?lat=${props.userPos.latitude}&lon=${props.userPos.longitude}&units=metric&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`
       );
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Weather data fetch failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
-        );
-      }
-      const data = await response.json();
-      setCurrentLocationWeather(data);
+      setCurrentLocationWeather(response.data);
     } catch (error) {
       console.error('Error fetching weather data:', error.message);
     } finally {
