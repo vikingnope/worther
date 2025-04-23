@@ -160,7 +160,7 @@ export const Header = memo(() => {
         </div>
       </header>
       {/* Spacer div to push content down - responsive for different screen sizes */}
-      <div className="h-[70px] lg:h-[72px] w-full"></div>
+      <div className="h-[65px] w-full"></div>
     </>
   );
 });
