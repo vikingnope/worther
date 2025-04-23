@@ -153,6 +153,7 @@ export default function ShowMap(props) {
   const [rainLayerChoice, setRainLayerChoice] = useState(true);
   const [satelliteLayerChoice, setSatelliteLayerChoice] = useState(false);
   const [windDirChoice, setWindDirChoice] = useState(false);
+  const isDesktop = useDeviceDetect();
 
   const { theme } = useSettingsStore();
 
@@ -208,6 +209,7 @@ export default function ShowMap(props) {
             maxBoundsViscosity={0.75}
             doubleClickZoom={false}
             className="grow"
+            style={!isDesktop ? { height: 'calc(85vh - 70px)' } : {}}
           >
             <ScaleControl position="bottomleft" />
             <CustomZoomControl theme={theme} />
@@ -277,6 +279,7 @@ export default function ShowMap(props) {
       windDirChoice,
       layerOpacity,
       markerIconConst,
+      isDesktop,
     ]
   );
 
