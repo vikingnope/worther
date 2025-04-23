@@ -95,10 +95,8 @@ export const Header = memo(() => {
                 <img
                   draggable="false"
                   src={Logo}
-                  className="transition-all duration-300 ease-in-out rounded shadow-md hover:shadow-cyan-400/20 hover:scale-105"
+                  className="transition-all duration-300 ease-in-out h-[50px] w-[50px] hover:brightness-110 hover:filter hover:drop-shadow-[0_0_3px_rgba(34,211,238,0.5)]"
                   alt="logo"
-                  width="50"
-                  height="50"
                 />
                 <span className="hidden sm:block ml-3 text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text animate-text">
                   Worther
