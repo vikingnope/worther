@@ -34,8 +34,8 @@ const CustomPopupStyle = ({ theme }) => {
 
     // Function to style a popup when it opens
     const stylePopup = e => {
-      const popup = e.popup;
-      const popupElement = popup.getElement();
+      const popup = e.popup || e;
+      const popupElement = popup.getElement ? popup.getElement() : e;
 
       if (!popupElement || !mapContainer.contains(popupElement)) return;
 
@@ -107,17 +107,27 @@ const CustomPopupStyle = ({ theme }) => {
       }
     };
 
+    // Function to restyle all existing popups
+    const updateAllPopups = () => {
+      // Get all open popups
+      mapContainer.querySelectorAll('.leaflet-popup').forEach(popupElement => {
+        const popup = popupElement._leaflet_popup;
+        if (popup) {
+          stylePopup({ popup });
+        } else {
+          stylePopup(popupElement);
+        }
+      });
+    };
+
     // Initial styling for any existing popups
-    mapContainer.querySelectorAll('.leaflet-popup').forEach(popupElement => {
-      // Create a mock event object with the popup
-      const popup = popupElement._leaflet_popup;
-      if (popup) {
-        stylePopup({ popup });
-      }
-    });
+    updateAllPopups();
 
     // Add event listener for new popups
     map.on('popupopen', stylePopup);
+
+    // Re-style all popups whenever theme changes
+    updateAllPopups();
 
     return () => {
       map.off('popupopen', stylePopup);
