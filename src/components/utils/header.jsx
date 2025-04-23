@@ -125,7 +125,7 @@ export const Header = memo(() => {
                 {/* Theme toggle button */}
                 <button
                   onClick={toggleTheme}
-                  className="relative flex items-center py-2 px-3 text-lg transition-all duration-300 mr-2 text-gray-300 hover:text-white"
+                  className="relative flex items-center py-2 px-3 text-lg transition-all duration-300 mr-2 text-gray-300 hover:text-white cursor-pointer"
                   aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
                 >
                   <span className="transition-all duration-300 hover:rotate-12">
