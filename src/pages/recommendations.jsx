@@ -572,8 +572,8 @@ export default function Recommendations() {
                   ref={mapRef}
                 >
                   <ZoomController isDesktop={isDesktop} />
-                  <CustomZoomControl mapType="light" />
-                  <CustomAttributionControl mapType="light" />
+                  <CustomZoomControl theme="light" />
+                  <CustomAttributionControl theme="light" />
                   <MapFocuser
                     focusLocation={focusLocation}
                     resetFocus={resetFocus}

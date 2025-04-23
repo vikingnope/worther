@@ -97,9 +97,9 @@ export const RainViewerData = memo(props => {
 RainViewerData.displayName = 'RainViewerData';
 
 // Define the labelLayerProps here, outside of JSX
-const getLabelLayerProps = mapType => ({
+const getLabelLayerProps = theme => ({
   url:
-    mapType === 'light'
+    theme === 'light'
       ? 'https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png'
       : 'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png',
   attribution:
@@ -112,7 +112,7 @@ const getLabelLayerProps = mapType => ({
 });
 
 export const HybridLayer = memo(props => {
-  const labelLayerProps = getLabelLayerProps(props.mapType);
+  const labelLayerProps = getLabelLayerProps(props.theme);
 
   return (
     <>
