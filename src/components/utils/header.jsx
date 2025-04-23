@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
@@ -7,16 +7,22 @@ import Logo from './../../resources/logo_transparent.png';
 import { Dropdown } from './mobileDropdown';
 
 const NavigationLink = memo(({ text, path, currentLocation }) => {
-  const active = currentLocation === path ? 'text-cyan-300 font-medium' : 'text-gray-200';
+  const active = currentLocation === path;
 
   return (
     <Link
       to={path}
-      className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-cyan-300 transition-all duration-200 ease-in-out mr-6 ${active}`}
+      className={`relative flex uppercase items-center gap-2 text-lg font-medium py-2 px-3 transition-all duration-300 ease-in-out mr-3 group 
+        ${active ? 'text-cyan-300' : 'text-gray-300 hover:text-white'}`}
       aria-label={`Navigate to ${text}`}
     >
-      {NAV_ICONS[text] ?? null}
-      {text}
+      <span className="transition-all duration-300">{NAV_ICONS[text] ?? null}</span>
+      <span>{text}</span>
+      {/* Animated underline effect */}
+      <span
+        className={`absolute bottom-0 left-0 w-full h-0.5 transform origin-left transition-all duration-300
+        ${active ? 'bg-cyan-300 scale-x-100' : 'bg-cyan-500 scale-x-0 group-hover:scale-x-100'}`}
+      ></span>
     </Link>
   );
 });
@@ -25,6 +31,7 @@ NavigationLink.displayName = 'NavigationLink';
 
 export const Header = memo(() => {
   const history = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
   let location = '/' + useLocation().pathname.split('/')[1];
 
   if (
@@ -40,6 +47,22 @@ export const Header = memo(() => {
     location = '/map/light';
   }
 
+  // Add scroll effect for header
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const handleClick = useCallback(
     e => {
       e.preventDefault();
@@ -49,46 +72,81 @@ export const Header = memo(() => {
   );
 
   return (
-    <header className="inset-x-0 top-0 bg-gradient-to-b from-slate-900 to-black h-min w-full shadow-md select-none z-10">
-      <section className="relative">
-        <button
-          onClick={handleClick}
-          onKeyDown={e => {
-            if (e.key === 'Enter') handleClick(e);
-          }}
-          className="bg-transparent border-0 cursor-pointer"
-          aria-label="Navigate to home page"
-        >
-          <img
-            draggable="false"
-            src={Logo}
-            className="transition-all duration-200 ease-in-out ml-3.5 rounded shadow-md hover:shadow-lg hover:scale-105"
-            alt="logo"
-            width="60"
-            height="60"
-          />
-        </button>
-      </section>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-1'
+            : 'bg-gradient-to-b from-slate-900/90 to-slate-900/70 py-2'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            {/* Logo section */}
+            <div className="flex-shrink-0">
+              <button
+                onClick={handleClick}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') handleClick(e);
+                }}
+                className="bg-transparent border-0 cursor-pointer flex items-center"
+                aria-label="Navigate to home page"
+              >
+                <img
+                  draggable="false"
+                  src={Logo}
+                  className="transition-all duration-300 ease-in-out rounded shadow-md hover:shadow-cyan-400/20 hover:scale-105"
+                  alt="logo"
+                  width="50"
+                  height="50"
+                />
+                <span className="hidden sm:block ml-3 text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text animate-text">
+                  Worther
+                </span>
+              </button>
+            </div>
 
-      <nav className="absolute right-0 top-2.5 flex">
-        {/* Desktop navigation - visible on lg screens and up */}
-        <div className="hidden lg:flex">
-          {NAV_ITEMS.map((item, index) => (
-            <NavigationLink
-              key={index}
-              text={item.text}
-              path={item.path}
-              currentLocation={location}
-            />
-          ))}
-        </div>
+            {/* Navigation */}
+            <nav className="flex items-center">
+              {/* Desktop navigation - visible on lg screens and up */}
+              <div className="hidden lg:flex items-center space-x-1">
+                {NAV_ITEMS.map((item, index) => (
+                  <NavigationLink
+                    key={index}
+                    text={item.text}
+                    path={item.path}
+                    currentLocation={location}
+                  />
+                ))}
+                <Link
+                  to="/settings"
+                  className={`relative flex items-center py-2 px-3 text-lg transition-all duration-300 ml-1 ${
+                    location === '/settings' ? 'text-cyan-300' : 'text-gray-300 hover:text-white'
+                  }`}
+                  aria-label="Navigate to settings"
+                >
+                  <span className="transition-transform duration-300 hover:rotate-12">
+                    {NAV_ICONS.Settings}
+                  </span>
+                  {/* Animated underline effect */}
+                  <span
+                    className={`absolute bottom-0 left-0 w-full h-0.5 transform origin-left transition-all duration-300
+                    ${location === '/settings' ? 'bg-cyan-300 scale-x-100' : 'bg-cyan-500 scale-x-0 group-hover:scale-x-100'}`}
+                  ></span>
+                </Link>
+              </div>
 
-        {/* Mobile dropdown - visible below lg screens */}
-        <div className="lg:hidden">
-          <Dropdown location={location} />
+              {/* Mobile dropdown - visible below lg screens */}
+              <div className="lg:hidden">
+                <Dropdown location={location} />
+              </div>
+            </nav>
+          </div>
         </div>
-      </nav>
-    </header>
+      </header>
+      {/* Spacer div to push content down - responsive for different screen sizes */}
+      <div className="h-[70px] lg:h-[72px] w-full"></div>
+    </>
   );
 });
 
