@@ -2,7 +2,6 @@ import L from 'leaflet';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, ScaleControl, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useParams } from 'react-router-dom';
 
 import {
   WindSpeedLayer,
@@ -16,14 +15,14 @@ import { Header } from '../components/utils/header';
 import {
   CustomZoomControl,
   CustomAttributionControl,
-  MapMode,
   MenuBar,
 } from '../components/utils/mapElements';
 import { WeatherPopupContent } from '../components/utils/weatherVariables';
 import { useDeviceDetect } from '../hooks/useDeviceDetect';
+import useSettingsStore from '../stores/settingsStore';
 
 // Custom component to style popups based on map mode
-const CustomPopupStyle = ({ mapType }) => {
+const CustomPopupStyle = ({ theme }) => {
   const map = useMap();
   const isDesktop = useDeviceDetect();
 
@@ -48,8 +47,8 @@ const CustomPopupStyle = ({ mapType }) => {
 
       // Style the popup elements
       if (contentWrapper && popupTip) {
-        const bgColor = mapType === 'light' ? '#ffffff' : '#1a1a1a';
-        const textColor = mapType === 'light' ? '#000000' : '#ffffff';
+        const bgColor = theme === 'light' ? '#ffffff' : '#1a1a1a';
+        const textColor = theme === 'light' ? '#000000' : '#ffffff';
 
         [contentWrapper, popupTip].forEach(element => {
           element.style.backgroundColor = bgColor;
@@ -91,18 +90,18 @@ const CustomPopupStyle = ({ mapType }) => {
         closeButton.style.right = isDesktop ? '7px' : '5px';
         closeButton.style.top = isDesktop ? '12px' : '8px';
         closeButton.style.fontSize = isDesktop ? '16px' : '14px';
-        closeButton.style.color = mapType === 'light' ? '#000000' : '#ffffff';
+        closeButton.style.color = theme === 'light' ? '#000000' : '#ffffff';
 
         // Add hover event listeners
         closeButton.onmouseover = () => {
           closeButton.style.transform = 'scale(1.2)';
-          closeButton.style.color = mapType === 'light' ? '#333333' : '#aaaaaa';
+          closeButton.style.color = theme === 'light' ? '#333333' : '#aaaaaa';
           closeButton.style.fontWeight = 'bolder';
         };
 
         closeButton.onmouseout = () => {
           closeButton.style.transform = 'scale(1)';
-          closeButton.style.color = mapType === 'light' ? '#000000' : '#ffffff';
+          closeButton.style.color = theme === 'light' ? '#000000' : '#ffffff';
           closeButton.style.fontWeight = 'bold';
         };
       }
@@ -123,13 +122,13 @@ const CustomPopupStyle = ({ mapType }) => {
     return () => {
       map.off('popupopen', stylePopup);
     };
-  }, [mapType, map, isDesktop]);
+  }, [theme, map, isDesktop]);
 
   return null; // This component doesn't render anything, just applies styling
 };
 
 // Custom component to dynamically update map background color
-const MapBackgroundUpdater = ({ mapType }) => {
+const MapBackgroundUpdater = ({ theme }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -137,10 +136,10 @@ const MapBackgroundUpdater = ({ mapType }) => {
       // Get the map container element and update its background color
       const container = map.getContainer();
       if (container) {
-        container.style.backgroundColor = mapType === 'light' ? '#ffffff' : '#121212';
+        container.style.backgroundColor = theme === 'light' ? '#ffffff' : '#121212';
       }
     }
-  }, [mapType, map]);
+  }, [theme, map]);
 
   return null; // This component doesn't render anything, just applies styling
 };
@@ -155,7 +154,7 @@ export default function ShowMap(props) {
   const [satelliteLayerChoice, setSatelliteLayerChoice] = useState(false);
   const [windDirChoice, setWindDirChoice] = useState(false);
 
-  const { mapType } = useParams();
+  const { theme } = useSettingsStore();
 
   document.title = 'Worther - Map';
 
@@ -211,14 +210,14 @@ export default function ShowMap(props) {
             className="grow"
           >
             <ScaleControl position="bottomleft" />
-            <CustomZoomControl mapType={mapType} />
-            <CustomAttributionControl mapType={mapType} />
-            <CustomPopupStyle mapType={mapType} />
+            <CustomZoomControl theme={theme} />
+            <CustomAttributionControl theme={theme} />
+            <CustomPopupStyle theme={theme} />
             <TileLayer
               zIndex={1}
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
               url={
-                mapType === 'light'
+                theme === 'light'
                   ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png'
                   : 'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png'
               }
@@ -228,11 +227,11 @@ export default function ShowMap(props) {
             <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity} />
             <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity} />
             <CloudLayer show={cloudLayerChoice} opacity={layerOpacity} />
-            <HybridLayer show={satelliteLayerChoice} mapType={mapType} />
-            <MapBackgroundUpdater mapType={mapType} />
+            <HybridLayer show={satelliteLayerChoice} theme={theme} />
+            <MapBackgroundUpdater theme={theme} />
             {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
             <MenuBar
-              mode={mapType}
+              mode={theme}
               showWindDir={windDirChoice}
               onShowWindDirChange={setWindDirChoice}
               showSatellite={satelliteLayerChoice}
@@ -253,8 +252,8 @@ export default function ShowMap(props) {
                 <Popup>
                   <WeatherPopupContent
                     userPos={userPos}
-                    color={mapType === 'light' ? 'black' : 'white'}
-                    mapType={mapType}
+                    color={theme === 'light' ? 'black' : 'white'}
+                    theme={theme}
                     page={'map'}
                   />
                 </Popup>
@@ -262,7 +261,6 @@ export default function ShowMap(props) {
             ) : (
               <></>
             )}
-            <MapMode mode={mapType} />
           </MapContainer>
           <Footer />
         </div>
@@ -270,7 +268,7 @@ export default function ShowMap(props) {
     },
     [
       userPos,
-      mapType,
+      theme,
       rainLayerChoice,
       windLayerChoice,
       temperatureLayerChoice,

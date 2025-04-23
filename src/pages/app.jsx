@@ -42,7 +42,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/map/:mapType" element={<ShowMap />} />
+            <Route path="/map" element={<ShowMap />} />
             <Route path="/weather" element={<Weather />} />
             {/* Changes url according to city */}
             <Route path="/weather/:city" element={<GetSingleWeather />} />

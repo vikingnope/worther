@@ -4,6 +4,7 @@ import { RiMenu4Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
+import useSettingsStore from '../../stores/settingsStore';
 
 const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
   const active = currentLocation === path;
@@ -32,6 +33,13 @@ export const Dropdown = memo(props => {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
   const dropdownRef = useRef(null);
+
+  const { theme, setTheme } = useSettingsStore();
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+    closeMenu();
+  };
 
   useEffect(() => {
     const handleClickOutside = event => {
@@ -131,6 +139,17 @@ export const Dropdown = memo(props => {
               <span className="text-lg">{NAV_ICONS.Settings}</span>
               Settings
             </Link>
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="flex justify-start px-5 py-3 items-center gap-3 uppercase text-base font-medium text-gray-200 hover:text-white hover:bg-slate-800/30 transition-all duration-200 border-l-2 border-transparent"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              <span className="text-lg">
+                {theme === 'dark' ? NAV_ICONS.LightMode : NAV_ICONS.DarkMode}
+              </span>
+              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </button>
           </div>
         </nav>
       )}

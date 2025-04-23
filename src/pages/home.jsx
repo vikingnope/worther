@@ -11,7 +11,7 @@ import { WeatherPopupContent } from '../components/utils/weatherVariables';
 const SITE_MAP = [
   {
     text: 'Map',
-    path: '/map/light',
+    path: '/map',
     icon: (
       <FaMapMarkedAlt className="text-4xl mb-3 text-blue-400 group-hover:text-cyan-300 transition-colors duration-300" />
     ),

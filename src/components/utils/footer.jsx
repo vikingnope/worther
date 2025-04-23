@@ -43,7 +43,7 @@ export const Footer = memo(() => {
                 Weather
               </Link>
               <Link
-                to="/map/light"
+                to="/map"
                 className="text-gray-400 hover:text-cyan-300 text-sm transition-colors duration-200"
               >
                 Map

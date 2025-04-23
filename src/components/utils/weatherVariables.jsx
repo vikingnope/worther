@@ -763,7 +763,7 @@ export const WeatherPopupContent = memo(props => {
   // Determine styles based on map type for map page
   const popupStyles = useMemo(() => {
     if (props.page === 'map') {
-      return props.mapType === 'light'
+      return props.theme === 'light'
         ? {
             background: '#ffffff',
             color: '#000000',
@@ -792,7 +792,7 @@ export const WeatherPopupContent = memo(props => {
           };
     }
     return {}; // Default styles for non-map pages
-  }, [props.page, props.mapType]);
+  }, [props.page, props.theme]);
 
   if (isLoadingWeather) {
     return (

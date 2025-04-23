@@ -2,6 +2,7 @@ import { memo, useCallback, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
+import useSettingsStore from '../../stores/settingsStore';
 
 import Logo from './../../resources/logo_transparent.png';
 import { Dropdown } from './mobileDropdown';
@@ -34,6 +35,12 @@ export const Header = memo(() => {
   const [scrolled, setScrolled] = useState(false);
   let location = '/' + useLocation().pathname.split('/')[1];
 
+  const { theme, setTheme } = useSettingsStore();
+
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
+
   if (
     location === '/weatherCountry' ||
     location === '/weatherLocation' ||
@@ -43,8 +50,6 @@ export const Header = memo(() => {
     location === '/advancedWeather'
   ) {
     location = '/weather';
-  } else if (location === '/map') {
-    location = '/map/light';
   }
 
   // Add scroll effect for header
@@ -116,6 +121,18 @@ export const Header = memo(() => {
                     currentLocation={location}
                   />
                 ))}
+
+                {/* Theme toggle button */}
+                <button
+                  onClick={toggleTheme}
+                  className="relative flex items-center py-2 px-3 text-lg transition-all duration-300 mr-2 text-gray-300 hover:text-white"
+                  aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                >
+                  <span className="transition-all duration-300 hover:rotate-12">
+                    {theme === 'dark' ? NAV_ICONS.LightMode : NAV_ICONS.DarkMode}
+                  </span>
+                </button>
+
                 <Link
                   to="/settings"
                   className={`relative flex items-center py-2 px-3 text-lg transition-all duration-300 ml-1 ${
