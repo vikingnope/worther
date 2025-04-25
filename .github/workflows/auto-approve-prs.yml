@@ -29,7 +29,7 @@ jobs:
 
   approve-from-comment:
     runs-on: ubuntu-latest
-    if: github.event_name == 'issue_comment' && contains(github.event.issue.html_url, '/pull/') && contains(github.event.comment.body, '@worther approve')
+    if: github.event_name == 'issue_comment' && contains(github.event.issue.html_url, '/pull/') && contains(github.event.comment.body, '!approve')
     steps:
       - name: Check if comment author is repository owner
         id: check-author
