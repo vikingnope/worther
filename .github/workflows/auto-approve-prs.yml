@@ -12,7 +12,7 @@ on:
 
 permissions:
   pull-requests: write
-  issues: read
+  issues: write
   contents: read
 
 jobs:
@@ -22,11 +22,10 @@ jobs:
     steps:
       - name: Approve PR and add comment
         run: |
-          gh pr review --approve "$PR_URL"
-          gh pr comment "$PR_URL" --body "Dependabot has been detected, PR auto-approved"
+          gh pr review --approve "${{ github.event.pull_request.number }}"
+          gh pr comment "${{ github.event.pull_request.number }}" --body "Dependabot has been detected, PR auto-approved"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   approve-from-comment:
     runs-on: ubuntu-latest
@@ -36,21 +35,20 @@ jobs:
         id: check-author
         run: |
           AUTHOR="${{ github.event.comment.user.login }}"
-          # Get repository owner
-          REPO_OWNER=$(echo "${{ github.repository }}" | cut -d'/' -f1)
+          # Use built-in context variable for repository owner
+          REPO_OWNER="${{ github.repository_owner }}"
           if [[ "$AUTHOR" == "$REPO_OWNER" ]]; then
             echo "is_authorized=true" >> $GITHUB_OUTPUT
           else
             echo "is_authorized=false" >> $GITHUB_OUTPUT
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve PR from comment
         if: steps.check-author.outputs.is_authorized == 'true'
         run: |
-          PR_NUMBER=$(echo "${{ github.event.issue.html_url }}" | awk -F'/pull/' '{print $2}' | cut -d'/' -f1)
-          gh pr review $PR_NUMBER --approve
-          gh pr comment $PR_NUMBER --body "PR approved by repository owner via comment"
+          gh pr review "${{ github.event.issue.number }}" --approve
+          gh pr comment "${{ github.event.issue.number }}" --body "PR approved by repository owner via comment"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
