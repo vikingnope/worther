@@ -16,10 +16,22 @@ permissions:
   contents: read
 
 jobs:
+  debug-actor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug GitHub Actor
+        run: |
+          echo "GitHub Actor: ${{ github.actor }}"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Repo Owner: ${{ github.repository_owner }}"
+
   auto-approve-dependabot:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
       - name: Approve PR and add comment
         run: |
           gh pr review --approve "${{ github.event.pull_request.number }}"
@@ -31,6 +43,15 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'issue_comment' && contains(github.event.issue.html_url, '/pull/') && contains(github.event.comment.body, '!approve')
     steps:
+      - name: Notify workflow start
+        run: |
+          gh pr comment "${{ github.event.issue.number }}" --body "Approval workflow has started running for PR #${{ github.event.issue.number }}..."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
       - name: Check if comment author is repository owner
         id: check-author
         run: |
