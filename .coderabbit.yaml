@@ -41,6 +41,8 @@ reviews:
     conditions:
       any:
         - author: 'dependabot[bot]'
+        - author: 'dependabot'
+        - branch_contains: 'dependabot'
         - comment_contains: '@coderabbitai approve'
     comment: 'Auto-approved Dependabot PR'
   finishing_touches:

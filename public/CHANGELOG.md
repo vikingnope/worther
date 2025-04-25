@@ -17,7 +17,7 @@
 - Added trim to cities in weather submits
 - Added ESLint & Prettier (Ignores `pnpm-lock.yaml`)
 - Updated `react-router-dom` to 7.5.2 to resolve security vulnerability
-- Fixed CodeRabbit config to auto-approve dependabot PRs
+- Fixed CodeRabbit config to auto-approve dependabot PRs (For real this time)
 
 ---
 
