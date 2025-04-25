@@ -1,0 +1,60 @@
+name: Auto Approve PRs
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  issue_comment:
+    types:
+      - created
+
+permissions:
+  pull-requests: write
+  issues: read
+  contents: read
+
+jobs:
+  auto-approve-dependabot:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'
+    steps:
+      - name: Approve PR and add comment
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr comment "$PR_URL" --body "Dependabot has been detected, PR auto-approved"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  approve-from-comment:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' && contains(github.event.issue.html_url, '/pull/') && contains(github.event.comment.body, '@worther approve')
+    steps:
+      - name: Check if comment author is authorized
+        id: check-author
+        run: |
+          AUTHOR="${{ github.event.comment.user.login }}"
+          if [[ "$AUTHOR" == "vikingnope" ]]; then
+            echo "is_authorized=true" >> $GITHUB_OUTPUT
+          else
+            # Check if author is a repo admin
+            ROLE=$(gh api repos/${{ github.repository }}/collaborators/$AUTHOR --jq '.permission // "read"')
+            if [[ "$ROLE" == "admin" ]]; then
+              echo "is_authorized=true" >> $GITHUB_OUTPUT
+            else
+              echo "is_authorized=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve PR from comment
+        if: steps.check-author.outputs.is_authorized == 'true'
+        run: |
+          PR_NUMBER=$(echo "${{ github.event.issue.html_url }}" | awk -F'/pull/' '{print $2}' | cut -d'/' -f1)
+          gh pr review $PR_NUMBER --approve
+          gh pr comment $PR_NUMBER --body "PR approved by @${{ github.event.comment.user.login }} via comment"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
