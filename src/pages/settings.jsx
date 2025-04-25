@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   FaSun,
   FaMoon,
@@ -40,6 +40,10 @@ export default function Settings() {
   } = useSettingsStore();
 
   const [locationInput, setLocationInput] = useState(defaultLocation);
+
+  useEffect(() => {
+    setLocationInput(defaultLocation);
+  }, [defaultLocation]);
 
   useEffect(() => {
     document.title = 'Worther - Settings';
