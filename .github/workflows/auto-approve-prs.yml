@@ -44,14 +44,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'issue_comment' && contains(github.event.issue.html_url, '/pull/') && contains(github.event.comment.body, '!approve')
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
       - name: Notify workflow start
         run: |
           gh pr comment "${{ github.event.issue.number }}" --body "Approval workflow has started running for PR #${{ github.event.issue.number }}..."
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
 
       - name: Check if comment author is repository owner
         id: check-author
