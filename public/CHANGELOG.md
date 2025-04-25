@@ -18,6 +18,8 @@
 - Added ESLint & Prettier (Ignores `pnpm-lock.yaml`)
 - Updated `react-router-dom` to 7.5.2 to resolve security vulnerability
 - Removed coderabbit config and created workflow to auto-approve dependabot PRs and to approve PRs based on comment from repo owner
+- Updated dependabot to run daily
+- Removed redundant testing libraries
 
 ---
 
