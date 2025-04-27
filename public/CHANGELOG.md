@@ -21,6 +21,7 @@
 - Updated dependabot to run daily
 - Removed redundant testing libraries
 - Bump TailwindCSS v4.1.4
+- Created workflow for dependabot to auto update changelog
 
 ---
 
