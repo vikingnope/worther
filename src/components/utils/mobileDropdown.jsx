@@ -103,10 +103,23 @@ export const Dropdown = memo(props => {
     <div ref={dropdownRef} className="relative">
       <button
         onClick={toggleMenu}
-        className="flex items-center justify-center p-2 text-gray-200 hover:text-cyan-300 transition-colors duration-200 rounded-full hover:bg-slate-800/50"
+        className="flex items-center justify-center p-2 text-gray-200 hover:text-cyan-300 transition-colors duration-200 rounded-full hover:bg-slate-800/50 overflow-hidden"
         aria-label={opened ? 'Close navigation menu' : 'Open navigation menu'}
       >
-        {opened ? <MdClose size="28" /> : <RiMenu4Line size="28" />}
+        <div className="relative w-7 h-7">
+          <MdClose
+            size="28"
+            className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+              opened ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-50'
+            }`}
+          />
+          <RiMenu4Line
+            size="28"
+            className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+              opened ? 'opacity-0 -rotate-90 scale-50' : 'opacity-100 rotate-0 scale-100'
+            }`}
+          />
+        </div>
       </button>
 
       {(opened || visible) && (
