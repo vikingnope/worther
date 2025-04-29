@@ -1,0 +1,30 @@
+name: 'Check PR Approval Status'
+description: 'Checks if a PR has already been approved'
+inputs:
+  pr-number:
+    description: 'Pull request number to check'
+    required: true
+  github-token:
+    description: 'GitHub token for authorization'
+    required: true
+outputs:
+  already_approved:
+    description: 'Whether the PR is already approved (true/false)'
+    value: ${{ steps.check-approval.outputs.already_approved }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Check if PR is already approved
+      id: check-approval
+      shell: bash
+      run: |
+        # Get PR reviews
+        REVIEWS=$(gh pr view ${{ inputs.pr-number }} --json reviews --jq '.reviews')
+        # Check if any review has state APPROVED
+        if echo "$REVIEWS" | grep -q '"state": "APPROVED"'; then
+          echo "already_approved=true" >> $GITHUB_OUTPUT
+        else
+          echo "already_approved=false" >> $GITHUB_OUTPUT
+        fi
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}

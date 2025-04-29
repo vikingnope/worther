@@ -25,17 +25,10 @@ jobs:
 
       - name: Check if PR is already approved
         id: check-approval
-        run: |
-          # Get PR reviews
-          REVIEWS=$(gh pr view ${{ github.event.pull_request.number }} --json reviews --jq '.reviews')
-          # Check if any review has state APPROVED
-          if echo "$REVIEWS" | grep -q '"state": "APPROVED"'; then
-            echo "already_approved=true" >> $GITHUB_OUTPUT
-          else
-            echo "already_approved=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ./.github/actions/check-approval
+        with:
+          pr-number: ${{ github.event.pull_request.number }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comment on already approved PR
         if: steps.check-approval.outputs.already_approved == 'true'
@@ -67,17 +60,10 @@ jobs:
 
       - name: Check if PR is already approved
         id: check-comment-approval
-        run: |
-          # Get PR reviews
-          REVIEWS=$(gh pr view ${{ github.event.issue.number }} --json reviews --jq '.reviews')
-          # Check if any review has state APPROVED
-          if echo "$REVIEWS" | grep -q '"state": "APPROVED"'; then
-            echo "already_approved=true" >> $GITHUB_OUTPUT
-          else
-            echo "already_approved=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ./.github/actions/check-approval
+        with:
+          pr-number: ${{ github.event.issue.number }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comment on already approved PR
         if: steps.check-comment-approval.outputs.already_approved == 'true'
