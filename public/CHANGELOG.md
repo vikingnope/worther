@@ -24,7 +24,6 @@
 - Created workflow for dependabot to auto update changelog (adjusted PR title)
 - Enhanced auto-approver to not allow review again for nothing if already approved
 - Bump dependency react-router-dom from 7.5.2 to 7.5.3
-- Bump dependency react-router-dom from 7.5.2 to 7.5.3
 
 ---
 
