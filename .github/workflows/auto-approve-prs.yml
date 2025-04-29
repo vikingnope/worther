@@ -23,12 +23,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
 
+      - name: Check if PR is already approved
+        id: check-approval
+        uses: ./.github/actions/check-approval
+        with:
+          pr-number: ${{ github.event.pull_request.number }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on already approved PR
+        if: steps.check-approval.outputs.already_approved == 'true'
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --body "This PR has already been approved."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Approve PR and add comment
+        if: steps.check-approval.outputs.already_approved == 'false'
         run: |
           gh pr review --approve "${{ github.event.pull_request.number }}"
           gh pr comment "${{ github.event.pull_request.number }}" --body "Dependabot has been detected, PR auto-approved"
         env:
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   approve-from-comment:
     runs-on: ubuntu-latest
@@ -43,8 +58,23 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if PR is already approved
+        id: check-comment-approval
+        uses: ./.github/actions/check-approval
+        with:
+          pr-number: ${{ github.event.issue.number }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on already approved PR
+        if: steps.check-comment-approval.outputs.already_approved == 'true'
+        run: |
+          gh pr comment "${{ github.event.issue.number }}" --body "This PR has already been approved."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check if comment author is repository owner
         id: check-author
+        if: steps.check-comment-approval.outputs.already_approved == 'false'
         run: |
           AUTHOR="${{ github.event.comment.user.login }}"
           # Use built-in context variable for repository owner
@@ -58,7 +88,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve PR from comment
-        if: steps.check-author.outputs.is_authorized == 'true'
+        if: steps.check-author.outputs.is_authorized == 'true' && steps.check-comment-approval.outputs.already_approved == 'false'
         run: |
           gh pr review "${{ github.event.issue.number }}" --approve
           gh pr comment "${{ github.event.issue.number }}" --body "PR approved by repository owner via comment"
