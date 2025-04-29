@@ -45,8 +45,6 @@ jobs:
           FROM_VERSION="${{ steps.extract-info.outputs.from_version }}"
           TO_VERSION="${{ steps.extract-info.outputs.to_version }}"
 
-          echo "Updating changelog for: $PACKAGE $FROM_VERSION → $TO_VERSION"
-
           if [ ! -f "$CHANGELOG_FILE" ]; then
             echo "Error: CHANGELOG.md not found at $CHANGELOG_FILE"
             exit 1
@@ -72,8 +70,6 @@ jobs:
 
           # Format the changelog entry
           ENTRY="- Bump $DEP_TYPE $PACKAGE from $FROM_VERSION to $TO_VERSION"
-
-          echo "Inserting at line $INSERT_LINE: '$ENTRY'"
 
           # Insert the entry before the separator line or at the end of file
           sed -i "${INSERT_LINE}i $ENTRY" "$CHANGELOG_FILE"
