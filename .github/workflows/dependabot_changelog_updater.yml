@@ -17,20 +17,31 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Echo debugging info
+        run: |
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Event Name: ${{ github.event_name }}"
+
       - name: Extract dependency information
         id: extract-info
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          if [[ "$PR_TITLE" =~ Bump\ ([^\ ]+)\ from\ ([0-9]+\.[0-9]+\.[0-9]+)\ to\ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+          echo "Processing PR title: $PR_TITLE"
+
+          # Pattern for conventional commit format: build(deps): bump package from version to version
+          if [[ "$PR_TITLE" =~ build\(deps.*\):\ bump\ ([^\ ]+)\ from\ ([0-9]+[\.0-9]*)\ to\ ([0-9]+[\.0-9]*) ]]; then
             PACKAGE="${BASH_REMATCH[1]}"
             FROM_VERSION="${BASH_REMATCH[2]}"
             TO_VERSION="${BASH_REMATCH[3]}"
+            echo "Matched! Package: $PACKAGE, From: $FROM_VERSION, To: $TO_VERSION"
             echo "package=$PACKAGE" >> $GITHUB_OUTPUT
             echo "from_version=$FROM_VERSION" >> $GITHUB_OUTPUT
             echo "to_version=$TO_VERSION" >> $GITHUB_OUTPUT
             echo "has_match=true" >> $GITHUB_OUTPUT
           else
+            echo "No match found in PR title"
             echo "has_match=false" >> $GITHUB_OUTPUT
           fi
 
@@ -41,6 +52,19 @@ jobs:
           PACKAGE="${{ steps.extract-info.outputs.package }}"
           FROM_VERSION="${{ steps.extract-info.outputs.from_version }}"
           TO_VERSION="${{ steps.extract-info.outputs.to_version }}"
+
+          echo "Updating changelog for: $PACKAGE $FROM_VERSION → $TO_VERSION"
+
+          if [ ! -f "$CHANGELOG_FILE" ]; then
+            echo "Error: CHANGELOG.md not found at $CHANGELOG_FILE"
+            exit 1
+          fi
+
+          # Determine the type of dependency
+          DEP_TYPE="dependency"
+          if [[ "${{ github.event.pull_request.title }}" == *"deps-dev"* ]]; then
+            DEP_TYPE="dev dependency"
+          fi
 
           # Find the first version section line and the next section (if any)
           FIRST_VERSION_LINE=$(grep -n "^## " "$CHANGELOG_FILE" | head -1 | cut -d: -f1)
@@ -55,7 +79,9 @@ jobs:
           fi
 
           # Format the changelog entry
-          ENTRY="- Bump $PACKAGE from $FROM_VERSION to $TO_VERSION"
+          ENTRY="- Bump $DEP_TYPE $PACKAGE from $FROM_VERSION to $TO_VERSION"
+
+          echo "Inserting at line $INSERT_LINE: '$ENTRY'"
 
           # Insert the entry before the separator line or at the end of file
           sed -i "${INSERT_LINE}i $ENTRY" "$CHANGELOG_FILE"
