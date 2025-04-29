@@ -22,6 +22,7 @@
 - Removed redundant testing libraries
 - Bump TailwindCSS v4.1.4
 - Created workflow for dependabot to auto update changelog
+- Enhanced auto-approver to not allow review again for nothing if already approved
 
 ---
 
