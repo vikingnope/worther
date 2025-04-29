@@ -47,6 +47,8 @@ jobs:
 
       - name: Update CHANGELOG.md
         if: steps.extract-info.outputs.has_match == 'true'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           CHANGELOG_FILE="public/CHANGELOG.md"
           PACKAGE="${{ steps.extract-info.outputs.package }}"
@@ -62,7 +64,7 @@ jobs:
 
           # Determine the type of dependency
           DEP_TYPE="dependency"
-          if [[ "${{ github.event.pull_request.title }}" == *"deps-dev"* ]]; then
+          if [[ "$PR_TITLE" == *"deps-dev"* ]]; then
             DEP_TYPE="dev dependency"
           fi
 
