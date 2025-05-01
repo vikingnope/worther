@@ -1,20 +1,17 @@
-name: Lint and Format
+name: Lint and Format Checks
 
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+  workflow_call:
+    inputs:
+      job-name:
+        required: true
+        type: string
+        description: 'Name of the job to display in UI'
 
 jobs:
-  lint:
-    name: Run ESLint and Prettier checks
+  lint-format:
+    name: ${{ inputs.job-name }}
     runs-on: ubuntu-latest
-    # This will make the workflow show up as a required check in GitHub
-    permissions:
-      contents: read
-      pull-requests: write
-
     steps:
       - uses: actions/checkout@v4.2.2
 
