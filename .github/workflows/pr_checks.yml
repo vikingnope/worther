@@ -194,9 +194,54 @@ jobs:
   #################################################
   # CODE QUALITY CHECKS
   #################################################
-  quality-lint-format:
+  # For non-bot PRs - runs immediately
+  quality-lint-format-user:
     name: 🧹 Code Quality Checks
-    needs: [initial-author-check, changelog-update-dependabot, changelog-check-user]
+    needs: [initial-author-check]
+    if: ${{ needs.initial-author-check.outputs.is_bot == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4.2.3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run ESLint
+        run: pnpm run lint
+
+      - name: Check Formatting
+        run: pnpm run format:check
+
+  # For bot PRs - waits for changelog update to finish
+  quality-lint-format-bot:
+    name: 🧹 Code Quality Checks (Bot PR)
+    # Wait for changelog update to complete for bot PRs
+    needs: [initial-author-check, changelog-update-dependabot]
+    if: ${{ needs.initial-author-check.outputs.is_bot == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
@@ -239,7 +284,12 @@ jobs:
   #################################################
   metadata-milestone-check:
     name: 🏷️ PR Milestone Check
-    needs: [initial-author-check, quality-lint-format]
+    needs:
+      - initial-author-check
+      - quality-lint-format-user
+      - quality-lint-format-bot
+    # This ensures it only needs one of the two lint jobs to complete based on PR author type
+    if: ${{ always() && !contains(needs.*.result, 'cancelled') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check if PR has milestone
@@ -310,15 +360,33 @@ jobs:
   final-status:
     name: 🚦 Final Status Check
     needs:
-      [initial-author-check, changelog-enforce-user, quality-lint-format, metadata-milestone-check]
+      - initial-author-check
+      - quality-lint-format-user
+      - quality-lint-format-bot
+      - metadata-milestone-check
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Verify all checks passed
         run: |
           IS_BOT="${{ needs.initial-author-check.outputs.is_bot }}"
 
-          if [[ "$IS_BOT" == "false" ]] && [[ "${{ needs.changelog-enforce-user.outputs.should_block }}" == "true" ]]; then
-            echo "Changelog update required - blocking merge"
+          # Check if any job failed
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            echo "One or more checks failed - blocking merge"
             exit 1
           fi
+
+          # For non-bot PRs, verify the changelog check completed
+          if [[ "$IS_BOT" == "false" ]] && [[ "${{ contains(fromJson('["quality-lint-format-user", "metadata-milestone-check"]'), 'skipped') }}" == "true" ]]; then
+            echo "Required checks were skipped - blocking merge"
+            exit 1
+          fi
+
+          # For bot PRs, verify the bot-specific checks completed
+          if [[ "$IS_BOT" == "true" ]] && [[ "${{ contains(fromJson('["quality-lint-format-bot", "metadata-milestone-check"]'), 'skipped') }}" == "true" ]]; then
+            echo "Required checks were skipped - blocking merge"
+            exit 1
+          fi
+
           echo "All PR checks completed successfully ✓"
