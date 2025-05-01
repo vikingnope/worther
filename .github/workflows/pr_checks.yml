@@ -312,9 +312,11 @@ jobs:
             git fetch origin $BASE_REF --depth=1
             CHANGELOG_CHANGED=$(git diff --name-only origin/$BASE_REF | grep -c "public/CHANGELOG.md" || true)
           else
-            # Regular PR event
-            git fetch origin ${{ github.base_ref }} --depth=1
-            CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "public/CHANGELOG.md" || true)
+            # Regular PR event - use proper API to get base ref instead of github.base_ref context variable
+            BASE_REF=$(gh pr view $PR_NUMBER --json baseRefName -q ".baseRefName")
+            echo "Base branch: $BASE_REF"
+            git fetch origin $BASE_REF --depth=1
+            CHANGELOG_CHANGED=$(git diff --name-only origin/$BASE_REF | grep -c "public/CHANGELOG.md" || true)
           fi
 
           echo "Changelog changed: $CHANGELOG_CHANGED"
