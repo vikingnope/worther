@@ -28,6 +28,7 @@
 - Convert issue templates to YAML from Markdown for better readability and configuration
 - Updated automatic changelog to wrap package versions in backticks
 - Added exit code to `pr_checks.yml` file
+- Fixed chore report template not being read due to error
 
 ---
 
