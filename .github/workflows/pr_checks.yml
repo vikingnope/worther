@@ -1,0 +1,324 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited, ready_for_review, demilestoned]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  #################################################
+  # INITIAL CHECK - Author detection
+  #################################################
+  initial-author-check:
+    name: 🔍 Initial PR Author Check
+    runs-on: ubuntu-latest
+    outputs:
+      is_bot: ${{ steps.check-bot.outputs.is_bot }}
+      is_dependabot: ${{ steps.check-bot.outputs.is_dependabot }}
+    steps:
+      - name: Check if PR author is a bot
+        id: check-bot
+        run: |
+          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+          if [[ "$PR_AUTHOR" == *"[bot]" ]] || [[ "$PR_AUTHOR" == "dependabot" ]]; then
+            echo "is_bot=true" >> $GITHUB_OUTPUT
+            if [[ "$PR_AUTHOR" == "dependabot"* ]]; then
+              echo "is_dependabot=true" >> $GITHUB_OUTPUT
+            else
+              echo "is_dependabot=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "is_bot=false" >> $GITHUB_OUTPUT
+            echo "is_dependabot=false" >> $GITHUB_OUTPUT
+          fi
+
+  #################################################
+  # CHANGELOG CHECKS
+  #################################################
+  changelog-update-dependabot:
+    name: 📝 Update Changelog (Dependabot)
+    needs: initial-author-check
+    if: ${{ needs.initial-author-check.outputs.is_dependabot == 'true' }}
+    runs-on: ubuntu-latest
+    outputs:
+      changelog_updated: ${{ steps.extract-info.outputs.has_match }}
+      package_name: ${{ steps.extract-info.outputs.package }}
+      from_version: ${{ steps.extract-info.outputs.from_version }}
+      to_version: ${{ steps.extract-info.outputs.to_version }}
+      dep_type: ${{ steps.update-changelog.outputs.dep_type }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract dependency information
+        id: extract-info
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          # Pattern for conventional commit format: build(deps): bump package from version to version
+          if [[ "$PR_TITLE" =~ build\(deps.*\):\ bump\ ([^\ ]+)\ from\ ([0-9]+[\.0-9]*)\ to\ ([0-9]+[\.0-9]*) ]]; then
+            PACKAGE="${BASH_REMATCH[1]}"
+            FROM_VERSION="${BASH_REMATCH[2]}"
+            TO_VERSION="${BASH_REMATCH[3]}"
+            echo "package=$PACKAGE" >> $GITHUB_OUTPUT
+            echo "from_version=$FROM_VERSION" >> $GITHUB_OUTPUT
+            echo "to_version=$TO_VERSION" >> $GITHUB_OUTPUT
+            echo "has_match=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_match=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update CHANGELOG.md
+        id: update-changelog
+        if: steps.extract-info.outputs.has_match == 'true'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          CHANGELOG_FILE="public/CHANGELOG.md"
+          PACKAGE="${{ steps.extract-info.outputs.package }}"
+          FROM_VERSION="${{ steps.extract-info.outputs.from_version }}"
+          TO_VERSION="${{ steps.extract-info.outputs.to_version }}"
+
+          if [ ! -f "$CHANGELOG_FILE" ]; then
+            echo "Error: CHANGELOG.md not found at $CHANGELOG_FILE"
+            exit 1
+          fi
+
+          # Determine the type of dependency
+          DEP_TYPE="dependency"
+          if [[ "$PR_TITLE" == *"deps-dev"* ]]; then
+            DEP_TYPE="dev dependency"
+          fi
+          echo "dep_type=$DEP_TYPE" >> $GITHUB_OUTPUT
+
+          # Find the first version section line and the next section (if any)
+          FIRST_VERSION_LINE=$(grep -n "^## " "$CHANGELOG_FILE" | head -1 | cut -d: -f1)
+          NEXT_VERSION_LINE=$(grep -n "^---" "$CHANGELOG_FILE" | head -1 | cut -d: -f1)
+
+          # If there's no next section (no "---" line found), insert before the end of the file
+          if [ -z "$NEXT_VERSION_LINE" ]; then
+            INSERT_LINE="$(($(wc -l < "$CHANGELOG_FILE")+1))"
+          else
+            # Insert right before the "---" separator
+            INSERT_LINE="$((NEXT_VERSION_LINE-1))"
+          fi
+
+          # Format the changelog entry
+          ENTRY="- Bump $DEP_TYPE $PACKAGE from $FROM_VERSION to $TO_VERSION"
+
+          # Insert the entry before the separator line or at the end of file
+          sed -i "${INSERT_LINE}i $ENTRY" "$CHANGELOG_FILE"
+
+          # Commit and push the changes
+          git config --local user.email "dependabot-changelog-updater[bot]@users.noreply.github.com"
+          git config --local user.name "Dependabot Changelog Updater"
+          git add "$CHANGELOG_FILE"
+          git commit -m "docs: update changelog with $PACKAGE dependency bump"
+          git push
+
+      - name: Comment on PR about changelog update
+        if: steps.extract-info.outputs.has_match == 'true'
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const packageName = '${{ steps.extract-info.outputs.package }}';
+            const fromVersion = '${{ steps.extract-info.outputs.from_version }}';
+            const toVersion = '${{ steps.extract-info.outputs.to_version }}';
+            const depType = '${{ steps.update-changelog.outputs.dep_type }}';
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `📝 **Changelog Automatically Updated**\n\nA changelog entry has been automatically added for this Dependabot PR:\n\n- Bump ${depType} ${packageName} from ${fromVersion} to ${toVersion}`
+            });
+
+  changelog-check-user:
+    name: 📋 Check Changelog (User PR)
+    needs: initial-author-check
+    # Skip if it's a bot PR
+    if: ${{ needs.initial-author-check.outputs.is_bot == 'false' }}
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.changelog-check.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Check for changelog changes
+        id: changelog-check
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "public/CHANGELOG.md" || true)
+          echo "changed=$CHANGELOG_CHANGED" >> $GITHUB_OUTPUT
+
+  changelog-enforce-user:
+    name: ✅ Enforce Changelog (User PR)
+    needs: [initial-author-check, changelog-check-user]
+    if: ${{ needs.initial-author-check.outputs.is_bot == 'false' }}
+    runs-on: ubuntu-latest
+    outputs:
+      should_block: ${{ steps.check-status.outputs.should_block }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Handle changelog enforcement
+        id: check-status
+        run: |
+          HAS_CHANGES="${{ needs.changelog-check-user.outputs.has_changes }}"
+
+          # Always try to remove the label first if changes exist
+          if [[ "$HAS_CHANGES" != "0" ]]; then
+            echo "Changelog changes detected - removing label if it exists"
+            gh pr edit ${{ github.event.pull_request.number }} --remove-label "Changelog needed" 2>/dev/null || true
+          fi
+
+          # For non-bot PRs, check if changelog was updated
+          if [[ "$HAS_CHANGES" == "0" ]]; then
+            echo "User PR detected without changelog changes - blocking"
+            gh label create "Changelog needed" --color FF0000 --description "Changelog update required" 2>/dev/null || true
+            gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
+            echo "should_block=true" >> $GITHUB_OUTPUT
+          else
+            echo "User PR detected with changelog changes - allowing"
+            echo "should_block=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  #################################################
+  # CODE QUALITY CHECKS
+  #################################################
+  quality-lint-format:
+    name: 🧹 Code Quality Checks
+    needs: [initial-author-check, changelog-update-dependabot, changelog-check-user]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4.2.3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run ESLint
+        run: pnpm run lint
+
+      - name: Check Formatting
+        run: pnpm run format:check
+
+  #################################################
+  # PR METADATA CHECKS
+  #################################################
+  metadata-milestone-check:
+    name: 🏷️ PR Milestone Check
+    needs: [initial-author-check, quality-lint-format]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR has milestone
+        id: check-milestone
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+
+            // Check if PR has a milestone
+            const pr = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: prNumber
+            });
+
+            if (pr.data.milestone) {
+              console.log(`PR #${prNumber} already has milestone: ${pr.data.milestone.title}`);
+              return true;
+            }
+
+            // Get latest milestone
+            const milestones = await github.rest.issues.listMilestones({
+              owner,
+              repo,
+              state: 'open',
+              sort: 'due_on',
+              direction: 'desc'
+            });
+
+            if (milestones.data.length === 0) {
+              console.log('No milestones found!');
+              core.setFailed('No milestones available to add to PR');
+              return false;
+            }
+
+            // Sort by creation date (newest first)
+            const sortedMilestones = milestones.data.sort((a, b) => 
+              new Date(b.created_at) - new Date(a.created_at)
+            );
+
+            const latestMilestone = sortedMilestones[0];
+            console.log(`Latest milestone: ${latestMilestone.title}`);
+
+            // Update the PR with the latest milestone
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: prNumber,
+              milestone: latestMilestone.number
+            });
+
+            // Add comment to PR
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: prNumber,
+              body: `✅ Automatically added milestone ${latestMilestone.title} to this pull request.`
+            });
+
+            console.log(`Added milestone ${latestMilestone.title} to PR #${prNumber}`);
+            return true;
+
+  #################################################
+  # FINAL STATUS CHECK
+  #################################################
+  final-status:
+    name: 🚦 Final Status Check
+    needs:
+      [initial-author-check, changelog-enforce-user, quality-lint-format, metadata-milestone-check]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all checks passed
+        run: |
+          IS_BOT="${{ needs.initial-author-check.outputs.is_bot }}"
+
+          if [[ "$IS_BOT" == "false" ]] && [[ "${{ needs.changelog-enforce-user.outputs.should_block }}" == "true" ]]; then
+            echo "Changelog update required - blocking merge"
+            exit 1
+          fi
+          echo "All PR checks completed successfully ✓"
