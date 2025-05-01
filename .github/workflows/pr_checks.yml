@@ -441,9 +441,4 @@ jobs:
         if: ${{ always() }}
         run: |
           echo "::notice::Final status check completed with result: ${{ job.status }}"
-          # Exit with code 0 if the preceding steps succeeded, otherwise 1
-          if [[ "${{ job.status }}" == "success" ]]; then
-            exit 0
-          else
-            exit 1
-          fi
+          [[ "${{ job.status }}" == "success" ]] && exit 0 || exit 1
