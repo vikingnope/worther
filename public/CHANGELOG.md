@@ -25,7 +25,7 @@
 - Enhanced auto-approver to not allow review again for nothing if already approved
 - Bump dependency react-router-dom from 7.5.2 to 7.5.3
 - Moved multiple workflows into one file for better workflow organisation
-- Convert issue templates to yaml from markdown for better readability and configuration
+- Convert issue templates to YAML from Markdown for better readability and configuration
 
 ---
 
