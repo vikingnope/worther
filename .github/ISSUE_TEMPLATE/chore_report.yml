@@ -62,11 +62,10 @@ body:
     id: scope-other
     attributes:
       label: Other Scope
-      description: If you selected "Other" above, please specify
+      description: If you selected "Other" in the Scope field above, please specify
       placeholder: e.g., Analytics, Third-party integrations
     validations:
       required: false
-    if: ${{ contains(inputs.scope, 'Other') }}
 
   - type: dropdown
     id: priority
