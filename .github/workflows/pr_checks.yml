@@ -435,3 +435,15 @@ jobs:
               echo "- ✓ Changelog check (completed)"
             fi
           fi
+
+      # Always run this step to ensure job completion is properly reported to GitHub
+      - name: Mark status check as complete
+        if: ${{ always() }}
+        run: |
+          echo "::notice::Final status check completed with result: ${{ job.status }}"
+          # Exit with code 0 if the preceding steps succeeded, otherwise 1
+          if [[ "${{ job.status }}" == "success" ]]; then
+            exit 0
+          else
+            exit 1
+          fi
