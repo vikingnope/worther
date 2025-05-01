@@ -468,12 +468,41 @@ jobs:
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
             const changelogUpdateOutput = '${{ needs.changelog-update-dependabot.outputs.commit_sha }}';
 
-            // For Dependabot PRs with changelog updates, use the latest commit SHA if it exists and is valid
-            if (isBot && changelogUpdateOutput && changelogUpdateOutput.length > 0) {
-              console.log(`Using updated commit SHA from changelog update: ${changelogUpdateOutput}`);
-              sha = changelogUpdateOutput;
+            // For Dependabot PRs with changelog updates, get the latest commit from the branch
+            if (isBot) {
+              try {
+                // Fetch the latest commit from the PR branch regardless of what we have in event payload
+                // This ensures we always use the most up-to-date SHA after any workflow modifications
+                const { data: prData } = await github.rest.pulls.get({
+                  owner,
+                  repo,
+                  pull_number: context.payload.pull_request.number
+                });
+                
+                if (prData && prData.head && prData.head.sha) {
+                  console.log(`Using latest SHA from PR API: ${prData.head.sha}`);
+                  console.log(`Previous SHA from event: ${sha}`);
+                  sha = prData.head.sha;
+                }
+                
+                // Additional fallback - if we have a specific commit SHA from changelog update, use it
+                if (changelogUpdateOutput && changelogUpdateOutput.length > 0) {
+                  console.log(`Changelog update produced commit: ${changelogUpdateOutput}`);
+                  console.log(`Comparing to latest PR SHA: ${sha}`);
+                  
+                  // Only use the changelog commit if it's different from what we already have
+                  if (changelogUpdateOutput !== sha) {
+                    console.log(`Using changelog update commit SHA: ${changelogUpdateOutput}`);
+                    sha = changelogUpdateOutput;
+                  }
+                }
+              } catch (apiError) {
+                console.error(`Error fetching latest PR data: ${apiError.message}`);
+                console.log(`Falling back to original SHA: ${sha}`);
+                // Continue with the original SHA
+              }
             } else {
-              console.log(`Using original PR head SHA: ${sha}`);
+              console.log(`Using original PR head SHA for user PR: ${sha}`);
             }
 
             console.log(`Reporting final status for ${owner}/${repo}@${sha}: ${jobStatus}`);
