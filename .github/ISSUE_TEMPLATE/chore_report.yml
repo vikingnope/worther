@@ -1,0 +1,128 @@
+name: Chore Report
+description: Track maintenance tasks, refactoring, and other housekeeping activities
+title: '[CHORE] '
+labels: ['Chore']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping maintain and improve Worther!
+
+  - type: dropdown
+    id: chore-type
+    attributes:
+      label: Chore Type
+      multiple: true
+      options:
+        - Dependency update
+        - Code refactoring
+        - Documentation update
+        - Performance optimization
+        - Technical debt reduction
+        - Testing improvement
+        - Build/CI pipeline work
+        - Other maintenance tasks
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Chore Description
+      description: A clear and concise description of what needs to be done.
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this chore necessary? What problems will it solve, or what improvements will it bring?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      multiple: true
+      options:
+        - Frontend
+        - Backend
+        - Testing infrastructure
+        - Documentation
+        - CI/CD pipeline
+        - Development environment
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: scope-other
+    attributes:
+      label: Other Scope
+      description: If you selected "Other" above, please specify
+      placeholder: e.g., Analytics, Third-party integrations
+    validations:
+      required: false
+    if: ${{ contains(inputs.scope, 'Other') }}
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - High (Blocking development or causing significant issues)
+        - Medium (Should be addressed soon)
+        - Low (Nice to have, can be deferred)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Estimated Effort
+      options:
+        - Small (hours)
+        - Medium (1-2 days)
+        - Large (3+ days)
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Clear list of requirements for this chore to be considered complete
+      placeholder: |
+        - e.g., "All dependencies updated to latest stable versions"
+        - e.g., "Code coverage remains above 80%"
+        - e.g., "Documentation updated to reflect changes"
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation Notes
+      description: Any details about how this chore should be implemented, tools to use, or areas to be careful about.
+    validations:
+      required: false
+
+  - type: input
+    id: related
+    attributes:
+      label: Related Issues/PRs
+      description: Link to any related issues or pull requests.
+      placeholder: '#123, #456'
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots relevant to the chore here.
+    validations:
+      required: false
