@@ -481,22 +481,23 @@ jobs:
 
             // Set state based on job status
             let state = 'success';
-            let description = '✅ All PR checks completed successfully';
+            let description = 'All PR checks completed successfully';
 
             if (jobStatus !== 'success') {
               state = 'failure';
-              description = '❌ One or more PR checks failed';
+              description = 'One or more PR checks failed';
             }
 
             try {
               // Explicitly create a status check for the Final Status Check
+              // Note: Removed emoji from context to avoid 4-byte Unicode validation errors
               const statusResponse = await github.rest.repos.createCommitStatus({
                 owner,
                 repo,
                 sha,
                 state,
                 description,
-                context: '🚦 Final Status Check'
+                context: 'Final Status Check'
               });
               
               console.log(`Status check created with state: ${state}, response status: ${statusResponse.status}`);
@@ -513,7 +514,7 @@ jobs:
                   sha: context.sha,
                   state,
                   description: description + " (fallback)",
-                  context: '🚦 Final Status Check'
+                  context: 'Final Status Check'
                 });
                 console.log(`Fallback status check created with state: ${state}, response status: ${fallbackResponse.status}`);
               } catch (fallbackError) {
