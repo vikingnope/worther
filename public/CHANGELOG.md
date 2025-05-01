@@ -30,6 +30,7 @@
 - Fixed chore report template not being read due to error
 - Fixes issue with Dependabot PRs not getting status from PR Checks workflow
 - Added option to run PR check workflow with command by repo owner
+- Bump dev dependency `@tailwindcss/postcss` from 4.1.4 to 4.1.5
 
 ---
 
