@@ -30,7 +30,6 @@ jobs:
         uses: actions/github-script@v7.0.1
         with:
           script: |
-            const core = require('@actions/core');
             const prAuthor = context.payload.pull_request.user.login;
 
             // Check if the author is a bot (ends with [bot] or is dependabot)
@@ -240,7 +239,6 @@ jobs:
         uses: actions/github-script@v7.0.1
         with:
           script: |
-            const core = require('@actions/core');
             const { owner, repo } = context.repo;
             const prNumber = context.payload.pull_request.number;
 
