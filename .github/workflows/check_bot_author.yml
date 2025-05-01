@@ -1,0 +1,76 @@
+name: Check PR Author Bot Status
+
+on:
+  workflow_call:
+    inputs:
+      pr_number:
+        required: true
+        type: string
+        description: 'The pull request number to check'
+      event_type:
+        required: true
+        type: string
+        description: 'The event type (pull_request or issue_comment)'
+    outputs:
+      is_bot:
+        description: 'Whether the PR author is a bot'
+        value: ${{ jobs.check-bot-author.outputs.is_bot }}
+      is_dependabot:
+        description: 'Whether the PR author is specifically Dependabot'
+        value: ${{ jobs.check-bot-author.outputs.is_dependabot }}
+
+jobs:
+  check-bot-author:
+    name: 🔍 Check PR Author
+    runs-on: ubuntu-latest
+    outputs:
+      is_bot: ${{ steps.check-bot.outputs.is_bot }}
+      is_dependabot: ${{ steps.check-bot.outputs.is_dependabot }}
+    steps:
+      - name: Check if PR author is a bot
+        id: check-bot
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            let prAuthor;
+            let prNumber;
+
+            // Handle different event types
+            if (context.payload.pull_request) {
+              // For direct PR events
+              prAuthor = context.payload.pull_request.user.login;
+              prNumber = context.payload.pull_request.number;
+              console.log(`Direct PR event: PR #${prNumber} by ${prAuthor}`);
+            } else {
+              // For comment-triggered events, fetch PR details using the provided number
+              prNumber = ${{ inputs.pr_number }};
+              console.log(`Comment-triggered event: Fetching PR #${prNumber} details`);
+              
+              try {
+                const { data: pr } = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: prNumber
+                });
+                prAuthor = pr.user.login;
+                console.log(`Fetched PR author: ${prAuthor}`);
+              } catch (error) {
+                console.error(`Error fetching PR details: ${error.message}`);
+                core.setFailed(`Failed to fetch PR details: ${error.message}`);
+                return;
+              }
+            }
+
+            // Check if the author is a bot (ends with [bot] or is dependabot)
+            const isBot = prAuthor.endsWith('[bot]') || prAuthor.startsWith('dependabot');
+
+            // Check specifically for Dependabot
+            const isDependabot = prAuthor.startsWith('dependabot');
+
+            // Set outputs
+            core.setOutput('is_bot', isBot.toString());
+            core.setOutput('is_dependabot', isDependabot.toString());
+
+            console.log(`PR #${prNumber} Author: ${prAuthor}`);
+            console.log(`Is Bot: ${isBot}`);
+            console.log(`Is Dependabot: ${isDependabot}`);
