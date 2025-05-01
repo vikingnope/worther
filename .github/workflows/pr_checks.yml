@@ -209,7 +209,7 @@ jobs:
   quality-lint-format-user:
     needs: [initial-author-check]
     if: ${{ needs.initial-author-check.outputs.is_bot == 'false' }}
-    uses: ./.github/workflows/lint-format.yml
+    uses: ./.github/workflows/lint_format.yml
     with:
       job-name: '🧹 Code Quality Checks'
 
@@ -218,7 +218,7 @@ jobs:
     # Wait for changelog update to complete for bot PRs
     needs: [initial-author-check, changelog-update-dependabot]
     if: ${{ needs.initial-author-check.outputs.is_bot == 'true' }}
-    uses: ./.github/workflows/lint-format.yml
+    uses: ./.github/workflows/lint_format.yml
     with:
       job-name: '🧹 Code Quality Checks (Bot PR)'
 
