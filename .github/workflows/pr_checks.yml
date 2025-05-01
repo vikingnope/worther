@@ -318,7 +318,6 @@ jobs:
           IS_BOT="${{ needs.initial-author-check.outputs.is_bot }}"
           echo "is_bot=$IS_BOT" >> $GITHUB_OUTPUT
 
-      # Show status report of all jobs
       - name: Generate status report
         run: |
           echo "## 📊 PR Checks Status Report"
@@ -328,11 +327,11 @@ jobs:
           echo "| 🔍 Initial Author Check | ${{ needs.initial-author-check.result }} | PR is by ${{ needs.initial-author-check.outputs.is_bot == 'true' && 'bot' || 'user' }} |"
 
           if [[ "${{ steps.set-status.outputs.is_bot }}" == "true" ]]; then
-            echo "| 📝 Update Changelog (Bot) | ${{ contains(github.event.pull_request.jobs, 'changelog-update-dependabot') && needs.changelog-update-dependabot.result || 'skipped' }} | ${{ needs.changelog-update-dependabot.outputs.changelog_updated == 'true' && 'Updated' || 'Not applicable' }} |"
+            echo "| 📝 Update Changelog (Bot) | ${{ needs.changelog-update-dependabot.result }} | ${{ needs.changelog-update-dependabot.outputs.changelog_updated == 'true' && 'Updated' || 'Not applicable' }} |"
             echo "| 🧹 Code Quality (Bot) | ${{ needs.quality-lint-format-bot.result }} | - |"
           else
-            echo "| 📋 Check Changelog (User) | ${{ contains(github.event.pull_request.jobs, 'changelog-check-user') && needs.changelog-check-user.result || 'skipped' }} | Changes: ${{ needs.changelog-check-user.outputs.has_changes != '0' && 'Yes' || 'No' }} |"
-            echo "| ✅ Enforce Changelog | ${{ contains(github.event.pull_request.jobs, 'changelog-enforce-user') && needs.changelog-enforce-user.result || 'skipped' }} | Should block: ${{ needs.changelog-enforce-user.outputs.should_block }} |"
+            echo "| 📋 Check Changelog (User) | ${{ needs.changelog-check-user.result }} | Changes: ${{ needs.changelog-check-user.outputs.has_changes != '0' && 'Yes' || 'No' }} |"
+            echo "| ✅ Enforce Changelog | ${{ needs.changelog-enforce-user.result }} | Should block: ${{ needs.changelog-enforce-user.outputs.should_block }} |"
             echo "| 🧹 Code Quality (User) | ${{ needs.quality-lint-format-user.result }} | - |"
           fi
 
@@ -357,24 +356,23 @@ jobs:
             if [[ "${{ needs.quality-lint-format-bot.result }}" == "failure" ]]; then
               echo "- ❌ Code quality checks (bot) failed"
             fi
-            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-update-dependabot') && needs.changelog-update-dependabot.result == 'failure' }}" == "true" ]]; then
+            if [[ "${{ needs.changelog-update-dependabot.result }}" == "failure" ]]; then
               echo "- ❌ Changelog update for bot failed"
             fi
           else
             if [[ "${{ needs.quality-lint-format-user.result }}" == "failure" ]]; then
               echo "- ❌ Code quality checks (user) failed"
             fi
-            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-check-user') && needs.changelog-check-user.result == 'failure' }}" == "true" ]]; then
+            if [[ "${{ needs.changelog-check-user.result }}" == "failure" ]]; then
               echo "- ❌ Changelog check failed"
             fi
-            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-enforce-user') && needs.changelog-enforce-user.result == 'failure' }}" == "true" ]]; then
+            if [[ "${{ needs.changelog-enforce-user.result }}" == "failure" ]]; then
               echo "- ❌ Changelog enforcement failed"
             fi
           fi
 
           exit 1
 
-      # Check for skipped jobs based on PR author type
       - name: Check for skipped jobs (non-bot PR)
         if: ${{ steps.set-status.outputs.is_bot == 'false' }}
         env:
@@ -425,7 +423,7 @@ jobs:
             echo "- ✓ Initial author check (completed)"
             echo "- ✓ Bot code quality check (completed)"
             echo "- ✓ Milestone check (completed)"
-            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-update-dependabot') }}" == "true" ]]; then
+            if [[ "${{ needs.changelog-update-dependabot.result }}" != 'skipped' ]]; then
               echo "- ✓ Changelog auto-update (completed)"
             fi
           else
@@ -433,7 +431,7 @@ jobs:
             echo "- ✓ Initial author check (completed)"
             echo "- ✓ User code quality check (completed)"
             echo "- ✓ Milestone check (completed)"
-            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-check-user') }}" == "true" ]]; then
+            if [[ "${{ needs.changelog-check-user.result }}" != 'skipped' ]]; then
               echo "- ✓ Changelog check (completed)"
             fi
           fi
