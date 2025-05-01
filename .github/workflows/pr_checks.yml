@@ -22,19 +22,25 @@ jobs:
     steps:
       - name: Check if PR author is a bot
         id: check-bot
-        run: |
-          PR_AUTHOR="${{ github.event.pull_request.user.login }}"
-          if [[ "$PR_AUTHOR" == *"[bot]" ]] || [[ "$PR_AUTHOR" == "dependabot" ]]; then
-            echo "is_bot=true" >> $GITHUB_OUTPUT
-            if [[ "$PR_AUTHOR" == "dependabot"* ]]; then
-              echo "is_dependabot=true" >> $GITHUB_OUTPUT
-            else
-              echo "is_dependabot=false" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "is_bot=false" >> $GITHUB_OUTPUT
-            echo "is_dependabot=false" >> $GITHUB_OUTPUT
-          fi
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const core = require('@actions/core');
+            const prAuthor = context.payload.pull_request.user.login;
+
+            // Check if the author is a bot (ends with [bot] or is dependabot)
+            const isBot = prAuthor.endsWith('[bot]') || prAuthor.startsWith('dependabot');
+
+            // Check specifically for Dependabot
+            const isDependabot = prAuthor.startsWith('dependabot');
+
+            // Set outputs
+            core.setOutput('is_bot', isBot.toString());
+            core.setOutput('is_dependabot', isDependabot.toString());
+
+            console.log(`PR Author: ${prAuthor}`);
+            console.log(`Is Bot: ${isBot}`);
+            console.log(`Is Dependabot: ${isDependabot}`);
 
   #################################################
   # CHANGELOG CHECKS
