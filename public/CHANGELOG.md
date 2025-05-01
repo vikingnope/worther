@@ -31,6 +31,7 @@
 - Fixes issue with Dependabot PRs not getting status from PR Checks workflow
 - Added option to run PR check workflow with command by repo owner
 - Bump dev dependency `@tailwindcss/vite` from 4.1.4 to 4.1.5
+- Bump dev dependency `@tailwindcss/vite` from 4.1.4 to 4.1.5
 
 ---
 
