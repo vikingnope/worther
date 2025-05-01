@@ -29,6 +29,7 @@
 - Updated automatic changelog to wrap package versions in backticks
 - Fixed chore report template not being read due to error
 - Fixes issue with Dependabot PRs not getting status from PR Checks workflow
+- Made PR Checker runnable with command by repo owner
 
 ---
 
