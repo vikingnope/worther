@@ -484,8 +484,8 @@ jobs:
             try {
               // Explicitly create a status check for the Final Status Check
               await github.rest.repos.createCommitStatus({
-                owner,
-                repo,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
                 sha,
                 state,
                 description,
@@ -501,8 +501,8 @@ jobs:
                 console.log(`Retrying with original PR head SHA`);
                 try {
                   await github.rest.repos.createCommitStatus({
-                    owner,
-                    repo,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
                     sha: context.payload.pull_request.head.sha,
                     state,
                     description: description + " (fallback)",
