@@ -459,7 +459,7 @@ jobs:
             const jobStatus = '${{ job.status }}';
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
             const changelogUpdateOutput = '${{ needs.changelog-update-dependabot.outputs.commit_sha }}';
-            
+
             // For Dependabot PRs with changelog updates, use the latest commit SHA
             if (isBot && changelogUpdateOutput && changelogUpdateOutput.length > 0) {
               sha = changelogUpdateOutput;
@@ -467,18 +467,18 @@ jobs:
             } else {
               console.log(`Using original PR head SHA: ${sha}`);
             }
-            
+
             console.log(`Reporting final status for ${owner}/${repo}@${sha}: ${jobStatus}`);
-            
+
             // Set state based on job status
             let state = 'success';
             let description = '✅ All PR checks completed successfully';
-            
+
             if (jobStatus !== 'success') {
               state = 'failure';
               description = '❌ One or more PR checks failed';
             }
-            
+
             try {
               // Explicitly create a status check for the Final Status Check
               await github.rest.repos.createCommitStatus({
@@ -512,7 +512,7 @@ jobs:
                 }
               }
             }
-            
+
             // Exit with appropriate code
             if (jobStatus !== 'success') {
               process.exit(1);
