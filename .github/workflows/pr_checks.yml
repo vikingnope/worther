@@ -457,15 +457,22 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
-            let sha = context.payload.pull_request.head.sha;
+            const prRef = context.payload.pull_request;
+            let sha = prRef?.head?.sha;
+
+            if (!sha) {
+              console.log('No SHA found in PR head, falling back to event SHA');
+              sha = context.sha;
+            }
+
             const jobStatus = '${{ job.status }}';
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
             const changelogUpdateOutput = '${{ needs.changelog-update-dependabot.outputs.commit_sha }}';
 
-            // For Dependabot PRs with changelog updates, use the latest commit SHA
+            // For Dependabot PRs with changelog updates, use the latest commit SHA if it exists and is valid
             if (isBot && changelogUpdateOutput && changelogUpdateOutput.length > 0) {
+              console.log(`Using updated commit SHA from changelog update: ${changelogUpdateOutput}`);
               sha = changelogUpdateOutput;
-              console.log(`Using updated commit SHA from changelog update: ${sha}`);
             } else {
               console.log(`Using original PR head SHA: ${sha}`);
             }
@@ -483,35 +490,35 @@ jobs:
 
             try {
               // Explicitly create a status check for the Final Status Check
-              await github.rest.repos.createCommitStatus({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+              const statusResponse = await github.rest.repos.createCommitStatus({
+                owner,
+                repo,
                 sha,
                 state,
                 description,
                 context: '🚦 Final Status Check'
               });
               
-              console.log(`Status check created with state: ${state}`);
+              console.log(`Status check created with state: ${state}, response status: ${statusResponse.status}`);
             } catch (error) {
               console.error(`Error creating status check: ${error.message}`);
+              console.error(`Error details: ${JSON.stringify(error)}`);
               
-              // Try again with the original PR SHA as fallback
-              if (sha !== context.payload.pull_request.head.sha) {
-                console.log(`Retrying with original PR head SHA`);
-                try {
-                  await github.rest.repos.createCommitStatus({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    sha: context.payload.pull_request.head.sha,
-                    state,
-                    description: description + " (fallback)",
-                    context: '🚦 Final Status Check'
-                  });
-                  console.log(`Fallback status check created with state: ${state}`);
-                } catch (fallbackError) {
-                  console.error(`Error creating fallback status check: ${fallbackError.message}`);
-                }
+              // Try again with the current context SHA as fallback
+              console.log(`Retrying with context SHA: ${context.sha}`);
+              try {
+                const fallbackResponse = await github.rest.repos.createCommitStatus({
+                  owner,
+                  repo,
+                  sha: context.sha,
+                  state,
+                  description: description + " (fallback)",
+                  context: '🚦 Final Status Check'
+                });
+                console.log(`Fallback status check created with state: ${state}, response status: ${fallbackResponse.status}`);
+              } catch (fallbackError) {
+                console.error(`Error creating fallback status check: ${fallbackError.message}`);
+                console.error(`Fallback error details: ${JSON.stringify(fallbackError)}`);
               }
             }
 
