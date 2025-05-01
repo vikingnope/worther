@@ -1,0 +1,159 @@
+name: Bug Report
+description: Create a report to help improve Worther
+title: '[BUG] '
+labels: ['Bug']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Bug Severity
+      options:
+        - Critical (Site/feature unusable)
+        - High (Major feature broken)
+        - Medium (Feature partially working)
+        - Low (Minor visual/functional issue)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      description: A clear and concise description of the issue.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Frequency
+      options:
+        - Always happens
+        - Often happens
+        - Occasionally happens
+        - Happened only once
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Navigate to a specific weather page/feature (e.g., "Go to the Hourly Forecast page")
+        2. Enter a location or search term (e.g., "Type London, UK in the search box")
+        3. Interact with a specific weather component (e.g., "Click on the temperature graph")
+        4. Describe the issue that occurs (e.g., "The graph fails to update")
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: A clear description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: The device you were using when encountering the bug
+      placeholder: e.g., Windows Desktop, iPhone 14 Pro, Samsung Galaxy S23
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: The browser and version you were using
+      placeholder: e.g., Chrome 120.0.6099.109, Safari 16.2, Firefox 121.0
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Worther Version
+      description: The version of the application (found in about page)
+      placeholder: e.g., v1.2.3
+    validations:
+      required: true
+
+  - type: input
+    id: resolution
+    attributes:
+      label: Screen Resolution
+      description: Your device's screen resolution
+      placeholder: e.g., 1920x1080, 390x844
+    validations:
+      required: false
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: The location you were checking weather for
+      placeholder: e.g., London, UK
+    validations:
+      required: true
+
+  - type: input
+    id: time
+    attributes:
+      label: Time of Issue
+      description: When the issue occurred
+      placeholder: e.g., 2024-01-20 14:30 GMT
+    validations:
+      required: false
+
+  - type: input
+    id: weather-feature
+    attributes:
+      label: Weather Feature
+      description: The specific weather feature affected
+      placeholder: e.g., Hourly forecast, Radar map, Temperature chart
+    validations:
+      required: true
+
+  - type: input
+    id: weather-conditions
+    attributes:
+      label: Weather Conditions
+      description: The weather conditions at the time
+      placeholder: e.g., Rainy, Sunny, Snowing
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here.
+    validations:
+      required: false
