@@ -19,102 +19,120 @@ permissions:
 
 jobs:
   #################################################
-  # MANUAL TRIGGER CHECK
+  # COMMENT COMMAND CHECK
   #################################################
-  check-manual-trigger:
-    name: 🔎 Check Manual Trigger
+  check-comment:
+    name: 🔎 Check Comment Command
     if: ${{ github.event_name == 'issue_comment' }}
     runs-on: ubuntu-latest
     outputs:
-      should_run: ${{ steps.check-comment.outputs.should_run }}
-      pr_number: ${{ steps.get-pr.outputs.pr_number }}
+      should_run: ${{ steps.check-command.outputs.should_run }}
+      pr_number: ${{ steps.get-pr-number.outputs.pr_number }}
     steps:
-      - name: Check comment content and author
-        id: check-comment
+      - name: Check if comment is !check and from repo owner
+        id: check-command
         uses: actions/github-script@v7.0.1
         with:
           script: |
-            const commentText = context.payload.comment.body.trim();
-            const commenter = context.payload.comment.user.login;
-            const repoOwner = context.payload.repository.owner.login;
+            const { owner, repo } = context.repo;
+            const comment = context.payload.comment;
+            const commentBody = comment.body.trim();
+            const commentUser = comment.user.login;
 
-            // Check if comment is !check and commenter is repo owner
-            const isCheckCommand = commentText === '!check';
-            const isRepoOwner = (commenter === repoOwner);
-            const shouldRun = isCheckCommand && isRepoOwner;
-
-            console.log(`Comment: ${commentText}`);
-            console.log(`Commenter: ${commenter}`);
-            console.log(`Repo Owner: ${repoOwner}`);
-            console.log(`Is !check command: ${isCheckCommand}`);
-            console.log(`Is repo owner: ${isRepoOwner}`);
-            console.log(`Should run workflow: ${shouldRun}`);
-
-            core.setOutput('should_run', shouldRun.toString());
-
-            // Add a comment to inform the user if they don't have permission
-            if (isCheckCommand && !isRepoOwner) {
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `⚠️ Sorry, only the repository owner (@${repoOwner}) can trigger checks with the \`!check\` command.`
-              });
+            // Check if the comment is exactly "!check"
+            if (commentBody !== '!check') {
+              console.log(`Comment "${commentBody}" is not a recognized command`);
+              return core.setOutput('should_run', 'false');
             }
 
-            // Add a reaction to the comment
-            const reaction = shouldRun ? '+1' : '-1';
-            await github.rest.reactions.createForIssueComment({
-              comment_id: context.payload.comment.id,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              content: reaction
-            });
-
-      - name: Get PR number from issue comment
-        id: get-pr
-        if: ${{ steps.check-comment.outputs.should_run == 'true' }}
-        uses: actions/github-script@v7.0.1
-        with:
-          script: |
-            // This is needed because issue_comment events don't directly provide PR information
-            let prNumber = null;
-
-            // Check if this comment is on a pull request
-            if (context.payload.issue.pull_request) {
-              prNumber = context.payload.issue.number;
-              console.log(`Comment is on PR #${prNumber}`);
-              
-              // Add a confirmation comment
-              await github.rest.issues.createComment({
-                issue_number: prNumber,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `✅ Running PR checks manually as requested by @${context.payload.comment.user.login}`
-              });
-              
-              core.setOutput('pr_number', prNumber.toString());
-            } else {
+            // Check if this is a PR comment
+            if (!context.payload.issue.pull_request) {
               console.log('Comment is not on a pull request');
-              core.setOutput('pr_number', '');
+              return core.setOutput('should_run', 'false');
             }
+
+            // Determine if the commenter is the repo owner
+            try {
+              const repoData = await github.rest.repos.get({
+                owner,
+                repo
+              });
+              
+              const repoOwner = repoData.data.owner.login;
+              
+              if (commentUser === repoOwner) {
+                console.log(`Comment is from repository owner ${repoOwner} - running checks`);
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: context.payload.issue.number,
+                  body: '🔄 Running PR checks as requested by repository owner...'
+                });
+                return core.setOutput('should_run', 'true');
+              } else {
+                console.log(`Comment is from ${commentUser}, not the repo owner ${repoOwner}`);
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: context.payload.issue.number,
+                  body: '❌ Only the repository owner can run checks with the `!check` command.'
+                });
+                return core.setOutput('should_run', 'false');
+              }
+            } catch (error) {
+              console.error(`Error checking repository owner: ${error}`);
+              return core.setOutput('should_run', 'false');
+            }
+
+      - name: Get PR number
+        id: get-pr-number
+        if: steps.check-command.outputs.should_run == 'true'
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const prNumber = context.payload.issue.number;
+            console.log(`Getting PR data for #${prNumber}`);
+            core.setOutput('pr_number', prNumber);
 
   #################################################
   # INITIAL CHECK - Author detection
   #################################################
   initial-author-check:
     name: 🔍 Initial PR Author Check
-    needs: check-manual-trigger
+    needs: [check-comment]
     if: |
-      always() && (
-        (github.event_name == 'pull_request') || 
-        (github.event_name == 'issue_comment' && needs.check-manual-trigger.outputs.should_run == 'true')
-      )
+      (github.event_name == 'pull_request') || 
+      (github.event_name == 'issue_comment' && needs.check-comment.outputs.should_run == 'true')
     runs-on: ubuntu-latest
     outputs:
       is_bot: ${{ steps.check-bot.outputs.is_bot }}
       is_dependabot: ${{ steps.check-bot.outputs.is_dependabot }}
     steps:
+      - name: Get PR data for issue comment
+        id: get-pr-data
+        if: ${{ github.event_name == 'issue_comment' }}
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = ${{ needs.check-comment.outputs.pr_number }};
+
+            try {
+              console.log(`Fetching PR #${prNumber} data`);
+              const { data: pr } = await github.rest.pulls.get({
+                owner,
+                repo,
+                pull_number: prNumber
+              });
+              
+              // Store PR data as outputs
+              core.setOutput('pr_author', pr.user.login);
+              console.log(`PR Author: ${pr.user.login}`);
+            } catch (error) {
+              console.error(`Error fetching PR data: ${error.message}`);
+              core.setFailed(`Failed to get PR data: ${error.message}`);
+            }
+
       - name: Check if PR author is a bot
         id: check-bot
         uses: actions/github-script@v7.0.1
@@ -125,16 +143,8 @@ jobs:
             if ('${{ github.event_name }}' === 'pull_request') {
               prAuthor = context.payload.pull_request.user.login;
             } else {
-              // For manual trigger via comment, we need to fetch PR details
-              const prNumber = ${{ needs.check-manual-trigger.outputs.pr_number }};
-              
-              const { data: prData } = await github.rest.pulls.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: prNumber
-              });
-              
-              prAuthor = prData.user.login;
+              // For issue_comment events, use the author we got from the previous step
+              prAuthor = '${{ steps.get-pr-data.outputs.pr_author }}';
             }
 
             // Check if the author is a bot (ends with [bot] or is dependabot)
@@ -173,15 +183,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4.2.2
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || format('refs/pull/{0}/head', needs.check-comment.outputs.pr_number) }}
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Extract dependency information
         id: extract-info
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
+          # Get PR title based on event type
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            PR_TITLE="${{ github.event.pull_request.title }}"
+          else
+            # For issue_comment events, fetch PR title using GitHub API
+            PR_TITLE=$(gh pr view ${{ needs.check-comment.outputs.pr_number }} --json title -q ".title")
+          fi
+
+          echo "PR Title: $PR_TITLE"
+
           # Pattern for conventional commit format: build(deps): bump package from version to version
           if [[ "$PR_TITLE" =~ build\(deps.*\):\ bump\ ([^\ ]+)\ from\ ([0-9]+[\.0-9]*)\ to\ ([0-9]+[\.0-9]*) ]]; then
             PACKAGE="${BASH_REMATCH[1]}"
@@ -194,6 +212,8 @@ jobs:
           else
             echo "has_match=false" >> $GITHUB_OUTPUT
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update CHANGELOG.md
         id: update-changelog
@@ -276,12 +296,31 @@ jobs:
       has_changes: ${{ steps.changelog-check.outputs.changed }}
     steps:
       - uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || format('refs/pull/{0}/head', needs.check-comment.outputs.pr_number) }}
+
       - name: Check for changelog changes
         id: changelog-check
         run: |
-          git fetch origin ${{ github.base_ref }} --depth=1
-          CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "public/CHANGELOG.md" || true)
+          # Determine PR number based on event type
+          PR_NUMBER="${{ github.event_name == 'pull_request' && github.event.pull_request.number || needs.check-comment.outputs.pr_number }}"
+
+          # For issue comment triggers, we need to fetch base branch info from API
+          if [[ "${{ github.event_name }}" == "issue_comment" ]]; then
+            BASE_REF=$(gh pr view $PR_NUMBER --json baseRefName -q ".baseRefName")
+            echo "Base branch: $BASE_REF"
+            git fetch origin $BASE_REF --depth=1
+            CHANGELOG_CHANGED=$(git diff --name-only origin/$BASE_REF | grep -c "public/CHANGELOG.md" || true)
+          else
+            # Regular PR event
+            git fetch origin ${{ github.base_ref }} --depth=1
+            CHANGELOG_CHANGED=$(git diff --name-only origin/${{ github.base_ref }} | grep -c "public/CHANGELOG.md" || true)
+          fi
+
+          echo "Changelog changed: $CHANGELOG_CHANGED"
           echo "changed=$CHANGELOG_CHANGED" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   changelog-enforce-user:
     name: ✅ Enforce Changelog (User PR)
@@ -346,6 +385,7 @@ jobs:
       - initial-author-check
       - quality-lint-format-user
       - quality-lint-format-bot
+      - check-comment
     # This ensures it only needs one of the two lint jobs to complete based on PR author type
     if: ${{ always() && !contains(needs.*.result, 'cancelled') }}
     runs-on: ubuntu-latest
@@ -356,7 +396,17 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const prNumber = context.payload.pull_request.number;
+            let prNumber;
+
+            // Determine PR number based on event type
+            if ('${{ github.event_name }}' === 'pull_request') {
+              prNumber = context.payload.pull_request.number;
+            } else {
+              // For issue_comment events
+              prNumber = ${{ needs.check-comment.outputs.pr_number }};
+            }
+
+            console.log(`Checking milestone for PR #${prNumber}`);
 
             // Check if PR has a milestone
             const pr = await github.rest.pulls.get({
