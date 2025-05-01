@@ -6,7 +6,7 @@
 - Fixed title labeller not recognising '/'
 - Fixed Vercel 404 Page showing instead of custom 404 page
 - Major design changes throughout all pages to a more modern UI (new colours, new icons, new search functionality, better error handling, etc...)
-- Upgraded to TailwindCSS v4
+- Upgraded to `TailwindCSS` v4
 - Added version history to changelog with auto-scroll functionality
 - Fixed data inaccuracies in logic calculation in daily weather page
 - Changed branding (Changed logo and added banner)
@@ -20,12 +20,13 @@
 - Removed coderabbit config and created workflow to auto-approve dependabot PRs and to approve PRs based on comment from repo owner
 - Updated dependabot to run daily
 - Removed redundant testing libraries
-- Bump TailwindCSS v4.1.4
+- Bump `TailwindCSS` v4.1.4
 - Created workflow for dependabot to auto update changelog (adjusted PR title)
 - Enhanced auto-approver to not allow review again for nothing if already approved
-- Bump dependency react-router-dom from 7.5.2 to 7.5.3
+- Bump dependency `react-router-dom` from 7.5.2 to 7.5.3
 - Moved multiple workflows into one file for better workflow organisation
 - Convert issue templates to YAML from Markdown for better readability and configuration
+- Updated automatic changelog to do backticks for package version
 
 ---
 
