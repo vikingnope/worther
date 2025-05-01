@@ -306,6 +306,7 @@ jobs:
       - quality-lint-format-user
       - quality-lint-format-bot
       - metadata-milestone-check
+      - changelog-update-dependabot
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
