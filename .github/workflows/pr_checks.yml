@@ -120,7 +120,7 @@ jobs:
           fi
 
           # Format the changelog entry
-          ENTRY="- Bump $DEP_TYPE $PACKAGE from $FROM_VERSION to $TO_VERSION"
+          ENTRY="- Bump $DEP_TYPE `$PACKAGE` from $FROM_VERSION to $TO_VERSION"
 
           # Insert the entry before the separator line or at the end of file
           sed -i "${INSERT_LINE}i $ENTRY" "$CHANGELOG_FILE"
