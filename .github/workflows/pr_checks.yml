@@ -96,7 +96,6 @@ jobs:
         if: steps.extract-info.outputs.has_match == 'true'
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CHANGELOG_FILE="public/CHANGELOG.md"
           PACKAGE="${{ steps.extract-info.outputs.package }}"
