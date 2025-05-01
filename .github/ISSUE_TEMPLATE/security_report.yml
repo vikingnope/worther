@@ -1,0 +1,135 @@
+name: Security Report
+description: Report a security vulnerability in Worther
+title: '[SECURITY] '
+labels: ['Security']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Note**: If this vulnerability involves sensitive user data, please consider reporting privately.
+
+        Thanks for helping to keep Worther secure!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of the security vulnerability in the weather application.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps To Reproduce
+      description: Clear steps to reproduce the vulnerability
+      placeholder: |
+        1. 
+        2. 
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Describe the potential impact on user experience or data security.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected-components
+    attributes:
+      label: Affected Components
+      multiple: true
+      options:
+        - React Component
+        - API Integration
+        - Browser Feature
+        - Authentication
+        - Data Storage
+        - Server Configuration
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: component-details
+    attributes:
+      label: Component Details
+      description: Please specify which component(s) specifically are affected
+      placeholder: e.g., WeatherCard, SearchBar, OpenWeather API, GeoCoding API, localStorage, geolocation
+    validations:
+      required: true
+
+  - type: input
+    id: affected-feature
+    attributes:
+      label: Affected Feature
+      description: The specific feature with the security issue
+      placeholder: e.g., weather search, location detection
+    validations:
+      required: true
+
+  - type: input
+    id: data-storage
+    attributes:
+      label: Data Storage (if applicable)
+      description: If related to data storage, specify which storage is affected
+      placeholder: e.g., localStorage, sessionStorage
+    validations:
+      required: false
+
+  - type: input
+    id: api-endpoint
+    attributes:
+      label: API Endpoint (if applicable)
+      description: If related to an API, specify which endpoint is affected
+      placeholder: e.g., weather data fetch, location lookup
+    validations:
+      required: false
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: If you have suggestions for fixing the security issue, describe them here.
+    validations:
+      required: false
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: The browser and version where you discovered this issue
+      placeholder: e.g., Chrome 96, Firefox 95
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: The operating system you were using
+      placeholder: e.g., Windows 10, macOS
+    validations:
+      required: true
+
+  - type: input
+    id: app-version
+    attributes:
+      label: React App Version
+      description: The version of the application
+      placeholder: e.g., 1.0.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the security issue here.
+    validations:
+      required: false

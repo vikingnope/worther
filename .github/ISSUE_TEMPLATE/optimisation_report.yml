@@ -1,0 +1,111 @@
+name: Optimisation Report
+description: Suggest performance improvements for Worther
+title: '[OPTIMISATION] '
+labels: ['Optimisation']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the performance of Worther!
+
+  - type: input
+    id: load-time
+    attributes:
+      label: Load Time
+      description: The current page load time, if known
+      placeholder: e.g., 3.5 seconds
+    validations:
+      required: false
+
+  - type: input
+    id: fcp
+    attributes:
+      label: First Contentful Paint
+      description: The time to first contentful paint, if known
+      placeholder: e.g., 1.2 seconds
+    validations:
+      required: false
+
+  - type: input
+    id: lcp
+    attributes:
+      label: Largest Contentful Paint
+      description: The time to largest contentful paint, if known
+      placeholder: e.g., 2.8 seconds
+    validations:
+      required: false
+
+  - type: input
+    id: tti
+    attributes:
+      label: Time to Interactive
+      description: The time to interactive, if known
+      placeholder: e.g., 4.1 seconds
+    validations:
+      required: false
+
+  - type: textarea
+    id: area
+    attributes:
+      label: Area for Optimisation
+      description: Describe which part of the website needs optimisation
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe how this could be optimized
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Expected Impact
+      description: What improvements do you expect from this optimisation?
+      options:
+        - label: Faster page load
+        - label: Reduced bandwidth usage
+        - label: Better user experience
+        - label: Improved SEO
+        - label: Other (please specify in Additional Context)
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      description: The browser and version you used for testing
+      placeholder: e.g., Chrome 120.0.6099.109
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: The device you used for testing
+      placeholder: e.g., Windows Desktop, iPhone 14, Samsung Galaxy S23
+    validations:
+      required: true
+
+  - type: input
+    id: network
+    attributes:
+      label: Network Connection
+      description: Your network connection type
+      placeholder: e.g., WiFi 100Mbps, 4G, 5G
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about the optimisation suggestion here.
+    validations:
+      required: false
