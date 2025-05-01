@@ -504,6 +504,10 @@ jobs:
               console.error(`Error creating status check: ${error.message}`);
               console.error(`Error details: ${JSON.stringify(error)}`);
               
+              // Add a brief backoff before retry to reduce transient API race conditions
+              console.log('Adding brief backoff (1 second) before retry...');
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              
               // Try again with the current context SHA as fallback
               console.log(`Retrying with context SHA: ${context.sha}`);
               try {
@@ -519,10 +523,13 @@ jobs:
               } catch (fallbackError) {
                 console.error(`Error creating fallback status check: ${fallbackError.message}`);
                 console.error(`Fallback error details: ${JSON.stringify(fallbackError)}`);
+                
+                // If both attempts fail, add additional logging for troubleshooting
+                console.log('Both status creation attempts failed - this may require manual verification');
               }
             }
 
-            // Exit with appropriate code
+            // Exit with appropriate code using core.setFailed() for better consistency with GitHub Actions
             if (jobStatus !== 'success') {
-              process.exit(1);
+              core.setFailed(`One or more PR checks failed with status: ${jobStatus}`);
             }
