@@ -57,6 +57,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
     outputs:
       changelog_updated: ${{ steps.extract-info.outputs.has_match }}
       package_name: ${{ steps.extract-info.outputs.package }}
