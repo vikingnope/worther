@@ -66,6 +66,7 @@ body:
       placeholder: e.g., Analytics, Third-party integrations
     validations:
       required: false
+    if: ${{ contains(inputs.scope, 'Other') }}
 
   - type: dropdown
     id: priority
