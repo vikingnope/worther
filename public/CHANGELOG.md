@@ -26,7 +26,7 @@
 - Bump dependency `react-router-dom` from 7.5.2 to 7.5.3
 - Moved multiple workflows into one file for better workflow organisation
 - Convert issue templates to YAML from Markdown for better readability and configuration
-- Updated automatic changelog to do backticks for package version
+- Updated automatic changelog to wrap package versions in backticks
 
 ---
 
