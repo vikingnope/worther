@@ -27,6 +27,8 @@
 - Moved multiple workflows into one file for better workflow organisation
 - Convert issue templates to YAML from Markdown for better readability and configuration
 - Updated automatic changelog to wrap package versions in backticks
+- Fixed chore report template not being read due to error
+- Fixes issue with Dependabot PRs not getting status from PR Checks workflow
 
 ---
 

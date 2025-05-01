@@ -13,6 +13,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  statuses: write
 
 jobs:
   #################################################
@@ -54,17 +55,23 @@ jobs:
     needs: initial-author-check
     if: ${{ needs.initial-author-check.outputs.is_dependabot == 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
     outputs:
       changelog_updated: ${{ steps.extract-info.outputs.has_match }}
       package_name: ${{ steps.extract-info.outputs.package }}
       from_version: ${{ steps.extract-info.outputs.from_version }}
       to_version: ${{ steps.extract-info.outputs.to_version }}
       dep_type: ${{ steps.update-changelog.outputs.dep_type }}
+      commit_sha: ${{ steps.update-changelog.outputs.commit_sha }}
     steps:
       - uses: actions/checkout@v4.2.2
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Extract dependency information
         id: extract-info
@@ -126,11 +133,16 @@ jobs:
           sed -i "${INSERT_LINE}i $ENTRY" "$CHANGELOG_FILE"
 
           # Commit and push the changes
-          git config --local user.email "dependabot-changelog-updater[bot]@users.noreply.github.com"
-          git config --local user.name "Dependabot Changelog Updater"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions"
           git add "$CHANGELOG_FILE"
           git commit -m "docs: update changelog with $PACKAGE dependency bump"
           git push
+
+          # Get the commit SHA of the new commit we just pushed
+          COMMIT_SHA=$(git rev-parse HEAD)
+          echo "commit_sha=$COMMIT_SHA" >> $GITHUB_OUTPUT
+          echo "Updated changelog with commit: $COMMIT_SHA"
 
       - name: Comment on PR about changelog update
         if: steps.extract-info.outputs.has_match == 'true'
@@ -435,3 +447,89 @@ jobs:
               echo "- ✓ Changelog check (completed)"
             fi
           fi
+
+      # Use GitHub API to explicitly report status (works better for Dependabot PRs)
+      - name: Explicitly report final status
+        if: ${{ always() }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const prRef = context.payload.pull_request;
+            let sha = prRef?.head?.sha;
+
+            if (!sha) {
+              console.log('No SHA found in PR head, falling back to event SHA');
+              sha = context.sha;
+            }
+
+            const jobStatus = '${{ job.status }}';
+            const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
+            const changelogUpdateOutput = '${{ needs.changelog-update-dependabot.outputs.commit_sha }}';
+
+            // For Dependabot PRs with changelog updates, use the latest commit SHA if it exists and is valid
+            if (isBot && changelogUpdateOutput && changelogUpdateOutput.length > 0) {
+              console.log(`Using updated commit SHA from changelog update: ${changelogUpdateOutput}`);
+              sha = changelogUpdateOutput;
+            } else {
+              console.log(`Using original PR head SHA: ${sha}`);
+            }
+
+            console.log(`Reporting final status for ${owner}/${repo}@${sha}: ${jobStatus}`);
+
+            // Set state based on job status
+            let state = 'success';
+            let description = 'All PR checks completed successfully';
+
+            if (jobStatus !== 'success') {
+              state = 'failure';
+              description = 'One or more PR checks failed';
+            }
+
+            try {
+              // Explicitly create a status check for the Final Status Check
+              // Note: Removed emoji from context to avoid 4-byte Unicode validation errors
+              const statusResponse = await github.rest.repos.createCommitStatus({
+                owner,
+                repo,
+                sha,
+                state,
+                description,
+                context: 'Final Status Check'
+              });
+              
+              console.log(`Status check created with state: ${state}, response status: ${statusResponse.status}`);
+            } catch (error) {
+              console.error(`Error creating status check: ${error.message}`);
+              console.error(`Error details: ${JSON.stringify(error)}`);
+              
+              // Add a brief backoff before retry to reduce transient API race conditions
+              console.log('Adding brief backoff (1 second) before retry...');
+              await new Promise(resolve => setTimeout(resolve, 1000));
+              
+              // Try again with the current context SHA as fallback
+              console.log(`Retrying with context SHA: ${context.sha}`);
+              try {
+                const fallbackResponse = await github.rest.repos.createCommitStatus({
+                  owner,
+                  repo,
+                  sha: context.sha,
+                  state,
+                  description: description + " (fallback)",
+                  context: 'Final Status Check'
+                });
+                console.log(`Fallback status check created with state: ${state}, response status: ${fallbackResponse.status}`);
+              } catch (fallbackError) {
+                console.error(`Error creating fallback status check: ${fallbackError.message}`);
+                console.error(`Fallback error details: ${JSON.stringify(fallbackError)}`);
+                
+                // If both attempts fail, add additional logging for troubleshooting
+                console.log('Both status creation attempts failed - this may require manual verification');
+              }
+            }
+
+            // Exit with appropriate code using core.setFailed() for better consistency with GitHub Actions
+            if (jobStatus !== 'success') {
+              core.setFailed(`One or more PR checks failed with status: ${jobStatus}`);
+            }
