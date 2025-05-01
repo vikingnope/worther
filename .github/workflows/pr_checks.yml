@@ -309,26 +309,128 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      - name: Verify all checks passed
+      - name: Set job status variables
+        id: set-status
         run: |
           IS_BOT="${{ needs.initial-author-check.outputs.is_bot }}"
+          echo "is_bot=$IS_BOT" >> $GITHUB_OUTPUT
 
-          # Check if any job failed
-          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
-            echo "One or more checks failed - blocking merge"
+      # Show status report of all jobs
+      - name: Generate status report
+        run: |
+          echo "## 📊 PR Checks Status Report"
+          echo ""
+          echo "| Check | Status | Result |"
+          echo "|-------|--------|--------|"
+          echo "| 🔍 Initial Author Check | ${{ needs.initial-author-check.result }} | PR is by ${{ needs.initial-author-check.outputs.is_bot == 'true' && 'bot' || 'user' }} |"
+
+          if [[ "${{ steps.set-status.outputs.is_bot }}" == "true" ]]; then
+            echo "| 📝 Update Changelog (Bot) | ${{ contains(github.event.pull_request.jobs, 'changelog-update-dependabot') && needs.changelog-update-dependabot.result || 'skipped' }} | ${{ needs.changelog-update-dependabot.outputs.changelog_updated == 'true' && 'Updated' || 'Not applicable' }} |"
+            echo "| 🧹 Code Quality (Bot) | ${{ needs.quality-lint-format-bot.result }} | - |"
+          else
+            echo "| 📋 Check Changelog (User) | ${{ contains(github.event.pull_request.jobs, 'changelog-check-user') && needs.changelog-check-user.result || 'skipped' }} | Changes: ${{ needs.changelog-check-user.outputs.has_changes != '0' && 'Yes' || 'No' }} |"
+            echo "| ✅ Enforce Changelog | ${{ contains(github.event.pull_request.jobs, 'changelog-enforce-user') && needs.changelog-enforce-user.result || 'skipped' }} | Should block: ${{ needs.changelog-enforce-user.outputs.should_block }} |"
+            echo "| 🧹 Code Quality (User) | ${{ needs.quality-lint-format-user.result }} | - |"
+          fi
+
+          echo "| 🏷️ PR Milestone Check | ${{ needs.metadata-milestone-check.result }} | - |"
+
+      # Split failure check to its own step with if condition
+      - name: Check for job failures
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: |
+          echo "⛔ One or more checks failed - blocking merge"
+
+          # List which checks failed
+          if [[ "${{ needs.initial-author-check.result }}" == "failure" ]]; then
+            echo "- ❌ Initial author check failed"
+          fi
+
+          if [[ "${{ needs.metadata-milestone-check.result }}" == "failure" ]]; then
+            echo "- ❌ Milestone check failed"
+          fi
+
+          if [[ "${{ steps.set-status.outputs.is_bot }}" == "true" ]]; then
+            if [[ "${{ needs.quality-lint-format-bot.result }}" == "failure" ]]; then
+              echo "- ❌ Code quality checks (bot) failed"
+            fi
+            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-update-dependabot') && needs.changelog-update-dependabot.result == 'failure' }}" == "true" ]]; then
+              echo "- ❌ Changelog update for bot failed"
+            fi
+          else
+            if [[ "${{ needs.quality-lint-format-user.result }}" == "failure" ]]; then
+              echo "- ❌ Code quality checks (user) failed"
+            fi
+            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-check-user') && needs.changelog-check-user.result == 'failure' }}" == "true" ]]; then
+              echo "- ❌ Changelog check failed"
+            fi
+            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-enforce-user') && needs.changelog-enforce-user.result == 'failure' }}" == "true" ]]; then
+              echo "- ❌ Changelog enforcement failed"
+            fi
+          fi
+
+          exit 1
+
+      # Check for skipped jobs based on PR author type
+      - name: Check for skipped jobs (non-bot PR)
+        if: ${{ steps.set-status.outputs.is_bot == 'false' }}
+        env:
+          QUALITY_STATUS: ${{ needs.quality-lint-format-user.result }}
+          MILESTONE_STATUS: ${{ needs.metadata-milestone-check.result }}
+        run: |
+          if [[ "$QUALITY_STATUS" == "skipped" || "$MILESTONE_STATUS" == "skipped" ]]; then
+            echo "⚠️ Required checks were skipped - blocking merge"
+            
+            if [[ "$QUALITY_STATUS" == "skipped" ]]; then
+              echo "- ⚠️ Code quality checks were skipped"
+            fi
+            
+            if [[ "$MILESTONE_STATUS" == "skipped" ]]; then
+              echo "- ⚠️ Milestone checks were skipped"
+            fi
+            
             exit 1
           fi
 
-          # For non-bot PRs, verify the changelog check completed
-          if [[ "$IS_BOT" == "false" ]] && [[ "${{ contains(fromJson('["quality-lint-format-user", "metadata-milestone-check"]'), 'skipped') }}" == "true" ]]; then
-            echo "Required checks were skipped - blocking merge"
+      - name: Check for skipped jobs (bot PR)
+        if: ${{ steps.set-status.outputs.is_bot == 'true' }}
+        env:
+          BOT_QUALITY_STATUS: ${{ needs.quality-lint-format-bot.result }}
+          MILESTONE_STATUS: ${{ needs.metadata-milestone-check.result }}
+        run: |
+          if [[ "$BOT_QUALITY_STATUS" == "skipped" || "$MILESTONE_STATUS" == "skipped" ]]; then
+            echo "⚠️ Required checks were skipped - blocking merge"
+            
+            if [[ "$BOT_QUALITY_STATUS" == "skipped" ]]; then
+              echo "- ⚠️ Bot code quality checks were skipped"
+            fi
+            
+            if [[ "$MILESTONE_STATUS" == "skipped" ]]; then
+              echo "- ⚠️ Milestone checks were skipped"
+            fi
+            
             exit 1
           fi
 
-          # For bot PRs, verify the bot-specific checks completed
-          if [[ "$IS_BOT" == "true" ]] && [[ "${{ contains(fromJson('["quality-lint-format-bot", "metadata-milestone-check"]'), 'skipped') }}" == "true" ]]; then
-            echo "Required checks were skipped - blocking merge"
-            exit 1
-          fi
+      - name: Success message
+        run: |
+          echo "✅ All PR checks completed successfully"
 
-          echo "All PR checks completed successfully ✓"
+          # Provide a summary of what was run
+          if [[ "${{ steps.set-status.outputs.is_bot }}" == "true" ]]; then
+            echo "Bot PR detected - ran bot-specific workflows"
+            echo "- ✓ Initial author check (completed)"
+            echo "- ✓ Bot code quality check (completed)"
+            echo "- ✓ Milestone check (completed)"
+            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-update-dependabot') }}" == "true" ]]; then
+              echo "- ✓ Changelog auto-update (completed)"
+            fi
+          else
+            echo "User PR detected - ran user-specific workflows"
+            echo "- ✓ Initial author check (completed)"
+            echo "- ✓ User code quality check (completed)"
+            echo "- ✓ Milestone check (completed)"
+            if [[ "${{ contains(github.event.pull_request.jobs, 'changelog-check-user') }}" == "true" ]]; then
+              echo "- ✓ Changelog check (completed)"
+            fi
+          fi
