@@ -3,6 +3,8 @@ name: Pull Request Checks
 on:
   pull_request:
     types: [opened, reopened, synchronize, edited, ready_for_review, demilestoned]
+  issue_comment:
+    types: [created]
 
 # Add concurrency to cancel in-progress runs on new commits
 concurrency:
@@ -17,9 +19,75 @@ permissions:
 
 jobs:
   #################################################
+  # COMMENT CHECK - For manual trigger via !check
+  #################################################
+  check-manual-trigger:
+    if: ${{ github.event_name == 'issue_comment' }}
+    name: 🔍 Check Manual Trigger
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check-command.outputs.should_run }}
+      pr_number: ${{ steps.get-pr.outputs.pr_number }}
+    steps:
+      - name: Check for command and owner
+        id: check-command
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const comment = context.payload.comment.body;
+            const commenter = context.payload.comment.user.login;
+
+            // Check if the comment contains the command and is from repo owner
+            const isCommand = comment.includes('!check');
+            const isRepoOwner = context.payload.repository.owner.login === commenter;
+
+            const shouldRun = isCommand && isRepoOwner;
+
+            console.log(`Comment: "${comment}"`);
+            console.log(`Commenter: ${commenter}`);
+            console.log(`Is Owner: ${isRepoOwner}`);
+            console.log(`Is Command: ${isCommand}`);
+            console.log(`Should Run: ${shouldRun}`);
+
+            core.setOutput('should_run', shouldRun.toString());
+
+            // Comment with acknowledgment if it's the command
+            if (isCommand) {
+              if (isRepoOwner) {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '✅ PR check workflow manually triggered by repository owner.'
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '⚠️ Only repository owners can trigger the PR check workflow manually.'
+                });
+              }
+            }
+
+      - name: Get PR number
+        id: get-pr
+        if: ${{ steps.check-command.outputs.should_run == 'true' }}
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            // Comment is on a PR issue
+            const prNumber = context.issue.number;
+            console.log(`PR Number: ${prNumber}`);
+            core.setOutput('pr_number', prNumber);
+
+  #################################################
   # INITIAL CHECK - Author detection
   #################################################
   initial-author-check:
+    needs: [check-manual-trigger]
+    # Run if this is a PR event OR if it's a manual trigger and should_run is true
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && needs.check-manual-trigger.outputs.should_run == 'true') }}
     name: 🔍 Initial PR Author Check
     runs-on: ubuntu-latest
     outputs:
@@ -31,7 +99,23 @@ jobs:
         uses: actions/github-script@v7.0.1
         with:
           script: |
-            const prAuthor = context.payload.pull_request.user.login;
+            // Handle both direct PR events and comment-triggered events
+            let prAuthor;
+            let prNumber;
+
+            if (context.eventName === 'pull_request') {
+              prAuthor = context.payload.pull_request.user.login;
+              prNumber = context.payload.pull_request.number;
+            } else {
+              // For comment events, we need to fetch the PR details
+              prNumber = ${{ needs.check-manual-trigger.outputs.pr_number }};
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber
+              });
+              prAuthor = pr.user.login;
+            }
 
             // Check if the author is a bot (ends with [bot] or is dependabot)
             const isBot = prAuthor.endsWith('[bot]') || prAuthor.startsWith('dependabot');
