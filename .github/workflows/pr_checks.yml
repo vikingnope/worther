@@ -3,6 +3,8 @@ name: Pull Request Checks
 on:
   pull_request:
     types: [opened, reopened, synchronize, edited, ready_for_review, demilestoned]
+  issue_comment:
+    types: [created]
 
 # Add concurrency to cancel in-progress runs on new commits
 concurrency:
@@ -17,43 +19,104 @@ permissions:
 
 jobs:
   #################################################
-  # INITIAL CHECK - Author detection
+  # COMMENT CHECK - For manual trigger via !check
   #################################################
-  initial-author-check:
-    name: 🔍 Initial PR Author Check
+  check-manual-trigger:
+    if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request }}
+    name: 🔍 Check Manual Trigger
     runs-on: ubuntu-latest
     outputs:
-      is_bot: ${{ steps.check-bot.outputs.is_bot }}
-      is_dependabot: ${{ steps.check-bot.outputs.is_dependabot }}
+      should_run: ${{ steps.check-command.outputs.should_run }}
+      pr_number: ${{ steps.get-pr.outputs.pr_number }}
     steps:
-      - name: Check if PR author is a bot
-        id: check-bot
+      - name: Check for command and owner
+        id: check-command
         uses: actions/github-script@v7.0.1
         with:
           script: |
-            const prAuthor = context.payload.pull_request.user.login;
+            const comment = context.payload.comment.body;
+            const commenter = context.payload.comment.user.login;
 
-            // Check if the author is a bot (ends with [bot] or is dependabot)
-            const isBot = prAuthor.endsWith('[bot]') || prAuthor.startsWith('dependabot');
+            // Check if the comment contains the command and is from repo owner
+            // More strict matching: must be at beginning of line and a standalone word
+            const isCommand = /^!check\b/.test(comment.trim());
+            const isRepoOwner = context.payload.repository.owner.login === commenter;
 
-            // Check specifically for Dependabot
-            const isDependabot = prAuthor.startsWith('dependabot');
+            const shouldRun = isCommand && isRepoOwner;
 
-            // Set outputs
-            core.setOutput('is_bot', isBot.toString());
-            core.setOutput('is_dependabot', isDependabot.toString());
+            console.log(`Comment: "${comment}"`);
+            console.log(`Commenter: ${commenter}`);
+            console.log(`Is Owner: ${isRepoOwner}`);
+            console.log(`Is Command: ${isCommand}`);
+            console.log(`Should Run: ${shouldRun}`);
 
-            console.log(`PR Author: ${prAuthor}`);
-            console.log(`Is Bot: ${isBot}`);
-            console.log(`Is Dependabot: ${isDependabot}`);
+            core.setOutput('should_run', shouldRun.toString());
+
+            // Comment with acknowledgment if it's the command
+            if (isCommand) {
+              if (isRepoOwner) {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '✅ PR check workflow manually triggered by repository owner.'
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '⚠️ Only repository owners can trigger the PR check workflow manually.'
+                });
+              }
+            }
+
+      - name: Get PR number
+        id: get-pr
+        if: ${{ steps.check-command.outputs.should_run == 'true' }}
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            // Comment is on a PR issue
+            const prNumber = context.issue.number;
+            console.log(`PR Number: ${prNumber}`);
+            core.setOutput('pr_number', prNumber);
+
+  #################################################
+  # INITIAL CHECK - Author detection for PR events
+  #################################################
+  initial-author-check-pr:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: 🔍 Initial PR Author Check
+    uses: ./.github/workflows/check_bot_author.yml
+    with:
+      pr_number: ${{ github.event.pull_request.number }}
+      event_type: 'pull_request'
+
+  #################################################
+  # INITIAL CHECK - Author detection for manual triggers
+  #################################################
+  initial-author-check-manual:
+    needs: [check-manual-trigger]
+    if: ${{ github.event_name == 'issue_comment' && needs.check-manual-trigger.outputs.should_run == 'true' }}
+    name: 🔍 Initial PR Author Check (Manual)
+    uses: ./.github/workflows/check_bot_author.yml
+    with:
+      pr_number: ${{ needs.check-manual-trigger.outputs.pr_number }}
+      event_type: 'issue_comment'
 
   #################################################
   # CHANGELOG CHECKS
   #################################################
   changelog-update-dependabot:
     name: 📝 Update Changelog (Dependabot)
-    needs: initial-author-check
-    if: ${{ needs.initial-author-check.outputs.is_dependabot == 'true' }}
+    needs: [initial-author-check-pr, initial-author-check-manual]
+    if: |
+      always() &&
+      (
+        (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_dependabot == 'true') || 
+        (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_dependabot == 'true')
+      )
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -164,9 +227,13 @@ jobs:
 
   changelog-check-user:
     name: 📋 Check Changelog (User PR)
-    needs: initial-author-check
-    # Skip if it's a bot PR
-    if: ${{ needs.initial-author-check.outputs.is_bot == 'false' }}
+    needs: [initial-author-check-pr, initial-author-check-manual]
+    if: |
+      always() &&
+      (
+        (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'false') || 
+        (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'false')
+      )
     runs-on: ubuntu-latest
     outputs:
       has_changes: ${{ steps.changelog-check.outputs.changed }}
@@ -181,8 +248,13 @@ jobs:
 
   changelog-enforce-user:
     name: ✅ Enforce Changelog (User PR)
-    needs: [initial-author-check, changelog-check-user]
-    if: ${{ needs.initial-author-check.outputs.is_bot == 'false' }}
+    needs: [initial-author-check-pr, initial-author-check-manual, changelog-check-user]
+    if: |
+      always() &&
+      (
+        (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'false') || 
+        (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'false')
+      )
     runs-on: ubuntu-latest
     outputs:
       should_block: ${{ steps.check-status.outputs.should_block }}
@@ -218,8 +290,13 @@ jobs:
   #################################################
   # For non-bot PRs - runs immediately
   quality-lint-format-user:
-    needs: [initial-author-check]
-    if: ${{ needs.initial-author-check.outputs.is_bot == 'false' }}
+    needs: [initial-author-check-pr, initial-author-check-manual]
+    if: |
+      always() &&
+      (
+        (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'false') || 
+        (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'false')
+      )
     uses: ./.github/workflows/lint_format.yml
     with:
       job-name: '🧹 Code Quality Checks'
@@ -227,8 +304,13 @@ jobs:
   # For bot PRs - waits for changelog update to finish
   quality-lint-format-bot:
     # Wait for changelog update to complete for bot PRs
-    needs: [initial-author-check, changelog-update-dependabot]
-    if: ${{ needs.initial-author-check.outputs.is_bot == 'true' }}
+    needs: [initial-author-check-pr, initial-author-check-manual, changelog-update-dependabot]
+    if: |
+      always() &&
+      (
+        (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'true') || 
+        (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'true')
+      )
     uses: ./.github/workflows/lint_format.yml
     with:
       job-name: '🧹 Code Quality Checks (Bot PR)'
@@ -239,7 +321,8 @@ jobs:
   metadata-milestone-check:
     name: 🏷️ PR Milestone Check
     needs:
-      - initial-author-check
+      - initial-author-check-pr
+      - initial-author-check-manual
       - quality-lint-format-user
       - quality-lint-format-bot
     # This ensures it only needs one of the two lint jobs to complete based on PR author type
@@ -314,7 +397,8 @@ jobs:
   final-status:
     name: 🚦 Final Status Check
     needs:
-      - initial-author-check
+      - initial-author-check-pr
+      - initial-author-check-manual
       - quality-lint-format-user
       - quality-lint-format-bot
       - metadata-milestone-check
@@ -327,8 +411,24 @@ jobs:
       - name: Set job status variables
         id: set-status
         run: |
-          IS_BOT="${{ needs.initial-author-check.outputs.is_bot }}"
-          echo "is_bot=$IS_BOT" >> $GITHUB_OUTPUT
+          # Determine if this is a bot PR regardless of trigger type
+          IS_BOT_PR="false"
+          IS_BOT_MANUAL="false"
+
+          if [[ "${{ needs.initial-author-check-pr.result }}" == "success" ]]; then
+            IS_BOT_PR="${{ needs.initial-author-check-pr.outputs.is_bot }}"
+          fi
+
+          if [[ "${{ needs.initial-author-check-manual.result }}" == "success" ]]; then
+            IS_BOT_MANUAL="${{ needs.initial-author-check-manual.outputs.is_bot }}"
+          fi
+
+          # If either path determined it's a bot, set is_bot=true
+          if [[ "$IS_BOT_PR" == "true" || "$IS_BOT_MANUAL" == "true" ]]; then
+            echo "is_bot=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_bot=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Generate status report
         run: |
@@ -336,8 +436,17 @@ jobs:
           echo ""
           echo "| Check | Status | Result |"
           echo "|-------|--------|--------|"
-          echo "| 🔍 Initial Author Check | ${{ needs.initial-author-check.result }} | PR is by ${{ needs.initial-author-check.outputs.is_bot == 'true' && 'bot' || 'user' }} |"
 
+          # Check which trigger path was used
+          if [[ "${{ needs.initial-author-check-pr.result }}" == "success" ]]; then
+            echo "| 🔍 Initial Author Check (PR) | ${{ needs.initial-author-check-pr.result }} | PR is by ${{ needs.initial-author-check-pr.outputs.is_bot == 'true' && 'bot' || 'user' }} |"
+          fi
+
+          if [[ "${{ needs.initial-author-check-manual.result }}" == "success" ]]; then
+            echo "| 🔍 Initial Author Check (Manual) | ${{ needs.initial-author-check-manual.result }} | PR is by ${{ needs.initial-author-check-manual.outputs.is_bot == 'true' && 'bot' || 'user' }} |"
+          fi
+
+          # Rest remains the same
           if [[ "${{ steps.set-status.outputs.is_bot }}" == "true" ]]; then
             echo "| 📝 Update Changelog (Bot) | ${{ needs.changelog-update-dependabot.result }} | ${{ needs.changelog-update-dependabot.outputs.changelog_updated == 'true' && 'Updated' || 'Not applicable' }} |"
             echo "| 🧹 Code Quality (Bot) | ${{ needs.quality-lint-format-bot.result }} | - |"
@@ -356,8 +465,12 @@ jobs:
           echo "⛔ One or more checks failed - blocking merge"
 
           # List which checks failed
-          if [[ "${{ needs.initial-author-check.result }}" == "failure" ]]; then
-            echo "- ❌ Initial author check failed"
+          if [[ "${{ needs.initial-author-check-pr.result }}" == "failure" ]]; then
+            echo "- ❌ Initial author check (PR) failed"
+          fi
+
+          if [[ "${{ needs.initial-author-check-manual.result }}" == "failure" ]]; then
+            echo "- ❌ Initial author check (Manual) failed"
           fi
 
           if [[ "${{ needs.metadata-milestone-check.result }}" == "failure" ]]; then
@@ -468,12 +581,41 @@ jobs:
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
             const changelogUpdateOutput = '${{ needs.changelog-update-dependabot.outputs.commit_sha }}';
 
-            // For Dependabot PRs with changelog updates, use the latest commit SHA if it exists and is valid
-            if (isBot && changelogUpdateOutput && changelogUpdateOutput.length > 0) {
-              console.log(`Using updated commit SHA from changelog update: ${changelogUpdateOutput}`);
-              sha = changelogUpdateOutput;
+            // For Dependabot PRs with changelog updates, get the latest commit from the branch
+            if (isBot) {
+              try {
+                // Fetch the latest commit from the PR branch regardless of what we have in event payload
+                // This ensures we always use the most up-to-date SHA after any workflow modifications
+                const { data: prData } = await github.rest.pulls.get({
+                  owner,
+                  repo,
+                  pull_number: context.payload.pull_request.number
+                });
+                
+                if (prData && prData.head && prData.head.sha) {
+                  console.log(`Using latest SHA from PR API: ${prData.head.sha}`);
+                  console.log(`Previous SHA from event: ${sha}`);
+                  sha = prData.head.sha;
+                }
+                
+                // Additional fallback - if we have a specific commit SHA from changelog update, use it
+                if (changelogUpdateOutput && changelogUpdateOutput.length > 0) {
+                  console.log(`Changelog update produced commit: ${changelogUpdateOutput}`);
+                  console.log(`Comparing to latest PR SHA: ${sha}`);
+                  
+                  // Only use the changelog commit if it's different from what we already have
+                  if (changelogUpdateOutput !== sha) {
+                    console.log(`Using changelog update commit SHA: ${changelogUpdateOutput}`);
+                    sha = changelogUpdateOutput;
+                  }
+                }
+              } catch (apiError) {
+                console.error(`Error fetching latest PR data: ${apiError.message}`);
+                console.log(`Falling back to original SHA: ${sha}`);
+                // Continue with the original SHA
+              }
             } else {
-              console.log(`Using original PR head SHA: ${sha}`);
+              console.log(`Using original PR head SHA for user PR: ${sha}`);
             }
 
             console.log(`Reporting final status for ${owner}/${repo}@${sha}: ${jobStatus}`);
