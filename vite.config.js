@@ -24,6 +24,7 @@ export default defineConfig({
       '@resources': path.resolve(__dirname, './src/resources'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@constants': path.resolve(__dirname, './src/constants'),
+      '@styles': path.resolve(__dirname, './src/styles'),
     },
   },
   server: {
