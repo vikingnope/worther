@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
+
 import packageJson from '../../package.json';
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
 
 function ExternalLink({ href, children }) {
   return (

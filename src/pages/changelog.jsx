@@ -3,9 +3,10 @@ import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
+
 import packageJson from '../../package.json';
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
 
 export default function Changelog() {
   const [markdown, setMarkdown] = useState('');

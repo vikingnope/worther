@@ -14,9 +14,9 @@ import {
 } from 'react-icons/fa';
 import { IoMdSettings } from 'react-icons/io';
 
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
-import useSettingsStore from '../stores/settingsStore';
+import useSettingsStore from '@stores/settingsStore';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
 
 export default function Settings() {
   const {

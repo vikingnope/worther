@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
 
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
 
 export default function Weather() {
   const options = useMemo(() => countryList().getData(), []);

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
 
 export default function ErrorPage() {
   useEffect(() => {

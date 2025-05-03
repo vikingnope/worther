@@ -9,17 +9,13 @@ import {
   CloudLayer,
   RainViewerData,
   HybridLayer,
-} from '../components/layers';
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
-import {
-  CustomZoomControl,
-  CustomAttributionControl,
-  MenuBar,
-} from '../components/utils/mapElements';
-import { WeatherPopupContent } from '../components/utils/weatherVariables';
-import { useDeviceDetect } from '../hooks/useDeviceDetect';
-import useSettingsStore from '../stores/settingsStore';
+} from '@components/layers';
+import { useDeviceDetect } from '@hooks/useDeviceDetect';
+import useSettingsStore from '@stores/settingsStore';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
+import { CustomZoomControl, CustomAttributionControl, MenuBar } from '@utils/mapElements';
+import { WeatherPopupContent } from '@utils/weatherVariables';
 
 // Custom component to style popups based on map mode
 const CustomPopupStyle = ({ theme }) => {
