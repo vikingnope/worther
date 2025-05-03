@@ -53,6 +53,18 @@ export default [
         node: {
           extensions: ['.js', '.jsx'],
         },
+        alias: {
+          map: [
+            ['@', './src'],
+            ['@utils', './src/components/utils'],
+            ['@components', './src/components'],
+            ['@pages', './src/pages'],
+            ['@api', './src/api'],
+            ['@stores', './src/stores'],
+            ['@resources', './src/resources'],
+          ],
+          extensions: ['.js', '.jsx', '.json'],
+        },
       },
       'import/ignore': ['@vercel/analytics/react', '@vercel/speed-insights/react'],
     },
