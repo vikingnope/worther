@@ -3,8 +3,8 @@ import { MdClose } from 'react-icons/md';
 import { RiMenu4Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 
-import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
-import useSettingsStore from '../../stores/settingsStore';
+import { NAV_ITEMS, NAV_ICONS } from '@constants/headerConstants.jsx';
+import useSettingsStore from '@stores/settingsStore';
 
 const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
   const active = currentLocation === path;

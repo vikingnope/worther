@@ -1,11 +1,10 @@
 import { memo, useCallback, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
-import useSettingsStore from '../../stores/settingsStore';
-
-import Logo from './../../resources/logo_transparent.png';
-import { Dropdown } from './mobileDropdown';
+import { NAV_ITEMS, NAV_ICONS } from '@constants/headerConstants.jsx';
+import Logo from '@resources/logo_transparent.png';
+import useSettingsStore from '@stores/settingsStore';
+import { Dropdown } from '@utils/mobileDropdown';
 
 const NavigationLink = memo(({ text, path, currentLocation }) => {
   const active = currentLocation === path;

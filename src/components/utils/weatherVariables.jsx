@@ -45,8 +45,8 @@ import {
 } from 'react-icons/wi'; // Weather icons for various conditions
 import { useNavigate, Link } from 'react-router-dom';
 
-import { Footer } from './footer';
-import { Header } from './header';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
 
 // Weather icons mapping configuration
 const weatherIconsMap = {

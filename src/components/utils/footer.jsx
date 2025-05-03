@@ -4,7 +4,7 @@ import { FaDiscord } from 'react-icons/fa';
 import { IoDocumentTextSharp } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 
-import Logo from './../../resources/logo_transparent.png';
+import Logo from '@resources/logo_transparent.png';
 
 export const Footer = memo(() => {
   const currentYear = new Date().getFullYear();
