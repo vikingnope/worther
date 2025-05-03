@@ -1,10 +1,12 @@
+import axios from 'axios';
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
+
 import packageJson from '../../package.json';
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
 
 export default function Changelog() {
   const [markdown, setMarkdown] = useState('');
@@ -20,15 +22,10 @@ export default function Changelog() {
 
   // Fetch the CHANGELOG.md file content from public directory
   useEffect(() => {
-    fetch('/CHANGELOG.md')
+    axios
+      .get('/CHANGELOG.md')
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to load changelog: ${response.status} ${response.statusText}`);
-        }
-        return response.text();
-      })
-      .then(text => {
-        setMarkdown(text);
+        setMarkdown(response.data);
       })
       .catch(error => {
         console.error('Error loading changelog:', error);

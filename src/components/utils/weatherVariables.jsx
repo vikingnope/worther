@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useMemo, useCallback, useEffect, useState, memo } from 'react';
 import { AiFillCloud } from 'react-icons/ai'; // Cloudy
 import {
@@ -44,8 +45,8 @@ import {
 } from 'react-icons/wi'; // Weather icons for various conditions
 import { useNavigate, Link } from 'react-router-dom';
 
-import { Footer } from './footer';
-import { Header } from './header';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
 
 // Weather icons mapping configuration
 const weatherIconsMap = {
@@ -719,18 +720,10 @@ export const WeatherPopupContent = memo(props => {
 
     setIsLoadingWeather(true);
     try {
-      // Replace with your actual weather API endpoint
-      const response = await fetch(
+      const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?lat=${props.userPos.latitude}&lon=${props.userPos.longitude}&units=metric&appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`
       );
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Weather data fetch failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
-        );
-      }
-      const data = await response.json();
-      setCurrentLocationWeather(data);
+      setCurrentLocationWeather(response.data);
     } catch (error) {
       console.error('Error fetching weather data:', error.message);
     } finally {
@@ -763,7 +756,7 @@ export const WeatherPopupContent = memo(props => {
   // Determine styles based on map type for map page
   const popupStyles = useMemo(() => {
     if (props.page === 'map') {
-      return props.mapType === 'light'
+      return props.theme === 'light'
         ? {
             background: '#ffffff',
             color: '#000000',
@@ -792,7 +785,7 @@ export const WeatherPopupContent = memo(props => {
           };
     }
     return {}; // Default styles for non-map pages
-  }, [props.page, props.mapType]);
+  }, [props.page, props.theme]);
 
   if (isLoadingWeather) {
     return (

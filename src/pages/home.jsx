@@ -4,14 +4,14 @@ import { FaMapMarkedAlt, FaCloudSunRain, FaListUl, FaInfoCircle } from 'react-ic
 import { MdLocationOff } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
-import { WeatherPopupContent } from '../components/utils/weatherVariables';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
+import { WeatherPopupContent } from '@utils/weatherVariables';
 
 const SITE_MAP = [
   {
     text: 'Map',
-    path: '/map/light',
+    path: '/map',
     icon: (
       <FaMapMarkedAlt className="text-4xl mb-3 text-blue-400 group-hover:text-cyan-300 transition-colors duration-300" />
     ),

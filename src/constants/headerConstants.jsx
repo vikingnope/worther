@@ -1,11 +1,13 @@
 import { AiFillHome } from 'react-icons/ai';
 import { BsFillMapFill, BsCloudSunFill } from 'react-icons/bs';
 import { HiInformationCircle } from 'react-icons/hi';
+import { IoMdSettings } from 'react-icons/io';
+import { MdLightMode, MdDarkMode } from 'react-icons/md';
 import { TbBeach } from 'react-icons/tb';
 
 export const NAV_ITEMS = [
   { text: 'Home', path: '/' },
-  { text: 'Map', path: '/map/light' },
+  { text: 'Map', path: '/map' },
   { text: 'Weather', path: '/weather' },
   { text: 'Recommendations', path: '/recommendations' },
   { text: 'About', path: '/about' },
@@ -17,4 +19,7 @@ export const NAV_ICONS = {
   Weather: <BsCloudSunFill size="25" />,
   Recommendations: <TbBeach size="25" />,
   About: <HiInformationCircle size="26" />,
+  Settings: <IoMdSettings size="26" />,
+  LightMode: <MdLightMode size="24" />,
+  DarkMode: <MdDarkMode size="24" />,
 };
