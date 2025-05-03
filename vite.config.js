@@ -23,6 +23,7 @@ export default defineConfig({
       '@stores': path.resolve(__dirname, './src/stores'),
       '@resources': path.resolve(__dirname, './src/resources'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@constants': path.resolve(__dirname, './src/constants'),
     },
   },
   server: {

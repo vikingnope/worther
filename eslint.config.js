@@ -63,6 +63,7 @@ export default [
             ['@stores', './src/stores'],
             ['@resources', './src/resources'],
             ['@hooks', './src/hooks'],
+            ['@constants', './src/constants'],
           ],
           extensions: ['.js', '.jsx', '.json'],
         },
