@@ -30,7 +30,7 @@
 - Fixed chore report template not being read due to error
 - Fixes issue with Dependabot PRs not getting status from PR Checks workflow
 - Added option to run PR check workflow with command by repo owner
-- Removed all of the old branding
+- Removed all old branding
 
 ---
 
