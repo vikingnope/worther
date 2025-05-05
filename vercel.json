@@ -29,6 +29,15 @@
           "value": "max-age=63072000; includeSubDomains; preload"
         }
       ]
+    },
+    {
+      "source": "/vercel.live/(.*)",
+      "headers": [
+        {
+          "key": "Set-Cookie",
+          "value": "__vercel_live_token=*; SameSite=None; Secure"
+        }
+      ]
     }
   ]
 }
