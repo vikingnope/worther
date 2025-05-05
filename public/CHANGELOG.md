@@ -31,6 +31,7 @@
 - Fixes issue with Dependabot PRs not getting status from PR Checks workflow
 - Added option to run PR check workflow with command by repo owner
 - Removed all old branding
+- Bump dev dependency `eslint` from 9.25.1 to 9.26.0
 
 ---
 
