@@ -10,6 +10,7 @@ import {
   CloudLayer,
   RainViewerData,
   HybridLayer,
+  DayNightLayer,
 } from '../components/layers';
 import { Footer } from '../components/utils/footer';
 import { Header } from '../components/utils/header';
@@ -154,6 +155,7 @@ export default function ShowMap(props) {
   const [rainLayerChoice, setRainLayerChoice] = useState(true);
   const [satelliteLayerChoice, setSatelliteLayerChoice] = useState(false);
   const [windDirChoice, setWindDirChoice] = useState(false);
+  const [dayNightLayerChoice, setDayNightLayerChoice] = useState(false);
 
   const { mapType } = useParams();
 
@@ -229,6 +231,7 @@ export default function ShowMap(props) {
             <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity} />
             <CloudLayer show={cloudLayerChoice} opacity={layerOpacity} />
             <HybridLayer show={satelliteLayerChoice} mapType={mapType} />
+            <DayNightLayer show={dayNightLayerChoice} opacity={layerOpacity} mapType={mapType} />
             <MapBackgroundUpdater mapType={mapType} />
             {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
             <MenuBar
@@ -247,6 +250,8 @@ export default function ShowMap(props) {
               onShowTemperatureChange={setTemperatureLayerChoice}
               layerOpacity={layerOpacity}
               onLayerOpacityChange={setLayerOpacity}
+              showDayNight={dayNightLayerChoice}
+              onShowDayNightChange={setDayNightLayerChoice}
             />
             {!markerShow ? (
               <Marker icon={markerIconConst} position={[userPos.latitude, userPos.longitude]}>
@@ -277,6 +282,7 @@ export default function ShowMap(props) {
       cloudLayerChoice,
       satelliteLayerChoice,
       windDirChoice,
+      dayNightLayerChoice,
       layerOpacity,
       markerIconConst,
     ]

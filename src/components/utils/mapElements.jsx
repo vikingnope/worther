@@ -3,6 +3,7 @@ import { BsSliders } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoClose, IoSearch, IoLayers } from 'react-icons/io5';
 import { MdOutlineLightMode, MdDarkMode } from 'react-icons/md';
+import { PiSunHorizonBold } from 'react-icons/pi';
 import { TbTemperature, TbWind, TbCloud, TbCloudRain, TbSatellite } from 'react-icons/tb';
 import { useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
@@ -246,6 +247,7 @@ export const MapMode = ({ mode }) => {
  */
 const OptionsMethod = memo(props => {
   const [city, setCity] = useState('');
+  const [dayNightMode, setDayNightMode] = useState(props.mode === 'dark');
   const navigate = useNavigate();
 
   // Prevent map interaction when interacting with menu controls
@@ -268,6 +270,11 @@ const OptionsMethod = memo(props => {
     },
     [navigate, city]
   );
+
+  const handleDayNightToggle = useCallback(() => {
+    setDayNightMode(prev => !prev);
+    navigate(dayNightMode ? '/map/light' : '/map/dark');
+  }, [dayNightMode, navigate]);
 
   const getLayerButtonClass = useCallback(
     isActive => {
@@ -459,6 +466,39 @@ const OptionsMethod = memo(props => {
           <TbSatellite size="18" />
           <span>Satellite</span>
         </button>
+
+        {/* Day/Night layer (full width) */}
+        <button
+          onClick={() => props.onShowDayNightChange?.(!props.showDayNight)}
+          className={`${getLayerButtonClass(props.showDayNight)} mt-2`}
+          aria-label="Toggle day/night terminator"
+          aria-pressed={props.showDayNight}
+        >
+          <PiSunHorizonBold size="18" />
+          <span>Day/Night Line</span>
+        </button>
+      </div>
+
+      {/* Day/Night mode toggle */}
+      <div className="mt-4">
+        <label htmlFor="dayNightToggle" className={sectionTitleClass}>
+          <div className="flex items-center gap-1 mb-2">
+            <PiSunHorizonBold />
+            <span>Day/Night Mode</span>
+          </div>
+        </label>
+        <button
+          onClick={handleDayNightToggle}
+          className={`
+                    flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200
+                    ${dayNightMode ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
+                `}
+          aria-label="Toggle day/night mode"
+          aria-pressed={dayNightMode}
+        >
+          {dayNightMode ? <MdOutlineLightMode size="18" /> : <MdDarkMode size="18" />}
+          <span>{dayNightMode ? 'Night' : 'Day'} Mode</span>
+        </button>
       </div>
     </div>
   );
@@ -483,6 +523,8 @@ OptionsMethod.displayName = 'OptionsMethod';
  * @param {Function} props.onShowWindChange - Callback for toggling wind layer
  * @param {boolean} props.showTemperature - Whether to show temperature layer
  * @param {Function} props.onShowTemperatureChange - Callback for toggling temperature layer
+ * @param {boolean} props.showDayNight - Whether to show day/night terminator layer
+ * @param {Function} props.onShowDayNightChange - Callback for toggling day/night terminator layer
  * @param {number} props.layerOpacity - The opacity level of map layers (0-1)
  * @param {Function} props.onLayerOpacityChange - Callback for changing layer opacity
  * @returns {JSX.Element} - The menu bar component
@@ -541,6 +583,8 @@ export const MenuBar = props => {
           onShowWindChange={props.onShowWindChange}
           showTemperature={props.showTemperature}
           onShowTemperatureChange={props.onShowTemperatureChange}
+          showDayNight={props.showDayNight}
+          onShowDayNightChange={props.onShowDayNightChange}
           layerOpacity={props.layerOpacity}
           onLayerOpacityChange={props.onLayerOpacityChange}
           onClose={handleToggle}

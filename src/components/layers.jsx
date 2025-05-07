@@ -1,6 +1,8 @@
+import Terminator from '@joergdietrich/leaflet.terminator';
 import axios from 'axios';
-import { useEffect, useState, memo } from 'react';
-import { TileLayer } from 'react-leaflet';
+import L from 'leaflet';
+import { useEffect, useState, memo, useRef } from 'react';
+import { TileLayer, useMap } from 'react-leaflet';
 
 export const CloudLayer = memo(props => {
   return (
@@ -137,6 +139,73 @@ export const HybridLayer = memo(props => {
 HybridLayer.displayName = 'HybridLayer';
 
 // export const WindDirectionLayer = (props) => {
+export const DayNightLayer = memo(props => {
+  const map = useMap();
+  const terminatorRef = useRef(null);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    // If show is true and terminator doesn't exist, create it
+    if (props.show && !terminatorRef.current) {
+      // Create the terminator and add it to the map using the imported Terminator module
+      terminatorRef.current = new Terminator({
+        color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.5)',
+        fillOpacity: props.opacity || 0.5,
+        weight: 2, // Add a thicker line weight for better visibility
+      }).addTo(map);
+
+      // Update the terminator position every minute (60000ms)
+      intervalRef.current = window.setInterval(() => {
+        if (terminatorRef.current) {
+          terminatorRef.current.setTime();
+        }
+      }, 60000);
+    }
+    // If show is false and terminator exists, remove it
+    else if (!props.show && terminatorRef.current) {
+      map.removeLayer(terminatorRef.current);
+      terminatorRef.current = null;
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+
+    // Update the opacity when it changes
+    if (props.show && terminatorRef.current && props.opacity !== undefined) {
+      terminatorRef.current.setStyle({
+        fillOpacity: props.opacity,
+        opacity: props.opacity,
+      });
+    }
+
+    // Update colors when map type changes
+    if (props.show && terminatorRef.current && props.mapType) {
+      terminatorRef.current.setStyle({
+        color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.5)',
+      });
+    }
+
+    // Clean up function for useEffect
+    return () => {
+      if (terminatorRef.current) {
+        map.removeLayer(terminatorRef.current);
+        terminatorRef.current = null;
+      }
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [map, props.show, props.opacity, props.mapType]);
+
+  // This component doesn't render anything visible directly
+  return null;
+});
+
+DayNightLayer.displayName = 'DayNightLayer';
 
 //   return (
 //     <>
