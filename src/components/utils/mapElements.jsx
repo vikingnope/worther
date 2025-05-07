@@ -272,9 +272,12 @@ const OptionsMethod = memo(props => {
   );
 
   const handleDayNightToggle = useCallback(() => {
-    setDayNightMode(prev => !prev);
-    navigate(dayNightMode ? '/map/light' : '/map/dark');
-  }, [dayNightMode, navigate]);
+    setDayNightMode(prev => {
+      const newValue = !prev;
+      navigate(newValue ? '/map/dark' : '/map/light');
+      return newValue;
+    });
+  }, [navigate]);
 
   const getLayerButtonClass = useCallback(
     isActive => {
@@ -488,6 +491,7 @@ const OptionsMethod = memo(props => {
           </div>
         </label>
         <button
+          id="dayNightToggle"
           onClick={handleDayNightToggle}
           className={`
                     flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200
@@ -496,7 +500,7 @@ const OptionsMethod = memo(props => {
           aria-label="Toggle day/night mode"
           aria-pressed={dayNightMode}
         >
-          {dayNightMode ? <MdOutlineLightMode size="18" /> : <MdDarkMode size="18" />}
+          {dayNightMode ? <MdDarkMode size="18" /> : <MdOutlineLightMode size="18" />}
           <span>{dayNightMode ? 'Night' : 'Day'} Mode</span>
         </button>
       </div>
