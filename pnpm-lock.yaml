@@ -14,6 +14,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@19.1.0)(react@19.1.0))(@types/react@19.1.0)(react@19.1.0)
+      '@joergdietrich/leaflet.terminator':
+        specifier: ^1.1.0
+        version: 1.1.0(leaflet@1.9.4)
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(react@19.1.0)
@@ -469,6 +472,11 @@ packages:
   '@humanwhocodes/retry@0.4.2':
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
+
+  '@joergdietrich/leaflet.terminator@1.1.0':
+    resolution: {integrity: sha512-Bq/dBECmVH6nf8V0zVSS7dUJA4bqe0Czl0DWzV1O1kTl5hMXGGc4EuyhTMft6KMLTU0GTLr4dvEa3YfXJWUUTQ==}
+    peerDependencies:
+      leaflet: ^1.2.0
 
   '@jridgewell/gen-mapping@0.3.8':
     resolution: {integrity: sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA==}
@@ -2735,6 +2743,10 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.2': {}
+
+  '@joergdietrich/leaflet.terminator@1.1.0(leaflet@1.9.4)':
+    dependencies:
+      leaflet: 1.9.4
 
   '@jridgewell/gen-mapping@0.3.8':
     dependencies:
