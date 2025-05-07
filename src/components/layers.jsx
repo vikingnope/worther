@@ -147,23 +147,28 @@ export const DayNightLayer = memo(props => {
   useEffect(() => {
     // If show is true and terminator doesn't exist, create it
     if (props.show && !terminatorRef.current) {
-      // Create the terminator and add it to the map using the imported Terminator module
-      terminatorRef.current = new Terminator({
-        color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-        fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.5)',
-        fillOpacity: props.opacity || 0.5,
-        weight: 2, // Add a thicker line weight for better visibility
-      }).addTo(map);
+      try {
+        // Create the terminator and add it to the map using the imported Terminator module
+        terminatorRef.current = new Terminator({
+          color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+          fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(50, 50, 50, 0.5)',
+          fillOpacity: props.opacity || 0.5,
+          weight: 2, // Add a thicker line weight for better visibility
+        }).addTo(map);
 
-      // Ensure the terminator is in the correct position on first render
-      terminatorRef.current.setTime();
+        // Ensure the terminator is in the correct position on first render
+        terminatorRef.current.setTime();
 
-      // Update the terminator position every minute (60000ms)
-      intervalRef.current = window.setInterval(() => {
-        if (terminatorRef.current) {
-          terminatorRef.current.setTime();
-        }
-      }, 60000);
+        // Update the terminator position every minute (60000ms)
+        intervalRef.current = window.setInterval(() => {
+          if (terminatorRef.current) {
+            terminatorRef.current.setTime();
+          }
+        }, 60000);
+      } catch (error) {
+        console.error('Failed to create day/night terminator:', error);
+        terminatorRef.current = null;
+      }
     }
     // If show is false and terminator exists, remove it
     else if (!props.show && terminatorRef.current) {
