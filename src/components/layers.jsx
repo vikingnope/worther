@@ -191,7 +191,7 @@ export const DayNightLayer = memo(props => {
         intervalRef.current = null;
       }
     };
-  }, [map, props.show]); // Only depend on map and props.show
+  }, [map, props.show, props.opacity, props.mapType]);
 
   // Separate effect for opacity updates
   useEffect(() => {
