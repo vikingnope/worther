@@ -1,6 +1,5 @@
 import Terminator from '@joergdietrich/leaflet.terminator';
 import axios from 'axios';
-import L from 'leaflet';
 import { useEffect, useState, memo, useRef } from 'react';
 import { TileLayer, useMap } from 'react-leaflet';
 
@@ -144,6 +143,7 @@ export const DayNightLayer = memo(props => {
   const terminatorRef = useRef(null);
   const intervalRef = useRef(null);
 
+  // Effect for creating/destroying the layer based only on props.show
   useEffect(() => {
     // If show is true and terminator doesn't exist, create it
     if (props.show && !terminatorRef.current) {
@@ -154,6 +154,9 @@ export const DayNightLayer = memo(props => {
         fillOpacity: props.opacity || 0.5,
         weight: 2, // Add a thicker line weight for better visibility
       }).addTo(map);
+
+      // Ensure the terminator is in the correct position on first render
+      terminatorRef.current.setTime();
 
       // Update the terminator position every minute (60000ms)
       intervalRef.current = window.setInterval(() => {
@@ -172,22 +175,6 @@ export const DayNightLayer = memo(props => {
       }
     }
 
-    // Update the opacity when it changes
-    if (props.show && terminatorRef.current && props.opacity !== undefined) {
-      terminatorRef.current.setStyle({
-        fillOpacity: props.opacity,
-        opacity: props.opacity,
-      });
-    }
-
-    // Update colors when map type changes
-    if (props.show && terminatorRef.current && props.mapType) {
-      terminatorRef.current.setStyle({
-        color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-        fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.5)',
-      });
-    }
-
     // Clean up function for useEffect
     return () => {
       if (terminatorRef.current) {
@@ -199,7 +186,27 @@ export const DayNightLayer = memo(props => {
         intervalRef.current = null;
       }
     };
-  }, [map, props.show, props.opacity, props.mapType]);
+  }, [map, props.show]); // Only depend on map and props.show
+
+  // Separate effect for opacity updates
+  useEffect(() => {
+    if (props.show && terminatorRef.current && props.opacity !== undefined) {
+      terminatorRef.current.setStyle({
+        fillOpacity: props.opacity,
+        opacity: props.opacity,
+      });
+    }
+  }, [props.opacity, props.show]);
+
+  // Separate effect for map type (color) updates
+  useEffect(() => {
+    if (props.show && terminatorRef.current && props.mapType) {
+      terminatorRef.current.setStyle({
+        color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+        fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.5)',
+      });
+    }
+  }, [props.mapType, props.show]);
 
   // This component doesn't render anything visible directly
   return null;
