@@ -31,6 +31,7 @@
 - Fixes issue with Dependabot PRs not getting status from PR Checks workflow
 - Added option to run PR check workflow with command by repo owner
 - Removed all old branding
+- Added day/night cycle layer
 
 ---
 
