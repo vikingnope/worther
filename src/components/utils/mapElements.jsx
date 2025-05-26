@@ -8,6 +8,8 @@ import { TbTemperature, TbWind, TbCloud, TbCloudRain, TbSatellite } from 'react-
 import { useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 
+import useSettingsStore from '@stores/settingsStore';
+
 /**
  * CustomZoomControl - A reusable component to style the Leaflet zoom controls
  *
@@ -175,8 +177,10 @@ export const CustomAttributionControl = ({ theme = 'light' }) => {
  */
 const OptionsMethod = memo(props => {
   const [city, setCity] = useState('');
-  const [dayNightMode, setDayNightMode] = useState(props.mode === 'dark');
   const navigate = useNavigate();
+
+  // Get theme and setTheme from settings store instead of using local state
+  const { theme, setTheme } = useSettingsStore();
 
   // Prevent map interaction when interacting with menu controls
   const preventMapInteraction = useCallback(event => {
@@ -200,12 +204,9 @@ const OptionsMethod = memo(props => {
   );
 
   const handleDayNightToggle = useCallback(() => {
-    setDayNightMode(prev => {
-      const newValue = !prev;
-      navigate(newValue ? '/map/dark' : '/map/light');
-      return newValue;
-    });
-  }, [navigate]);
+    // Toggle theme using settings store instead of navigation
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
 
   const getLayerButtonClass = useCallback(
     isActive => {
@@ -423,13 +424,13 @@ const OptionsMethod = memo(props => {
           onClick={handleDayNightToggle}
           className={`
                     flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200
-                    ${dayNightMode ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
+                    ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
                 `}
           aria-label="Toggle day/night mode"
-          aria-pressed={dayNightMode}
+          aria-pressed={theme === 'dark'}
         >
-          {dayNightMode ? <MdDarkMode size="18" /> : <MdOutlineLightMode size="18" />}
-          <span>{dayNightMode ? 'Night' : 'Day'} Mode</span>
+          {theme === 'dark' ? <MdDarkMode size="18" /> : <MdOutlineLightMode size="18" />}
+          <span>{theme === 'dark' ? 'Night' : 'Day'} Mode</span>
         </button>
       </div>
     </div>
