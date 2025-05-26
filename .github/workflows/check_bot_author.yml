@@ -43,7 +43,12 @@ jobs:
               console.log(`Direct PR event: PR #${prNumber} by ${prAuthor}`);
             } else {
               // For comment-triggered events, fetch PR details using the provided number
-              prNumber = ${{ inputs.pr_number }};
+              const inputPR = '${{ inputs.pr_number }}';
+              if (!inputPR || isNaN(Number(inputPR))) {
+                core.setFailed('Invalid or missing PR number input');
+                return;
+              }
+              prNumber = Number(inputPR);
               console.log(`Comment-triggered event: Fetching PR #${prNumber} details`);
               
               try {
@@ -61,11 +66,23 @@ jobs:
               }
             }
 
-            // Check if the author is a bot (ends with [bot] or is dependabot)
-            const isBot = prAuthor.endsWith('[bot]') || prAuthor.startsWith('dependabot');
+            // Define bot detection patterns - consistent with pr_checks.yml
+            const botPatterns = [
+              /^coderabbit(ai)?(-[a-z0-9]+)?$/i,     // CodeRabbit variants
+              /^dependabot(\[bot\])?$/i,             // Dependabot (dependabot, dependabot[bot])
+              /^github-actions(\[bot\])?$/i,         // GitHub Actions bot
+              /^renovate(\[bot\])?$/i,               // Renovate bot
+              /^greenkeeper(\[bot\])?$/i,            // Greenkeeper bot
+              /^snyk-bot$/i,                         // Snyk security bot
+              /\[bot\]$/i,                           // Generic [bot] suffix pattern
+              /-bot$/i,                              // Generic -bot suffix pattern
+            ];
+
+            // Check if the author matches any bot pattern
+            const isBot = botPatterns.some(pattern => pattern.test(prAuthor));
 
             // Check specifically for Dependabot
-            const isDependabot = prAuthor.startsWith('dependabot');
+            const isDependabot = /^dependabot(\[bot\])?$/i.test(prAuthor);
 
             // Set outputs
             core.setOutput('is_bot', isBot.toString());

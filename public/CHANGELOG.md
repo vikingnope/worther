@@ -38,6 +38,7 @@
 - Bump `vite` to v6.3.5
 - Bump `@vitejs/plugin-react` to v4.5.0
 - Bump `eslint-config-prettier` to v10.1.5
+- Enhanced PR checker to resolve existing issues and automatically add a detailed PR comment with status
 
 ---
 
