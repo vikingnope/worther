@@ -24,9 +24,7 @@ jobs:
   check-manual-trigger:
     if: >
       github.event_name == 'issue_comment' && 
-      github.event.issue.pull_request &&
-      !contains(github.event.comment.user.login, 'coderabbit') &&
-      !contains(github.event.comment.user.login, 'CodeRabbit')
+      github.event.issue.pull_request
     name: 🔍 Check Manual Trigger
     runs-on: ubuntu-latest
     outputs:
@@ -40,6 +38,13 @@ jobs:
           script: |
             const comment = context.payload.comment.body;
             const commenter = context.payload.comment.user.login;
+
+            // Early exit if commenter is a coderabbit bot (case-insensitive)
+            if (commenter.toLowerCase().includes('coderabbit')) {
+              console.log(`Ignoring comment from coderabbit bot: ${commenter}`);
+              core.setOutput('should_run', 'false');
+              return;
+            }
 
             // Check if the comment contains the command and is from repo owner
             // More strict matching: must be at beginning of line and a standalone word
@@ -863,32 +868,58 @@ jobs:
             }
 
             try {
-              // Search for existing bot comment with our marker
+              // Search for existing bot comment with our marker (with pagination to handle PRs with many comments)
               console.log('Searching for existing PR checks comment...');
-              const comments = await github.rest.issues.listComments({
-                owner,
-                repo,
-                issue_number: prNumber
-              });
+              
+              let botComment = null;
+              let page = 1;
+              let hasMorePages = true;
+              
+              // Search through all comment pages to find our bot comment
+              while (hasMorePages && !botComment) {
+                console.log(`Fetching comments page ${page}...`);
+                const commentsResponse = await github.rest.issues.listComments({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  per_page: 100, // Maximum allowed per page
+                  page: page
+                });
 
-              // Look for our comment by the hidden marker AND verify it's from a bot
-              const botComment = comments.data.find(comment => {
-                if (!comment.body || !comment.body.includes('<!-- PR_CHECKS_BOT_COMMENT -->')) {
-                  return false;
+                // Look for our comment by the hidden marker AND verify it's from a bot
+                botComment = commentsResponse.data.find(comment => {
+                  if (!comment.body || !comment.body.includes('<!-- PR_CHECKS_BOT_COMMENT -->')) {
+                    return false;
+                  }
+                  
+                  // Verify the comment is from a bot to prevent overwriting user comments
+                  const isGitHubActionsBot = comment.user.login === 'github-actions[bot]';
+                  const isGitHubActionsUser = comment.user.login === 'github-actions';
+                  const isExpectedBot = isGitHubActionsBot || isGitHubActionsUser;
+                  
+                  if (!isExpectedBot) {
+                    console.log(`Found comment with marker but from non-bot user: ${comment.user.login} (ID: ${comment.id}). Skipping update.`);
+                    return false;
+                  }
+                  
+                  return true;
+                });
+
+                // Check if there are more pages
+                hasMorePages = commentsResponse.data.length === 100;
+                page++;
+                
+                // Safety limit to prevent infinite loops (GitHub has a practical limit anyway)
+                if (page > 50) {
+                  console.log('Reached maximum page search limit (50 pages = ~5000 comments)');
+                  break;
                 }
-                
-                // Verify the comment is from a bot to prevent overwriting user comments
-                const isGitHubActionsBot = comment.user.login === 'github-actions[bot]';
-                const isGitHubActionsUser = comment.user.login === 'github-actions';
-                const isExpectedBot = isGitHubActionsBot || isGitHubActionsUser;
-                
-                if (!isExpectedBot) {
-                  console.log(`Found comment with marker but from non-bot user: ${comment.user.login} (ID: ${comment.id}). Skipping update.`);
-                  return false;
-                }
-                
-                return true;
-              });
+              }
+
+              console.log(botComment ? 
+                `Found existing bot comment (ID: ${botComment.id}) from user: ${botComment.user.login}` : 
+                'No existing bot comment found'
+              );
 
               const commentBody = buildCommentContent();
 
