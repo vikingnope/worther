@@ -37,6 +37,18 @@ jobs:
             const comment = context.payload.comment.body;
             const commenter = context.payload.comment.user.login;
 
+            // Check if the comment is from CodeRabbit AI - if so, skip entirely
+            const isCodeRabbitBot = commenter === 'coderabbitai[bot]' || 
+                                   commenter === 'coderabbitai' || 
+                                   commenter === 'CodeRabbitAI' ||
+                                   commenter.toLowerCase().includes('coderabbit');
+
+            if (isCodeRabbitBot) {
+              console.log(`Skipping workflow - comment is from CodeRabbit AI (${commenter})`);
+              core.setOutput('should_run', 'false');
+              return;
+            }
+
             // Check if the comment contains the command and is from repo owner
             // More strict matching: must be at beginning of line and a standalone word
             const isCommand = /^!check\b/.test(comment.trim());
