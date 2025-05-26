@@ -397,6 +397,7 @@ jobs:
   final-status:
     name: 🚦 Final Status Check
     needs:
+      - check-manual-trigger
       - initial-author-check-pr
       - initial-author-check-manual
       - quality-lint-format-user
@@ -569,7 +570,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
-            const prNumber = context.payload.pull_request?.number;
+
+            // Resolve PR number: prioritize manual trigger, fall back to PR event
+            const prNumber = '${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number;
+
             const jobStatus = '${{ job.status }}';
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
 
@@ -672,7 +676,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
-            const prNumber = context.payload.pull_request?.number;
+
+            // Resolve PR number: prioritize manual trigger, fall back to PR event
+            const prNumber = '${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number;
 
             if (!prNumber) {
               console.log('No PR number found, skipping comment');
