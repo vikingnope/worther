@@ -675,3 +675,192 @@ jobs:
             if (jobStatus !== 'success') {
               core.setFailed(`One or more PR checks failed with status: ${jobStatus}`);
             }
+
+      # Post comprehensive PR comment with check results
+      - name: Comment on PR with results
+        if: ${{ always() }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request?.number;
+
+            if (!prNumber) {
+              console.log('No PR number found, skipping comment');
+              return;
+            }
+
+            // Gather all job results and details
+            const jobResults = {
+              initialAuthorCheckPr: '${{ needs.initial-author-check-pr.result }}',
+              initialAuthorCheckManual: '${{ needs.initial-author-check-manual.result }}',
+              qualityLintFormatUser: '${{ needs.quality-lint-format-user.result }}',
+              qualityLintFormatBot: '${{ needs.quality-lint-format-bot.result }}',
+              metadataMilestoneCheck: '${{ needs.metadata-milestone-check.result }}',
+              changelogUpdateDependabot: '${{ needs.changelog-update-dependabot.result }}',
+              changelogCheckUser: '${{ needs.changelog-check-user.result }}',
+              changelogEnforceUser: '${{ needs.changelog-enforce-user.result }}'
+            };
+
+            // Gather additional context
+            const jobStatus = '${{ job.status }}';
+            const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
+            const isPrBot = '${{ needs.initial-author-check-pr.outputs.is_bot }}' === 'true';
+            const isManualBot = '${{ needs.initial-author-check-manual.outputs.is_bot }}' === 'true';
+            const changelogShouldBlock = '${{ needs.changelog-enforce-user.outputs.should_block }}' === 'true';
+            const changelogHasChanges = '${{ needs.changelog-check-user.outputs.has_changes }}' !== '0';
+            const changelogUpdated = '${{ needs.changelog-update-dependabot.outputs.changelog_updated }}' === 'true';
+
+            // Determine final status
+            const allPassed = jobStatus === 'success';
+
+            // Build comment content
+            let commentBody = `## 🚦 PR Checks Summary\n\n`;
+
+            if (allPassed) {
+              commentBody += `✅ **All checks have passed!** This PR is ready for review and merge.\n\n`;
+            } else {
+              commentBody += `❌ **Some checks have failed.** Please review the details below and address any issues.\n\n`;
+            }
+
+            // Add detailed status table
+            commentBody += `### 📊 Check Results\n\n`;
+            commentBody += `| Check | Status | Details |\n`;
+            commentBody += `|-------|--------|----------|\n`;
+
+            // Author check results
+            if (jobResults.initialAuthorCheckPr !== 'skipped') {
+              const authorType = isPrBot ? 'Bot' : 'User';
+              const statusIcon = jobResults.initialAuthorCheckPr === 'success' ? '✅' : '❌';
+              commentBody += `| 🔍 Author Detection (PR) | ${statusIcon} ${jobResults.initialAuthorCheckPr} | Detected ${authorType} PR |\n`;
+            }
+
+            if (jobResults.initialAuthorCheckManual !== 'skipped') {
+              const authorType = isManualBot ? 'Bot' : 'User';
+              const statusIcon = jobResults.initialAuthorCheckManual === 'success' ? '✅' : '❌';
+              commentBody += `| 🔍 Author Detection (Manual) | ${statusIcon} ${jobResults.initialAuthorCheckManual} | Detected ${authorType} PR |\n`;
+            }
+
+            // Code quality checks
+            if (isBot && jobResults.qualityLintFormatBot !== 'skipped') {
+              const statusIcon = jobResults.qualityLintFormatBot === 'success' ? '✅' : jobResults.qualityLintFormatBot === 'failure' ? '❌' : '⚠️';
+              const details = jobResults.qualityLintFormatBot === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
+              commentBody += `| 🧹 Code Quality (Bot) | ${statusIcon} ${jobResults.qualityLintFormatBot} | ${details} |\n`;
+            }
+
+            if (!isBot && jobResults.qualityLintFormatUser !== 'skipped') {
+              const statusIcon = jobResults.qualityLintFormatUser === 'success' ? '✅' : jobResults.qualityLintFormatUser === 'failure' ? '❌' : '⚠️';
+              const details = jobResults.qualityLintFormatUser === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
+              commentBody += `| 🧹 Code Quality (User) | ${statusIcon} ${jobResults.qualityLintFormatUser} | ${details} |\n`;
+            }
+
+            // Changelog checks
+            if (isBot && jobResults.changelogUpdateDependabot !== 'skipped') {
+              const statusIcon = jobResults.changelogUpdateDependabot === 'success' ? '✅' : '❌';
+              const details = changelogUpdated ? 'Changelog automatically updated' : 'Changelog update failed or not applicable';
+              commentBody += `| 📝 Changelog Update (Bot) | ${statusIcon} ${jobResults.changelogUpdateDependabot} | ${details} |\n`;
+            }
+
+            if (!isBot) {
+              if (jobResults.changelogCheckUser !== 'skipped') {
+                const statusIcon = jobResults.changelogCheckUser === 'success' ? '✅' : '❌';
+                const details = changelogHasChanges ? 'Changelog changes detected' : 'No changelog changes found';
+                commentBody += `| 📋 Changelog Check (User) | ${statusIcon} ${jobResults.changelogCheckUser} | ${details} |\n`;
+              }
+              
+              if (jobResults.changelogEnforceUser !== 'skipped') {
+                const statusIcon = jobResults.changelogEnforceUser === 'success' ? '✅' : '❌';
+                let details = 'Changelog requirement satisfied';
+                if (jobResults.changelogEnforceUser === 'failure' || changelogShouldBlock) {
+                  details = 'Changelog update required - please update CHANGELOG.md';
+                }
+                commentBody += `| ✅ Changelog Enforcement | ${statusIcon} ${jobResults.changelogEnforceUser} | ${details} |\n`;
+              }
+            }
+
+            // Milestone check
+            if (jobResults.metadataMilestoneCheck !== 'skipped') {
+              const statusIcon = jobResults.metadataMilestoneCheck === 'success' ? '✅' : '❌';
+              const details = jobResults.metadataMilestoneCheck === 'success' ? 'Milestone added or verified' : 'Failed to add milestone';
+              commentBody += `| 🏷️ Milestone Check | ${statusIcon} ${jobResults.metadataMilestoneCheck} | ${details} |\n`;
+            }
+
+            // Add failure details if any
+            if (!allPassed) {
+              commentBody += `\n### ❗ Issues to Address\n\n`;
+              
+              const failures = [];
+              const skippedRequired = [];
+
+              // Check for actual failures
+              Object.entries(jobResults).forEach(([job, result]) => {
+                if (result === 'failure') {
+                  switch (job) {
+                    case 'qualityLintFormatUser':
+                    case 'qualityLintFormatBot':
+                      failures.push('**Code Quality Issues**: Please fix linting or formatting errors. Run the lint and format commands locally to see specific issues.');
+                      break;
+                    case 'changelogEnforceUser':
+                      if (changelogShouldBlock) {
+                        failures.push('**Changelog Required**: Please update the `public/CHANGELOG.md` file with details about your changes.');
+                      }
+                      break;
+                    case 'metadataMilestoneCheck':
+                      failures.push('**Milestone Assignment**: Failed to automatically assign a milestone to this PR.');
+                      break;
+                    case 'changelogUpdateDependabot':
+                      failures.push('**Changelog Update Failed**: Automatic changelog update for dependency changes failed.');
+                      break;
+                    case 'initialAuthorCheckPr':
+                    case 'initialAuthorCheckManual':
+                      failures.push('**Author Detection Failed**: Unable to determine if this is a bot or user PR.');
+                      break;
+                    default:
+                      failures.push(`**${job}**: Check failed - please review the workflow logs for details.`);
+                  }
+                } else if (result === 'skipped') {
+                  // Only report skipped jobs that should have run
+                  const isRequiredSkipped = (
+                    (job === 'qualityLintFormatUser' && !isBot) ||
+                    (job === 'qualityLintFormatBot' && isBot) ||
+                    (job === 'metadataMilestoneCheck')
+                  );
+                  
+                  if (isRequiredSkipped) {
+                    skippedRequired.push(job);
+                  }
+                }
+              });
+
+              // Add failure descriptions
+              failures.forEach((failure, index) => {
+                commentBody += `${index + 1}. ${failure}\n`;
+              });
+
+              // Add skipped required job warnings
+              if (skippedRequired.length > 0) {
+                commentBody += `\n⚠️ **Required checks were skipped**: Some necessary checks did not run, which may indicate a workflow configuration issue.\n`;
+              }
+
+              commentBody += `\n💡 **Next Steps**: Please address the issues above and push new commits to re-trigger the checks.\n`;
+            } else {
+              commentBody += `\n🎉 **Great job!** All automated checks have passed. Your PR is ready for human review.\n`;
+            }
+
+            // Add footer
+            commentBody += `\n---\n*This comment was automatically generated by the PR checks workflow.*`;
+
+            // Post the comment
+            try {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body: commentBody
+              });
+              console.log('PR comment posted successfully');
+            } catch (commentError) {
+              console.error(`Error posting PR comment: ${commentError.message}`);
+              // Don't fail the workflow if commenting fails
+            }
