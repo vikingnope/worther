@@ -33,7 +33,6 @@
     "format:check": "prettier --check \"{src,public,.github}/**/*.{js,jsx,json,css,md,html,yml,yaml}\" \"*.{js,json,md,html,yml,yaml}\""
   },
   "devDependencies": {
-
     "@eslint/js": "^9.27.0",
     "@tailwindcss/postcss": "^4.1.7",
     "@tailwindcss/vite": "^4.1.7",
