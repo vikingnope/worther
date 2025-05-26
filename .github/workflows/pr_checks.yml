@@ -39,21 +39,20 @@ jobs:
             const comment = context.payload.comment.body;
             const commenter = context.payload.comment.user.login;
 
-            // Define known bot accounts to ignore (exact matches and patterns)
-            const knownBots = [
-              'coderabbitai',           // CodeRabbit AI official bot
-              'coderabbit-ai[bot]',     // GitHub App bot format
-              'dependabot[bot]',        // Dependabot
-              'github-actions[bot]',    // GitHub Actions
-              'renovate[bot]',          // Renovate bot
-              'greenkeeper[bot]',       // Greenkeeper bot
-              'snyk-bot',               // Snyk security bot
+            // Define bot detection patterns - more maintainable than mixed approaches
+            const botPatterns = [
+              /^coderabbit(ai)?(-[a-z0-9]+)?$/i,     // CodeRabbit variants (coderabbitai, coderabbit-ai, etc.)
+              /^dependabot(\[bot\])?$/i,             // Dependabot (dependabot, dependabot[bot])
+              /^github-actions(\[bot\])?$/i,         // GitHub Actions bot
+              /^renovate(\[bot\])?$/i,               // Renovate bot
+              /^greenkeeper(\[bot\])?$/i,            // Greenkeeper bot
+              /^snyk-bot$/i,                         // Snyk security bot
+              /\[bot\]$/i,                           // Generic [bot] suffix pattern
+              /-bot$/i,                              // Generic -bot suffix pattern
             ];
 
-            // Check for exact bot account matches
-            const isBotCommenter = knownBots.includes(commenter.toLowerCase()) || 
-                                   commenter.endsWith('[bot]') ||
-                                   /^coderabbit(ai)?(-[a-z0-9]+)?$/i.test(commenter); // More precise CodeRabbit pattern
+            // Check if commenter matches any bot pattern
+            const isBotCommenter = botPatterns.some(pattern => pattern.test(commenter));
 
             if (isBotCommenter) {
               console.log(`Ignoring comment from known bot account: ${commenter}`);
@@ -359,7 +358,7 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const prNumber = parseInt(context.payload.pull_request.number, 10);
+            const prNumber = context.payload.pull_request.number;
 
             // Check if PR has a milestone
             const pr = await github.rest.pulls.get({
@@ -596,7 +595,10 @@ jobs:
             const { owner, repo } = context.repo;
 
             // Resolve PR number: prioritize manual trigger, fall back to PR event
-            const prNumber = parseInt('${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number, 10);
+            const manualTriggerPR = '${{ needs.check-manual-trigger.outputs.pr_number }}';
+            const prNumber = (manualTriggerPR && !isNaN(Number(manualTriggerPR))) 
+              ? Number(manualTriggerPR) 
+              : context.payload.pull_request?.number;
 
             const jobStatus = '${{ job.status }}';
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
@@ -702,7 +704,10 @@ jobs:
             const { owner, repo } = context.repo;
 
             // Resolve PR number: prioritize manual trigger, fall back to PR event
-            const prNumber = parseInt('${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number, 10);
+            const manualTriggerPR = '${{ needs.check-manual-trigger.outputs.pr_number }}';
+            const prNumber = (manualTriggerPR && !isNaN(Number(manualTriggerPR))) 
+              ? Number(manualTriggerPR) 
+              : context.payload.pull_request?.number;
 
             if (!prNumber) {
               console.log('No PR number found, skipping comment');
