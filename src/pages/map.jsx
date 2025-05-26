@@ -254,6 +254,8 @@ export default function ShowMap(props) {
               onShowTemperatureChange={setTemperatureLayerChoice}
               layerOpacity={layerOpacity}
               onLayerOpacityChange={setLayerOpacity}
+              showDayNight={dayNightLayerChoice}
+              onShowDayNightChange={setDayNightLayerChoice}
             />
             {!markerShow ? (
               <Marker icon={markerIconConst} position={[userPos.latitude, userPos.longitude]}>
@@ -283,6 +285,7 @@ export default function ShowMap(props) {
       cloudLayerChoice,
       satelliteLayerChoice,
       windDirChoice,
+      dayNightLayerChoice,
       layerOpacity,
       markerIconConst,
       isDesktop,
