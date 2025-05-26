@@ -39,11 +39,11 @@ jobs:
             if (context.payload.pull_request) {
               // For direct PR events
               prAuthor = context.payload.pull_request.user.login;
-              prNumber = context.payload.pull_request.number;
+              prNumber = parseInt(context.payload.pull_request.number, 10);
               console.log(`Direct PR event: PR #${prNumber} by ${prAuthor}`);
             } else {
               // For comment-triggered events, fetch PR details using the provided number
-              prNumber = ${{ inputs.pr_number }};
+              prNumber = parseInt(${{ inputs.pr_number }}, 10);
               console.log(`Comment-triggered event: Fetching PR #${prNumber} details`);
               
               try {

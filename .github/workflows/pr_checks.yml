@@ -39,9 +39,24 @@ jobs:
             const comment = context.payload.comment.body;
             const commenter = context.payload.comment.user.login;
 
-            // Early exit if commenter is a coderabbit bot (case-insensitive)
-            if (commenter.toLowerCase().includes('coderabbit')) {
-              console.log(`Ignoring comment from coderabbit bot: ${commenter}`);
+            // Define known bot accounts to ignore (exact matches and patterns)
+            const knownBots = [
+              'coderabbitai',           // CodeRabbit AI official bot
+              'coderabbit-ai[bot]',     // GitHub App bot format
+              'dependabot[bot]',        // Dependabot
+              'github-actions[bot]',    // GitHub Actions
+              'renovate[bot]',          // Renovate bot
+              'greenkeeper[bot]',       // Greenkeeper bot
+              'snyk-bot',               // Snyk security bot
+            ];
+
+            // Check for exact bot account matches
+            const isBotCommenter = knownBots.includes(commenter.toLowerCase()) || 
+                                   commenter.endsWith('[bot]') ||
+                                   /^coderabbit(ai)?(-[a-z0-9]+)?$/i.test(commenter); // More precise CodeRabbit pattern
+
+            if (isBotCommenter) {
+              console.log(`Ignoring comment from known bot account: ${commenter}`);
               core.setOutput('should_run', 'false');
               return;
             }
@@ -344,7 +359,7 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = parseInt(context.payload.pull_request.number, 10);
 
             // Check if PR has a milestone
             const pr = await github.rest.pulls.get({
@@ -581,7 +596,7 @@ jobs:
             const { owner, repo } = context.repo;
 
             // Resolve PR number: prioritize manual trigger, fall back to PR event
-            const prNumber = '${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number;
+            const prNumber = parseInt('${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number, 10);
 
             const jobStatus = '${{ job.status }}';
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
@@ -687,7 +702,7 @@ jobs:
             const { owner, repo } = context.repo;
 
             // Resolve PR number: prioritize manual trigger, fall back to PR event
-            const prNumber = '${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number;
+            const prNumber = parseInt('${{ needs.check-manual-trigger.outputs.pr_number }}' || context.payload.pull_request?.number, 10);
 
             if (!prNumber) {
               console.log('No PR number found, skipping comment');
@@ -892,13 +907,20 @@ jobs:
                     return false;
                   }
                   
-                  // Verify the comment is from a bot to prevent overwriting user comments
-                  const isGitHubActionsBot = comment.user.login === 'github-actions[bot]';
-                  const isGitHubActionsUser = comment.user.login === 'github-actions';
-                  const isExpectedBot = isGitHubActionsBot || isGitHubActionsUser;
+                  // Define known bot accounts that can create/update PR check comments
+                  const allowedBotAccounts = [
+                    'github-actions[bot]',
+                    'github-actions',
+                    'githubactions',  // Alternative naming
+                  ];
                   
-                  if (!isExpectedBot) {
-                    console.log(`Found comment with marker but from non-bot user: ${comment.user.login} (ID: ${comment.id}). Skipping update.`);
+                  // Verify the comment is from an allowed bot account to prevent overwriting user comments
+                  const isAllowedBot = allowedBotAccounts.includes(comment.user.login.toLowerCase()) ||
+                                       comment.user.login.endsWith('[bot]') && 
+                                       (comment.user.login.includes('github-actions') || comment.user.login.includes('githubactions'));
+                  
+                  if (!isAllowedBot) {
+                    console.log(`Found comment with marker but from non-allowed user: ${comment.user.login} (ID: ${comment.id}). Skipping update to prevent overwriting user content.`);
                     return false;
                   }
                   
