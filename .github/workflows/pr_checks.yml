@@ -7,8 +7,17 @@ on:
     types: [created]
 
 # Add concurrency to cancel in-progress runs on new commits
+# But exclude CodeRabbit comments from cancelling legitimate runs
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: >
+    ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{
+      (github.event_name == 'issue_comment' && 
+       (github.event.comment.user.login == 'coderabbitai[bot]' || 
+        github.event.comment.user.login == 'coderabbitai' || 
+        github.event.comment.user.login == 'CodeRabbitAI' || 
+        contains(github.event.comment.user.login, 'coderabbit'))) 
+      && 'coderabbit' || 'main'
+    }}
   cancel-in-progress: true
 
 permissions:
