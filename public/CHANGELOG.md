@@ -32,6 +32,12 @@
 - Added option to run PR check workflow with command by repo owner
 - Removed all old branding
 - Added day/night cycle layer
+- Bump `TailwindCSS` to v 4.1.7
+- Bump `eslint` to 9.27.0
+- Bump `react-router-dom` to v7.6.1
+- Bump `vite` to v6.3.5
+- Bump `@vitejs/plugin-react` to v4.5.0
+- Bump `eslint-config-prettier` to v10.1.5
 
 ---
 
