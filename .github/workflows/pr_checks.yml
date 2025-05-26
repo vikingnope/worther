@@ -687,6 +687,12 @@ jobs:
 
             // Function to build comment content
             function buildCommentContent() {
+              // Helper function to capitalize status values for display
+              function capitalizeStatus(status) {
+                if (!status) return status;
+                return status.charAt(0).toUpperCase() + status.slice(1);
+              }
+
               // Gather all job results and details
               const jobResults = {
                 initialAuthorCheckPr: '${{ needs.initial-author-check-pr.result }}',
@@ -731,40 +737,40 @@ jobs:
               if (jobResults.initialAuthorCheckPr !== 'skipped') {
                 const authorType = isPrBot ? 'Bot' : 'User';
                 const statusIcon = jobResults.initialAuthorCheckPr === 'success' ? '✅' : '❌';
-                content += `| 🔍 Author Detection (PR) | ${statusIcon} ${jobResults.initialAuthorCheckPr} | Detected ${authorType} PR |\n`;
+                content += `| 🔍 Author Detection (PR) | ${statusIcon} ${capitalizeStatus(jobResults.initialAuthorCheckPr)} | Detected ${authorType} PR |\n`;
               }
 
               if (jobResults.initialAuthorCheckManual !== 'skipped') {
                 const authorType = isManualBot ? 'Bot' : 'User';
                 const statusIcon = jobResults.initialAuthorCheckManual === 'success' ? '✅' : '❌';
-                content += `| 🔍 Author Detection (Manual) | ${statusIcon} ${jobResults.initialAuthorCheckManual} | Detected ${authorType} PR |\n`;
+                content += `| 🔍 Author Detection (Manual) | ${statusIcon} ${capitalizeStatus(jobResults.initialAuthorCheckManual)} | Detected ${authorType} PR |\n`;
               }
 
               // Code quality checks
               if (isBot && jobResults.qualityLintFormatBot !== 'skipped') {
                 const statusIcon = jobResults.qualityLintFormatBot === 'success' ? '✅' : jobResults.qualityLintFormatBot === 'failure' ? '❌' : '⚠️';
                 const details = jobResults.qualityLintFormatBot === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
-                content += `| 🧹 Code Quality (Bot) | ${statusIcon} ${jobResults.qualityLintFormatBot} | ${details} |\n`;
+                content += `| 🧹 Code Quality (Bot) | ${statusIcon} ${capitalizeStatus(jobResults.qualityLintFormatBot)} | ${details} |\n`;
               }
 
               if (!isBot && jobResults.qualityLintFormatUser !== 'skipped') {
                 const statusIcon = jobResults.qualityLintFormatUser === 'success' ? '✅' : jobResults.qualityLintFormatUser === 'failure' ? '❌' : '⚠️';
                 const details = jobResults.qualityLintFormatUser === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
-                content += `| 🧹 Code Quality (User) | ${statusIcon} ${jobResults.qualityLintFormatUser} | ${details} |\n`;
+                content += `| 🧹 Code Quality (User) | ${statusIcon} ${capitalizeStatus(jobResults.qualityLintFormatUser)} | ${details} |\n`;
               }
 
               // Changelog checks
               if (isBot && jobResults.changelogUpdateDependabot !== 'skipped') {
                 const statusIcon = jobResults.changelogUpdateDependabot === 'success' ? '✅' : '❌';
                 const details = changelogUpdated ? 'Changelog automatically updated' : 'Changelog update failed or not applicable';
-                content += `| 📝 Changelog Update (Bot) | ${statusIcon} ${jobResults.changelogUpdateDependabot} | ${details} |\n`;
+                content += `| 📝 Changelog Update (Bot) | ${statusIcon} ${capitalizeStatus(jobResults.changelogUpdateDependabot)} | ${details} |\n`;
               }
 
               if (!isBot) {
                 if (jobResults.changelogCheckUser !== 'skipped') {
                   const statusIcon = jobResults.changelogCheckUser === 'success' ? '✅' : '❌';
                   const details = changelogHasChanges ? 'Changelog changes detected' : 'No changelog changes found';
-                  content += `| 📋 Changelog Check (User) | ${statusIcon} ${jobResults.changelogCheckUser} | ${details} |\n`;
+                  content += `| 📋 Changelog Check (User) | ${statusIcon} ${capitalizeStatus(jobResults.changelogCheckUser)} | ${details} |\n`;
                 }
                 
                 if (jobResults.changelogEnforceUser !== 'skipped') {
@@ -773,7 +779,7 @@ jobs:
                   if (jobResults.changelogEnforceUser === 'failure' || changelogShouldBlock) {
                     details = 'Changelog update required - please update CHANGELOG.md';
                   }
-                  content += `| ✅ Changelog Enforcement | ${statusIcon} ${jobResults.changelogEnforceUser} | ${details} |\n`;
+                  content += `| ✅ Changelog Enforcement | ${statusIcon} ${capitalizeStatus(jobResults.changelogEnforceUser)} | ${details} |\n`;
                 }
               }
 
@@ -781,7 +787,7 @@ jobs:
               if (jobResults.metadataMilestoneCheck !== 'skipped') {
                 const statusIcon = jobResults.metadataMilestoneCheck === 'success' ? '✅' : '❌';
                 const details = jobResults.metadataMilestoneCheck === 'success' ? 'Milestone added or verified' : 'Failed to add milestone';
-                content += `| 🏷️ Milestone Check | ${statusIcon} ${jobResults.metadataMilestoneCheck} | ${details} |\n`;
+                content += `| 🏷️ Milestone Check | ${statusIcon} ${capitalizeStatus(jobResults.metadataMilestoneCheck)} | ${details} |\n`;
               }
 
               // Add failure details if any
