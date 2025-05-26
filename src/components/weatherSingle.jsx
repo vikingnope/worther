@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import countryList from 'react-select-country-list';
 
-import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
+import { ShowWeather, SunriseSunsetTimes } from '@utils/weatherVariables';
 
 export const GetSingleWeather = memo(() => {
   const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url

@@ -2,22 +2,22 @@ import { useEffect, useState, useCallback, useMemo, memo } from 'react';
 import { BsSliders } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoClose, IoSearch, IoLayers } from 'react-icons/io5';
-import { MdOutlineLightMode, MdDarkMode } from 'react-icons/md';
+import { MdDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { PiSunHorizonBold } from 'react-icons/pi';
 import { TbTemperature, TbWind, TbCloud, TbCloudRain, TbSatellite } from 'react-icons/tb';
 import { useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 
-import { useDeviceDetect } from '../../hooks/useDeviceDetect';
+import useSettingsStore from '@stores/settingsStore';
 
 /**
  * CustomZoomControl - A reusable component to style the Leaflet zoom controls
  *
  * @param {Object} props - Component props
- * @param {string} [props.mapType='light'] - The map theme ('light' or 'dark')
+ * @param {string} [props.theme='light'] - The map theme ('light' or 'dark')
  * @returns {null} - This component doesn't render anything visible, just applies styling
  */
-export const CustomZoomControl = ({ mapType = 'light' }) => {
+export const CustomZoomControl = ({ theme = 'light' }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
       // Apply styles to the container
       zoomContainer.style.border = 'none';
       zoomContainer.style.boxShadow =
-        mapType === 'light' ? '0 2px 10px rgba(0, 0, 0, 0.1)' : '0 2px 10px rgba(0, 0, 0, 0.4)';
+        theme === 'light' ? '0 2px 10px rgba(0, 0, 0, 0.1)' : '0 2px 10px rgba(0, 0, 0, 0.4)';
       zoomContainer.style.borderRadius = '8px';
       zoomContainer.style.overflow = 'hidden';
 
@@ -46,7 +46,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
 
         // Hover effect
         button.onmouseover = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             button.style.backgroundColor = '#f0f0f0';
           } else {
             button.style.backgroundColor = '#444';
@@ -55,7 +55,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
 
         // Reset on mouseout
         button.onmouseout = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             button.style.backgroundColor = '#fff';
           } else {
             button.style.backgroundColor = '#333';
@@ -64,7 +64,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
       });
 
       // Apply theme-specific styles
-      if (mapType === 'light') {
+      if (theme === 'light') {
         // Light mode styling
         zoomInButton.style.color = '#333';
         zoomInButton.style.backgroundColor = '#fff';
@@ -78,7 +78,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
         zoomOutButton.style.backgroundColor = '#333';
       }
     }
-  }, [mapType, map]);
+  }, [theme, map]);
 
   return null; // This component doesn't render anything, just applies styling
 };
@@ -87,10 +87,10 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
  * CustomAttributionControl - A reusable component to style the Leaflet attribution control
  *
  * @param {Object} props - Component props
- * @param {string} [props.mapType='light'] - The map theme ('light' or 'dark')
+ * @param {string} [props.theme='light'] - The map theme ('light' or 'dark')
  * @returns {null} - This component doesn't render anything visible, just applies styling
  */
-export const CustomAttributionControl = ({ mapType = 'light' }) => {
+export const CustomAttributionControl = ({ theme = 'light' }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
       attributionElement.style.fontSize = '11px';
       attributionElement.style.lineHeight = '1.2';
       attributionElement.style.boxShadow =
-        mapType === 'light' ? '0 1px 5px rgba(0, 0, 0, 0.1)' : '0 1px 5px rgba(0, 0, 0, 0.4)';
+        theme === 'light' ? '0 1px 5px rgba(0, 0, 0, 0.1)' : '0 1px 5px rgba(0, 0, 0, 0.4)';
       attributionElement.style.whiteSpace = 'nowrap';
       attributionElement.style.overflow = 'hidden';
       attributionElement.style.textOverflow = 'ellipsis';
@@ -132,7 +132,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
         link.style.fontWeight = '500';
         link.style.transition = 'color 0.2s ease';
 
-        if (mapType === 'light') {
+        if (theme === 'light') {
           link.style.color = '#0078A8';
         } else {
           link.style.color = '#6BB0FF';
@@ -140,7 +140,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
 
         // Add hover effect
         link.onmouseover = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             link.style.color = '#005580';
           } else {
             link.style.color = '#99CCFF';
@@ -148,7 +148,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
         };
 
         link.onmouseout = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             link.style.color = '#0078A8';
           } else {
             link.style.color = '#6BB0FF';
@@ -157,7 +157,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
       });
 
       // Apply theme-specific styles
-      if (mapType === 'light') {
+      if (theme === 'light') {
         // Light mode
         attributionElement.style.color = '#333';
         attributionElement.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
@@ -167,79 +167,9 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
         attributionElement.style.backgroundColor = 'rgba(40, 40, 40, 0.9)';
       }
     }
-  }, [mapType, map]);
+  }, [theme, map]);
 
   return null; // This component doesn't render anything, just applies styling
-};
-
-/**
- * MapMode - A component that provides a toggle button to switch between light and dark map modes
- *
- * @param {Object} props - Component props
- * @param {string} props.mode - The current map mode ('light' or 'dark')
- * @returns {JSX.Element} - The map mode toggle button
- */
-export const MapMode = ({ mode }) => {
-  const navigate = useNavigate();
-  const isDesktop = useDeviceDetect();
-
-  const handleModeToggle = e => {
-    e.preventDefault();
-    navigate(mode === 'light' ? '/map/dark' : '/map/light');
-  };
-
-  return (
-    <div className={`z-50 absolute ${isDesktop ? 'bottom-12 right-8' : 'bottom-16 right-4'}`}>
-      <button
-        onClick={handleModeToggle}
-        className={`
-                    flex items-center justify-center
-                    ${isDesktop ? 'h-12 w-12' : 'h-10 w-10'} 
-                    rounded-full shadow-lg 
-                    transition-all duration-300
-                    ${
-                      mode === 'light'
-                        ? 'bg-neutral-800 text-white hover:bg-neutral-700'
-                        : 'bg-white text-gray-800 hover:bg-gray-100'
-                    }
-                    overflow-hidden
-                    before:content-[''] 
-                    before:absolute 
-                    before:inset-0 
-                    before:rounded-full 
-                    before:opacity-0
-                    before:transition-opacity
-                    before:duration-300
-                    cursor-pointer
-                    ${
-                      mode === 'light'
-                        ? 'before:bg-gradient-to-tr before:from-blue-700 before:to-purple-700 hover:before:opacity-20'
-                        : 'before:bg-gradient-to-tr before:from-yellow-400 before:to-orange-500 hover:before:opacity-20'
-                    }
-                `}
-        title={`Switch to ${mode === 'light' ? 'Dark' : 'Light'} Mode`}
-        aria-label={`Switch to ${mode === 'light' ? 'Dark' : 'Light'} Mode`}
-      >
-        {mode === 'light' ? (
-          <MdDarkMode className="relative z-10" size={isDesktop ? 24 : 20} />
-        ) : (
-          <MdOutlineLightMode className="relative z-10" size={isDesktop ? 24 : 20} />
-        )}
-
-        {/* Subtle glow effect */}
-        <span
-          className={`
-                    absolute inset-0 rounded-full opacity-0 transition-opacity duration-300
-                    ${
-                      mode === 'light'
-                        ? 'bg-blue-500 hover:opacity-10'
-                        : 'bg-yellow-400 hover:opacity-10'
-                    } filter blur-md
-                `}
-        ></span>
-      </button>
-    </div>
-  );
 };
 
 /**
@@ -247,8 +177,10 @@ export const MapMode = ({ mode }) => {
  */
 const OptionsMethod = memo(props => {
   const [city, setCity] = useState('');
-  const [dayNightMode, setDayNightMode] = useState(props.mode === 'dark');
   const navigate = useNavigate();
+
+  // Get theme and setTheme from settings store instead of using local state
+  const { theme, setTheme } = useSettingsStore();
 
   // Prevent map interaction when interacting with menu controls
   const preventMapInteraction = useCallback(event => {
@@ -272,26 +204,23 @@ const OptionsMethod = memo(props => {
   );
 
   const handleDayNightToggle = useCallback(() => {
-    setDayNightMode(prev => {
-      const newValue = !prev;
-      navigate(newValue ? '/map/dark' : '/map/light');
-      return newValue;
-    });
-  }, [navigate]);
+    // Toggle theme using settings store instead of navigation
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
 
   const getLayerButtonClass = useCallback(
     isActive => {
       const baseClasses =
-        'flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200';
+        'flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200 border';
 
       if (props.mode === 'dark') {
         return isActive
-          ? `${baseClasses} bg-blue-600 text-white shadow-md border border-blue-700`
-          : `${baseClasses} bg-neutral-700 text-gray-200 hover:bg-neutral-600 border border-neutral-600`;
+          ? `${baseClasses} bg-blue-600 text-white shadow-md border-blue-700`
+          : `${baseClasses} bg-neutral-700 text-gray-200 hover:bg-neutral-600 border-neutral-600`;
       } else {
         return isActive
-          ? `${baseClasses} bg-blue-500 text-white shadow-md`
-          : `${baseClasses} bg-gray-100 text-gray-700 hover:bg-gray-200`;
+          ? `${baseClasses} bg-blue-500 text-white shadow-md border-blue-500`
+          : `${baseClasses} bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300`;
       }
     },
     [props.mode]
@@ -495,13 +424,13 @@ const OptionsMethod = memo(props => {
           onClick={handleDayNightToggle}
           className={`
                     flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200
-                    ${dayNightMode ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
+                    ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
                 `}
           aria-label="Toggle day/night mode"
-          aria-pressed={dayNightMode}
+          aria-pressed={theme === 'dark'}
         >
-          {dayNightMode ? <MdDarkMode size="18" /> : <MdOutlineLightMode size="18" />}
-          <span>{dayNightMode ? 'Night' : 'Day'} Mode</span>
+          {theme === 'dark' ? <MdDarkMode size="18" /> : <MdOutlineLightMode size="18" />}
+          <span>{theme === 'dark' ? 'Night' : 'Day'} Mode</span>
         </button>
       </div>
     </div>

@@ -5,8 +5,8 @@ import { FaArrowLeft } from 'react-icons/fa6';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Footer } from './utils/footer';
-import { Header } from './utils/header';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
 import {
   WeatherIcons,
   WindDirection,
@@ -15,7 +15,7 @@ import {
   TimeZoneShow,
   SunriseSunsetTimes,
   WindArrow,
-} from './utils/weatherVariables';
+} from '@utils/weatherVariables';
 
 // Weather phenomena types for consistent tracking
 const WEATHER_PHENOMENA = {

@@ -20,7 +20,8 @@
     "react-router-dom": "^7.6.1",
     "react-select": "^5.10.1",
     "react-select-country-list": "^2.2.3",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "zustand": "^5.0.5"
   },
   "scripts": {
     "dev": "vite",
@@ -38,6 +39,7 @@
     "@vitejs/plugin-react": "4.5.0",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
