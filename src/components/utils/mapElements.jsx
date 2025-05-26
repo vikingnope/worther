@@ -211,16 +211,16 @@ const OptionsMethod = memo(props => {
   const getLayerButtonClass = useCallback(
     isActive => {
       const baseClasses =
-        'flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200';
+        'flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200 border';
 
       if (props.mode === 'dark') {
         return isActive
-          ? `${baseClasses} bg-blue-600 text-white shadow-md border border-blue-700`
-          : `${baseClasses} bg-neutral-700 text-gray-200 hover:bg-neutral-600 border border-neutral-600`;
+          ? `${baseClasses} bg-blue-600 text-white shadow-md border-blue-700`
+          : `${baseClasses} bg-neutral-700 text-gray-200 hover:bg-neutral-600 border-neutral-600`;
       } else {
         return isActive
-          ? `${baseClasses} bg-blue-500 text-white shadow-md`
-          : `${baseClasses} bg-gray-100 text-gray-700 hover:bg-gray-200`;
+          ? `${baseClasses} bg-blue-500 text-white shadow-md border-blue-500`
+          : `${baseClasses} bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300`;
       }
     },
     [props.mode]
