@@ -871,16 +871,30 @@ jobs:
                 issue_number: prNumber
               });
 
-              // Look for our comment by the hidden marker
-              const botComment = comments.data.find(comment => 
-                comment.body && comment.body.includes('<!-- PR_CHECKS_BOT_COMMENT -->')
-              );
+              // Look for our comment by the hidden marker AND verify it's from a bot
+              const botComment = comments.data.find(comment => {
+                if (!comment.body || !comment.body.includes('<!-- PR_CHECKS_BOT_COMMENT -->')) {
+                  return false;
+                }
+                
+                // Verify the comment is from a bot to prevent overwriting user comments
+                const isGitHubActionsBot = comment.user.login === 'github-actions[bot]';
+                const isGitHubActionsUser = comment.user.login === 'github-actions';
+                const isExpectedBot = isGitHubActionsBot || isGitHubActionsUser;
+                
+                if (!isExpectedBot) {
+                  console.log(`Found comment with marker but from non-bot user: ${comment.user.login} (ID: ${comment.id}). Skipping update.`);
+                  return false;
+                }
+                
+                return true;
+              });
 
               const commentBody = buildCommentContent();
 
               if (botComment) {
-                // Update existing comment
-                console.log(`Updating existing comment (ID: ${botComment.id})`);
+                // Update existing comment (verified to be from bot)
+                console.log(`Updating existing bot comment (ID: ${botComment.id}) from user: ${botComment.user.login}`);
                 await github.rest.issues.updateComment({
                   owner,
                   repo,
