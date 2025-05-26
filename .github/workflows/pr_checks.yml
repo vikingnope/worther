@@ -2,7 +2,7 @@ name: Pull Request Checks
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize, edited, ready_for_review, demilestoned]
+    types: [opened, reopened, synchronize, edited, ready_for_review]
   issue_comment:
     types: [created]
 
@@ -22,7 +22,9 @@ jobs:
   # COMMENT CHECK - For manual trigger via !check
   #################################################
   check-manual-trigger:
-    if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request }}
+    if: >
+      github.event_name == 'issue_comment' && 
+      github.event.issue.pull_request
     name: 🔍 Check Manual Trigger
     runs-on: ubuntu-latest
     outputs:
@@ -36,6 +38,27 @@ jobs:
           script: |
             const comment = context.payload.comment.body;
             const commenter = context.payload.comment.user.login;
+
+            // Define bot detection patterns - more maintainable than mixed approaches
+            const botPatterns = [
+              /^coderabbit(ai)?(-[a-z0-9]+)?$/i,     // CodeRabbit variants (coderabbitai, coderabbit-ai, etc.)
+              /^dependabot(\[bot\])?$/i,             // Dependabot (dependabot, dependabot[bot])
+              /^github-actions(\[bot\])?$/i,         // GitHub Actions bot
+              /^renovate(\[bot\])?$/i,               // Renovate bot
+              /^greenkeeper(\[bot\])?$/i,            // Greenkeeper bot
+              /^snyk-bot$/i,                         // Snyk security bot
+              /\[bot\]$/i,                           // Generic [bot] suffix pattern
+              /-bot$/i,                              // Generic -bot suffix pattern
+            ];
+
+            // Check if commenter matches any bot pattern
+            const isBotCommenter = botPatterns.some(pattern => pattern.test(commenter));
+
+            if (isBotCommenter) {
+              console.log(`Ignoring comment from known bot account: ${commenter}`);
+              core.setOutput('should_run', 'false');
+              return;
+            }
 
             // Check if the comment contains the command and is from repo owner
             // More strict matching: must be at beginning of line and a standalone word
@@ -397,6 +420,7 @@ jobs:
   final-status:
     name: 🚦 Final Status Check
     needs:
+      - check-manual-trigger
       - initial-author-check-pr
       - initial-author-check-manual
       - quality-lint-format-user
@@ -569,53 +593,47 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
-            const prRef = context.payload.pull_request;
-            let sha = prRef?.head?.sha;
 
-            if (!sha) {
-              console.log('No SHA found in PR head, falling back to event SHA');
-              sha = context.sha;
-            }
+            // Resolve PR number: prioritize manual trigger, fall back to PR event
+            const manualTriggerPR = '${{ needs.check-manual-trigger.outputs.pr_number }}';
+            const prNumber = (manualTriggerPR && !isNaN(Number(manualTriggerPR))) 
+              ? Number(manualTriggerPR) 
+              : context.payload.pull_request?.number;
 
             const jobStatus = '${{ job.status }}';
             const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
-            const changelogUpdateOutput = '${{ needs.changelog-update-dependabot.outputs.commit_sha }}';
 
-            // For Dependabot PRs with changelog updates, get the latest commit from the branch
-            if (isBot) {
+            let sha;
+
+            if (prNumber) {
+              // Always get the latest commit SHA from the PR to handle mid-workflow commits
               try {
-                // Fetch the latest commit from the PR branch regardless of what we have in event payload
-                // This ensures we always use the most up-to-date SHA after any workflow modifications
-                const { data: prData } = await github.rest.pulls.get({
+                console.log(`Fetching latest commit for PR #${prNumber}`);
+                const prResponse = await github.rest.pulls.get({
                   owner,
                   repo,
-                  pull_number: context.payload.pull_request.number
+                  pull_number: prNumber
                 });
                 
-                if (prData && prData.head && prData.head.sha) {
-                  console.log(`Using latest SHA from PR API: ${prData.head.sha}`);
-                  console.log(`Previous SHA from event: ${sha}`);
-                  sha = prData.head.sha;
-                }
+                sha = prResponse.data.head.sha;
+                console.log(`Using latest PR head SHA: ${sha}`);
                 
-                // Additional fallback - if we have a specific commit SHA from changelog update, use it
-                if (changelogUpdateOutput && changelogUpdateOutput.length > 0) {
-                  console.log(`Changelog update produced commit: ${changelogUpdateOutput}`);
-                  console.log(`Comparing to latest PR SHA: ${sha}`);
-                  
-                  // Only use the changelog commit if it's different from what we already have
-                  if (changelogUpdateOutput !== sha) {
-                    console.log(`Using changelog update commit SHA: ${changelogUpdateOutput}`);
-                    sha = changelogUpdateOutput;
-                  }
+                // Log if this differs from the trigger SHA for debugging
+                const triggerSha = context.payload.pull_request?.head?.sha || context.sha;
+                if (sha !== triggerSha) {
+                  console.log(`Note: Latest SHA (${sha}) differs from trigger SHA (${triggerSha})`);
+                  console.log(`This typically means commits were made during workflow execution (e.g., changelog updates)`);
                 }
-              } catch (apiError) {
-                console.error(`Error fetching latest PR data: ${apiError.message}`);
-                console.log(`Falling back to original SHA: ${sha}`);
-                // Continue with the original SHA
+              } catch (error) {
+                console.error(`Error fetching PR details: ${error.message}`);
+                // Fallback to trigger SHA
+                sha = context.payload.pull_request?.head?.sha || context.sha;
+                console.log(`Falling back to trigger SHA: ${sha}`);
               }
             } else {
-              console.log(`Using original PR head SHA for user PR: ${sha}`);
+              // No PR context, use event SHA
+              sha = context.sha;
+              console.log(`No PR context found, using event SHA: ${sha}`);
             }
 
             console.log(`Reporting final status for ${owner}/${repo}@${sha}: ${jobStatus}`);
@@ -674,4 +692,286 @@ jobs:
             // Exit with appropriate code using core.setFailed() for better consistency with GitHub Actions
             if (jobStatus !== 'success') {
               core.setFailed(`One or more PR checks failed with status: ${jobStatus}`);
+            }
+
+      # Post comprehensive PR comment with check results (update existing if found)
+      - name: Comment on PR with results
+        if: ${{ always() }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+
+            // Resolve PR number: prioritize manual trigger, fall back to PR event
+            const manualTriggerPR = '${{ needs.check-manual-trigger.outputs.pr_number }}';
+            const prNumber = (manualTriggerPR && !isNaN(Number(manualTriggerPR))) 
+              ? Number(manualTriggerPR) 
+              : context.payload.pull_request?.number;
+
+            if (!prNumber) {
+              console.log('No PR number found, skipping comment');
+              return;
+            }
+
+            // Function to build comment content
+            function buildCommentContent() {
+              // Helper function to capitalize status values for display
+              function capitalizeStatus(status) {
+                if (!status) return status;
+                return status.charAt(0).toUpperCase() + status.slice(1);
+              }
+
+              // Gather all job results and details
+              const jobResults = {
+                initialAuthorCheckPr: '${{ needs.initial-author-check-pr.result }}',
+                initialAuthorCheckManual: '${{ needs.initial-author-check-manual.result }}',
+                qualityLintFormatUser: '${{ needs.quality-lint-format-user.result }}',
+                qualityLintFormatBot: '${{ needs.quality-lint-format-bot.result }}',
+                metadataMilestoneCheck: '${{ needs.metadata-milestone-check.result }}',
+                changelogUpdateDependabot: '${{ needs.changelog-update-dependabot.result }}',
+                changelogCheckUser: '${{ needs.changelog-check-user.result }}',
+                changelogEnforceUser: '${{ needs.changelog-enforce-user.result }}'
+              };
+
+              // Gather additional context
+              const jobStatus = '${{ job.status }}';
+              const isBot = '${{ steps.set-status.outputs.is_bot }}' === 'true';
+              const isPrBot = '${{ needs.initial-author-check-pr.outputs.is_bot }}' === 'true';
+              const isManualBot = '${{ needs.initial-author-check-manual.outputs.is_bot }}' === 'true';
+              const changelogShouldBlock = '${{ needs.changelog-enforce-user.outputs.should_block }}' === 'true';
+              const changelogHasChanges = '${{ needs.changelog-check-user.outputs.has_changes }}' !== '0';
+              const changelogUpdated = '${{ needs.changelog-update-dependabot.outputs.changelog_updated }}' === 'true';
+
+              // Determine final status
+              const allPassed = jobStatus === 'success';
+
+              // Build comment content with unique marker
+              let content = `<!-- PR_CHECKS_BOT_COMMENT -->\n`;
+              content += `## 🚦 PR Checks Summary\n\n`;
+              content += `🔄 **Last updated**: ${new Date().toISOString()}\n\n`;
+
+              if (allPassed) {
+                content += `✅ **All checks have passed!** This PR is ready for review and merge.\n\n`;
+              } else {
+                content += `❌ **Some checks have failed.** Please review the details below and address any issues.\n\n`;
+              }
+
+              // Add detailed status table
+              content += `### 📊 Check Results\n\n`;
+              content += `| Check | Status | Details |\n`;
+              content += `|-------|--------|----------|\n`;
+
+              // Author check results
+              if (jobResults.initialAuthorCheckPr !== 'skipped') {
+                const authorType = isPrBot ? 'Bot' : 'User';
+                const statusIcon = jobResults.initialAuthorCheckPr === 'success' ? '✅' : '❌';
+                content += `| 🔍 Author Detection (PR) | ${statusIcon} ${capitalizeStatus(jobResults.initialAuthorCheckPr)} | Detected ${authorType} PR |\n`;
+              }
+
+              if (jobResults.initialAuthorCheckManual !== 'skipped') {
+                const authorType = isManualBot ? 'Bot' : 'User';
+                const statusIcon = jobResults.initialAuthorCheckManual === 'success' ? '✅' : '❌';
+                content += `| 🔍 Author Detection (Manual) | ${statusIcon} ${capitalizeStatus(jobResults.initialAuthorCheckManual)} | Detected ${authorType} PR |\n`;
+              }
+
+              // Code quality checks
+              if (isBot && jobResults.qualityLintFormatBot !== 'skipped') {
+                const statusIcon = jobResults.qualityLintFormatBot === 'success' ? '✅' : jobResults.qualityLintFormatBot === 'failure' ? '❌' : '⚠️';
+                const details = jobResults.qualityLintFormatBot === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
+                content += `| 🧹 Code Quality (Bot) | ${statusIcon} ${capitalizeStatus(jobResults.qualityLintFormatBot)} | ${details} |\n`;
+              }
+
+              if (!isBot && jobResults.qualityLintFormatUser !== 'skipped') {
+                const statusIcon = jobResults.qualityLintFormatUser === 'success' ? '✅' : jobResults.qualityLintFormatUser === 'failure' ? '❌' : '⚠️';
+                const details = jobResults.qualityLintFormatUser === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
+                content += `| 🧹 Code Quality (User) | ${statusIcon} ${capitalizeStatus(jobResults.qualityLintFormatUser)} | ${details} |\n`;
+              }
+
+              // Changelog checks
+              if (isBot && jobResults.changelogUpdateDependabot !== 'skipped') {
+                const statusIcon = jobResults.changelogUpdateDependabot === 'success' ? '✅' : '❌';
+                const details = changelogUpdated ? 'Changelog automatically updated' : 'Changelog update failed or not applicable';
+                content += `| 📝 Changelog Update (Bot) | ${statusIcon} ${capitalizeStatus(jobResults.changelogUpdateDependabot)} | ${details} |\n`;
+              }
+
+              if (!isBot) {
+                if (jobResults.changelogCheckUser !== 'skipped') {
+                  const statusIcon = jobResults.changelogCheckUser === 'success' ? '✅' : '❌';
+                  const details = changelogHasChanges ? 'Changelog changes detected' : 'No changelog changes found';
+                  content += `| 📋 Changelog Check (User) | ${statusIcon} ${capitalizeStatus(jobResults.changelogCheckUser)} | ${details} |\n`;
+                }
+                
+                if (jobResults.changelogEnforceUser !== 'skipped') {
+                  const statusIcon = jobResults.changelogEnforceUser === 'success' ? '✅' : '❌';
+                  let details = 'Changelog requirement satisfied';
+                  if (jobResults.changelogEnforceUser === 'failure' || changelogShouldBlock) {
+                    details = 'Changelog update required - please update CHANGELOG.md';
+                  }
+                  content += `| ✅ Changelog Enforcement | ${statusIcon} ${capitalizeStatus(jobResults.changelogEnforceUser)} | ${details} |\n`;
+                }
+              }
+
+              // Milestone check
+              if (jobResults.metadataMilestoneCheck !== 'skipped') {
+                const statusIcon = jobResults.metadataMilestoneCheck === 'success' ? '✅' : '❌';
+                const details = jobResults.metadataMilestoneCheck === 'success' ? 'Milestone added or verified' : 'Failed to add milestone';
+                content += `| 🏷️ Milestone Check | ${statusIcon} ${capitalizeStatus(jobResults.metadataMilestoneCheck)} | ${details} |\n`;
+              }
+
+              // Add failure details if any
+              if (!allPassed) {
+                content += `\n### ❗ Issues to Address\n\n`;
+                
+                const failures = [];
+                const skippedRequired = [];
+
+                // Check for actual failures
+                Object.entries(jobResults).forEach(([job, result]) => {
+                  if (result === 'failure') {
+                    switch (job) {
+                      case 'qualityLintFormatUser':
+                      case 'qualityLintFormatBot':
+                        failures.push('**Code Quality Issues**: Please fix linting or formatting errors. Run the lint and format commands locally to see specific issues.');
+                        break;
+                      case 'changelogEnforceUser':
+                        if (changelogShouldBlock) {
+                          failures.push('**Changelog Required**: Please update the `public/CHANGELOG.md` file with details about your changes.');
+                        }
+                        break;
+                      case 'metadataMilestoneCheck':
+                        failures.push('**Milestone Assignment**: Failed to automatically assign a milestone to this PR.');
+                        break;
+                      case 'changelogUpdateDependabot':
+                        failures.push('**Changelog Update Failed**: Automatic changelog update for dependency changes failed.');
+                        break;
+                      case 'initialAuthorCheckPr':
+                      case 'initialAuthorCheckManual':
+                        failures.push('**Author Detection Failed**: Unable to determine if this is a bot or user PR.');
+                        break;
+                      default:
+                        failures.push(`**${job}**: Check failed - please review the workflow logs for details.`);
+                    }
+                  } else if (result === 'skipped') {
+                    // Only report skipped jobs that should have run
+                    const isRequiredSkipped = (
+                      (job === 'qualityLintFormatUser' && !isBot) ||
+                      (job === 'qualityLintFormatBot' && isBot) ||
+                      (job === 'metadataMilestoneCheck')
+                    );
+                    
+                    if (isRequiredSkipped) {
+                      skippedRequired.push(job);
+                    }
+                  }
+                });
+
+                // Add failure descriptions
+                failures.forEach((failure, index) => {
+                  content += `${index + 1}. ${failure}\n`;
+                });
+
+                // Add skipped required job warnings
+                if (skippedRequired.length > 0) {
+                  content += `\n⚠️ **Required checks were skipped**: Some necessary checks did not run, which may indicate a workflow configuration issue.\n`;
+                }
+
+                content += `\n💡 **Next Steps**: Please address the issues above and push new commits to re-trigger the checks.\n`;
+              } else {
+                content += `\n🎉 **Great job!** All automated checks have passed. Your PR is ready for human review.\n`;
+              }
+
+              // Add footer
+              content += `\n---\n*This comment was automatically generated by the PR checks workflow.*`;
+              
+              return content;
+            }
+
+            try {
+              // Search for existing bot comment with our marker (with pagination to handle PRs with many comments)
+              console.log('Searching for existing PR checks comment...');
+              
+              let botComment = null;
+              let page = 1;
+              let hasMorePages = true;
+              
+              // Search through all comment pages to find our bot comment
+              while (hasMorePages && !botComment) {
+                console.log(`Fetching comments page ${page}...`);
+                const commentsResponse = await github.rest.issues.listComments({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  per_page: 100, // Maximum allowed per page
+                  page: page
+                });
+
+                // Look for our comment by the hidden marker AND verify it's from a bot
+                botComment = commentsResponse.data.find(comment => {
+                  if (!comment.body || !comment.body.includes('<!-- PR_CHECKS_BOT_COMMENT -->')) {
+                    return false;
+                  }
+                  
+                  // Define known bot accounts that can create/update PR check comments
+                  const allowedBotAccounts = [
+                    'github-actions[bot]',
+                    'github-actions',
+                    'githubactions',  // Alternative naming
+                  ];
+                  
+                  // Verify the comment is from an allowed bot account to prevent overwriting user comments
+                  const isAllowedBot = allowedBotAccounts.includes(comment.user.login.toLowerCase()) ||
+                                       comment.user.login.endsWith('[bot]') && 
+                                       (comment.user.login.includes('github-actions') || comment.user.login.includes('githubactions'));
+                  
+                  if (!isAllowedBot) {
+                    console.log(`Found comment with marker but from non-allowed user: ${comment.user.login} (ID: ${comment.id}). Skipping update to prevent overwriting user content.`);
+                    return false;
+                  }
+                  
+                  return true;
+                });
+
+                // Check if there are more pages
+                hasMorePages = commentsResponse.data.length === 100;
+                page++;
+                
+                // Safety limit to prevent infinite loops (GitHub has a practical limit anyway)
+                if (page > 50) {
+                  console.log('Reached maximum page search limit (50 pages = ~5000 comments)');
+                  break;
+                }
+              }
+
+              console.log(botComment ? 
+                `Found existing bot comment (ID: ${botComment.id}) from user: ${botComment.user.login}` : 
+                'No existing bot comment found'
+              );
+
+              const commentBody = buildCommentContent();
+
+              if (botComment) {
+                // Update existing comment (verified to be from bot)
+                console.log(`Updating existing bot comment (ID: ${botComment.id}) from user: ${botComment.user.login}`);
+                await github.rest.issues.updateComment({
+                  owner,
+                  repo,
+                  comment_id: botComment.id,
+                  body: commentBody
+                });
+                console.log('Existing PR comment updated successfully');
+              } else {
+                // Create new comment
+                console.log('No existing comment found, creating new one');
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: commentBody
+                });
+                console.log('New PR comment created successfully');
+              }
+            } catch (commentError) {
+              console.error(`Error managing PR comment: ${commentError.message}`);
+              // Don't fail the workflow if commenting fails
             }
