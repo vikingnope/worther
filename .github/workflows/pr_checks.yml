@@ -2,22 +2,13 @@ name: Pull Request Checks
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize, edited, ready_for_review, demilestoned]
+    types: [opened, reopened, synchronize, edited, ready_for_review]
   issue_comment:
     types: [created]
 
 # Add concurrency to cancel in-progress runs on new commits
-# But exclude CodeRabbit comments from cancelling legitimate runs
 concurrency:
-  group: >
-    ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{
-      (github.event_name == 'issue_comment' && 
-       (github.event.comment.user.login == 'coderabbitai[bot]' || 
-        github.event.comment.user.login == 'coderabbitai' || 
-        github.event.comment.user.login == 'CodeRabbitAI' || 
-        contains(github.event.comment.user.login, 'coderabbit'))) 
-      && 'coderabbit' || 'main'
-    }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -31,7 +22,13 @@ jobs:
   # COMMENT CHECK - For manual trigger via !check
   #################################################
   check-manual-trigger:
-    if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request }}
+    if: >
+      github.event_name == 'issue_comment' && 
+      github.event.issue.pull_request &&
+      github.event.comment.user.login != 'coderabbitai[bot]' &&
+      github.event.comment.user.login != 'coderabbitai' &&
+      github.event.comment.user.login != 'CodeRabbitAI' &&
+      contains(github.event.comment.user.login, 'coderabbit') == false
     name: 🔍 Check Manual Trigger
     runs-on: ubuntu-latest
     outputs:
@@ -45,18 +42,6 @@ jobs:
           script: |
             const comment = context.payload.comment.body;
             const commenter = context.payload.comment.user.login;
-
-            // Check if the comment is from CodeRabbit AI - if so, skip entirely
-            const isCodeRabbitBot = commenter === 'coderabbitai[bot]' || 
-                                   commenter === 'coderabbitai' || 
-                                   commenter === 'CodeRabbitAI' ||
-                                   commenter.toLowerCase().includes('coderabbit');
-
-            if (isCodeRabbitBot) {
-              console.log(`Skipping workflow - comment is from CodeRabbit AI (${commenter})`);
-              core.setOutput('should_run', 'false');
-              return;
-            }
 
             // Check if the comment contains the command and is from repo owner
             // More strict matching: must be at beginning of line and a standalone word
