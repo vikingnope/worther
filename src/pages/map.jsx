@@ -9,6 +9,7 @@ import {
   CloudLayer,
   RainViewerData,
   HybridLayer,
+  DayNightLayer,
 } from '@components/layers';
 import { useDeviceDetect } from '@hooks/useDeviceDetect';
 import useSettingsStore from '@stores/settingsStore';
@@ -159,6 +160,7 @@ export default function ShowMap(props) {
   const [rainLayerChoice, setRainLayerChoice] = useState(true);
   const [satelliteLayerChoice, setSatelliteLayerChoice] = useState(false);
   const [windDirChoice, setWindDirChoice] = useState(false);
+  const [dayNightLayerChoice, setDayNightLayerChoice] = useState(false);
   const isDesktop = useDeviceDetect();
 
   const { theme } = useSettingsStore();
@@ -236,6 +238,7 @@ export default function ShowMap(props) {
             <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity} />
             <CloudLayer show={cloudLayerChoice} opacity={layerOpacity} />
             <HybridLayer show={satelliteLayerChoice} theme={theme} />
+            <DayNightLayer show={dayNightLayerChoice} opacity={layerOpacity} mapType={theme} />
             <MapBackgroundUpdater theme={theme} />
             {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
             <MenuBar

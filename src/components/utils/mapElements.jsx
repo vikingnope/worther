@@ -2,6 +2,8 @@ import { useEffect, useState, useCallback, useMemo, memo } from 'react';
 import { BsSliders } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoClose, IoSearch, IoLayers } from 'react-icons/io5';
+import { MdDarkMode, MdOutlineLightMode } from 'react-icons/md';
+import { PiSunHorizonBold } from 'react-icons/pi';
 import { TbTemperature, TbWind, TbCloud, TbCloudRain, TbSatellite } from 'react-icons/tb';
 import { useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
