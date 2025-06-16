@@ -199,6 +199,7 @@ export const TimeZoneShow = memo(props => {
     3600: 'GMT+1',
     7200: 'GMT+2',
     10800: 'GMT+3',
+    12600: 'GMT+3:30',
     14400: 'GMT+4',
     18000: 'GMT+5',
     19800: 'GMT+5:30',
