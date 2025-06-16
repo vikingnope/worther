@@ -264,13 +264,13 @@ html {
 
 ::-moz-selection {
   /* Code for Firefox */
-  color: #83838a;
-  background: #1c1c1a;
+  color: #ffffff;
+  background: rgba(12, 74, 138, 0.85);
 }
 
 ::selection {
-  color: #83838a;
-  background: #1c1c1a;
+  color: #ffffff;
+  background: rgba(12, 74, 138, 0.85);
 }
 
 /* Text gradient animation for the Worther title */
