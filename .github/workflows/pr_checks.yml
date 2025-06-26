@@ -42,6 +42,7 @@ jobs:
             // Define bot detection patterns - more maintainable than mixed approaches
             const botPatterns = [
               /^coderabbit(ai)?(-[a-z0-9]+)?$/i,     // CodeRabbit variants (coderabbitai, coderabbit-ai, etc.)
+              /^vercel(\[bot\])?$/i,                 // Vercel bot
               /^dependabot(\[bot\])?$/i,             // Dependabot (dependabot, dependabot[bot])
               /^github-actions(\[bot\])?$/i,         // GitHub Actions bot
               /^renovate(\[bot\])?$/i,               // Renovate bot
@@ -129,13 +130,43 @@ jobs:
       event_type: 'issue_comment'
 
   #################################################
+  # EARLY EXIT - Stop workflow for excluded bots
+  #################################################
+  early-exit-excluded-bots:
+    name: 🚫 Early Exit for Excluded Bots
+    needs: [initial-author-check-pr, initial-author-check-manual]
+    if: |
+      always() &&
+      (
+        (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_excluded_bot == 'true') || 
+        (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_excluded_bot == 'true')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip workflow for excluded bot
+        run: |
+          echo "🤖 Excluded bot detected - skipping all PR checks"
+          echo "This workflow has been designed to skip checks for certain automated bots"
+          echo "to avoid unnecessary resource usage and workflow noise."
+
+          # Determine which bot was detected
+          if [[ "${{ needs.initial-author-check-pr.outputs.is_excluded_bot }}" == "true" ]]; then
+            echo "Bot detected via PR event"
+          elif [[ "${{ needs.initial-author-check-manual.outputs.is_excluded_bot }}" == "true" ]]; then
+            echo "Bot detected via manual trigger"
+          fi
+
+          echo "✅ Workflow completed successfully (excluded bot path)"
+
+  #################################################
   # CHANGELOG CHECKS
   #################################################
   changelog-update-dependabot:
     name: 📝 Update Changelog (Dependabot)
-    needs: [initial-author-check-pr, initial-author-check-manual]
+    needs: [initial-author-check-pr, initial-author-check-manual, early-exit-excluded-bots]
     if: |
       always() &&
+      needs.early-exit-excluded-bots.result == 'skipped' &&
       (
         (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_dependabot == 'true') || 
         (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_dependabot == 'true')
@@ -251,9 +282,10 @@ jobs:
 
   changelog-check-user:
     name: 📋 Check Changelog (User PR)
-    needs: [initial-author-check-pr, initial-author-check-manual]
+    needs: [initial-author-check-pr, initial-author-check-manual, early-exit-excluded-bots]
     if: |
       always() &&
+      needs.early-exit-excluded-bots.result == 'skipped' &&
       (
         (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'false') || 
         (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'false')
@@ -272,9 +304,16 @@ jobs:
 
   changelog-enforce-user:
     name: ✅ Enforce Changelog (User PR)
-    needs: [initial-author-check-pr, initial-author-check-manual, changelog-check-user]
+    needs:
+      [
+        initial-author-check-pr,
+        initial-author-check-manual,
+        early-exit-excluded-bots,
+        changelog-check-user,
+      ]
     if: |
       always() &&
+      needs.early-exit-excluded-bots.result == 'skipped' &&
       (
         (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'false') || 
         (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'false')
@@ -324,9 +363,10 @@ jobs:
   #################################################
   # For non-bot PRs - runs immediately
   quality-lint-format-user:
-    needs: [initial-author-check-pr, initial-author-check-manual]
+    needs: [initial-author-check-pr, initial-author-check-manual, early-exit-excluded-bots]
     if: |
       always() &&
+      needs.early-exit-excluded-bots.result == 'skipped' &&
       (
         (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'false') || 
         (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'false')
@@ -338,9 +378,16 @@ jobs:
   # For bot PRs - waits for changelog update to finish
   quality-lint-format-bot:
     # Wait for changelog update to complete for bot PRs
-    needs: [initial-author-check-pr, initial-author-check-manual, changelog-update-dependabot]
+    needs:
+      [
+        initial-author-check-pr,
+        initial-author-check-manual,
+        early-exit-excluded-bots,
+        changelog-update-dependabot,
+      ]
     if: |
       always() &&
+      needs.early-exit-excluded-bots.result == 'skipped' &&
       (
         (needs.initial-author-check-pr.result == 'success' && needs.initial-author-check-pr.outputs.is_bot == 'true') || 
         (needs.initial-author-check-manual.result == 'success' && needs.initial-author-check-manual.outputs.is_bot == 'true')
@@ -357,10 +404,11 @@ jobs:
     needs:
       - initial-author-check-pr
       - initial-author-check-manual
+      - early-exit-excluded-bots
       - quality-lint-format-user
       - quality-lint-format-bot
     # This ensures it only needs one of the two lint jobs to complete based on PR author type
-    if: ${{ always() && !contains(needs.*.result, 'cancelled') }}
+    if: ${{ always() && needs.early-exit-excluded-bots.result == 'skipped' && !contains(needs.*.result, 'cancelled') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check if PR has milestone
@@ -434,6 +482,7 @@ jobs:
       - check-manual-trigger
       - initial-author-check-pr
       - initial-author-check-manual
+      - early-exit-excluded-bots
       - quality-lint-format-user
       - quality-lint-format-bot
       - metadata-milestone-check
@@ -443,6 +492,18 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check for excluded bot early exit
+        id: check-excluded-bot
+        run: |
+          # Check if this was an excluded bot that triggered early exit
+          if [[ "${{ needs.early-exit-excluded-bots.result }}" == "success" ]]; then
+            echo "excluded_bot_detected=true" >> $GITHUB_OUTPUT
+            echo "🤖 Excluded bot detected - workflow completed via early exit path"
+            echo "This is the expected behavior for CodeRabbit AI, Vercel, and similar bots."
+          else
+            echo "excluded_bot_detected=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Set job status variables
         id: set-status
         run: |
@@ -467,6 +528,22 @@ jobs:
 
       - name: Generate status report
         run: |
+          # If excluded bot was detected, show simplified success message
+          if [[ "${{ steps.check-excluded-bot.outputs.excluded_bot_detected }}" == "true" ]]; then
+            echo "## 🤖 Excluded Bot Detected"
+            echo ""
+            echo "This PR is from an excluded bot (CodeRabbit AI, Vercel, etc.)."
+            echo "All PR checks have been automatically skipped to avoid unnecessary workflow runs."
+            echo ""
+            echo "✅ **Status: Completed Successfully (Excluded Bot Path)**"
+            echo ""
+            echo "| Check | Status | Result |"
+            echo "|-------|--------|--------|"
+            echo "| 🔍 Bot Detection | ✅ Success | Excluded bot detected |"
+            echo "| 🚫 Early Exit | ✅ Success | Workflow skipped appropriately |"
+            exit 0
+          fi
+
           echo "## 📊 PR Checks Status Report"
           echo ""
           echo "| Check | Status | Result |"
@@ -495,7 +572,7 @@ jobs:
 
       # Split failure check to its own step with if condition
       - name: Check for job failures
-        if: ${{ contains(needs.*.result, 'failure') }}
+        if: ${{ contains(needs.*.result, 'failure') && steps.check-excluded-bot.outputs.excluded_bot_detected != 'true' }}
         run: |
           echo "⛔ One or more checks failed - blocking merge"
 
@@ -535,6 +612,7 @@ jobs:
           exit 1
 
       - name: Check for skipped jobs
+        if: ${{ steps.check-excluded-bot.outputs.excluded_bot_detected != 'true' }}
         env:
           USER_QUALITY_STATUS: ${{ needs.quality-lint-format-user.result }}
           BOT_QUALITY_STATUS: ${{ needs.quality-lint-format-bot.result }}
@@ -571,6 +649,7 @@ jobs:
           fi
 
       - name: Success message
+        if: ${{ steps.check-excluded-bot.outputs.excluded_bot_detected != 'true' }}
         run: |
           echo "✅ All PR checks completed successfully"
 
@@ -593,9 +672,17 @@ jobs:
             fi
           fi
 
+      - name: Success message for excluded bots
+        if: ${{ steps.check-excluded-bot.outputs.excluded_bot_detected == 'true' }}
+        run: |
+          echo "✅ Excluded bot workflow completed successfully"
+          echo ""
+          echo "🤖 This PR is from an excluded bot, so all checks were appropriately skipped."
+          echo "This is the expected and desired behavior to avoid unnecessary resource usage."
+
       # Auto-assign PR based on check results
       - name: Auto-assign PR based on results
-        if: ${{ always() }}
+        if: ${{ always() && steps.check-excluded-bot.outputs.excluded_bot_detected != 'true' }}
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -697,6 +784,15 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
+
+            // Check if this was an excluded bot
+            const isExcludedBot = '${{ steps.check-excluded-bot.outputs.excluded_bot_detected }}' === 'true';
+
+            if (isExcludedBot) {
+              console.log('Excluded bot detected - skipping status reporting to avoid noise');
+              console.log('This is the expected behavior for CodeRabbit AI, Vercel, and similar bots');
+              return;
+            }
 
             // Resolve PR number: prioritize manual trigger, fall back to PR event
             const manualTriggerPR = '${{ needs.check-manual-trigger.outputs.pr_number }}';
@@ -800,7 +896,7 @@ jobs:
 
       # Post comprehensive PR comment with check results (update existing if found)
       - name: Comment on PR with results
-        if: ${{ always() }}
+        if: ${{ always() && steps.check-excluded-bot.outputs.excluded_bot_detected != 'true' }}
         uses: actions/github-script@v7.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

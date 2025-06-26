@@ -18,6 +18,9 @@ on:
       is_dependabot:
         description: 'Whether the PR author is specifically Dependabot'
         value: ${{ jobs.check-bot-author.outputs.is_dependabot }}
+      is_excluded_bot:
+        description: 'Whether the PR author is an excluded bot (should skip all checks)'
+        value: ${{ jobs.check-bot-author.outputs.is_excluded_bot }}
 
 jobs:
   check-bot-author:
@@ -26,6 +29,7 @@ jobs:
     outputs:
       is_bot: ${{ steps.check-bot.outputs.is_bot }}
       is_dependabot: ${{ steps.check-bot.outputs.is_dependabot }}
+      is_excluded_bot: ${{ steps.check-bot.outputs.is_excluded_bot }}
     steps:
       - name: Check if PR author is a bot
         id: check-bot
@@ -66,9 +70,15 @@ jobs:
               }
             }
 
-            // Define bot detection patterns - consistent with pr_checks.yml
-            const botPatterns = [
+            // Define excluded bot patterns (bots that should cause workflow to skip entirely)
+            const excludedBotPatterns = [
               /^coderabbit(ai)?(-[a-z0-9]+)?$/i,     // CodeRabbit variants
+              /^vercel(\[bot\])?$/i,                 // Vercel bot
+            ];
+
+            // Define all bot patterns (including excluded ones)
+            const botPatterns = [
+              ...excludedBotPatterns,                // Excluded bots
               /^dependabot(\[bot\])?$/i,             // Dependabot (dependabot, dependabot[bot])
               /^github-actions(\[bot\])?$/i,         // GitHub Actions bot
               /^renovate(\[bot\])?$/i,               // Renovate bot
@@ -81,13 +91,35 @@ jobs:
             // Check if the author matches any bot pattern
             const isBot = botPatterns.some(pattern => pattern.test(prAuthor));
 
+            // Check if the author is an excluded bot
+            const isExcludedBot = excludedBotPatterns.some(pattern => pattern.test(prAuthor));
+
             // Check specifically for Dependabot
             const isDependabot = /^dependabot(\[bot\])?$/i.test(prAuthor);
 
             // Set outputs
             core.setOutput('is_bot', isBot.toString());
             core.setOutput('is_dependabot', isDependabot.toString());
+            core.setOutput('is_excluded_bot', isExcludedBot.toString());
 
             console.log(`PR #${prNumber} Author: ${prAuthor}`);
             console.log(`Is Bot: ${isBot}`);
             console.log(`Is Dependabot: ${isDependabot}`);
+            console.log(`Is Excluded Bot: ${isExcludedBot}`);
+
+            // If this is an excluded bot, create a comment and exit gracefully
+            if (isExcludedBot) {
+              console.log(`Detected excluded bot: ${prAuthor}. Workflow will be skipped.`);
+              
+              try {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: prNumber,
+                  body: `🤖 **Automated Bot Detected**: This PR is from \`${prAuthor}\`, which is an excluded bot. PR checks have been automatically skipped to avoid unnecessary workflow runs.`
+                });
+                console.log('Added comment about excluded bot detection');
+              } catch (error) {
+                console.log(`Could not add comment (this is normal): ${error.message}`);
+              }
+            }
