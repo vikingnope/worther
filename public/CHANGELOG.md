@@ -40,7 +40,7 @@
 - Bump `axios` to v1.10.0
 - Removed `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
 - Changed beach recommendations logic
-- Updated PR checker
+- Enhanced PR checker with warnings and auto-assigning of PR
 
 ---
 
