@@ -301,6 +301,8 @@ jobs:
             gh label create "Changelog needed" --color FF0000 --description "Changelog update required" 2>/dev/null || true
             gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
             echo "should_block=true" >> $GITHUB_OUTPUT
+            echo "❌ Changelog update is required for this PR"
+            exit 1
           else
             echo "User PR detected with changelog changes - allowing"
             echo "should_block=false" >> $GITHUB_OUTPUT
@@ -476,7 +478,7 @@ jobs:
             echo "| 🧹 Code Quality (Bot) | ${{ needs.quality-lint-format-bot.result }} | - |"
           else
             echo "| 📋 Check Changelog (User) | ${{ needs.changelog-check-user.result }} | Changes: ${{ needs.changelog-check-user.outputs.has_changes != '0' && 'Yes' || 'No' }} |"
-            echo "| ✅ Enforce Changelog | ${{ needs.changelog-enforce-user.result }} | Should block: ${{ needs.changelog-enforce-user.outputs.should_block }} |"
+            echo "| ✅ Enforce Changelog | ${{ needs.changelog-enforce-user.result }} | ${{ needs.changelog-enforce-user.result == 'failure' && 'Changelog update required' || 'Satisfied' }} |"
             echo "| 🧹 Code Quality (User) | ${{ needs.quality-lint-format-user.result }} | - |"
           fi
 
@@ -514,10 +516,9 @@ jobs:
             fi
             if [[ "${{ needs.changelog-check-user.result }}" == "failure" ]]; then
               echo "- ❌ Changelog check failed"
-            fi
-            if [[ "${{ needs.changelog-enforce-user.result }}" == "failure" ]]; then
-              echo "- ❌ Changelog enforcement failed"
-            fi
+            fi          if [[ "${{ needs.changelog-enforce-user.result }}" == "failure" ]]; then
+            echo "- ❌ Changelog enforcement failed - changelog update required"
+          fi
           fi
 
           exit 1
@@ -803,10 +804,16 @@ jobs:
                 }
                 
                 if (jobResults.changelogEnforceUser !== 'skipped') {
-                  const statusIcon = jobResults.changelogEnforceUser === 'success' ? '✅' : '❌';
-                  let details = 'Changelog requirement satisfied';
-                  if (jobResults.changelogEnforceUser === 'failure' || changelogShouldBlock) {
+                  let statusIcon, details;
+                  if (jobResults.changelogEnforceUser === 'failure') {
+                    statusIcon = '❌';
                     details = 'Changelog update required - please update CHANGELOG.md';
+                  } else if (jobResults.changelogEnforceUser === 'success') {
+                    statusIcon = '✅';
+                    details = 'Changelog requirement satisfied';
+                  } else {
+                    statusIcon = '⚠️';
+                    details = 'Changelog enforcement check did not complete';
                   }
                   content += `| ✅ Changelog Enforcement | ${statusIcon} ${capitalizeStatus(jobResults.changelogEnforceUser)} | ${details} |\n`;
                 }
@@ -835,9 +842,7 @@ jobs:
                         failures.push('**Code Quality Issues**: Please fix linting or formatting errors. Run the lint and format commands locally to see specific issues.');
                         break;
                       case 'changelogEnforceUser':
-                        if (changelogShouldBlock) {
-                          failures.push('**Changelog Required**: Please update the `public/CHANGELOG.md` file with details about your changes.');
-                        }
+                        failures.push('**Changelog Required**: Please update the `public/CHANGELOG.md` file with details about your changes.');
                         break;
                       case 'metadataMilestoneCheck':
                         failures.push('**Milestone Assignment**: Failed to automatically assign a milestone to this PR.');
