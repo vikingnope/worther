@@ -593,6 +593,102 @@ jobs:
             fi
           fi
 
+      # Auto-assign PR based on check results
+      - name: Auto-assign PR based on results
+        if: ${{ always() }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+
+            // Resolve PR number: prioritize manual trigger, fall back to PR event
+            const manualTriggerPR = '${{ needs.check-manual-trigger.outputs.pr_number }}';
+            const prNumber = (manualTriggerPR && !isNaN(Number(manualTriggerPR))) 
+              ? Number(manualTriggerPR) 
+              : context.payload.pull_request?.number;
+
+            if (!prNumber) {
+              console.log('No PR number found, skipping assignment');
+              return;
+            }
+
+            const jobStatus = '${{ job.status }}';
+            const allPassed = jobStatus === 'success';
+
+            try {
+              // Get PR details including current assignees and author
+              const prResponse = await github.rest.pulls.get({
+                owner,
+                repo,
+                pull_number: prNumber
+              });
+
+              const prAuthor = prResponse.data.user.login;
+              const currentAssignees = prResponse.data.assignees.map(assignee => assignee.login);
+              const repoOwner = context.payload.repository.owner.login; // Get repository owner dynamically
+
+              let targetAssignee;
+              let assignmentReason;
+
+              if (allPassed) {
+                // All checks passed - assign to repo owner for review
+                targetAssignee = repoOwner;
+                assignmentReason = 'All checks passed - ready for owner review';
+              } else {
+                // Some checks failed or had warnings - assign to PR author
+                targetAssignee = prAuthor;
+                assignmentReason = 'Checks failed or have warnings - needs author attention';
+              }
+
+              // Check if the target assignee is already assigned
+              if (currentAssignees.includes(targetAssignee)) {
+                console.log(`PR is already assigned to ${targetAssignee}, no change needed`);
+                return;
+              }
+
+              // Assign the PR to the target user
+              console.log(`Assigning PR #${prNumber} to ${targetAssignee} (${assignmentReason})`);
+              
+              await github.rest.issues.addAssignees({
+                owner,
+                repo,
+                issue_number: prNumber,
+                assignees: [targetAssignee]
+              });
+
+              // Remove other assignees if needed (optional - keeps assignment clean)
+              const assigneesToRemove = currentAssignees.filter(assignee => assignee !== targetAssignee);
+              if (assigneesToRemove.length > 0) {
+                console.log(`Removing previous assignees: ${assigneesToRemove.join(', ')}`);
+                await github.rest.issues.removeAssignees({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  assignees: assigneesToRemove
+                });
+              }
+
+              console.log(`Successfully assigned PR #${prNumber} to ${targetAssignee}`);
+
+              // Add a comment about the assignment
+              const assignmentComment = allPassed 
+                ? `🎯 **Auto-assigned to @${targetAssignee}** - All checks passed! This PR is ready for review and merge.`
+                : `🎯 **Auto-assigned to @${targetAssignee}** - Please address the failed checks and push new commits to re-trigger the workflow.`;
+
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: prNumber,
+                body: assignmentComment
+              });
+
+            } catch (error) {
+              console.error(`Error auto-assigning PR: ${error.message}`);
+              // Don't fail the workflow if assignment fails
+              console.log('Assignment failed but workflow will continue');
+            }
+
       # Use GitHub API to explicitly report status (works better for Dependabot PRs)
       - name: Explicitly report final status
         if: ${{ always() }}
@@ -761,8 +857,10 @@ jobs:
 
               if (allPassed) {
                 content += `✅ **All checks have passed!** This PR is ready for review and merge.\n\n`;
+                content += `🎯 **Auto-assigned to @${context.payload.repository.owner.login}** for review and merge approval.\n\n`;
               } else {
                 content += `❌ **Some checks have failed.** Please review the details below and address any issues.\n\n`;
+                content += `🎯 **Auto-assigned to PR author** to address the failed checks.\n\n`;
               }
 
               // Helper function to get status icon and details for a check result
