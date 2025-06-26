@@ -39,6 +39,7 @@
 - Added a bunch of missing time zones which have slight variations of the normal ones
 - Bump `axios` to v1.10.0
 - Removed `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
+- Bump dev dependency `eslint-plugin-import` from 2.31.0 to 2.32.0
 
 ---
 
