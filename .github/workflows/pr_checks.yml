@@ -304,13 +304,20 @@ jobs:
             gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
             echo "should_block=true" >> $GITHUB_OUTPUT
             echo "❌ Changelog update is required for this PR"
-            exit 1
+            # Set step failure but don't exit to preserve outputs
+            echo "::error::Changelog update is required - job will fail but outputs are preserved"
           else
             echo "User PR detected with changelog changes - allowing"
             echo "should_block=false" >> $GITHUB_OUTPUT
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fail job if changelog update required
+        if: steps.check-status.outputs.should_block == 'true'
+        run: |
+          echo "::error::Changelog update is required for this PR"
+          exit 1
 
   #################################################
   # CODE QUALITY CHECKS
@@ -527,46 +534,40 @@ jobs:
           echo "::error::One or more checks failed - blocking merge"
           exit 1
 
-      - name: Check for skipped jobs (non-bot PR)
-        if: ${{ steps.set-status.outputs.is_bot == 'false' }}
+      - name: Check for skipped jobs
         env:
-          QUALITY_STATUS: ${{ needs.quality-lint-format-user.result }}
-          MILESTONE_STATUS: ${{ needs.metadata-milestone-check.result }}
-        run: |
-          if [[ "$QUALITY_STATUS" == "skipped" || "$MILESTONE_STATUS" == "skipped" ]]; then
-            echo "::error::Required checks were skipped - blocking merge"
-            echo "⚠️ Required checks were skipped - blocking merge"
-            
-            if [[ "$QUALITY_STATUS" == "skipped" ]]; then
-              echo "- ⚠️ Code quality checks were skipped"
-            fi
-            
-            if [[ "$MILESTONE_STATUS" == "skipped" ]]; then
-              echo "- ⚠️ Milestone checks were skipped"
-            fi
-            
-            exit 1
-          fi
-
-      - name: Check for skipped jobs (bot PR)
-        if: ${{ steps.set-status.outputs.is_bot == 'true' }}
-        env:
+          USER_QUALITY_STATUS: ${{ needs.quality-lint-format-user.result }}
           BOT_QUALITY_STATUS: ${{ needs.quality-lint-format-bot.result }}
           MILESTONE_STATUS: ${{ needs.metadata-milestone-check.result }}
+          IS_BOT: ${{ steps.set-status.outputs.is_bot }}
         run: |
-          if [[ "$BOT_QUALITY_STATUS" == "skipped" || "$MILESTONE_STATUS" == "skipped" ]]; then
-            echo "::error::Required checks were skipped - blocking merge"
-            echo "⚠️ Required checks were skipped - blocking merge"
+          # Function to check for skipped jobs and report errors
+          check_skipped_jobs() {
+            local quality_status="$1"
+            local quality_label="$2"
+            local milestone_status="$3"
             
-            if [[ "$BOT_QUALITY_STATUS" == "skipped" ]]; then
-              echo "- ⚠️ Bot code quality checks were skipped"
+            if [[ "$quality_status" == "skipped" || "$milestone_status" == "skipped" ]]; then
+              echo "::error::Required checks were skipped - blocking merge"
+              echo "⚠️ Required checks were skipped - blocking merge"
+              
+              if [[ "$quality_status" == "skipped" ]]; then
+                echo "- ⚠️ $quality_label were skipped"
+              fi
+              
+              if [[ "$milestone_status" == "skipped" ]]; then
+                echo "- ⚠️ Milestone checks were skipped"
+              fi
+              
+              exit 1
             fi
-            
-            if [[ "$MILESTONE_STATUS" == "skipped" ]]; then
-              echo "- ⚠️ Milestone checks were skipped"
-            fi
-            
-            exit 1
+          }
+
+          # Check based on PR type
+          if [[ "$IS_BOT" == "true" ]]; then
+            check_skipped_jobs "$BOT_QUALITY_STATUS" "Bot code quality checks" "$MILESTONE_STATUS"
+          else
+            check_skipped_jobs "$USER_QUALITY_STATUS" "Code quality checks" "$MILESTONE_STATUS"
           fi
 
       - name: Success message
