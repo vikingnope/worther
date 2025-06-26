@@ -39,6 +39,7 @@
 - Added a bunch of missing time zones which have slight variations of the normal ones
 - Bump `axios` to v1.10.0
 - Removed `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
+- Bump dev dependency `prettier` from 3.5.3 to 3.6.1
 
 ---
 
