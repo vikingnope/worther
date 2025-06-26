@@ -39,6 +39,7 @@
 - Added a bunch of missing time zones which have slight variations of the normal ones
 - Bump `axios` to v1.10.0
 - Removed `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
+- Bump dev dependency `@vitejs/plugin-react` from 4.5.2 to 4.6.0
 
 ---
 
