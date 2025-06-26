@@ -759,6 +759,17 @@ jobs:
                 content += `❌ **Some checks have failed.** Please review the details below and address any issues.\n\n`;
               }
 
+              // Helper function to get status icon and details for a check result
+              function getCheckStatus(result, successDetails, failureDetails, warningDetails = null) {
+                const statusMap = new Map([
+                  ['success', { statusIcon: '✅', details: successDetails }],
+                  ['failure', { statusIcon: '❌', details: failureDetails }],
+                  ['default', { statusIcon: '⚠️', details: warningDetails || 'Check did not complete' }]
+                ]);
+                
+                return statusMap.get(result) || statusMap.get('default');
+              }
+
               // Add detailed status table
               content += `### 📊 Check Results\n\n`;
               content += `| Check | Status | Details |\n`;
@@ -767,63 +778,73 @@ jobs:
               // Author check results
               if (jobResults.initialAuthorCheckPr !== 'skipped') {
                 const authorType = isPrBot ? 'Bot' : 'User';
-                const statusIcon = jobResults.initialAuthorCheckPr === 'success' ? '✅' : '❌';
+                const { statusIcon } = getCheckStatus(jobResults.initialAuthorCheckPr, '', '');
                 content += `| 🔍 Author Detection (PR) | ${statusIcon} ${capitalizeStatus(jobResults.initialAuthorCheckPr)} | Detected ${authorType} PR |\n`;
               }
 
               if (jobResults.initialAuthorCheckManual !== 'skipped') {
                 const authorType = isManualBot ? 'Bot' : 'User';
-                const statusIcon = jobResults.initialAuthorCheckManual === 'success' ? '✅' : '❌';
+                const { statusIcon } = getCheckStatus(jobResults.initialAuthorCheckManual, '', '');
                 content += `| 🔍 Author Detection (Manual) | ${statusIcon} ${capitalizeStatus(jobResults.initialAuthorCheckManual)} | Detected ${authorType} PR |\n`;
               }
 
               // Code quality checks
               if (isBot && jobResults.qualityLintFormatBot !== 'skipped') {
-                const statusIcon = jobResults.qualityLintFormatBot === 'success' ? '✅' : jobResults.qualityLintFormatBot === 'failure' ? '❌' : '⚠️';
-                const details = jobResults.qualityLintFormatBot === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
+                const { statusIcon, details } = getCheckStatus(
+                  jobResults.qualityLintFormatBot,
+                  'Code quality checks passed',
+                  'Linting or formatting issues found'
+                );
                 content += `| 🧹 Code Quality (Bot) | ${statusIcon} ${capitalizeStatus(jobResults.qualityLintFormatBot)} | ${details} |\n`;
               }
 
               if (!isBot && jobResults.qualityLintFormatUser !== 'skipped') {
-                const statusIcon = jobResults.qualityLintFormatUser === 'success' ? '✅' : jobResults.qualityLintFormatUser === 'failure' ? '❌' : '⚠️';
-                const details = jobResults.qualityLintFormatUser === 'failure' ? 'Linting or formatting issues found' : 'Code quality checks passed';
+                const { statusIcon, details } = getCheckStatus(
+                  jobResults.qualityLintFormatUser,
+                  'Code quality checks passed',
+                  'Linting or formatting issues found'
+                );
                 content += `| 🧹 Code Quality (User) | ${statusIcon} ${capitalizeStatus(jobResults.qualityLintFormatUser)} | ${details} |\n`;
               }
 
               // Changelog checks
               if (isBot && jobResults.changelogUpdateDependabot !== 'skipped') {
-                const statusIcon = jobResults.changelogUpdateDependabot === 'success' ? '✅' : '❌';
-                const details = changelogUpdated ? 'Changelog automatically updated' : 'Changelog update failed or not applicable';
+                const { statusIcon, details } = getCheckStatus(
+                  jobResults.changelogUpdateDependabot,
+                  changelogUpdated ? 'Changelog automatically updated' : 'Not applicable',
+                  'Changelog update failed or not applicable'
+                );
                 content += `| 📝 Changelog Update (Bot) | ${statusIcon} ${capitalizeStatus(jobResults.changelogUpdateDependabot)} | ${details} |\n`;
               }
 
               if (!isBot) {
                 if (jobResults.changelogCheckUser !== 'skipped') {
-                  const statusIcon = jobResults.changelogCheckUser === 'success' ? '✅' : '❌';
-                  const details = changelogHasChanges ? 'Changelog changes detected' : 'No changelog changes found';
+                  const { statusIcon, details } = getCheckStatus(
+                    jobResults.changelogCheckUser,
+                    changelogHasChanges ? 'Changelog changes detected' : 'No changelog changes found',
+                    'Changelog check failed'
+                  );
                   content += `| 📋 Changelog Check (User) | ${statusIcon} ${capitalizeStatus(jobResults.changelogCheckUser)} | ${details} |\n`;
                 }
                 
                 if (jobResults.changelogEnforceUser !== 'skipped') {
-                  let statusIcon, details;
-                  if (jobResults.changelogEnforceUser === 'failure') {
-                    statusIcon = '❌';
-                    details = 'Changelog update required - please update CHANGELOG.md';
-                  } else if (jobResults.changelogEnforceUser === 'success') {
-                    statusIcon = '✅';
-                    details = 'Changelog requirement satisfied';
-                  } else {
-                    statusIcon = '⚠️';
-                    details = 'Changelog enforcement check did not complete';
-                  }
+                  const { statusIcon, details } = getCheckStatus(
+                    jobResults.changelogEnforceUser,
+                    'Changelog requirement satisfied',
+                    'Changelog update required - please update CHANGELOG.md',
+                    'Changelog enforcement check did not complete'
+                  );
                   content += `| ✅ Changelog Enforcement | ${statusIcon} ${capitalizeStatus(jobResults.changelogEnforceUser)} | ${details} |\n`;
                 }
               }
 
               // Milestone check
               if (jobResults.metadataMilestoneCheck !== 'skipped') {
-                const statusIcon = jobResults.metadataMilestoneCheck === 'success' ? '✅' : '❌';
-                const details = jobResults.metadataMilestoneCheck === 'success' ? 'Milestone added or verified' : 'Failed to add milestone';
+                const { statusIcon, details } = getCheckStatus(
+                  jobResults.metadataMilestoneCheck,
+                  'Milestone added or verified',
+                  'Failed to add milestone'
+                );
                 content += `| 🏷️ Milestone Check | ${statusIcon} ${capitalizeStatus(jobResults.metadataMilestoneCheck)} | ${details} |\n`;
               }
 
