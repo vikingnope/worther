@@ -518,7 +518,7 @@ jobs:
             fi
             if [[ "${{ needs.changelog-check-user.result }}" == "failure" ]]; then
               echo "- ❌ Changelog check failed"
-            fi          
+            fi
             if [[ "${{ needs.changelog-enforce-user.result }}" == "failure" ]]; then
             echo "- ❌ Changelog enforcement failed - changelog update required"
           fi
