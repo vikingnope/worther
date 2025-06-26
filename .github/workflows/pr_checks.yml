@@ -189,6 +189,7 @@ jobs:
           TO_VERSION="${{ steps.extract-info.outputs.to_version }}"
 
           if [ ! -f "$CHANGELOG_FILE" ]; then
+            echo "::error::CHANGELOG.md not found at $CHANGELOG_FILE"
             echo "Error: CHANGELOG.md not found at $CHANGELOG_FILE"
             exit 1
           fi
@@ -297,6 +298,7 @@ jobs:
 
           # For non-bot PRs, check if changelog was updated
           if [[ "$HAS_CHANGES" == "0" ]]; then
+            echo "::error::Changelog update is required for this PR"
             echo "User PR detected without changelog changes - blocking"
             gh label create "Changelog needed" --color FF0000 --description "Changelog update required" 2>/dev/null || true
             gh pr edit ${{ github.event.pull_request.number }} --add-label "Changelog needed"
@@ -522,6 +524,7 @@ jobs:
           fi
           fi
 
+          echo "::error::One or more checks failed - blocking merge"
           exit 1
 
       - name: Check for skipped jobs (non-bot PR)
@@ -531,6 +534,7 @@ jobs:
           MILESTONE_STATUS: ${{ needs.metadata-milestone-check.result }}
         run: |
           if [[ "$QUALITY_STATUS" == "skipped" || "$MILESTONE_STATUS" == "skipped" ]]; then
+            echo "::error::Required checks were skipped - blocking merge"
             echo "⚠️ Required checks were skipped - blocking merge"
             
             if [[ "$QUALITY_STATUS" == "skipped" ]]; then
@@ -551,6 +555,7 @@ jobs:
           MILESTONE_STATUS: ${{ needs.metadata-milestone-check.result }}
         run: |
           if [[ "$BOT_QUALITY_STATUS" == "skipped" || "$MILESTONE_STATUS" == "skipped" ]]; then
+            echo "::error::Required checks were skipped - blocking merge"
             echo "⚠️ Required checks were skipped - blocking merge"
             
             if [[ "$BOT_QUALITY_STATUS" == "skipped" ]]; then
