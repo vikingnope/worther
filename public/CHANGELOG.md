@@ -40,6 +40,7 @@
 - Bump `axios` to v1.10.0
 - Removed `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
 - Changed beach recommendations logic
+- Bump dependency `@emotion/styled` from 11.14.0 to 11.14.1
 
 ---
 
