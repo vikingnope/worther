@@ -3,7 +3,7 @@ description: 'Loads and provides bot detection patterns from centralized configu
 
 outputs:
   bot-patterns-script:
-    description: 'JavaScript code that defines bot detection functions'
+    description: 'JavaScript code that loads bot detection functions from saved config'
     value: ${{ steps.load-patterns.outputs.bot-patterns-script }}
 
 runs:
@@ -21,53 +21,34 @@ runs:
           exit 1
         fi
 
-        # Generate JavaScript code that creates the pattern arrays and helper functions
-        cat << 'EOF' > /tmp/bot-patterns.js
-        // Load bot patterns from configuration
+        # Copy config to a standard location for easy access
+        mkdir -p /tmp/bot-patterns
+        cp "$BOT_CONFIG_FILE" /tmp/bot-patterns/config.json
+
+        # Generate lightweight loader script with pattern validation
+        cat << 'EOF' > /tmp/bot-patterns-loader.js
         const fs = require('fs');
-        const path = require('path');
+        const config = JSON.parse(fs.readFileSync('/tmp/bot-patterns/config.json', 'utf8'));
 
-        const configPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'bot-patterns.json');
-        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-
-        // Create excluded bot patterns array
-        const excludedBotPatterns = config.excludedBotPatterns.map(p => new RegExp(p.pattern, p.flags));
-
-        // Create all bot patterns array (excluded + regular)
-        const allBotPatterns = [
-          ...excludedBotPatterns,
-          ...config.botPatterns.map(p => new RegExp(p.pattern, p.flags))
-        ];
-
-        // Helper functions for bot detection
-        function isBot(username) {
-          return allBotPatterns.some(pattern => pattern.test(username));
+        function validatePattern(patternObj, type) {
+          if (!patternObj.pattern || typeof patternObj.pattern !== 'string') return null;
+          if (patternObj.pattern.length > 200) { console.warn(`${type} pattern too long, skipping`); return null; }
+          try { return new RegExp(patternObj.pattern, patternObj.flags || ''); } 
+          catch (e) { console.warn(`Invalid ${type} pattern: ${patternObj.pattern}, skipping`); return null; }
         }
 
-        function isExcludedBot(username) {
-          return excludedBotPatterns.some(pattern => pattern.test(username));
-        }
-
-        function isDependabot(username) {
-          return /^dependabot(\[bot\])?$/i.test(username);
-        }
-
-        // Export for use in GitHub Actions scripts
-        if (typeof module !== 'undefined' && module.exports) {
-          module.exports = {
-            excludedBotPatterns,
-            allBotPatterns,
-            isBot,
-            isExcludedBot,
-            isDependabot
-          };
-        }
+        const excludedBotPatterns = (config.excludedBotPatterns || []).map(p => validatePattern(p, 'excluded')).filter(Boolean);
+        const botPatterns = (config.botPatterns || []).map(p => validatePattern(p, 'bot')).filter(Boolean);
+        const allBotPatterns = [...excludedBotPatterns, ...botPatterns];
+        function isBot(username) { return allBotPatterns.some(pattern => pattern.test(username)); }
+        function isExcludedBot(username) { return excludedBotPatterns.some(pattern => pattern.test(username)); }
+        function isDependabot(username) { return /^dependabot(\[bot\])?$/i.test(username); }
+        if (typeof module !== 'undefined' && module.exports) { module.exports = { excludedBotPatterns, allBotPatterns, isBot, isExcludedBot, isDependabot }; }
         EOF
 
-        # Read the generated JavaScript and encode it for GitHub Actions output
-        BOT_PATTERNS_SCRIPT=$(cat /tmp/bot-patterns.js)
+        # Set the compact loader script as output
+        BOT_PATTERNS_SCRIPT=$(cat /tmp/bot-patterns-loader.js)
 
-        # Set the output using the GitHub Actions format for multiline strings
         {
           echo "bot-patterns-script<<BOT_PATTERNS_EOF"
           echo "$BOT_PATTERNS_SCRIPT"
