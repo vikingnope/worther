@@ -182,58 +182,42 @@ export const WeatherIcons = memo(props => {
 WeatherIcons.displayName = 'WeatherIcons';
 
 export const TimeZoneShow = memo(props => {
-  const timeZoneMap = {
-    '-43200': 'GMT-12',
-    '-39600': 'GMT-11',
-    '-36000': 'GMT-10',
-    '-34200': 'GMT-9:30',
-    '-32400': 'GMT-9',
-    '-28800': 'GMT-8',
-    '-25200': 'GMT-7',
-    '-21600': 'GMT-6',
-    '-18000': 'GMT-5',
-    '-16200': 'GMT-4:30',
-    '-14400': 'GMT-4',
-    '-12600': 'GMT-3:30',
-    '-10800': 'GMT-3',
-    '-9000': 'GMT-2:30',
-    '-7200': 'GMT-2',
-    '-3600': 'GMT-1',
+  const formatTimezone = useMemo(() => {
+    // Error handling for invalid inputs
+    if (props.timeZone === undefined || props.timeZone === null) {
+      return 'GMT';
+    }
 
-    0: 'GMT',
+    const offsetSeconds = parseInt(props.timeZone);
 
-    3600: 'GMT+1',
-    7200: 'GMT+2',
-    10800: 'GMT+3',
-    12600: 'GMT+3:30',
-    14400: 'GMT+4',
-    16200: 'GMT+4:30',
-    18000: 'GMT+5',
-    19800: 'GMT+5:30',
-    20700: 'GMT+5:45',
-    21600: 'GMT+6',
-    23400: 'GMT+6:30',
-    24300: 'GMT+6:45',
-    25200: 'GMT+7',
-    28800: 'GMT+8',
-    30600: 'GMT+8:30',
-    31500: 'GMT+8:45',
-    32400: 'GMT+9',
-    34200: 'GMT+9:30',
-    35100: 'GMT+9:45',
-    36000: 'GMT+10',
-    37800: 'GMT+10:30',
-    39600: 'GMT+11',
-    41400: 'GMT+11:30',
-    43200: 'GMT+12',
-    45000: 'GMT+12:30',
-    45900: 'GMT+12:45',
-    46800: 'GMT+13',
-    50400: 'GMT+14',
-    54000: 'GMT+15',
-  };
+    // Handle invalid parsing or extreme values
+    if (isNaN(offsetSeconds) || Math.abs(offsetSeconds) > 86400) {
+      console.warn(`Invalid timezone offset: ${props.timeZone}`);
+      return 'GMT';
+    }
 
-  return timeZoneMap[props.timeZone] || '';
+    // Handle GMT case
+    if (offsetSeconds === 0) {
+      return 'GMT';
+    }
+
+    // Calculate hours and minutes
+    const absOffsetSeconds = Math.abs(offsetSeconds);
+    const hours = Math.floor(absOffsetSeconds / 3600);
+    const minutes = Math.floor((absOffsetSeconds % 3600) / 60);
+
+    // Determine sign
+    const sign = offsetSeconds > 0 ? '+' : '-';
+
+    // Format the timezone string
+    if (minutes === 0) {
+      return `GMT${sign}${hours}`;
+    } else {
+      return `GMT${sign}${hours}:${minutes.toString().padStart(2, '0')}`;
+    }
+  }, [props.timeZone]);
+
+  return formatTimezone || '';
 });
 
 TimeZoneShow.displayName = 'TimeZoneShow';
