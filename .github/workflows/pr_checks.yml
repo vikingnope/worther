@@ -708,15 +708,38 @@ jobs:
 
               const prAuthor = prResponse.data.user.login;
               const currentAssignees = prResponse.data.assignees.map(assignee => assignee.login);
-              const repoOwner = context.payload.repository.owner.login; // Get repository owner dynamically
+              const repoOwnerLogin = context.payload.repository.owner.login;
+
+              // Check if the repository owner is an organization
+              let repoOwnerUser = null;
+              let isOrganization = false;
+
+              try {
+                const ownerResponse = await github.rest.users.getByUsername({
+                  username: repoOwnerLogin
+                });
+                isOrganization = ownerResponse.data.type === 'Organization';
+                console.log(`Repository owner ${repoOwnerLogin} is ${isOrganization ? 'an organization' : 'a user'}`);
+              } catch (ownerError) {
+                console.log(`Could not determine owner type for ${repoOwnerLogin}: ${ownerError.message}`);
+                // Assume it's a user if we can't determine
+                isOrganization = false;
+              }
 
               let targetAssignee;
               let assignmentReason;
 
               if (allPassed) {
-                // All checks passed - assign to repo owner for review
-                targetAssignee = repoOwner;
-                assignmentReason = 'All checks passed - ready for owner review';
+                if (isOrganization) {
+                  // For organization repos, assign to PR author since orgs can't be assigned
+                  targetAssignee = prAuthor;
+                  assignmentReason = 'All checks passed - assigned to PR author (org-owned repo)';
+                  console.log(`Repository is owned by organization ${repoOwnerLogin}, assigning to PR author instead`);
+                } else {
+                  // For user repos, assign to repo owner for review
+                  targetAssignee = repoOwnerLogin;
+                  assignmentReason = 'All checks passed - ready for owner review';
+                }
               } else {
                 // Some checks failed or had warnings - assign to PR author
                 targetAssignee = prAuthor;
@@ -753,10 +776,17 @@ jobs:
 
               console.log(`Successfully assigned PR #${prNumber} to ${targetAssignee}`);
 
-              // Add a comment about the assignment
-              const assignmentComment = allPassed 
-                ? `🎯 **Auto-assigned to @${targetAssignee}** - All checks passed! This PR is ready for review and merge.`
-                : `🎯 **Auto-assigned to @${targetAssignee}** - Please address the failed checks and push new commits to re-trigger the workflow.`;
+              // Add a comment about the assignment with organization-aware messaging
+              let assignmentComment;
+              if (allPassed) {
+                if (isOrganization) {
+                  assignmentComment = `🎯 **Auto-assigned to @${targetAssignee}** - All checks passed! This PR is ready for review and merge. (Note: Assigned to PR author since repository is organization-owned)`;
+                } else {
+                  assignmentComment = `🎯 **Auto-assigned to @${targetAssignee}** - All checks passed! This PR is ready for review and merge.`;
+                }
+              } else {
+                assignmentComment = `🎯 **Auto-assigned to @${targetAssignee}** - Please address the failed checks and push new commits to re-trigger the workflow.`;
+              }
 
               await github.rest.issues.createComment({
                 owner,
@@ -767,10 +797,28 @@ jobs:
 
             } catch (error) {
               console.error(`Error auto-assigning PR: ${error.message}`);
+              
+              // Provide more detailed error information
+              if (error.message.includes('Validation Failed')) {
+                console.error('Assignment validation failed - this often happens when trying to assign organizations or invalid users');
+                console.error('Full error details:', JSON.stringify(error.response?.data || error, null, 2));
+              }
+              
               // Don't fail the workflow if assignment fails
               console.log('Assignment failed but workflow will continue');
+              
+              // Try to add a comment explaining the assignment failure
+              try {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: `⚠️ **Auto-assignment failed** - Could not automatically assign this PR. Please manually assign as needed.`
+                });
+              } catch (commentError) {
+                console.error(`Could not add comment about assignment failure: ${commentError.message}`);
+              }
             }
-
       # Use GitHub API to explicitly report status (works better for Dependabot PRs)
       - name: Explicitly report final status
         if: ${{ always() }}

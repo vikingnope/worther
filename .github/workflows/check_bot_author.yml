@@ -26,6 +26,10 @@ jobs:
   check-bot-author:
     name: 🔍 Check PR Author
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     outputs:
       is_bot: ${{ steps.check-bot.outputs.is_bot }}
       is_dependabot: ${{ steps.check-bot.outputs.is_dependabot }}
@@ -40,9 +44,27 @@ jobs:
       - name: Check if PR author is a bot
         id: check-bot
         uses: actions/github-script@v7.0.1
+        env:
+          BOTPATTERNS_JSON: ${{ steps.load-patterns.outputs.bot-patterns-json }}
         with:
           script: |
-            ${{ steps.load-patterns.outputs.bot-patterns-script }}
+            // Parse bot patterns from environment variable instead of re-reading file
+            const botPatterns = JSON.parse(process.env.BOTPATTERNS_JSON);
+
+            // Helper functions using the parsed patterns
+            function isBot(username) {
+              return botPatterns.bot_patterns.some(pattern => 
+                new RegExp(pattern, 'i').test(username)
+              );
+            }
+
+            function isExcludedBot(username) {
+              return botPatterns.excluded_bots.includes(username);
+            }
+
+            function isDependabot(username) {
+              return botPatterns.dependabot_names.includes(username);
+            }
 
             let prAuthor;
             let prNumber;
