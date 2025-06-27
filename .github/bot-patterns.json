@@ -1,0 +1,51 @@
+{
+  "excludedBotPatterns": [
+    {
+      "pattern": "^coderabbit(ai)?(-[a-z0-9]+)?$",
+      "flags": "i",
+      "description": "CodeRabbit variants (coderabbitai, coderabbit-ai, etc.)"
+    },
+    {
+      "pattern": "^vercel(\\[bot\\])?$",
+      "flags": "i",
+      "description": "Vercel bot"
+    }
+  ],
+  "botPatterns": [
+    {
+      "pattern": "^dependabot(\\[bot\\])?$",
+      "flags": "i",
+      "description": "Dependabot (dependabot, dependabot[bot])"
+    },
+    {
+      "pattern": "^github-actions(\\[bot\\])?$",
+      "flags": "i",
+      "description": "GitHub Actions bot"
+    },
+    {
+      "pattern": "^renovate(\\[bot\\])?$",
+      "flags": "i",
+      "description": "Renovate bot"
+    },
+    {
+      "pattern": "^greenkeeper(\\[bot\\])?$",
+      "flags": "i",
+      "description": "Greenkeeper bot"
+    },
+    {
+      "pattern": "^snyk-bot$",
+      "flags": "i",
+      "description": "Snyk security bot"
+    },
+    {
+      "pattern": "\\[bot\\]$",
+      "flags": "i",
+      "description": "Generic [bot] suffix pattern"
+    },
+    {
+      "pattern": "-bot$",
+      "flags": "i",
+      "description": "Generic -bot suffix pattern"
+    }
+  ]
+}

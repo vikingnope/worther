@@ -31,29 +31,24 @@ jobs:
       should_run: ${{ steps.check-command.outputs.should_run }}
       pr_number: ${{ steps.get-pr.outputs.pr_number }}
     steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Load bot patterns
+        id: load-patterns
+        uses: ./.github/actions/load-bot-patterns
+
       - name: Check for command and owner
         id: check-command
         uses: actions/github-script@v7.0.1
         with:
           script: |
+            ${{ steps.load-patterns.outputs.bot-patterns-script }}
+
             const comment = context.payload.comment.body;
             const commenter = context.payload.comment.user.login;
 
-            // Define bot detection patterns - more maintainable than mixed approaches
-            const botPatterns = [
-              /^coderabbit(ai)?(-[a-z0-9]+)?$/i,     // CodeRabbit variants (coderabbitai, coderabbit-ai, etc.)
-              /^vercel(\[bot\])?$/i,                 // Vercel bot
-              /^dependabot(\[bot\])?$/i,             // Dependabot (dependabot, dependabot[bot])
-              /^github-actions(\[bot\])?$/i,         // GitHub Actions bot
-              /^renovate(\[bot\])?$/i,               // Renovate bot
-              /^greenkeeper(\[bot\])?$/i,            // Greenkeeper bot
-              /^snyk-bot$/i,                         // Snyk security bot
-              /\[bot\]$/i,                           // Generic [bot] suffix pattern
-              /-bot$/i,                              // Generic -bot suffix pattern
-            ];
-
-            // Check if commenter matches any bot pattern
-            const isBotCommenter = botPatterns.some(pattern => pattern.test(commenter));
+            // Use the centralized bot detection function
+            const isBotCommenter = isBot(commenter);
 
             if (isBotCommenter) {
               console.log(`Ignoring comment from known bot account: ${commenter}`);

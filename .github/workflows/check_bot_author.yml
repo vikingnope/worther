@@ -31,11 +31,19 @@ jobs:
       is_dependabot: ${{ steps.check-bot.outputs.is_dependabot }}
       is_excluded_bot: ${{ steps.check-bot.outputs.is_excluded_bot }}
     steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Load bot patterns
+        id: load-patterns
+        uses: ./.github/actions/load-bot-patterns
+
       - name: Check if PR author is a bot
         id: check-bot
         uses: actions/github-script@v7.0.1
         with:
           script: |
+            ${{ steps.load-patterns.outputs.bot-patterns-script }}
+
             let prAuthor;
             let prNumber;
 
@@ -70,45 +78,23 @@ jobs:
               }
             }
 
-            // Define excluded bot patterns (bots that should cause workflow to skip entirely)
-            const excludedBotPatterns = [
-              /^coderabbit(ai)?(-[a-z0-9]+)?$/i,     // CodeRabbit variants
-              /^vercel(\[bot\])?$/i,                 // Vercel bot
-            ];
-
-            // Define all bot patterns (including excluded ones)
-            const botPatterns = [
-              ...excludedBotPatterns,                // Excluded bots
-              /^dependabot(\[bot\])?$/i,             // Dependabot (dependabot, dependabot[bot])
-              /^github-actions(\[bot\])?$/i,         // GitHub Actions bot
-              /^renovate(\[bot\])?$/i,               // Renovate bot
-              /^greenkeeper(\[bot\])?$/i,            // Greenkeeper bot
-              /^snyk-bot$/i,                         // Snyk security bot
-              /\[bot\]$/i,                           // Generic [bot] suffix pattern
-              /-bot$/i,                              // Generic -bot suffix pattern
-            ];
-
-            // Check if the author matches any bot pattern
-            const isBot = botPatterns.some(pattern => pattern.test(prAuthor));
-
-            // Check if the author is an excluded bot
-            const isExcludedBot = excludedBotPatterns.some(pattern => pattern.test(prAuthor));
-
-            // Check specifically for Dependabot
-            const isDependabot = /^dependabot(\[bot\])?$/i.test(prAuthor);
+            // Use the centralized bot detection functions
+            const isBotResult = isBot(prAuthor);
+            const isExcludedBotResult = isExcludedBot(prAuthor);
+            const isDependabotResult = isDependabot(prAuthor);
 
             // Set outputs
-            core.setOutput('is_bot', isBot.toString());
-            core.setOutput('is_dependabot', isDependabot.toString());
-            core.setOutput('is_excluded_bot', isExcludedBot.toString());
+            core.setOutput('is_bot', isBotResult.toString());
+            core.setOutput('is_dependabot', isDependabotResult.toString());
+            core.setOutput('is_excluded_bot', isExcludedBotResult.toString());
 
             console.log(`PR #${prNumber} Author: ${prAuthor}`);
-            console.log(`Is Bot: ${isBot}`);
-            console.log(`Is Dependabot: ${isDependabot}`);
-            console.log(`Is Excluded Bot: ${isExcludedBot}`);
+            console.log(`Is Bot: ${isBotResult}`);
+            console.log(`Is Dependabot: ${isDependabotResult}`);
+            console.log(`Is Excluded Bot: ${isExcludedBotResult}`);
 
             // If this is an excluded bot, create a comment and exit gracefully
-            if (isExcludedBot) {
+            if (isExcludedBotResult) {
               console.log(`Detected excluded bot: ${prAuthor}. Workflow will be skipped.`);
               
               try {
