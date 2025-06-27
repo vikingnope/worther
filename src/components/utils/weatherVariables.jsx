@@ -182,10 +182,19 @@ export const WeatherIcons = memo(props => {
 WeatherIcons.displayName = 'WeatherIcons';
 
 export const TimeZoneShow = memo(props => {
-  console.log(`TimeZoneShow: ${props.timeZone}`);
-
   const formatTimezone = useMemo(() => {
+    // Error handling for invalid inputs
+    if (props.timeZone === undefined || props.timeZone === null) {
+      return 'GMT';
+    }
+
     const offsetSeconds = parseInt(props.timeZone);
+
+    // Handle invalid parsing or extreme values
+    if (isNaN(offsetSeconds) || Math.abs(offsetSeconds) > 86400) {
+      console.warn(`Invalid timezone offset: ${props.timeZone}`);
+      return 'GMT';
+    }
 
     // Handle GMT case
     if (offsetSeconds === 0) {
