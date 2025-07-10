@@ -83,7 +83,7 @@ importers:
         version: 10.1.5(eslint@9.29.0(jiti@2.4.2))
       eslint-import-resolver-alias:
         specifier: ^1.1.2
-        version: 1.1.2(eslint-plugin-import@2.31.0(eslint@9.27.0(jiti@2.4.2)))
+        version: 1.1.2(eslint-plugin-import@2.31.0(eslint@9.29.0(jiti@2.4.2)))
       eslint-plugin-import:
         specifier: ^2.31.0
         version: 2.31.0(eslint@9.29.0(jiti@2.4.2))
@@ -3581,9 +3581,9 @@ snapshots:
     dependencies:
       eslint: 9.29.0(jiti@2.4.2)
 
-  eslint-import-resolver-alias@1.1.2(eslint-plugin-import@2.31.0(eslint@9.27.0(jiti@2.4.2))):
+  eslint-import-resolver-alias@1.1.2(eslint-plugin-import@2.31.0(eslint@9.29.0(jiti@2.4.2))):
     dependencies:
-      eslint-plugin-import: 2.31.0(eslint@9.27.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(eslint@9.29.0(jiti@2.4.2))
 
   eslint-import-resolver-node@0.3.9:
     dependencies:
