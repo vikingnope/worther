@@ -377,18 +377,26 @@ export default function Recommendations() {
         } else if (wind.speed >= 0 && data.length > 0) {
           for (const item of data) {
             let suitableObj2 = '';
-            let windDegreesEndSolution = item.degreesEnd;
+            const degreesStart = parseInt(item.degreesStart);
+            const degreesEnd = parseInt(item.degreesEnd);
+            const windDegrees = wind.degrees;
 
-            if (wind.degrees >= 210 && item.degreesStart >= 210 && item.degreesEnd <= 50) {
-              windDegreesEndSolution = item.degreesEnd + 360;
-            }
+            // Check if the range crosses the 0/360 boundary
+            const crossesBoundary = degreesEnd < degreesStart;
 
-            if (wind.degrees >= item.degreesStart && wind.degrees <= windDegreesEndSolution) {
-              suitableObj2 = 'Unsuitable';
+            let isWindInUnsuitableRange = false;
+
+            if (crossesBoundary) {
+              // Range crosses 0/360 boundary (e.g., 340-10 means 340-360 OR 0-10)
+              // Wind is unsuitable if it's >= degreesStart OR <= degreesEnd
+              isWindInUnsuitableRange = windDegrees >= degreesStart || windDegrees <= degreesEnd;
             } else {
-              suitableObj2 = 'Recommended';
+              // Normal range that doesn't cross boundary (e.g., 180-230)
+              // Wind is unsuitable if it's between degreesStart and degreesEnd
+              isWindInUnsuitableRange = windDegrees >= degreesStart && windDegrees <= degreesEnd;
             }
 
+            suitableObj2 = isWindInUnsuitableRange ? 'Unsuitable' : 'Recommended';
             newSuitability.push(suitableObj2);
           }
         }

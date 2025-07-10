@@ -16,14 +16,11 @@
 - Moved menuBar to mapElements
 - Added trim to cities in weather submits
 - Added ESLint & Prettier (Ignores `pnpm-lock.yaml`)
-- Updated `react-router-dom` to 7.5.2 to resolve security vulnerability
 - Removed coderabbit config and created workflow to auto-approve dependabot PRs and to approve PRs based on comment from repo owner
 - Updated dependabot to run daily
 - Removed redundant testing libraries
-- Bump `TailwindCSS` v4.1.4
 - Created workflow for dependabot to auto update changelog (adjusted PR title)
 - Enhanced auto-approver to not allow review again for nothing if already approved
-- Bump dependency `react-router-dom` from 7.5.2 to 7.5.3
 - Moved multiple workflows into one file for better workflow organisation
 - Convert issue templates to YAML from Markdown for better readability and configuration
 - Updated automatic changelog to wrap package versions in backticks
@@ -32,13 +29,18 @@
 - Added option to run PR check workflow with command by repo owner
 - Removed all old branding
 - Added day/night cycle layer
-- Bump `TailwindCSS` to v4.1.7
-- Bump `eslint` to v9.27.0
-- Bump `react-router-dom` to v7.6.1
+- Bump `TailwindCSS` to v4.1.10
+- Bump `eslint` to v9.29.0
+- Bump `react-router-dom` to v7.6.2
 - Bump `vite` to v6.3.5
-- Bump `@vitejs/plugin-react` to v4.5.0
+- Bump `@vitejs/plugin-react` to v4.5.2
 - Bump `eslint-config-prettier` to v10.1.5
 - Enhanced PR checker to resolve existing issues and automatically add a detailed PR comment with status
+- Added a bunch of missing time zones which have slight variations of the normal ones
+- Bump `axios` to v1.10.0
+- Removed `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
+- Changed beach recommendations logic to not be hard coded
+- Changed time zone logic to not be hard coded
 
 ---
 

@@ -183,38 +183,42 @@ export const WeatherIcons = memo(props => {
 WeatherIcons.displayName = 'WeatherIcons';
 
 export const TimeZoneShow = memo(props => {
-  const timeZoneMap = {
-    0: 'GMT',
-    '-3600': 'GMT-1',
-    '-7200': 'GMT-2',
-    '-10800': 'GMT-3',
-    '-14400': 'GMT-4',
-    '-18000': 'GMT-5',
-    '-21600': 'GMT-6',
-    '-25200': 'GMT-7',
-    '-28800': 'GMT-8',
-    '-32400': 'GMT-9',
-    '-36000': 'GMT-10',
-    '-39600': 'GMT-11',
-    '-43200': 'GMT-12',
-    3600: 'GMT+1',
-    7200: 'GMT+2',
-    10800: 'GMT+3',
-    14400: 'GMT+4',
-    18000: 'GMT+5',
-    19800: 'GMT+5:30',
-    21600: 'GMT+6',
-    25200: 'GMT+7',
-    28800: 'GMT+8',
-    32400: 'GMT+9',
-    36000: 'GMT+10',
-    39600: 'GMT+11',
-    43200: 'GMT+12',
-    46800: 'GMT+13',
-    50400: 'GMT+14',
-  };
+  const formatTimezone = useMemo(() => {
+    // Error handling for invalid inputs
+    if (props.timeZone === undefined || props.timeZone === null) {
+      return 'GMT';
+    }
 
-  return timeZoneMap[props.timeZone] || '';
+    const offsetSeconds = parseInt(props.timeZone);
+
+    // Handle invalid parsing or extreme values
+    if (isNaN(offsetSeconds) || Math.abs(offsetSeconds) > 86400) {
+      console.warn(`Invalid timezone offset: ${props.timeZone}`);
+      return 'GMT';
+    }
+
+    // Handle GMT case
+    if (offsetSeconds === 0) {
+      return 'GMT';
+    }
+
+    // Calculate hours and minutes
+    const absOffsetSeconds = Math.abs(offsetSeconds);
+    const hours = Math.floor(absOffsetSeconds / 3600);
+    const minutes = Math.floor((absOffsetSeconds % 3600) / 60);
+
+    // Determine sign
+    const sign = offsetSeconds > 0 ? '+' : '-';
+
+    // Format the timezone string
+    if (minutes === 0) {
+      return `GMT${sign}${hours}`;
+    } else {
+      return `GMT${sign}${hours}:${minutes.toString().padStart(2, '0')}`;
+    }
+  }, [props.timeZone]);
+
+  return formatTimezone || '';
 });
 
 TimeZoneShow.displayName = 'TimeZoneShow';
