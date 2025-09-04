@@ -18,7 +18,7 @@
     "react-markdown": "^10.1.0",
     "react-papaparse": "^4.4.0",
     "react-router-dom": "^7.6.2",
-    "react-select": "^5.10.1",
+    "react-select": "^5.10.2",
     "react-select-country-list": "^2.2.3",
     "remark-gfm": "^4.0.1"
   },
