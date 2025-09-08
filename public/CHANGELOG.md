@@ -49,6 +49,7 @@
 - Bump `@tailwindcss/vite` to v4.1.12
 - Bump `eslint-plugin-import` to v2.32.0
 - Bump `prettier` to v3.6.2
+- Bump dev dependency `eslint` from 9.34.0 to 9.35.0
 
 ---
 
