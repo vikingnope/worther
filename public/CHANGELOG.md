@@ -29,15 +29,15 @@
 - Added option to run PR check workflow with command by repo owner
 - Removed all old branding
 - Added day/night cycle layer
-- Bump `tailwindcss` to v4.1.12
-- Bump `eslint` to v9.34.0
-- Bump `react-router-dom` to v7.8.2
-- Bump `vite` to v7.1.4
+- Bump `tailwindcss` to v4.1.13
+- Bump `eslint` to v9.35.0
+- Bump `react-router-dom` to v7.9.1
+- Bump `vite` to v7.1.5
 - Bump `@vitejs/plugin-react` to v5.0.2
 - Bump `eslint-config-prettier` to v10.1.8
 - Enhanced PR checker to resolve existing issues and automatically add a detailed PR comment with status
 - Added a bunch of missing time zones which have slight variations of the normal ones
-- Bump `axios` to v1.11.0
+- Bump `axios` to v1.12.2
 - Removed `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
 - Changed beach recommendations logic to not be hard coded
 - Changed time zone logic to not be hard coded
@@ -45,8 +45,8 @@
 - Bump `react` to v19.1.1
 - Bump `react-dom` to v19.1.1
 - Bump `react-select` to v5.10.2
-- Bump `@eslint/js` to v9.34.0
-- Bump `@tailwindcss/vite` to v4.1.12
+- Bump `@eslint/js` to v9.35.0
+- Bump `@tailwindcss/vite` to v4.1.13
 - Bump `eslint-plugin-import` to v2.32.0
 - Bump `prettier` to v3.6.2
 
