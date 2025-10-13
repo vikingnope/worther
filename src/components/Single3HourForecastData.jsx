@@ -2,7 +2,8 @@ import axios from 'axios';
 import { useEffect, useState, useMemo, memo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ShowWeather, SunriseSunsetTimes } from '@utils/weatherVariables';
+import { SunriseSunsetTimes } from '@components/weather/helpers/weatherHelpers';
+import { ShowWeather } from '@components/weather/WeatherDisplay';
 
 export const SingleThreeHourForecastData = memo(() => {
   const { index, lat, lon } = useParams();
@@ -125,6 +126,7 @@ export const SingleThreeHourForecastData = memo(() => {
       connectionError={connectionError}
       mainWeather={weather.mainWeather}
       description={weather.description}
+      weatherId={weather.weatherId}
       name={location.name}
       country={location.country}
       temperature={weather.temperature}

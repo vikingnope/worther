@@ -4,9 +4,9 @@ import { FaMapMarkedAlt, FaCloudSunRain, FaListUl, FaInfoCircle } from 'react-ic
 import { MdLocationOff } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { WeatherPopupContent } from '@components/weather/WeatherDisplay';
 import { Footer } from '@utils/footer';
 import { Header } from '@utils/header';
-import { WeatherPopupContent } from '@utils/weatherVariables';
 
 const SITE_MAP = [
   {

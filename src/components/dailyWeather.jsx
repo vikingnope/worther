@@ -5,17 +5,16 @@ import { FaArrowLeft } from 'react-icons/fa6';
 import { IoWarningOutline } from 'react-icons/io5';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Footer } from '@utils/footer';
-import { Header } from '@utils/header';
 import {
-  WeatherIcons,
-  WindDirection,
-  VisibilityDesc,
-  WindForce,
   TimeZoneShow,
   SunriseSunsetTimes,
-  WindArrow,
-} from '@utils/weatherVariables';
+  VisibilityDesc,
+  WindDirection,
+  WindForce,
+} from '@components/weather/helpers/weatherHelpers';
+import { WeatherIcons, WindArrow } from '@components/weather/WeatherIcons';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
 
 // Weather phenomena types for consistent tracking
 const WEATHER_PHENOMENA = {

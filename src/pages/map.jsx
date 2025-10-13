@@ -11,12 +11,12 @@ import {
   HybridLayer,
   DayNightLayer,
 } from '@components/layers';
+import { WeatherPopupContent } from '@components/weather/WeatherDisplay';
 import { useDeviceDetect } from '@hooks/useDeviceDetect';
 import useSettingsStore from '@stores/settingsStore';
 import { Footer } from '@utils/footer';
 import { Header } from '@utils/header';
 import { CustomZoomControl, CustomAttributionControl, MenuBar } from '@utils/mapElements';
-import { WeatherPopupContent } from '@utils/weatherVariables';
 
 // Custom component to style popups based on map mode
 const CustomPopupStyle = ({ theme }) => {

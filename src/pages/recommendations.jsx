@@ -9,13 +9,12 @@ import { TiWarningOutline } from 'react-icons/ti';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 
+import { WindDirection } from '@components/weather/helpers/weatherHelpers';
 import { useDeviceDetect } from '@hooks/useDeviceDetect';
 import beaches from '@resources/beaches.csv';
 import { Footer } from '@utils/footer';
 import { Header } from '@utils/header';
 import { CustomZoomControl, CustomAttributionControl } from '@utils/mapElements';
-import { WindDirection } from '@utils/weatherVariables';
-
 // Map configuration constants
 const MAP_CENTER = [35.940125, 14.374125];
 const DESKTOP_ZOOM = 11;
