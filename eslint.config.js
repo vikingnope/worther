@@ -56,6 +56,7 @@ export default [
         alias: {
           map: [
             ['@', './src'],
+            ['@config', './src/config'],
             ['@utils', './src/components/utils'],
             ['@components', './src/components'],
             ['@pages', './src/pages'],
