@@ -344,9 +344,8 @@ export const DailyWeatherData = memo(() => {
                         <div className="relative transform hover:scale-110 transition-transform duration-300">
                           <div className="h-[120px] flex items-center justify-center">
                             <WeatherIcons
-                              mainWeather={weather.weather.main}
+                              weatherId={weather.weather.id}
                               windSpeed={weather.windSpeed}
-                              description={weather.weather.description}
                               timeZone={times.timeZone}
                               sunriseHour={localSunriseSunsetTimes?.sunriseHour}
                               sunsetHour={localSunriseSunsetTimes?.sunsetHour}

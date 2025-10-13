@@ -48,90 +48,188 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Footer } from '@utils/footer';
 import { Header } from '@utils/header';
 
-// Weather icons mapping configuration
-const weatherIconsMap = {
-  night: {
-    windy: {
-      Clear: { icon: MdModeNight, sizeAdjust: 0 },
-      'scattered clouds': { icon: WiNightCloudyWindy, sizeAdjust: 20 },
-      'broken clouds': { icon: WiNightCloudyWindy, sizeAdjust: 20 },
-      'few clouds': { icon: WiNightCloudyWindy, sizeAdjust: 17 },
-      'overcast clouds': { icon: WiNightCloudyWindy, sizeAdjust: 17 },
-      'light rain': { icon: WiNightAltRainWind, sizeAdjust: 0 },
-      'heavy intensity rain': { icon: WiNightAltRainWind, sizeAdjust: 0 },
-      'moderate rain': { icon: WiNightAltRainWind, sizeAdjust: 0 },
-      'light intensity shower rain': { icon: WiNightAltRainWind, sizeAdjust: 0 },
-      Drizzle: { icon: WiNightAltRainWind, sizeAdjust: 0 },
-      'thunderstorm with light rain': { icon: WiNightAltStormShowers, sizeAdjust: 0 },
-      Fog: { icon: WiNightFog, sizeAdjust: 0 },
-      haze: { icon: WiNightFog, sizeAdjust: 0 },
-      mist: { icon: WiNightFog, sizeAdjust: 0 },
-      Snow: { icon: WiNightAltSnow, sizeAdjust: 0 },
-      Smoke: { icon: WiSmoke, sizeAdjust: 0 },
-      Dust: { icon: WiDust, sizeAdjust: 0 },
-    },
-    calm: {
-      Clear: { icon: MdModeNight, sizeAdjust: 0 },
-      'scattered clouds': { icon: WiNightAltPartlyCloudy, sizeAdjust: 30 },
-      'broken clouds': { icon: WiNightAltPartlyCloudy, sizeAdjust: 30 },
-      'few clouds': { icon: WiNightAltCloudy, sizeAdjust: 20 },
-      'overcast clouds': { icon: WiNightAltCloudy, sizeAdjust: 20 },
-      'light rain': { icon: WiNightAltRainMix, sizeAdjust: 0 },
-      'heavy intensity rain': { icon: WiNightAltRain, sizeAdjust: 0 },
-      'moderate rain': { icon: WiNightAltRain, sizeAdjust: 0 },
-      'light intensity shower rain': { icon: WiNightAltRain, sizeAdjust: 0 },
-      Drizzle: { icon: WiNightAltShowers, sizeAdjust: 0 },
-      'thunderstorm with light rain': { icon: WiNightAltStormShowers, sizeAdjust: 0 },
-      'thunderstorm with rain': { icon: WiNightAltStormShowers, sizeAdjust: 0 },
-      Fog: { icon: WiNightFog, sizeAdjust: 0 },
-      haze: { icon: WiNightFog, sizeAdjust: 0 },
-      mist: { icon: WiNightFog, sizeAdjust: 0 },
-      Snow: { icon: WiNightAltSnow, sizeAdjust: 0 },
-      Smoke: { icon: WiSmoke, sizeAdjust: 0 },
-      Dust: { icon: WiDust, sizeAdjust: 0 },
+// Weather icon configuration - declarative approach
+// Each condition defines codes and icons for all 4 states (night/day × windy/calm)
+// Reference: https://openweathermap.org/weather-conditions
+const WEATHER_CONDITIONS = [
+  // Thunderstorm (2xx)
+  {
+    codes: [200, 201, 202, 210, 211, 212, 221, 230, 231, 232],
+    icons: {
+      night: { windy: WiNightAltStormShowers, calm: WiNightAltStormShowers },
+      day: { windy: BsFillCloudLightningRainFill, calm: BsFillCloudLightningRainFill },
     },
   },
-  day: {
-    windy: {
-      Clear: { icon: TbWind, sizeAdjust: 0 },
-      'scattered clouds': { icon: WiDayCloudyWindy, sizeAdjust: 0 },
-      'broken clouds': { icon: WiDayCloudyWindy, sizeAdjust: 0 },
-      'few clouds': { icon: WiCloudyWindy, sizeAdjust: 20 },
-      'overcast clouds': { icon: WiCloudyWindy, sizeAdjust: 20 },
-      'light rain': { icon: WiDayRainWind, sizeAdjust: 0 },
-      'heavy intensity rain': { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
-      'moderate rain': { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
-      'light intensity shower rain': { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
-      Drizzle: { icon: BsFillCloudDrizzleFill, sizeAdjust: 0 },
-      'thunderstorm with light rain': { icon: BsFillCloudLightningRainFill, sizeAdjust: 0 },
-      Fog: { icon: BsCloudFog, sizeAdjust: 0 },
-      Snow: { icon: WiDaySnowWind, sizeAdjust: 0 },
-      haze: { icon: BsFillCloudHazeFill, sizeAdjust: 0 },
-      mist: { icon: TbMist, sizeAdjust: 0 },
-      Smoke: { icon: WiSmoke, sizeAdjust: 0 },
-      Dust: { icon: WiDust, sizeAdjust: 0 },
-    },
-    calm: {
-      Clear: { icon: BsFillSunFill, sizeAdjust: 0 },
-      'scattered clouds': { icon: BsFillCloudSunFill, sizeAdjust: 0 },
-      'broken clouds': { icon: BsFillCloudSunFill, sizeAdjust: 0 },
-      'few clouds': { icon: AiFillCloud, sizeAdjust: 0 },
-      'overcast clouds': { icon: BsFillCloudsFill, sizeAdjust: 0 },
-      'light rain': { icon: BsFillCloudRainFill, sizeAdjust: 0 },
-      'heavy intensity rain': { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
-      'moderate rain': { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
-      'light intensity shower rain': { icon: BsFillCloudRainHeavyFill, sizeAdjust: 0 },
-      Drizzle: { icon: BsFillCloudDrizzleFill, sizeAdjust: 0 },
-      'thunderstorm with light rain': { icon: BsFillCloudLightningRainFill, sizeAdjust: 0 },
-      Fog: { icon: BsCloudFog, sizeAdjust: 0 },
-      Snow: { icon: BsFillCloudSnowFill, sizeAdjust: 0 },
-      haze: { icon: BsFillCloudHazeFill, sizeAdjust: 0 },
-      mist: { icon: TbMist, sizeAdjust: 0 },
-      Smoke: { icon: WiSmoke, sizeAdjust: 0 },
-      Dust: { icon: WiDust, sizeAdjust: 0 },
+  // Light Drizzle (300-302)
+  {
+    codes: [300, 301, 302],
+    icons: {
+      night: { windy: WiNightAltRainWind, calm: WiNightAltShowers },
+      day: { windy: BsFillCloudDrizzleFill, calm: BsFillCloudDrizzleFill },
     },
   },
+  // Heavy Drizzle (310-321)
+  {
+    codes: [310, 311, 312, 313, 314, 321],
+    icons: {
+      night: { windy: WiNightAltRainWind, calm: WiNightAltRainMix },
+      day: { windy: BsFillCloudDrizzleFill, calm: BsFillCloudDrizzleFill },
+    },
+  },
+  // Light Rain (500)
+  {
+    codes: [500],
+    icons: {
+      night: { windy: WiNightAltRainWind, calm: WiNightAltRainMix },
+      day: { windy: WiDayRainWind, calm: BsFillCloudRainFill },
+    },
+  },
+  // Heavy Rain (501-531)
+  {
+    codes: [501, 502, 503, 504, 520, 521, 522, 531],
+    icons: {
+      night: { windy: WiNightAltRainWind, calm: WiNightAltRain },
+      day: { windy: BsFillCloudRainHeavyFill, calm: BsFillCloudRainHeavyFill },
+    },
+  },
+  // Freezing Rain (511)
+  {
+    codes: [511],
+    icons: {
+      night: { windy: WiNightAltSnow, calm: WiNightAltSnow },
+      day: { windy: WiDaySnowWind, calm: BsFillCloudSnowFill },
+    },
+  },
+  // Snow (6xx)
+  {
+    codes: [600, 601, 602, 611, 612, 613, 615, 616, 620, 621, 622],
+    icons: {
+      night: { windy: WiNightAltSnow, calm: WiNightAltSnow },
+      day: { windy: WiDaySnowWind, calm: BsFillCloudSnowFill },
+    },
+  },
+  // Mist (701)
+  {
+    codes: [701],
+    icons: {
+      night: { windy: WiNightFog, calm: WiNightFog },
+      day: { windy: TbMist, calm: TbMist },
+    },
+  },
+  // Smoke (711, 762)
+  {
+    codes: [711, 762],
+    icons: {
+      night: { windy: WiSmoke, calm: WiSmoke },
+      day: { windy: WiSmoke, calm: WiSmoke },
+    },
+  },
+  // Haze (721)
+  {
+    codes: [721],
+    icons: {
+      night: { windy: WiNightFog, calm: WiNightFog },
+      day: { windy: BsFillCloudHazeFill, calm: BsFillCloudHazeFill },
+    },
+  },
+  // Dust/Sand (731, 751, 761)
+  {
+    codes: [731, 751, 761],
+    icons: {
+      night: { windy: WiDust, calm: WiDust },
+      day: { windy: WiDust, calm: WiDust },
+    },
+  },
+  // Fog (741)
+  {
+    codes: [741],
+    icons: {
+      night: { windy: WiNightFog, calm: WiNightFog },
+      day: { windy: BsCloudFog, calm: BsCloudFog },
+    },
+  },
+  // Squall (771)
+  {
+    codes: [771],
+    icons: {
+      night: { windy: WiNightCloudyWindy, calm: WiNightAltCloudy },
+      day: { windy: WiCloudyWindy, calm: BsFillCloudsFill },
+    },
+    sizeAdjust: { night: { windy: 20, calm: 20 }, day: { windy: 20, calm: 0 } },
+  },
+  // Tornado (781)
+  {
+    codes: [781],
+    icons: {
+      night: { windy: WiNightCloudyWindy, calm: WiNightAltCloudy },
+      day: { windy: WiCloudyWindy, calm: BsFillCloudsFill },
+    },
+    sizeAdjust: { night: { windy: 20, calm: 20 }, day: { windy: 20, calm: 0 } },
+  },
+  // Clear (800)
+  {
+    codes: [800],
+    icons: {
+      night: { windy: MdModeNight, calm: MdModeNight },
+      day: { windy: TbWind, calm: BsFillSunFill },
+    },
+  },
+  // Few Clouds (801)
+  {
+    codes: [801],
+    icons: {
+      night: { windy: WiNightCloudyWindy, calm: WiNightAltCloudy },
+      day: { windy: WiCloudyWindy, calm: AiFillCloud },
+    },
+    sizeAdjust: { night: { windy: 17, calm: 20 }, day: { windy: 20, calm: 0 } },
+  },
+  // Scattered Clouds (802-803)
+  {
+    codes: [802, 803],
+    icons: {
+      night: { windy: WiNightCloudyWindy, calm: WiNightAltPartlyCloudy },
+      day: { windy: WiDayCloudyWindy, calm: BsFillCloudSunFill },
+    },
+    sizeAdjust: { night: { windy: 20, calm: 30 }, day: { windy: 0, calm: 0 } },
+  },
+  // Overcast Clouds (804)
+  {
+    codes: [804],
+    icons: {
+      night: { windy: WiNightCloudyWindy, calm: WiNightAltCloudy },
+      day: { windy: WiCloudyWindy, calm: BsFillCloudsFill },
+    },
+    sizeAdjust: { night: { windy: 17, calm: 20 }, day: { windy: 20, calm: 0 } },
+  },
+];
+
+// Build the weatherIconsMap from the declarative config
+const buildWeatherIconsMap = () => {
+  const map = {
+    night: { windy: {}, calm: {} },
+    day: { windy: {}, calm: {} },
+  };
+
+  WEATHER_CONDITIONS.forEach(condition => {
+    const { codes, icons, sizeAdjust = {} } = condition;
+
+    codes.forEach(code => {
+      ['night', 'day'].forEach(timeOfDay => {
+        ['windy', 'calm'].forEach(windCondition => {
+          map[timeOfDay][windCondition][code] = {
+            icon: icons[timeOfDay][windCondition],
+            sizeAdjust: sizeAdjust[timeOfDay]?.[windCondition] || 0,
+          };
+        });
+      });
+    });
+  });
+
+  return map;
 };
+
+// Weather icons mapping configuration using OpenWeatherMap weather condition codes
+const weatherIconsMap = buildWeatherIconsMap();
 
 export const WeatherIcons = memo(props => {
   const currentHourConversion = useMemo(() => {
@@ -155,13 +253,8 @@ export const WeatherIcons = memo(props => {
     const timeOfDay = isNight ? 'night' : 'day';
     const windCondition = props.windSpeed >= 8.0 ? 'windy' : 'calm';
 
-    // Try to find an icon for the exact description
-    let iconConfig = weatherIconsMap[timeOfDay]?.[windCondition]?.[props.description];
-
-    // If no match for description, try to find by main weather
-    if (!iconConfig) {
-      iconConfig = weatherIconsMap[timeOfDay]?.[windCondition]?.[props.mainWeather];
-    }
+    // Use weatherId to lookup the icon
+    const iconConfig = weatherIconsMap[timeOfDay]?.[windCondition]?.[props.weatherId];
 
     if (iconConfig) {
       const IconComponent = iconConfig.icon;
@@ -172,10 +265,10 @@ export const WeatherIcons = memo(props => {
 
     // Fallback for any uncovered conditions
     console.warn(
-      `No weather icon found for: ${timeOfDay}, ${windCondition}, ${props.mainWeather}, ${props.description}`
+      `No weather icon found for: ${timeOfDay}, ${windCondition}, weatherId: ${props.weatherId}`
     );
     return <></>;
-  }, [props.mainWeather, props.description, props.windSpeed, isNight, size, props.color]);
+  }, [props.weatherId, props.windSpeed, isNight, size, props.color]);
 
   return icon;
 });
@@ -436,9 +529,8 @@ export const ShowWeather = memo(props => {
             <div className="relative">
               <div className="h-[200px] flex items-center justify-center">
                 <WeatherIcons
-                  mainWeather={props.mainWeather}
+                  weatherId={props.weatherId}
                   windSpeed={props.windSpeed}
-                  description={props.description}
                   timeZone={props.timeZone}
                   sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
                   sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
@@ -874,9 +966,8 @@ export const WeatherPopupContent = memo(props => {
       <div className="flex items-center mb-2">
         {currentLocationWeather.weather?.[0] && (
           <WeatherIcons
-            mainWeather={currentLocationWeather.weather[0].main}
+            weatherId={currentLocationWeather.weather[0].id}
             windSpeed={currentLocationWeather.wind?.speed}
-            description={currentLocationWeather.weather[0].description}
             timeZone={currentLocationWeather.timezone}
             sunriseHour={localSunriseSunsetTimes?.sunriseHour}
             sunsetHour={localSunriseSunsetTimes?.sunsetHour}

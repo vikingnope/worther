@@ -73,6 +73,7 @@ export const GetSingleWeather = memo(() => {
           pressure: response.data.main.pressure,
           mainWeather: response.data.weather[0].main,
           description: response.data.weather[0].description,
+          weatherId: response.data.weather[0].id,
           windSpeed: response.data.wind.speed,
           windDegrees: response.data.wind.deg,
           sunrise: response.data.sys.sunrise,

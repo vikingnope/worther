@@ -37,6 +37,7 @@ const getForecastWeather = async (lat, lon, setWeather, setLocation, setTimes, s
       pressure: weatherAPI.main.pressure,
       mainWeather: weatherAPI.weather[0].main,
       description: weatherAPI.weather[0].description,
+      weatherId: weatherAPI.weather[0].id,
       windSpeed: weatherAPI.wind.speed,
       windDegrees: weatherAPI.wind.deg,
       precipitation: weatherAPI.pop * 100,
