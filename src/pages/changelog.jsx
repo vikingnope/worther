@@ -25,12 +25,27 @@ export default function Changelog() {
     axios
       .get('/CHANGELOG.md')
       .then(response => {
-        setMarkdown(response.data);
+        // Check if we received HTML instead of markdown (common when file is not found)
+        if (typeof response.data === 'string' && response.data.includes('<!doctype html>')) {
+          console.error('Received HTML instead of markdown - file may not be loaded properly');
+          setMarkdown(
+            '# Error Loading Changelog\n\n' +
+              'Unable to load the changelog content. The file may not be properly served by the development server.\n\n' +
+              '**Please try the following:**\n' +
+              '1. Refresh the page (Ctrl+R or Cmd+R)\n' +
+              '2. Clear your browser cache\n\n' +
+              'If the problem persists, please [open an issue on GitHub](https://github.com/vikingnope/worther/issues/new?template=bug_report.yml&title=%5BBUG%5D%20Changelog%20is%20not%20loading&description=Changelog%20page%20failed%20to%20load%20file).'
+          );
+        } else {
+          setMarkdown(response.data);
+        }
       })
       .catch(error => {
         console.error('Error loading changelog:', error);
         setMarkdown(
-          '# Error Loading Changelog\n\nUnable to load the changelog content. Please try again later.'
+          '# Error Loading Changelog\n\n' +
+            'Unable to load the changelog content. Please try refreshing the page.\n\n' +
+            'If the problem persists, please [open an issue on GitHub](https://github.com/vikingnope/worther/issues/new?template=bug_report.yml&title=%5BBUG%5D%20Changelog%20is%20not%20loading&description=Changelog%20page%20failed%20to%20load%20file).'
         );
       });
   }, []);
@@ -329,14 +344,40 @@ export default function Changelog() {
                                 {children || 'Heading'}
                               </h2>
                             ),
-                            h3: ({ node, children, ...props }) => (
-                              <h3
-                                className="text-xl font-semibold mt-5 mb-3 text-cyan-400"
-                                {...props}
-                              >
-                                {children || 'Heading'}
-                              </h3>
-                            ),
+                            h3: ({ node, children, ...props }) => {
+                              // Get the text content to determine category
+                              const text = children?.toString() || '';
+                              let categoryClass = 'text-cyan-400';
+                              let iconEmoji = '';
+
+                              // Apply different colors based on category
+                              if (text === 'Added') {
+                                categoryClass = 'text-green-400';
+                                iconEmoji = '✨ ';
+                              } else if (text === 'Enhanced') {
+                                categoryClass = 'text-blue-400';
+                                iconEmoji = '🚀 ';
+                              } else if (text === 'Fixed') {
+                                categoryClass = 'text-amber-400';
+                                iconEmoji = '🔧 ';
+                              } else if (text === 'Dependencies') {
+                                categoryClass = 'text-purple-400';
+                                iconEmoji = '📦 ';
+                              } else if (text === 'Removed') {
+                                categoryClass = 'text-red-400';
+                                iconEmoji = '🗑️ ';
+                              }
+
+                              return (
+                                <h3
+                                  className={`text-xl font-semibold mt-5 mb-3 ${categoryClass}`}
+                                  {...props}
+                                >
+                                  {iconEmoji}
+                                  {children || 'Heading'}
+                                </h3>
+                              );
+                            },
                             p: ({ node, ...props }) => (
                               <p className="my-3 text-gray-200 leading-relaxed" {...props} />
                             ),
@@ -414,14 +455,40 @@ export default function Changelog() {
                           components={{
                             // Skip h2 rendering since we manually handled it above
                             h2: () => null,
-                            h3: ({ node, children, ...props }) => (
-                              <h3
-                                className="text-xl font-semibold mt-5 mb-3 text-cyan-400"
-                                {...props}
-                              >
-                                {children || 'Heading'}
-                              </h3>
-                            ),
+                            h3: ({ node, children, ...props }) => {
+                              // Get the text content to determine category
+                              const text = children?.toString() || '';
+                              let categoryClass = 'text-cyan-400';
+                              let iconEmoji = '';
+
+                              // Apply different colors based on category
+                              if (text === 'Added') {
+                                categoryClass = 'text-green-400';
+                                iconEmoji = '✨ ';
+                              } else if (text === 'Enhanced') {
+                                categoryClass = 'text-blue-400';
+                                iconEmoji = '🚀 ';
+                              } else if (text === 'Fixed') {
+                                categoryClass = 'text-amber-400';
+                                iconEmoji = '🔧 ';
+                              } else if (text === 'Dependencies') {
+                                categoryClass = 'text-purple-400';
+                                iconEmoji = '📦 ';
+                              } else if (text === 'Removed') {
+                                categoryClass = 'text-red-400';
+                                iconEmoji = '🗑️ ';
+                              }
+
+                              return (
+                                <h3
+                                  className={`text-xl font-semibold mt-5 mb-3 ${categoryClass}`}
+                                  {...props}
+                                >
+                                  {iconEmoji}
+                                  {children || 'Heading'}
+                                </h3>
+                              );
+                            },
                             p: ({ node, ...props }) => (
                               <p className="my-3 text-gray-200 leading-relaxed" {...props} />
                             ),
