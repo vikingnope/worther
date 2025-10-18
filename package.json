@@ -33,11 +33,11 @@
     "format:check": "prettier --check \"{src,public,.github}/**/*.{js,jsx,json,css,md,html,yml,yaml}\" \"*.{js,json,md,html,yml,yaml}\""
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
+    "@eslint/js": "^9.38.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "5.0.4",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9.37.0",
+    "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.32.0",

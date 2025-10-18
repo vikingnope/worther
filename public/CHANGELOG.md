@@ -51,8 +51,9 @@
 
 ### Dependencies
 
+- Added `babel-plugin-react-compiler` v1.0.0
 - Bump `tailwindcss` to v4.1.14
-- Bump `eslint` to v9.37.0
+- Bump `eslint` to v9.38.0
 - Bump `react-router-dom` to v7.9.4
 - Bump `vite` to v7.1.10
 - Bump `@vitejs/plugin-react` to v5.0.4
@@ -62,7 +63,7 @@
 - Bump `react` to v19.2.0
 - Bump `react-dom` to v19.2.0
 - Bump `react-select` to v5.10.2
-- Bump `@eslint/js` to v9.37.0
+- Bump `@eslint/js` to v9.38.0
 - Bump `@tailwindcss/vite` to v4.1.14
 - Bump `eslint-plugin-import` to v2.32.0
 - Bump `prettier` to v3.6.2
