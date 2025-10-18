@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useMemo, useCallback, useEffect, useState, memo } from 'react';
+import { useMemo, useEffect, useState, useCallback } from 'react';
 import {
   BsFillSunriseFill,
   BsFillSunsetFill,
@@ -32,7 +32,8 @@ import { Header } from '@utils/header';
 // - @components/weather/WeatherIcons.jsx: Weather icon components
 // - @components/weather/WeatherDisplay.jsx: Main weather display components (this file)
 
-export const ShowWeather = memo(props => {
+export function ShowWeather(props) {
+  // Keep these useMemo - they're doing calculations/transformations
   const timeUpdated = useMemo(
     () => ({
       timeUpdatedHour: String(new Date(props.timeUpdatedUNIX * 1000).getHours()).padStart(2, '0'),
@@ -68,301 +69,301 @@ export const ShowWeather = memo(props => {
 
   const history = useNavigate();
 
-  const handleSubmitNormal = useCallback(
-    e => {
-      e.preventDefault();
-      history(-1);
-    },
-    [history]
-  );
+  function handleSubmitNormal(e) {
+    e.preventDefault();
+    history(-1);
+  }
 
-  const handleSubmitAdvanced = useCallback(
-    e => {
-      e.preventDefault();
-      history('/3HourForecast/' + props.lat + '/' + props.lon);
-    },
-    [history, props.lat, props.lon]
-  );
+  function handleSubmitAdvanced(e) {
+    e.preventDefault();
+    history('/3HourForecast/' + props.lat + '/' + props.lon);
+  }
 
-  const WeatherDisplay = memo(() => (
-    <div className="grow flex flex-col justify-center max-w-4xl mx-auto w-full px-4 py-6">
-      {/* Back button - moved to top left */}
-      <section className="-mb-2">
-        <button
-          className="flex items-center text-blue-400 hover:text-cyan-300 transition-colors duration-300 font-medium cursor-pointer group mb-3 sm:mb-0 sm:absolute self-start mx-4 sm:mx-0"
-          onClick={props.choice === 'normal' ? handleSubmitNormal : handleSubmitAdvanced}
-        >
-          <FaArrowLeft className="h-5 w-5 mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
-          Back to Last Page
-        </button>
-      </section>
+  function WeatherDisplay() {
+    return (
+      <div className="grow flex flex-col justify-center max-w-4xl mx-auto w-full px-4 py-6">
+        {/* Back button - moved to top left */}
+        <section className="-mb-2">
+          <button
+            className="flex items-center text-blue-400 hover:text-cyan-300 transition-colors duration-300 font-medium cursor-pointer group mb-3 sm:mb-0 sm:absolute self-start mx-4 sm:mx-0"
+            onClick={props.choice === 'normal' ? handleSubmitNormal : handleSubmitAdvanced}
+          >
+            <FaArrowLeft className="h-5 w-5 mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
+            Back to Last Page
+          </button>
+        </section>
 
-      {/* Location and time information */}
-      <section className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
-          {props.name}, {props.country}
-        </h1>
+        {/* Location and time information */}
+        <section className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
+            {props.name}, {props.country}
+          </h1>
 
-        {props.dayConversion && (
-          <div className="mt-3">
-            <p className="text-2xl font-medium text-white/90">{props.dayConversion}</p>
-            <p className="text-xl mt-1 text-white/80">
-              {(props.hourConversion > 23
-                ? props.hourConversion - 24
-                : props.hourConversion < 0
-                  ? props.hourConversion + 24
-                  : props.hourConversion
-              )
-                .toString()
-                .padStart(2, '0')}
-              :{props.timeNormalMinutes}
-              <span className="text-gray-400 ml-2">
-                (<TimeZoneShow timeZone={props.timeZone} />)
-              </span>
-            </p>
-          </div>
-        )}
-      </section>
-
-      {/* Main weather display card */}
-      <section className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-6 mb-8 border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
-        <div className="flex flex-col md:flex-row items-center mb-4">
-          {/* Weather icon */}
-          <div className="mb-4 md:mb-0 md:mr-8 relative">
-            <div className="absolute inset-0 bg-blue-600/10 blur-2xl rounded-full"></div>
-            <div className="relative">
-              <div className="h-[200px] flex items-center justify-center">
-                <WeatherIcons
-                  weatherId={props.weatherId}
-                  windSpeed={props.windSpeed}
-                  timeZone={props.timeZone}
-                  sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
-                  sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
-                  hourConversion={props.hourConversion}
-                  page="single"
-                />
-              </div>
+          {props.dayConversion && (
+            <div className="mt-3">
+              <p className="text-2xl font-medium text-white/90">{props.dayConversion}</p>
+              <p className="text-xl mt-1 text-white/80">
+                {(props.hourConversion > 23
+                  ? props.hourConversion - 24
+                  : props.hourConversion < 0
+                    ? props.hourConversion + 24
+                    : props.hourConversion
+                )
+                  .toString()
+                  .padStart(2, '0')}
+                :{props.timeNormalMinutes}
+                <span className="text-gray-400 ml-2">
+                  (<TimeZoneShow timeZone={props.timeZone} />)
+                </span>
+              </p>
             </div>
-          </div>
+          )}
+        </section>
 
-          {/* Temperature information */}
-          <div className="text-center md:text-left">
-            <p className="font-bold text-3xl mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
-              {props.description.toUpperCase()}
-            </p>
-            <div className="flex items-center justify-center md:justify-start">
-              <FaTemperatureHigh size={28} className="mr-3 text-amber-400" />
-              <span className="text-6xl font-bold text-white">
-                {Math.round(props.temperature)}°C
-              </span>
-            </div>
-            <p className="mt-2 text-xl text-white/90">Feels like: {Math.round(props.tempFeel)}°C</p>
-            <div className="flex mt-2 justify-center md:justify-start gap-5">
-              <span className="flex items-center text-blue-300">
-                <IoIosArrowDown className="h-5 w-5 mr-1 text-blue-300" />
-                Min: {Math.round(props.tempMin)}°C
-              </span>
-              <span className="flex items-center text-red-300">
-                <IoIosArrowUp className="h-5 w-5 mr-1 text-red-300" />
-                Max: {Math.round(props.tempMax)}°C
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Detailed weather information section */}
-      <section className="bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-6 mb-8 border border-blue-900/30 backdrop-blur-sm">
-        <h2 className="text-xl font-bold mb-5 pb-2 border-b border-blue-900/50 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
-          Weather Details
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Column 1 */}
-          <div className="space-y-4">
-            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-              <WiHumidity size={38} className="mr-3 text-blue-400" />
-              <div>
-                <p className="font-medium text-blue-300">Humidity</p>
-                <p className="text-lg font-bold">{props.humidity}%</p>
-              </div>
-            </div>
-
-            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-              <WiBarometer size={38} className="mr-3 text-purple-400" />
-              <div>
-                <p className="font-medium text-purple-300">Pressure</p>
-                <p className="text-lg font-bold">{props.pressure} hPa</p>
-              </div>
-            </div>
-
-            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-              <BsCloudFog size={32} className="mr-3 text-gray-400" />
-              <div>
-                <p className="font-medium text-gray-300">Visibility</p>
-                <p className="text-lg font-bold">
-                  {props.visibility >= 1000
-                    ? `${props.visibility / 1000}km`
-                    : `${props.visibility}m`}
-                  <span className="text-sm text-gray-400 ml-1 font-normal">
-                    (<VisibilityDesc visibility={props.visibility} />)
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {props.rain !== undefined && (
-              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                <BsFillCloudRainFill size={32} className="mr-3 text-blue-300" />
-                <div>
-                  <p className="font-medium text-blue-200">Rain (last hour)</p>
-                  <p className="text-lg font-bold">{props.rain} mm</p>
+        {/* Main weather display card */}
+        <section className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-6 mb-8 border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+          <div className="flex flex-col md:flex-row items-center mb-4">
+            {/* Weather icon */}
+            <div className="mb-4 md:mb-0 md:mr-8 relative">
+              <div className="absolute inset-0 bg-blue-600/10 blur-2xl rounded-full"></div>
+              <div className="relative">
+                <div className="h-[200px] flex items-center justify-center">
+                  <WeatherIcons
+                    weatherId={props.weatherId}
+                    windSpeed={props.windSpeed}
+                    timeZone={props.timeZone}
+                    sunriseHour={props.localSunriseSunsetTimes?.sunriseHour}
+                    sunsetHour={props.localSunriseSunsetTimes?.sunsetHour}
+                    hourConversion={props.hourConversion}
+                    page="single"
+                  />
                 </div>
               </div>
-            )}
-
-            {props.precipitation !== undefined && (
-              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                <BsFillCloudDrizzleFill size={32} className="mr-3 text-blue-200" />
-                <div>
-                  <p className="font-medium text-blue-100">Precipitation</p>
-                  <p className="text-lg font-bold">{props.precipitation}%</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Column 2 */}
-          <div className="space-y-4">
-            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-              <WiStrongWind size={38} className="mr-3 text-teal-400" />
-              <div>
-                <p className="font-medium text-teal-300">Wind</p>
-                <p className="text-lg font-bold">
-                  {props.windSpeed} m/s{' '}
-                  <span className="text-sm text-gray-400 font-normal">
-                    (<WindForce windSpeed={props.windSpeed} />)
-                  </span>
-                </p>
-              </div>
             </div>
 
-            <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-              <GiWindsock size={32} className="mr-3 text-cyan-400" />
-              <div className="flex-1">
-                <p className="font-medium text-cyan-300">Wind Direction</p>
-                <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mr-3 wind-arrow-container">
-                    <WindArrow degrees={props.windDegrees} />
-                  </div>
+            {/* Temperature information */}
+            <div className="text-center md:text-left">
+              <p className="font-bold text-3xl mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
+                {props.description.toUpperCase()}
+              </p>
+              <div className="flex items-center justify-center md:justify-start">
+                <FaTemperatureHigh size={28} className="mr-3 text-amber-400" />
+                <span className="text-6xl font-bold text-white">
+                  {Math.round(props.temperature)}°C
+                </span>
+              </div>
+              <p className="mt-2 text-xl text-white/90">
+                Feels like: {Math.round(props.tempFeel)}°C
+              </p>
+              <div className="flex mt-2 justify-center md:justify-start gap-5">
+                <span className="flex items-center text-blue-300">
+                  <IoIosArrowDown className="h-5 w-5 mr-1 text-blue-300" />
+                  Min: {Math.round(props.tempMin)}°C
+                </span>
+                <span className="flex items-center text-red-300">
+                  <IoIosArrowUp className="h-5 w-5 mr-1 text-red-300" />
+                  Max: {Math.round(props.tempMax)}°C
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Detailed weather information section */}
+        <section className="bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-6 mb-8 border border-blue-900/30 backdrop-blur-sm">
+          <h2 className="text-xl font-bold mb-5 pb-2 border-b border-blue-900/50 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
+            Weather Details
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Column 1 */}
+            <div className="space-y-4">
+              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                <WiHumidity size={38} className="mr-3 text-blue-400" />
+                <div>
+                  <p className="font-medium text-blue-300">Humidity</p>
+                  <p className="text-lg font-bold">{props.humidity}%</p>
+                </div>
+              </div>
+
+              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                <WiBarometer size={38} className="mr-3 text-purple-400" />
+                <div>
+                  <p className="font-medium text-purple-300">Pressure</p>
+                  <p className="text-lg font-bold">{props.pressure} hPa</p>
+                </div>
+              </div>
+
+              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                <BsCloudFog size={32} className="mr-3 text-gray-400" />
+                <div>
+                  <p className="font-medium text-gray-300">Visibility</p>
                   <p className="text-lg font-bold">
-                    <WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°
+                    {props.visibility >= 1000
+                      ? `${props.visibility / 1000}km`
+                      : `${props.visibility}m`}
+                    <span className="text-sm text-gray-400 ml-1 font-normal">
+                      (<VisibilityDesc visibility={props.visibility} />)
+                    </span>
                   </p>
                 </div>
               </div>
+
+              {props.rain !== undefined && (
+                <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                  <BsFillCloudRainFill size={32} className="mr-3 text-blue-300" />
+                  <div>
+                    <p className="font-medium text-blue-200">Rain (last hour)</p>
+                    <p className="text-lg font-bold">{props.rain} mm</p>
+                  </div>
+                </div>
+              )}
+
+              {props.precipitation !== undefined && (
+                <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                  <BsFillCloudDrizzleFill size={32} className="mr-3 text-blue-200" />
+                  <div>
+                    <p className="font-medium text-blue-100">Precipitation</p>
+                    <p className="text-lg font-bold">{props.precipitation}%</p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {props.localSunriseSunsetTimes && (
-              <>
-                <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                  <BsFillSunriseFill size={32} className="mr-3 text-yellow-400" />
-                  <div>
-                    <p className="font-medium text-yellow-300">Sunrise</p>
+            {/* Column 2 */}
+            <div className="space-y-4">
+              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                <WiStrongWind size={38} className="mr-3 text-teal-400" />
+                <div>
+                  <p className="font-medium text-teal-300">Wind</p>
+                  <p className="text-lg font-bold">
+                    {props.windSpeed} m/s{' '}
+                    <span className="text-sm text-gray-400 font-normal">
+                      (<WindForce windSpeed={props.windSpeed} />)
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                <GiWindsock size={32} className="mr-3 text-cyan-400" />
+                <div className="flex-1">
+                  <p className="font-medium text-cyan-300">Wind Direction</p>
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mr-3 wind-arrow-container">
+                      <WindArrow degrees={props.windDegrees} />
+                    </div>
                     <p className="text-lg font-bold">
-                      {formatTimeDisplay(
-                        props.localSunriseSunsetTimes.sunriseHour,
-                        props.localSunriseSunsetTimes.sunriseMinute
-                      )}
-                      <span className="text-sm text-gray-400 ml-1 font-normal">
-                        (<TimeZoneShow timeZone={props.timeZone} />)
-                      </span>
+                      <WindDirection windDegrees={props.windDegrees} /> @ {props.windDegrees}°
                     </p>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
-                  <BsFillSunsetFill size={32} className="mr-3 text-orange-400" />
-                  <div>
-                    <p className="font-medium text-orange-300">Sunset</p>
-                    <p className="text-lg font-bold">
-                      {formatTimeDisplay(
-                        props.localSunriseSunsetTimes.sunsetHour,
-                        props.localSunriseSunsetTimes.sunsetMinute
-                      )}
-                      <span className="text-sm text-gray-400 ml-1 font-normal">
-                        (<TimeZoneShow timeZone={props.timeZone} />)
-                      </span>
-                    </p>
+              {props.localSunriseSunsetTimes && (
+                <>
+                  <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                    <BsFillSunriseFill size={32} className="mr-3 text-yellow-400" />
+                    <div>
+                      <p className="font-medium text-yellow-300">Sunrise</p>
+                      <p className="text-lg font-bold">
+                        {formatTimeDisplay(
+                          props.localSunriseSunsetTimes.sunriseHour,
+                          props.localSunriseSunsetTimes.sunriseMinute
+                        )}
+                        <span className="text-sm text-gray-400 ml-1 font-normal">
+                          (<TimeZoneShow timeZone={props.timeZone} />)
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
 
-      {/* Forecast buttons section */}
-      {props.choice === 'normal' && (
-        <section className="mb-8">
-          <div className="flex flex-wrap justify-center gap-4">
-            <form onSubmit={props.handleSubmit3Hour}>
-              <button
-                type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
-              >
-                3 Hour Forecast
-              </button>
-            </form>
-
-            <form onSubmit={props.handleSubmitDaily}>
-              <button
-                type="submit"
-                className="px-6 py-3 bg-gradient-to-r from-indigo-700 to-indigo-600 hover:from-indigo-600 hover:to-indigo-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
-              >
-                Daily Forecast
-              </button>
-            </form>
+                  <div className="flex items-center bg-black/30 p-3 rounded-lg backdrop-blur-sm border border-gray-800/50 transition-all duration-300 hover:border-gray-700/50">
+                    <BsFillSunsetFill size={32} className="mr-3 text-orange-400" />
+                    <div>
+                      <p className="font-medium text-orange-300">Sunset</p>
+                      <p className="text-lg font-bold">
+                        {formatTimeDisplay(
+                          props.localSunriseSunsetTimes.sunsetHour,
+                          props.localSunriseSunsetTimes.sunsetMinute
+                        )}
+                        <span className="text-sm text-gray-400 ml-1 font-normal">
+                          (<TimeZoneShow timeZone={props.timeZone} />)
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </section>
-      )}
 
-      {/* Navigation and update info */}
-      <section className="text-center mt-auto">
-        <p className="text-gray-400 text-sm">
-          Last Updated:{' '}
-          {props.choice === 'normal'
-            ? `${timeUpdatedHourConversion.toString().padStart(2, '0')}:${timeUpdated.timeUpdatedMinute}`
-            : `${currentHourConversion?.toString().padStart(2, '0')}:${props.currentTime.minute}`}{' '}
-          (<TimeZoneShow timeZone={props.timeZone} />)
-        </p>
-      </section>
-    </div>
-  ));
+        {/* Forecast buttons section */}
+        {props.choice === 'normal' && (
+          <section className="mb-8">
+            <div className="flex flex-wrap justify-center gap-4">
+              <form onSubmit={props.handleSubmit3Hour}>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
+                >
+                  3 Hour Forecast
+                </button>
+              </form>
 
-  const ErrorDisplay = ({ message, countryName }) => (
-    <div className="text-white bg-gradient-to-b from-black via-blue-950 to-black overflow-hidden flex flex-col min-h-screen items-center justify-center px-4 py-12">
-      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-8 max-w-md w-full text-center border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
-        <div className="mb-8">
-          <BsFillCloudSlashFill size={60} className="mx-auto text-blue-400 mb-4" />
-          <p className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
-            {message}
+              <form onSubmit={props.handleSubmitDaily}>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-gradient-to-r from-indigo-700 to-indigo-600 hover:from-indigo-600 hover:to-indigo-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
+                >
+                  Daily Forecast
+                </button>
+              </form>
+            </div>
+          </section>
+        )}
+
+        {/* Navigation and update info */}
+        <section className="text-center mt-auto">
+          <p className="text-gray-400 text-sm">
+            Last Updated:{' '}
+            {props.choice === 'normal'
+              ? `${timeUpdatedHourConversion.toString().padStart(2, '0')}:${timeUpdated.timeUpdatedMinute}`
+              : `${currentHourConversion?.toString().padStart(2, '0')}:${props.currentTime.minute}`}{' '}
+            (<TimeZoneShow timeZone={props.timeZone} />)
           </p>
-          {countryName && (
-            <p className="text-xl text-gray-300 mt-2">
-              Country: <span className="font-medium">{countryName}</span>
-            </p>
-          )}
-          <p className="text-gray-400 mt-3">Unable to retrieve weather data</p>
-        </div>
-        <Link
-          className="inline-block px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
-          to="/weather"
-        >
-          Return to Weather Search
-        </Link>
+        </section>
       </div>
-    </div>
-  );
+    );
+  }
+
+  function ErrorDisplay({ message, countryName }) {
+    return (
+      <div className="text-white bg-gradient-to-b from-black via-blue-950 to-black overflow-hidden flex flex-col min-h-screen items-center justify-center px-4 py-12">
+        <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-8 max-w-md w-full text-center border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+          <div className="mb-8">
+            <BsFillCloudSlashFill size={60} className="mx-auto text-blue-400 mb-4" />
+            <p className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
+              {message}
+            </p>
+            {countryName && (
+              <p className="text-xl text-gray-300 mt-2">
+                Country: <span className="font-medium">{countryName}</span>
+              </p>
+            )}
+            <p className="text-gray-400 mt-3">Unable to retrieve weather data</p>
+          </div>
+          <Link
+            className="inline-block px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
+            to="/weather"
+          >
+            Return to Weather Search
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="text-white bg-gradient-to-b from-black via-blue-950 to-black overflow-hidden flex flex-col min-h-screen">
@@ -401,11 +402,9 @@ export const ShowWeather = memo(props => {
       <Footer />
     </div>
   );
-});
+}
 
-ShowWeather.displayName = 'ShowWeather';
-
-export const WeatherPopupContent = memo(props => {
+export function WeatherPopupContent(props) {
   const [currentLocationWeather, setCurrentLocationWeather] = useState(null);
   const [isLoadingWeather, setIsLoadingWeather] = useState(false);
 
@@ -449,7 +448,7 @@ export const WeatherPopupContent = memo(props => {
   }, [currentLocationWeather]);
 
   // Determine styles based on map type for map page
-  const popupStyles = useMemo(() => {
+  const popupStyles = (() => {
     if (props.page === 'map') {
       return props.theme === 'light'
         ? {
@@ -480,7 +479,7 @@ export const WeatherPopupContent = memo(props => {
           };
     }
     return {}; // Default styles for non-map pages
-  }, [props.page, props.theme]);
+  })();
 
   if (isLoadingWeather) {
     return (
@@ -742,6 +741,4 @@ export const WeatherPopupContent = memo(props => {
       )}
     </div>
   );
-});
-
-WeatherPopupContent.displayName = 'WeatherPopupContent';
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { BiSearchAlt } from 'react-icons/bi';
 import { FaCity } from 'react-icons/fa';
 import { IoLocationSharp } from 'react-icons/io5';
@@ -11,6 +11,7 @@ import { Footer } from '@utils/footer';
 import { Header } from '@utils/header';
 
 export default function Weather() {
+  // Keep this useMemo - it's a static data fetch that should only run once
   const options = useMemo(() => countryList().getData(), []);
 
   const [searchMode, setSearchMode] = useState('simple'); // 'simple' or 'advanced'
@@ -24,32 +25,20 @@ export default function Weather() {
 
   const history = useNavigate();
 
-  const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
+    history('/weather/' + city.trim());
+  }
 
-      history('/weather/' + city.trim());
-    },
-    [history, city]
-  );
+  function handleAdvancedSubmit(e) {
+    e.preventDefault();
+    history('/weatherCountry/' + countryCode + '/' + city.trim());
+  }
 
-  const handleAdvancedSubmit = useCallback(
-    e => {
-      e.preventDefault();
-
-      history('/weatherCountry/' + countryCode + '/' + city.trim());
-    },
-    [history, countryCode, city]
-  );
-
-  const handleSubmitLocation = useCallback(
-    e => {
-      e.preventDefault();
-
-      history('/weatherLocation/' + userPos.latitude + '/' + userPos.longitude);
-    },
-    [history, userPos.latitude, userPos.longitude]
-  );
+  function handleSubmitLocation(e) {
+    e.preventDefault();
+    history('/weatherLocation/' + userPos.latitude + '/' + userPos.longitude);
+  }
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -82,12 +71,12 @@ export default function Weather() {
     }
   }, []);
 
-  const toggleSearchMode = useCallback(() => {
+  function toggleSearchMode() {
     setSearchMode(searchMode === 'simple' ? 'advanced' : 'simple');
     setCity('');
     setCountry(undefined);
     setCountryCode('');
-  }, [searchMode]);
+  }
 
   // Helper function to get user-friendly error message
   const getGeoErrorMessage = error => {

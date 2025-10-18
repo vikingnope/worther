@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { BsFillSunriseFill, BsFillSunsetFill } from 'react-icons/bs';
 import { FaArrowLeft } from 'react-icons/fa6';
 import { IoWarningOutline } from 'react-icons/io5';
@@ -40,7 +40,7 @@ const classifyWeatherCondition = conditionId => {
   return WEATHER_PHENOMENA.CLOUDS; // Default for 801-899 (clouds)
 };
 
-export const DailyWeatherData = memo(() => {
+export function DailyWeatherData() {
   const { lat, lon } = useParams();
 
   const [location, setLocation] = useState({});
@@ -266,12 +266,10 @@ export const DailyWeatherData = memo(() => {
       });
   }, [lat, lon]);
 
-  const localSunriseSunsetTimes = useMemo(() => {
-    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
-      return SunriseSunsetTimes(times);
-    }
-    return null;
-  }, [times]);
+  const localSunriseSunsetTimes =
+    times?.sunrise && times?.sunset && times?.timeZone !== undefined
+      ? SunriseSunsetTimes(times)
+      : null;
 
   const localDayConversions = useMemo(() => {
     if (!weather.length || !location.timeZone) return {};
@@ -518,6 +516,4 @@ export const DailyWeatherData = memo(() => {
       <Footer />
     </div>
   );
-});
-
-DailyWeatherData.displayName = 'DailyWeatherData';
+}

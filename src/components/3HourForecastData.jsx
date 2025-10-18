@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useEffect, useState, useMemo, useCallback, memo } from 'react';
-import { FaArrowLeft } from 'react-icons/fa6';
+import { useEffect, useState, useMemo } from 'react';
+import { FaArrowLeft } from 'react-icons/fa';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import {
@@ -15,7 +15,7 @@ import { useDeviceDetect } from '@hooks/useDeviceDetect';
 import { Footer } from '@utils/footer';
 import { Header } from '@utils/header';
 
-export const ThreeHourForecastData = memo(() => {
+export function ThreeHourForecastData() {
   const { lat, lon } = useParams();
 
   const [location, setLocation] = useState({});
@@ -26,7 +26,7 @@ export const ThreeHourForecastData = memo(() => {
 
   const history = useNavigate();
 
-  const handleNavigateBack = useCallback(() => {
+  function handleNavigateBack() {
     // Go back to single weather page with current location
     if (location.lat && location.lon) {
       history(`/weatherLocation/${location.lat}/${location.lon}`);
@@ -34,16 +34,12 @@ export const ThreeHourForecastData = memo(() => {
       // Fallback to history back if location coordinates are not available
       history(-1);
     }
-  }, [history, location.lat, location.lon]);
+  }
 
-  const handleSubmit = useCallback(
-    (e, index) => {
-      e.preventDefault();
-
-      history('/Single3HourForecast/' + index + '/' + location.lat + '/' + location.lon);
-    },
-    [history, location.lat, location.lon]
-  );
+  function handleSubmit(e, index) {
+    e.preventDefault();
+    history(`/Single3HourForecast/${index}/${location.lat}/${location.lon}`);
+  }
 
   useEffect(() => {
     document.title = 'Worther - 3 Hour Weather - ' + (location.name || '');
@@ -120,12 +116,10 @@ export const ThreeHourForecastData = memo(() => {
     return grouped;
   }, [weather, location.timeZone]); // Only recalculate when these dependencies change
 
-  const localSunriseSunsetTimes = useMemo(() => {
-    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
-      return SunriseSunsetTimes(times);
-    }
-    return null;
-  }, [times]);
+  const localSunriseSunsetTimes =
+    times?.sunrise && times?.sunset && times?.timeZone !== undefined
+      ? SunriseSunsetTimes(times)
+      : null;
 
   return (
     <div className="text-white overflow-hidden flex flex-col min-h-screen bg-gradient-to-b from-black via-blue-950 to-black">
@@ -253,6 +247,4 @@ export const ThreeHourForecastData = memo(() => {
       <Footer />
     </div>
   );
-});
-
-ThreeHourForecastData.displayName = 'ThreeHourForecastData';
+}

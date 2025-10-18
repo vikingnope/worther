@@ -12,6 +12,7 @@
 - Option to run PR check workflow with command by repo owner
 - Day/night cycle layer
 - A bunch of missing time zones which have slight variations of the normal ones
+- React Compiler
 
 ### Enhanced
 
@@ -46,6 +47,7 @@
 - Redundant testing libraries
 - All old branding
 - `postcss` and `@tailwindcss/postcss` since they are not needed with Vite
+- Extra memoisation due to React Compiler handling most of it now
 
 ### Dependencies
 

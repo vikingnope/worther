@@ -9,6 +9,9 @@ export default defineConfig({
   plugins: [
     react({
       include: '**/*.{jsx,js}',
+      babel: {
+        plugins: [['babel-plugin-react-compiler', {}]],
+      },
     }),
     tailwindcss(),
     eslint(),

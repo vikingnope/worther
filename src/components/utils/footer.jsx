@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { BsGithub } from 'react-icons/bs';
 import { FaDiscord } from 'react-icons/fa';
 import { IoDocumentTextSharp } from 'react-icons/io5';
@@ -6,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import Logo from '@resources/logo_transparent.png';
 
-export const Footer = memo(() => {
+export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -124,6 +123,4 @@ export const Footer = memo(() => {
       </div>
     </footer>
   );
-});
-
-Footer.displayName = 'Footer';
+}

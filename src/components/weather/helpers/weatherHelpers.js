@@ -1,11 +1,11 @@
-import { memo, useMemo } from 'react';
+import { useMemo } from 'react';
 
 /**
  * Formats a timezone offset in seconds to a GMT string
  * @param {number} timeZone - Timezone offset in seconds
  * @returns {string} Formatted timezone string (e.g., "GMT+5", "GMT-3:30")
  */
-export const TimeZoneShow = memo(props => {
+export function TimeZoneShow(props) {
   const formatTimezone = useMemo(() => {
     // Error handling for invalid inputs
     if (props.timeZone === undefined || props.timeZone === null) {
@@ -42,9 +42,7 @@ export const TimeZoneShow = memo(props => {
   }, [props.timeZone]);
 
   return formatTimezone || '';
-});
-
-TimeZoneShow.displayName = 'TimeZoneShow';
+}
 
 /**
  * Calculates local sunrise and sunset times based on UTC timestamps and timezone offset
@@ -74,7 +72,7 @@ SunriseSunsetTimes.displayName = 'SunriseSunsetTimes';
  * @param {Object} props - { visibility: number }
  * @returns {string} Visibility description
  */
-export const VisibilityDesc = memo(props => {
+export function VisibilityDesc(props) {
   const visibilityRanges = [
     { min: 0, max: 50, desc: 'Dense Fog' },
     { min: 50, max: 200, desc: 'Thick Fog' },
@@ -93,16 +91,14 @@ export const VisibilityDesc = memo(props => {
   );
 
   return visibilityDesc ? visibilityDesc.desc : '';
-});
-
-VisibilityDesc.displayName = 'VisibilityDesc';
+}
 
 /**
  * Converts wind direction in degrees to cardinal direction
  * @param {Object} props - { windDegrees: number }
  * @returns {string} Cardinal direction (e.g., "N", "NE", "SSW")
  */
-export const WindDirection = memo(props => {
+export function WindDirection(props) {
   const windDirections = [
     { min: 348.75, max: 360, dir: 'N' },
     { min: 0, max: 11.25, dir: 'N' },
@@ -128,16 +124,14 @@ export const WindDirection = memo(props => {
   const direction = windDirections.find(dir => windDegrees >= dir.min && windDegrees <= dir.max);
 
   return direction ? direction.dir : '';
-});
-
-WindDirection.displayName = 'WindDirection';
+}
 
 /**
  * Converts wind speed (m/s) to Beaufort scale force
  * @param {Object} props - { windSpeed: number }
  * @returns {string} Wind force description (e.g., "Force 5")
  */
-export const WindForce = memo(props => {
+export function WindForce(props) {
   const windForceRanges = [
     { min: 0, max: 0.3, force: 'Force 0' },
     { min: 0.3, max: 1.5, force: 'Force 1' },
@@ -159,9 +153,7 @@ export const WindForce = memo(props => {
   const force = windForceRanges.find(range => windSpeed >= range.min && windSpeed < range.max);
 
   return force ? force.force : '';
-});
-
-WindForce.displayName = 'WindForce';
+}
 
 /**
  * Formats time display with proper hour wrapping for 24-hour format

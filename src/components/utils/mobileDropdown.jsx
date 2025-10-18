@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MdClose } from 'react-icons/md';
 import { RiMenu4Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { NAV_ITEMS, NAV_ICONS } from '@constants/headerConstants.jsx';
 import useSettingsStore from '@stores/settingsStore';
 
-const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
+function Navigations({ text, path, currentLocation, onNavigate }) {
   const active = currentLocation === path;
 
   return (
@@ -24,11 +24,9 @@ const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
       {text}
     </Link>
   );
-});
+}
 
-Navigations.displayName = 'Navigations';
-
-export const Dropdown = memo(props => {
+export function Dropdown(props) {
   const [opened, setOpened] = useState(false);
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -168,6 +166,4 @@ export const Dropdown = memo(props => {
       )}
     </div>
   );
-});
-
-Dropdown.displayName = 'Dropdown Navigation';
+}

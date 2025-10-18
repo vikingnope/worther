@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, ScaleControl, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -197,103 +197,85 @@ export default function ShowMap(props) {
     []
   );
 
-  const map = useCallback(
-    (markerShow, zoomLevel) => {
-      return (
-        <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
-          <Header />
-          <MapContainer
-            center={
-              userPos.latitude && userPos.longitude
-                ? [userPos.latitude, userPos.longitude]
-                : [45, 10]
+  function map(markerShow, zoomLevel) {
+    return (
+      <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
+        <Header />
+        <MapContainer
+          center={
+            userPos.latitude && userPos.longitude ? [userPos.latitude, userPos.longitude] : [45, 10]
+          }
+          zoom={zoomLevel}
+          minZoom={2}
+          maxBounds={[
+            [-180, -180],
+            [180, 180],
+          ]}
+          maxBoundsViscosity={0.75}
+          doubleClickZoom={false}
+          className="grow"
+          style={!isDesktop ? { height: 'calc(85vh - 70px)' } : {}}
+        >
+          <ScaleControl position="bottomleft" />
+          <CustomZoomControl theme={theme} />
+          <CustomAttributionControl theme={theme} />
+          <CustomPopupStyle theme={theme} />
+          <TileLayer
+            zIndex={1}
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url={
+              theme === 'light'
+                ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png'
+                : 'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png'
             }
-            zoom={zoomLevel}
-            minZoom={2}
-            maxBounds={[
-              [-180, -180],
-              [180, 180],
-            ]}
-            maxBoundsViscosity={0.75}
-            doubleClickZoom={false}
-            className="grow"
-            style={!isDesktop ? { height: 'calc(85vh - 70px)' } : {}}
-          >
-            <ScaleControl position="bottomleft" />
-            <CustomZoomControl theme={theme} />
-            <CustomAttributionControl theme={theme} />
-            <CustomPopupStyle theme={theme} />
-            <TileLayer
-              zIndex={1}
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | &copy; <a href="https://carto.com/attributions">CARTO</a>'
-              url={
-                theme === 'light'
-                  ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png'
-                  : 'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png'
-              }
-              subdomains="abcd"
-            />
-            <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
-            <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity} />
-            <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity} />
-            <CloudLayer show={cloudLayerChoice} opacity={layerOpacity} />
-            <HybridLayer show={satelliteLayerChoice} theme={theme} />
-            <DayNightLayer show={dayNightLayerChoice} opacity={layerOpacity} mapType={theme} />
-            <MapBackgroundUpdater theme={theme} />
-            {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
-            <MenuBar
-              mode={theme}
-              showWindDir={windDirChoice}
-              onShowWindDirChange={setWindDirChoice}
-              showSatellite={satelliteLayerChoice}
-              onShowSatelliteChange={setSatelliteLayerChoice}
-              showRain={rainLayerChoice}
-              onShowRainChange={setRainLayerChoice}
-              showCloud={cloudLayerChoice}
-              onShowCloudChange={setCloudLayerChoice}
-              showWind={windLayerChoice}
-              onShowWindChange={setWindLayerChoice}
-              showTemperature={temperatureLayerChoice}
-              onShowTemperatureChange={setTemperatureLayerChoice}
-              layerOpacity={layerOpacity}
-              onLayerOpacityChange={setLayerOpacity}
-              showDayNight={dayNightLayerChoice}
-              onShowDayNightChange={setDayNightLayerChoice}
-            />
-            {!markerShow ? (
-              <Marker icon={markerIconConst} position={[userPos.latitude, userPos.longitude]}>
-                <Popup>
-                  <WeatherPopupContent
-                    userPos={userPos}
-                    color={theme === 'light' ? 'black' : 'white'}
-                    theme={theme}
-                    page={'map'}
-                  />
-                </Popup>
-              </Marker>
-            ) : (
-              <></>
-            )}
-          </MapContainer>
-          <Footer />
-        </div>
-      );
-    },
-    [
-      userPos,
-      theme,
-      rainLayerChoice,
-      windLayerChoice,
-      temperatureLayerChoice,
-      cloudLayerChoice,
-      satelliteLayerChoice,
-      windDirChoice,
-      dayNightLayerChoice,
-      layerOpacity,
-      markerIconConst,
-      isDesktop,
-    ]
-  );
+            subdomains="abcd"
+          />
+          <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
+          <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity} />
+          <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity} />
+          <CloudLayer show={cloudLayerChoice} opacity={layerOpacity} />
+          <HybridLayer show={satelliteLayerChoice} theme={theme} />
+          <DayNightLayer show={dayNightLayerChoice} opacity={layerOpacity} mapType={theme} />
+          <MapBackgroundUpdater theme={theme} />
+          {/* <WindDirectionLayer show={windDirChoice} opacity={layerOpacity} /> */}
+          <MenuBar
+            mode={theme}
+            showWindDir={windDirChoice}
+            onShowWindDirChange={setWindDirChoice}
+            showSatellite={satelliteLayerChoice}
+            onShowSatelliteChange={setSatelliteLayerChoice}
+            showRain={rainLayerChoice}
+            onShowRainChange={setRainLayerChoice}
+            showCloud={cloudLayerChoice}
+            onShowCloudChange={setCloudLayerChoice}
+            showWind={windLayerChoice}
+            onShowWindChange={setWindLayerChoice}
+            showTemperature={temperatureLayerChoice}
+            onShowTemperatureChange={setTemperatureLayerChoice}
+            layerOpacity={layerOpacity}
+            onLayerOpacityChange={setLayerOpacity}
+            showDayNight={dayNightLayerChoice}
+            onShowDayNightChange={setDayNightLayerChoice}
+          />
+          {!markerShow ? (
+            <Marker icon={markerIconConst} position={[userPos.latitude, userPos.longitude]}>
+              <Popup>
+                <WeatherPopupContent
+                  userPos={userPos}
+                  color={theme === 'light' ? 'black' : 'white'}
+                  theme={theme}
+                  page={'map'}
+                />
+              </Popup>
+            </Marker>
+          ) : (
+            <></>
+          )}
+        </MapContainer>
+        <Footer />
+      </div>
+    );
+  }
 
   return <div>{userPos.latitude && userPos.longitude ? map(false, 6) : map(true, 3)}</div>;
 }

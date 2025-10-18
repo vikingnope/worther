@@ -218,12 +218,12 @@ export default function Recommendations() {
   }, []);
 
   // Add this function to handle map clicks
-  const handleMapClick = useCallback(() => {
+  function handleMapClick() {
     if (selectedBeachNum) {
       setSelectedBeachNum(null);
       setFocusLocation(null);
     }
-  }, [selectedBeachNum]);
+  }
 
   // Function to reset map view
   const resetMapView = () => {
@@ -416,10 +416,10 @@ export default function Recommendations() {
     return 'Strong Breeze'; // Beaufort 6+
   };
 
-  // Helper function to scroll to map section, memoized to prevent rerender
-  const scrollToMap = useCallback(() => {
+  // Helper function to scroll to map section
+  function scrollToMap() {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+  }
 
   // Handle button visibility with animation transitions
   useEffect(() => {

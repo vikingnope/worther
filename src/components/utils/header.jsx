@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { NAV_ITEMS, NAV_ICONS } from '@constants/headerConstants.jsx';
@@ -6,7 +6,7 @@ import Logo from '@resources/logo_transparent.png';
 import useSettingsStore from '@stores/settingsStore';
 import { Dropdown } from '@utils/mobileDropdown';
 
-const NavigationLink = memo(({ text, path, currentLocation }) => {
+function NavigationLink({ text, path, currentLocation }) {
   const active = currentLocation === path;
 
   return (
@@ -25,20 +25,18 @@ const NavigationLink = memo(({ text, path, currentLocation }) => {
       ></span>
     </Link>
   );
-});
+}
 
-NavigationLink.displayName = 'NavigationLink';
-
-export const Header = memo(() => {
+export function Header() {
   const history = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   let location = '/' + useLocation().pathname.split('/')[1];
 
   const { theme, setTheme } = useSettingsStore();
 
-  const toggleTheme = useCallback(() => {
+  function toggleTheme() {
     setTheme(theme === 'dark' ? 'light' : 'dark');
-  }, [theme, setTheme]);
+  }
 
   if (
     location === '/weatherCountry' ||
@@ -67,13 +65,10 @@ export const Header = memo(() => {
     };
   }, []);
 
-  const handleClick = useCallback(
-    e => {
-      e.preventDefault();
-      history('/');
-    },
-    [history]
-  );
+  function handleClick(e) {
+    e.preventDefault();
+    history('/');
+  }
 
   return (
     <>
@@ -162,6 +157,4 @@ export const Header = memo(() => {
       <div className="h-[65px] w-full"></div>
     </>
   );
-});
-
-Header.displayName = 'Header';
+}

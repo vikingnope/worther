@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { useEffect, useState, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { SunriseSunsetTimes } from '@components/weather/helpers/weatherHelpers';
 import { ShowWeather } from '@components/weather/WeatherDisplay';
 
-export const SingleThreeHourForecastData = memo(() => {
+export function SingleThreeHourForecastData() {
   const { index, lat, lon } = useParams();
   const numericIndex = parseInt(index, 10); // Convert index to a number
 
@@ -101,20 +101,18 @@ export const SingleThreeHourForecastData = memo(() => {
     ).toDateString();
   }, [weather.dayUNIX, location.timeZone]);
 
-  const currentTime = useMemo(() => {
+  const currentTime = (() => {
     const d = new Date();
     return {
       hour: d.getHours(),
       minute: d.getMinutes(),
     };
-  }, []);
+  })();
 
-  const localSunriseSunsetTimes = useMemo(() => {
-    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
-      return SunriseSunsetTimes(times);
-    }
-    return null;
-  }, [times]);
+  const localSunriseSunsetTimes =
+    times?.sunrise && times?.sunset && times?.timeZone !== undefined
+      ? SunriseSunsetTimes(times)
+      : null;
 
   return (
     <ShowWeather
@@ -150,6 +148,4 @@ export const SingleThreeHourForecastData = memo(() => {
       loading={loading}
     />
   );
-});
-
-SingleThreeHourForecastData.displayName = 'SingleThreeHourForecastData';
+}

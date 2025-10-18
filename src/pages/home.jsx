@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { BiCurrentLocation } from 'react-icons/bi';
 import { FaMapMarkedAlt, FaCloudSunRain, FaListUl, FaInfoCircle } from 'react-icons/fa';
 import { MdLocationOff } from 'react-icons/md';
@@ -112,13 +112,13 @@ export default function Home() {
     }
   }, []);
 
-  const handleViewWeatherDetails = useCallback(() => {
+  function handleViewWeatherDetails() {
     if (userPos.latitude && userPos.longitude) {
       navigate(`/weatherLocation/${userPos.latitude}/${userPos.longitude}`);
     } else {
       navigate('/weather');
     }
-  }, [navigate, userPos]);
+  }
 
   return (
     <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">

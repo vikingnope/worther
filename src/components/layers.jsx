@@ -1,9 +1,9 @@
 import Terminator from '@joergdietrich/leaflet.terminator';
 import axios from 'axios';
-import { useEffect, useState, memo, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { TileLayer, useMap } from 'react-leaflet';
 
-export const CloudLayer = memo(props => {
+export function CloudLayer(props) {
   return (
     <>
       {props.show ? (
@@ -17,11 +17,9 @@ export const CloudLayer = memo(props => {
       ) : null}
     </>
   );
-});
+}
 
-CloudLayer.displayName = 'CloudLayer';
-
-export const WindSpeedLayer = memo(props => {
+export function WindSpeedLayer(props) {
   return (
     <>
       {props.show ? (
@@ -35,11 +33,9 @@ export const WindSpeedLayer = memo(props => {
       ) : null}
     </>
   );
-});
+}
 
-WindSpeedLayer.displayName = 'WindSpeedLayer';
-
-export const TemperatureLayer = memo(props => {
+export function TemperatureLayer(props) {
   return (
     <>
       {props.show ? (
@@ -53,13 +49,11 @@ export const TemperatureLayer = memo(props => {
       ) : null}
     </>
   );
-});
-
-TemperatureLayer.displayName = 'TemperatureLayer';
+}
 
 const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
 
-export const RainViewerData = memo(props => {
+export function RainViewerData(props) {
   const [path, setPath] = useState();
 
   useEffect(() => {
@@ -93,9 +87,7 @@ export const RainViewerData = memo(props => {
       )}
     </>
   );
-});
-
-RainViewerData.displayName = 'RainViewerData';
+}
 
 // Define the labelLayerProps here, outside of JSX
 const getLabelLayerProps = theme => ({
@@ -112,7 +104,7 @@ const getLabelLayerProps = theme => ({
   subdomains: 'abcd',
 });
 
-export const HybridLayer = memo(props => {
+export function HybridLayer(props) {
   const labelLayerProps = getLabelLayerProps(props.theme);
 
   return (
@@ -133,12 +125,10 @@ export const HybridLayer = memo(props => {
       ) : null}
     </>
   );
-});
-
-HybridLayer.displayName = 'HybridLayer';
+}
 
 // export const WindDirectionLayer = (props) => {
-export const DayNightLayer = memo(props => {
+export function DayNightLayer(props) {
   const map = useMap();
   const terminatorRef = useRef(null);
   const intervalRef = useRef(null);
@@ -215,9 +205,7 @@ export const DayNightLayer = memo(props => {
 
   // This component doesn't render anything visible directly
   return null;
-});
-
-DayNightLayer.displayName = 'DayNightLayer';
+}
 
 //   return (
 //     <>
