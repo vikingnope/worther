@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Activity, useEffect, useState } from 'react';
 import { BsSliders } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoClose, IoSearch, IoLayers } from 'react-icons/io5';
@@ -469,7 +469,7 @@ export function MenuBar(props) {
 
   return (
     <div>
-      {!toggle && (
+      <Activity mode={!toggle ? 'visible' : 'hidden'}>
         <button
           onClick={handleToggle}
           className={menuButtonClass}
@@ -479,9 +479,9 @@ export function MenuBar(props) {
           <IoIosArrowBack size="20" className="mr-1" />
           <span className="font-medium">Menu</span>
         </button>
-      )}
+      </Activity>
 
-      {toggle && (
+      <Activity mode={toggle ? 'visible' : 'hidden'}>
         <OptionsMethod
           mode={props.mode}
           showWindDir={props.showWindDir}
@@ -504,7 +504,7 @@ export function MenuBar(props) {
           className={optionsContainerClass}
           aria-expanded="true"
         />
-      )}
+      </Activity>
     </div>
   );
 }

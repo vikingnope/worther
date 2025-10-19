@@ -1,53 +1,47 @@
 import Terminator from '@joergdietrich/leaflet.terminator';
 import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import { Activity, useEffect, useEffectEvent, useState, useRef } from 'react';
 import { TileLayer, useMap } from 'react-leaflet';
 
 export function CloudLayer(props) {
   return (
-    <>
-      {props.show ? (
-        <TileLayer
-          url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
-          tileSize={256}
-          zIndex={3}
-          maxZoom={16}
-          opacity={props.opacity}
-        />
-      ) : null}
-    </>
+    <Activity mode={props.show ? 'visible' : 'hidden'}>
+      <TileLayer
+        url={`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
+        tileSize={256}
+        zIndex={3}
+        maxZoom={16}
+        opacity={props.opacity}
+      />
+    </Activity>
   );
 }
 
 export function WindSpeedLayer(props) {
   return (
-    <>
-      {props.show ? (
-        <TileLayer
-          url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
-          tileSize={256}
-          zIndex={3}
-          maxZoom={16}
-          opacity={props.opacity}
-        />
-      ) : null}
-    </>
+    <Activity mode={props.show ? 'visible' : 'hidden'}>
+      <TileLayer
+        url={`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
+        tileSize={256}
+        zIndex={3}
+        maxZoom={16}
+        opacity={props.opacity}
+      />
+    </Activity>
   );
 }
 
 export function TemperatureLayer(props) {
   return (
-    <>
-      {props.show ? (
-        <TileLayer
-          url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
-          tileSize={256}
-          zIndex={3}
-          maxZoom={16}
-          opacity={props.opacity}
-        />
-      ) : null}
-    </>
+    <Activity mode={props.show ? 'visible' : 'hidden'}>
+      <TileLayer
+        url={`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
+        tileSize={256}
+        zIndex={3}
+        maxZoom={16}
+        opacity={props.opacity}
+      />
+    </Activity>
   );
 }
 
@@ -73,19 +67,15 @@ export function RainViewerData(props) {
   }
 
   return (
-    <>
-      {path !== undefined && props.show ? (
-        <TileLayer
-          url={`https://tilecache.rainviewer.com${path}/256/{z}/{x}/{y}/2/1_1.png`}
-          tileSize={256}
-          zIndex={3}
-          maxZoom={16}
-          opacity={props.opacity}
-        />
-      ) : (
-        <></>
-      )}
-    </>
+    <Activity mode={path !== undefined && props.show ? 'visible' : 'hidden'}>
+      <TileLayer
+        url={`https://tilecache.rainviewer.com${path}/256/{z}/{x}/{y}/2/1_1.png`}
+        tileSize={256}
+        zIndex={3}
+        maxZoom={16}
+        opacity={props.opacity}
+      />
+    </Activity>
   );
 }
 
@@ -108,22 +98,18 @@ export function HybridLayer(props) {
   const labelLayerProps = getLabelLayerProps(props.theme);
 
   return (
-    <>
-      {props.show ? (
-        <>
-          {/* Base satellite layer */}
-          <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            attribution='&copy; <a href="https://www.esri.com">Esri</a>, Maxar, Earthstar Geographics'
-            tileSize={256}
-            zIndex={2}
-            opacity={1}
-          />
-          {/* Labels overlay layer */}
-          <TileLayer {...labelLayerProps} />
-        </>
-      ) : null}
-    </>
+    <Activity mode={props.show ? 'visible' : 'hidden'}>
+      {/* Base satellite layer */}
+      <TileLayer
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        attribution='&copy; <a href="https://www.esri.com">Esri</a>, Maxar, Earthstar Geographics'
+        tileSize={256}
+        zIndex={2}
+        opacity={1}
+      />
+      {/* Labels overlay layer */}
+      <TileLayer {...labelLayerProps} />
+    </Activity>
   );
 }
 
@@ -132,6 +118,18 @@ export function DayNightLayer(props) {
   const map = useMap();
   const terminatorRef = useRef(null);
   const intervalRef = useRef(null);
+
+  // Use useEffectEvent to handle style updates without adding dependencies
+  const updateTerminatorStyle = useEffectEvent(() => {
+    if (!terminatorRef.current) return;
+
+    terminatorRef.current.setStyle({
+      color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
+      fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.5)',
+      fillOpacity: props.opacity,
+      opacity: props.opacity,
+    });
+  });
 
   // Effect for creating/destroying the layer based only on props.show
   useEffect(() => {
@@ -169,6 +167,10 @@ export function DayNightLayer(props) {
         intervalRef.current = null;
       }
     }
+    // Update styles when layer is shown (using Effect Event)
+    else if (props.show && terminatorRef.current) {
+      updateTerminatorStyle();
+    }
 
     // Clean up function for useEffect
     return () => {
@@ -181,27 +183,7 @@ export function DayNightLayer(props) {
         intervalRef.current = null;
       }
     };
-  }, [map, props.show, props.opacity, props.mapType]);
-
-  // Separate effect for opacity updates
-  useEffect(() => {
-    if (props.show && terminatorRef.current && props.opacity !== undefined) {
-      terminatorRef.current.setStyle({
-        fillOpacity: props.opacity,
-        opacity: props.opacity,
-      });
-    }
-  }, [props.opacity, props.show]);
-
-  // Separate effect for map type (color) updates
-  useEffect(() => {
-    if (props.show && terminatorRef.current && props.mapType) {
-      terminatorRef.current.setStyle({
-        color: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
-        fillColor: props.mapType === 'light' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(0, 0, 0, 0.5)',
-      });
-    }
-  }, [props.mapType, props.show]);
+  }, [map, props.show]); // Only depend on map and show, styles handled by Effect Event
 
   // This component doesn't render anything visible directly
   return null;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { Activity, useState, useEffect, useRef } from 'react';
 import { MdClose } from 'react-icons/md';
 import { RiMenu4Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
@@ -28,7 +28,7 @@ function Navigations({ text, path, currentLocation, onNavigate }) {
 
 export function Dropdown(props) {
   const [opened, setOpened] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [activityMode, setActivityMode] = useState('hidden');
   const [animating, setAnimating] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -52,41 +52,33 @@ export function Dropdown(props) {
     };
   }, [dropdownRef]);
 
-  // Handle animation states when opened state changes
+  // Handle activity mode and animation states
   useEffect(() => {
     if (opened) {
-      setVisible(true);
-      // Small delay to ensure DOM update before animation starts
+      // Opening: Show immediately with animating=false, then animate in
+      setActivityMode('visible');
+      setAnimating(false); // Ensure we start from the non-animated state
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setAnimating(true);
         });
       });
     } else {
+      // Closing: Animate out first, then hide after animation completes
       setAnimating(false);
-    }
-  }, [opened]);
-
-  // Handle visibility after animation completes
-  useEffect(() => {
-    if (!animating && visible) {
       const timer = setTimeout(() => {
-        setVisible(false);
-      }, 300); // Match duration with the CSS transition
+        setActivityMode('hidden');
+      }, 300); // Match with CSS transition duration
       return () => clearTimeout(timer);
     }
-  }, [animating, visible]);
+  }, [opened]);
 
   const openMenu = () => {
     setOpened(true);
   };
 
   const closeMenu = () => {
-    setAnimating(false);
-    // Actual closing is handled by the effect above
-    setTimeout(() => {
-      setOpened(false);
-    }, 50);
+    setOpened(false);
   };
 
   const toggleMenu = () => {
@@ -120,7 +112,7 @@ export function Dropdown(props) {
         </div>
       </button>
 
-      {(opened || visible) && (
+      <Activity mode={activityMode}>
         <nav className="absolute right-0 z-50 mt-2 min-w-[220px]">
           <div
             className={`flex flex-col rounded-lg bg-slate-900/95 backdrop-blur-md shadow-lg overflow-hidden
@@ -163,7 +155,7 @@ export function Dropdown(props) {
             </button>
           </div>
         </nav>
-      )}
+      </Activity>
     </div>
   );
 }
