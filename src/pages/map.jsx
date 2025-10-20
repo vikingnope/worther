@@ -7,7 +7,7 @@ import {
   WindSpeedLayer,
   TemperatureLayer,
   CloudLayer,
-  RainViewerData,
+  PrecipitationLayer,
   HybridLayer,
   DayNightLayer,
 } from '@components/layers';
@@ -157,7 +157,7 @@ export default function ShowMap(props) {
   const [cloudLayerChoice, setCloudLayerChoice] = useState(false);
   const [temperatureLayerChoice, setTemperatureLayerChoice] = useState(false);
   const [windLayerChoice, setWindLayerChoice] = useState(false);
-  const [rainLayerChoice, setRainLayerChoice] = useState(true);
+  const [precipitationLayerChoice, setPrecipitationLayerChoice] = useState(true);
   const [satelliteLayerChoice, setSatelliteLayerChoice] = useState(false);
   const [windDirChoice, setWindDirChoice] = useState(false);
   const [dayNightLayerChoice, setDayNightLayerChoice] = useState(false);
@@ -230,7 +230,7 @@ export default function ShowMap(props) {
             }
             subdomains="abcd"
           />
-          <RainViewerData show={rainLayerChoice} opacity={layerOpacity} />
+          <PrecipitationLayer show={precipitationLayerChoice} opacity={layerOpacity} />
           <WindSpeedLayer show={windLayerChoice} opacity={layerOpacity} />
           <TemperatureLayer show={temperatureLayerChoice} opacity={layerOpacity} />
           <CloudLayer show={cloudLayerChoice} opacity={layerOpacity} />
@@ -244,8 +244,8 @@ export default function ShowMap(props) {
             onShowWindDirChange={setWindDirChoice}
             showSatellite={satelliteLayerChoice}
             onShowSatelliteChange={setSatelliteLayerChoice}
-            showRain={rainLayerChoice}
-            onShowRainChange={setRainLayerChoice}
+            showRain={precipitationLayerChoice}
+            onShowRainChange={setPrecipitationLayerChoice}
             showCloud={cloudLayerChoice}
             onShowCloudChange={setCloudLayerChoice}
             showWind={windLayerChoice}

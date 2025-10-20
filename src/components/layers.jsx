@@ -45,31 +45,11 @@ export function TemperatureLayer(props) {
   );
 }
 
-const baseURL = 'https://api.rainviewer.com/public/weather-maps.json';
-
-export function RainViewerData(props) {
-  const [path, setPath] = useState();
-
-  useEffect(() => {
-    getPath();
-  }, []);
-
-  async function getPath() {
-    try {
-      const response = await axios.get(baseURL);
-      const lastPath = response.data?.radar?.past?.length - 1;
-      if (lastPath >= 0) {
-        setPath(response.data.radar.past[lastPath].path);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+export function PrecipitationLayer(props) {
   return (
-    <Activity mode={path !== undefined && props.show ? 'visible' : 'hidden'}>
+    <Activity mode={props.show ? 'visible' : 'hidden'}>
       <TileLayer
-        url={`https://tilecache.rainviewer.com${path}/256/{z}/{x}/{y}/2/1_1.png`}
+        url={`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${import.meta.env.VITE_OPEN_WEATHER_API_KEY}`}
         tileSize={256}
         zIndex={3}
         maxZoom={16}
