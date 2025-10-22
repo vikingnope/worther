@@ -199,7 +199,7 @@ export default function ShowMap(props) {
 
   function map(markerShow, zoomLevel) {
     return (
-      <div className="text-white flex flex-col min-h-screen overflow-hidden bg-black">
+      <div className="flex min-h-screen flex-col overflow-hidden bg-black text-white">
         <Header />
         <MapContainer
           center={

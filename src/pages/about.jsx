@@ -10,7 +10,7 @@ function ExternalLink({ href, children }) {
   return (
     <a
       href={href}
-      className="underline duration-300 font-bold hover:text-cyan-300"
+      className="font-bold underline duration-300 hover:text-cyan-300"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -40,25 +40,25 @@ export default function About() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black text-white">
       <Header />
-      <main className="flex flex-col items-center justify-center grow px-6 md:px-12 py-10">
-        <div className="max-w-4xl w-full backdrop-blur-sm bg-black/30 rounded-xl p-8 shadow-lg border border-gray-800">
-          <h1 className="uppercase font-bold text-5xl md:text-7xl mb-8 text-center bg-gradient-to-r from-cyan-300 to-blue-500 text-transparent bg-clip-text">
+      <main className="flex grow flex-col items-center justify-center px-6 py-10 md:px-12">
+        <div className="w-full max-w-4xl rounded-xl border border-gray-800 bg-black/30 p-8 shadow-lg backdrop-blur-sm">
+          <h1 className="mb-8 bg-gradient-to-r from-cyan-300 to-blue-500 bg-clip-text text-center text-5xl font-bold text-transparent uppercase md:text-7xl">
             Welcome to Worther!
           </h1>
 
-          <p className="text-xl md:text-3xl my-8 text-center leading-relaxed">
+          <p className="my-8 text-center text-xl leading-relaxed md:text-3xl">
             The weather app with current weather of the whole world.
           </p>
 
           <div className="mt-12 mb-8">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-cyan-300">Built with</h2>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <h2 className="mb-4 text-2xl font-semibold text-cyan-300 md:text-3xl">Built with</h2>
+            <div className="flex flex-wrap justify-center gap-3">
               {technologies.map((tech, index) => (
                 <span
                   key={index}
-                  className="bg-gray-800 px-4 py-2 rounded-full hover:bg-gray-700 transition-colors"
+                  className="rounded-full bg-gray-800 px-4 py-2 transition-colors hover:bg-gray-700"
                 >
                   <ExternalLink href={tech.url}>{tech.name}</ExternalLink>
                 </span>
@@ -67,12 +67,12 @@ export default function About() {
           </div>
 
           <div className="mb-10">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-cyan-300">APIs used</h2>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <h2 className="mb-4 text-2xl font-semibold text-cyan-300 md:text-3xl">APIs used</h2>
+            <div className="flex flex-wrap justify-center gap-3">
               {apis.map((api, index) => (
                 <span
                   key={index}
-                  className="bg-gray-800 px-4 py-2 rounded-full hover:bg-gray-700 transition-colors"
+                  className="rounded-full bg-gray-800 px-4 py-2 transition-colors hover:bg-gray-700"
                 >
                   <ExternalLink href={api.url}>{api.name}</ExternalLink>
                 </span>
@@ -81,15 +81,15 @@ export default function About() {
           </div>
         </div>
 
-        <div className="mt-8 max-w-4xl w-full flex flex-col md:flex-row justify-between text-sm text-gray-300">
-          <p className="p-4 bg-black/30 rounded-lg backdrop-blur-sm border border-gray-800">
+        <div className="mt-8 flex w-full max-w-4xl flex-col justify-between text-sm text-gray-300 md:flex-row">
+          <p className="rounded-lg border border-gray-800 bg-black/30 p-4 backdrop-blur-sm">
             <span className="font-semibold text-cyan-300">Disclaimer:</span> Any location data used
             is only sent to the weather API when search by location is chosen, on the map it is only
             kept on the client side. Analytics are also sent to a server.
           </p>
-          <p className="mt-4 md:mt-0 p-4 bg-black/30 rounded-lg backdrop-blur-sm border border-gray-800 text-center">
+          <p className="mt-4 rounded-lg border border-gray-800 bg-black/30 p-4 text-center backdrop-blur-sm md:mt-0">
             Version{' '}
-            <Link to="/changelog" className="text-cyan-300 font-semibold underline">
+            <Link to="/changelog" className="font-semibold text-cyan-300 underline">
               {packageJson.version}
             </Link>
           </p>

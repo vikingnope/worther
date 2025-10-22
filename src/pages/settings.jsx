@@ -54,37 +54,37 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black text-white">
       <Header />
-      <main className="grow flex flex-col items-center justify-start py-8 md:py-12 px-4 md:px-6">
+      <main className="flex grow flex-col items-center justify-start px-4 py-8 md:px-6 md:py-12">
         {/* Settings Header */}
-        <section className="text-center mb-10">
+        <section className="mb-10 text-center">
           <div className="flex items-center justify-center gap-3">
             <IoMdSettings className="text-4xl text-cyan-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 pb-2">
+            <h1 className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text pb-2 text-4xl font-bold text-transparent md:text-5xl">
               Settings
             </h1>
           </div>
-          <p className="text-gray-300 mt-2">Customize your Worther experience</p>
+          <p className="mt-2 text-gray-300">Customize your Worther experience</p>
         </section>
 
         {/* Settings Panel */}
         <div className="w-full max-w-2xl">
-          <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl p-6 border border-blue-900/50 shadow-lg backdrop-blur-sm">
+          <div className="rounded-xl border border-blue-900/50 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 p-6 shadow-lg backdrop-blur-sm">
             {/* Theme Setting */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-cyan-300 mb-4 flex items-center gap-2">
-                <div className="relative w-5 h-5">
+              <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-cyan-300">
+                <div className="relative h-5 w-5">
                   <FaSun
-                    className={`absolute left-0 top-0 ${theme === 'light' ? 'opacity-100' : 'opacity-0'} transition-opacity`}
+                    className={`absolute top-0 left-0 ${theme === 'light' ? 'opacity-100' : 'opacity-0'} transition-opacity`}
                   />
                   <FaMoon
-                    className={`absolute left-0 top-0 ${theme === 'dark' ? 'opacity-100' : 'opacity-0'} transition-opacity`}
+                    className={`absolute top-0 left-0 ${theme === 'dark' ? 'opacity-100' : 'opacity-0'} transition-opacity`}
                   />
                 </div>
                 Theme
               </h2>
-              <div className="bg-black/40 p-4 rounded-lg backdrop-blur-sm border border-gray-800/50">
+              <div className="rounded-lg border border-gray-800/50 bg-black/40 p-4 backdrop-blur-sm">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300">
@@ -95,10 +95,10 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setTheme('dark')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all border cursor-pointer ${
+                      className={`cursor-pointer rounded-md border px-4 py-3 font-medium shadow-md transition-all ${
                         theme === 'dark'
-                          ? 'bg-neutral-900 text-white border-gray-600'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300 border-transparent'
+                          ? 'border-gray-600 bg-neutral-900 text-white'
+                          : 'border-transparent bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       <div className="flex items-center justify-center gap-2">
@@ -108,10 +108,10 @@ export default function Settings() {
                     </button>
                     <button
                       onClick={() => setTheme('light')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all border cursor-pointer ${
+                      className={`cursor-pointer rounded-md border px-4 py-3 font-medium shadow-md transition-all ${
                         theme === 'light'
-                          ? 'bg-white text-black border-transparent'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300 border-transparent'
+                          ? 'border-transparent bg-white text-black'
+                          : 'border-transparent bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       <div className="flex items-center justify-center gap-2">
@@ -126,34 +126,34 @@ export default function Settings() {
 
             {/* Units Settings - All consolidated in one section */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-cyan-300 mb-4 flex items-center gap-2">
+              <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-cyan-300">
                 <FaRulerHorizontal />
                 Measurement Units
               </h2>
-              <div className="bg-black/40 p-4 rounded-lg backdrop-blur-sm border border-gray-800/50">
+              <div className="rounded-lg border border-gray-800/50 bg-black/40 p-4 backdrop-blur-sm">
                 {/* Temperature Units */}
                 <div className="mb-6">
-                  <div className="flex items-center gap-2 text-lg font-medium text-blue-300 mb-3">
+                  <div className="mb-3 flex items-center gap-2 text-lg font-medium text-blue-300">
                     <FaThermometerHalf />
                     Temperature
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setTemperatureUnit('celsius')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         temperatureUnit === 'celsius'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Celsius (°C)
                     </button>
                     <button
                       onClick={() => setTemperatureUnit('fahrenheit')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         temperatureUnit === 'fahrenheit'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Fahrenheit (°F)
@@ -163,27 +163,27 @@ export default function Settings() {
 
                 {/* Distance Units */}
                 <div className="mb-6">
-                  <div className="flex items-center gap-2 text-lg font-medium text-blue-300 mb-3">
+                  <div className="mb-3 flex items-center gap-2 text-lg font-medium text-blue-300">
                     <FaRuler />
                     Distance
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setDistanceUnit('km')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         distanceUnit === 'km'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Kilometers (km)
                     </button>
                     <button
                       onClick={() => setDistanceUnit('mi')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         distanceUnit === 'mi'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Miles (mi)
@@ -193,27 +193,27 @@ export default function Settings() {
 
                 {/* Wind Speed Units */}
                 <div className="mb-6">
-                  <div className="flex items-center gap-2 text-lg font-medium text-blue-300 mb-3">
+                  <div className="mb-3 flex items-center gap-2 text-lg font-medium text-blue-300">
                     <FaWind />
                     Wind Speed
                   </div>
-                  <div className="grid grid-cols-2 gap-3 mb-2">
+                  <div className="mb-2 grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setSpeedUnit('kmh')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         speedUnit === 'kmh'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Kilometers per hour (km/h)
                     </button>
                     <button
                       onClick={() => setSpeedUnit('mph')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         speedUnit === 'mph'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Miles per hour (mph)
@@ -222,20 +222,20 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setSpeedUnit('ms')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         speedUnit === 'ms'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Meters per second (m/s)
                     </button>
                     <button
                       onClick={() => setSpeedUnit('knots')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         speedUnit === 'knots'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Knots (kn)
@@ -245,27 +245,27 @@ export default function Settings() {
 
                 {/* Pressure Units */}
                 <div className="mb-6">
-                  <div className="flex items-center gap-2 text-lg font-medium text-blue-300 mb-3">
+                  <div className="mb-3 flex items-center gap-2 text-lg font-medium text-blue-300">
                     <FaTachometerAlt />
                     Pressure
                   </div>
-                  <div className="grid grid-cols-2 gap-3 mb-2">
+                  <div className="mb-2 grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setPressureUnit('hPa')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         pressureUnit === 'hPa'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Hectopascals (hPa)
                     </button>
                     <button
                       onClick={() => setPressureUnit('mmHg')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         pressureUnit === 'mmHg'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Millimeters of Mercury (mmHg)
@@ -274,20 +274,20 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setPressureUnit('inHg')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         pressureUnit === 'inHg'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Inches of Mercury (inHg)
                     </button>
                     <button
                       onClick={() => setPressureUnit('psi')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         pressureUnit === 'psi'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Pounds per sq. inch (psi)
@@ -297,27 +297,27 @@ export default function Settings() {
 
                 {/* Precipitation Units */}
                 <div>
-                  <div className="flex items-center gap-2 text-lg font-medium text-blue-300 mb-3">
+                  <div className="mb-3 flex items-center gap-2 text-lg font-medium text-blue-300">
                     <FaTint />
                     Precipitation
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setPrecipitationUnit('mm')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         precipitationUnit === 'mm'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Millimeters (mm)
                     </button>
                     <button
                       onClick={() => setPrecipitationUnit('in')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         precipitationUnit === 'in'
                           ? 'bg-gradient-to-r from-green-600 to-green-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       Inches (in)
@@ -329,11 +329,11 @@ export default function Settings() {
 
             {/* Time Format Setting */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-cyan-300 mb-4 flex items-center gap-2">
+              <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-cyan-300">
                 <FaClock />
                 Time Format
               </h2>
-              <div className="bg-black/40 p-4 rounded-lg backdrop-blur-sm border border-gray-800/50">
+              <div className="rounded-lg border border-gray-800/50 bg-black/40 p-4 backdrop-blur-sm">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300">
@@ -346,20 +346,20 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setTimeFormat('24h')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         timeFormat === '24h'
                           ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       24-hour (14:30)
                     </button>
                     <button
                       onClick={() => setTimeFormat('12h')}
-                      className={`px-4 py-3 rounded-md font-medium shadow-md transition-all cursor-pointer ${
+                      className={`cursor-pointer rounded-md px-4 py-3 font-medium shadow-md transition-all ${
                         timeFormat === '12h'
                           ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
-                          : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                       }`}
                     >
                       12-hour (2:30 PM)
@@ -371,11 +371,11 @@ export default function Settings() {
 
             {/* Default Location Setting */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-cyan-300 mb-4 flex items-center gap-2">
+              <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-cyan-300">
                 <FaMapMarkerAlt />
                 Default Location
               </h2>
-              <div className="bg-black/40 p-4 rounded-lg backdrop-blur-sm border border-gray-800/50">
+              <div className="rounded-lg border border-gray-800/50 bg-black/40 p-4 backdrop-blur-sm">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-300">
@@ -385,17 +385,17 @@ export default function Settings() {
                       </span>
                     </span>
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex flex-col gap-3 sm:flex-row">
                     <input
                       type="text"
                       value={locationInput}
                       onChange={e => setLocationInput(e.target.value)}
                       placeholder="Enter city name or coordinates"
-                      className="flex-1 px-4 py-3 bg-gray-800 rounded-md border border-gray-700 focus:outline-none focus:border-blue-500"
+                      className="flex-1 rounded-md border border-gray-700 bg-gray-800 px-4 py-3 focus:border-blue-500 focus:outline-none"
                     />
                     <button
                       onClick={handleSaveLocation}
-                      className="px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-md font-medium shadow-md cursor-pointer whitespace-nowrap"
+                      className="cursor-pointer rounded-md bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 font-medium whitespace-nowrap shadow-md hover:from-blue-500 hover:to-blue-600"
                     >
                       Save Location
                     </button>
@@ -406,15 +406,15 @@ export default function Settings() {
 
             {/* Reset Settings */}
             <div>
-              <div className="bg-black/40 p-4 rounded-lg backdrop-blur-sm border border-gray-800/50">
+              <div className="rounded-lg border border-gray-800/50 bg-black/40 p-4 backdrop-blur-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-300 flex items-center gap-2">
+                  <span className="flex items-center gap-2 text-gray-300">
                     <FaUndoAlt />
                     Reset all settings to default
                   </span>
                   <button
                     onClick={resetSettings}
-                    className="px-4 py-2 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 transition-all rounded-md font-medium shadow-md cursor-pointer"
+                    className="cursor-pointer rounded-md bg-gradient-to-r from-red-700 to-red-600 px-4 py-2 font-medium shadow-md transition-all hover:from-red-600 hover:to-red-500"
                   >
                     Reset Settings
                   </button>

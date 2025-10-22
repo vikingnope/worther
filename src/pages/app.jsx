@@ -36,7 +36,7 @@ export default function App() {
       <Router>
         <Suspense
           fallback={
-            <div className="text-white flex h-screen bg-gradient-to-b from-black via-blue-950 to-black"></div>
+            <div className="flex h-screen bg-gradient-to-b from-black via-blue-950 to-black text-white"></div>
           }
         >
           <Routes>

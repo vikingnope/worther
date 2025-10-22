@@ -252,7 +252,7 @@ function OptionsMethod(props) {
       onTouchMove={preventMapInteraction}
     >
       {/* Menu header with close button */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h2
           className={`text-lg font-semibold ${props.mode === 'dark' ? 'text-white' : 'text-gray-800'}`}
         >
@@ -260,7 +260,7 @@ function OptionsMethod(props) {
         </h2>
         <button
           onClick={props.onClose}
-          className={`p-1 rounded-full transition-colors ${
+          className={`rounded-full p-1 transition-colors ${
             props.mode === 'dark'
               ? 'bg-neutral-700 text-white hover:bg-neutral-600'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -274,7 +274,7 @@ function OptionsMethod(props) {
       {/* City search form */}
       <form onSubmit={handleSubmit}>
         <div className={inputContainerClass}>
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <div className="absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400">
             <IoSearch size="18" />
           </div>
           <input
@@ -290,7 +290,7 @@ function OptionsMethod(props) {
 
       {/* Layer opacity control */}
       <div className={rangeContainerClass}>
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2 flex items-center justify-between">
           <label htmlFor="opacitySlider" className={sectionTitleClass}>
             <div className="flex items-center gap-1">
               <BsSliders />
@@ -300,8 +300,8 @@ function OptionsMethod(props) {
           <span
             className={
               props.mode === 'dark'
-                ? 'text-white font-medium text-sm'
-                : 'text-gray-700 font-medium text-sm'
+                ? 'text-sm font-medium text-white'
+                : 'text-sm font-medium text-gray-700'
             }
           >
             {Math.round(props.layerOpacity * 100)}%
@@ -326,7 +326,7 @@ function OptionsMethod(props) {
       {/* Weather layer toggles */}
       <div>
         <label htmlFor="mapLayersSection" className={sectionTitleClass}>
-          <div className="flex items-center gap-1 mb-2">
+          <div className="mb-2 flex items-center gap-1">
             <IoLayers />
             <span>Map Layers</span>
           </div>
@@ -396,7 +396,7 @@ function OptionsMethod(props) {
       {/* Day/Night mode toggle */}
       <div className="mt-4">
         <label htmlFor="dayNightToggle" className={sectionTitleClass}>
-          <div className="flex items-center gap-1 mb-2">
+          <div className="mb-2 flex items-center gap-1">
             <PiSunHorizonBold />
             <span>Day/Night Mode</span>
           </div>
@@ -404,10 +404,7 @@ function OptionsMethod(props) {
         <button
           id="dayNightToggle"
           onClick={handleDayNightToggle}
-          className={`
-                    flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200
-                    ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
-                `}
+          className={`flex w-full items-center justify-center gap-2 rounded-lg p-2 text-sm font-medium transition-all duration-200 ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'} `}
           aria-label="Toggle day/night mode"
           aria-pressed={theme === 'dark'}
         >

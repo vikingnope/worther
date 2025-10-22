@@ -12,11 +12,11 @@ function Navigations({ text, path, currentLocation, onNavigate }) {
   return (
     <Link
       to={path}
-      className={`flex justify-start px-5 py-3 items-center gap-3 uppercase text-base font-medium ${
+      className={`flex items-center justify-start gap-3 px-5 py-3 text-base font-medium uppercase ${
         active
-          ? 'text-cyan-300 bg-slate-800/50'
-          : 'text-gray-200 hover:text-white hover:bg-slate-800/30'
-      } transition-all duration-200 border-l-2 ${active ? 'border-cyan-300' : 'border-transparent'}`}
+          ? 'bg-slate-800/50 text-cyan-300'
+          : 'text-gray-200 hover:bg-slate-800/30 hover:text-white'
+      } border-l-2 transition-all duration-200 ${active ? 'border-cyan-300' : 'border-transparent'}`}
       aria-label={`Navigate to ${text}`}
       onClick={onNavigate}
     >
@@ -93,20 +93,20 @@ export function Dropdown(props) {
     <div ref={dropdownRef} className="relative">
       <button
         onClick={toggleMenu}
-        className="flex items-center justify-center p-2 text-gray-200 hover:text-cyan-300 transition-colors duration-200 rounded-full hover:bg-slate-800/50 overflow-hidden"
+        className="flex items-center justify-center overflow-hidden rounded-full p-2 text-gray-200 transition-colors duration-200 hover:bg-slate-800/50 hover:text-cyan-300"
         aria-label={opened ? 'Close navigation menu' : 'Open navigation menu'}
       >
-        <div className="relative w-7 h-7">
+        <div className="relative h-7 w-7">
           <MdClose
             size="28"
             className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-              opened ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-50'
+              opened ? 'scale-100 rotate-0 opacity-100' : 'scale-50 rotate-90 opacity-0'
             }`}
           />
           <RiMenu4Line
             size="28"
             className={`absolute inset-0 transition-all duration-300 ease-in-out ${
-              opened ? 'opacity-0 -rotate-90 scale-50' : 'opacity-100 rotate-0 scale-100'
+              opened ? 'scale-50 -rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100'
             }`}
           />
         </div>
@@ -115,9 +115,7 @@ export function Dropdown(props) {
       <Activity mode={activityMode}>
         <nav className="absolute right-0 z-50 mt-2 min-w-[220px]">
           <div
-            className={`flex flex-col rounded-lg bg-slate-900/95 backdrop-blur-md shadow-lg overflow-hidden
-                      transition-all duration-300 ease-in-out origin-top
-                      ${animating ? 'opacity-100 transform translate-y-0 scale-100' : 'opacity-0 transform -translate-y-2 scale-95'}`}
+            className={`flex origin-top flex-col overflow-hidden rounded-lg bg-slate-900/95 shadow-lg backdrop-blur-md transition-all duration-300 ease-in-out ${animating ? 'translate-y-0 scale-100 transform opacity-100' : '-translate-y-2 scale-95 transform opacity-0'}`}
           >
             {NAV_ITEMS.map((item, index) => (
               <Navigations
@@ -131,11 +129,11 @@ export function Dropdown(props) {
             {/* Settings navigation */}
             <Link
               to="/settings"
-              className={`flex justify-start px-5 py-3 items-center gap-3 uppercase text-base font-medium ${
+              className={`flex items-center justify-start gap-3 px-5 py-3 text-base font-medium uppercase ${
                 props.location === '/settings'
-                  ? 'text-cyan-300 bg-slate-800/50'
-                  : 'text-gray-200 hover:text-white hover:bg-slate-800/30'
-              } transition-all duration-200 border-l-2 ${props.location === '/settings' ? 'border-cyan-300' : 'border-transparent'}`}
+                  ? 'bg-slate-800/50 text-cyan-300'
+                  : 'text-gray-200 hover:bg-slate-800/30 hover:text-white'
+              } border-l-2 transition-all duration-200 ${props.location === '/settings' ? 'border-cyan-300' : 'border-transparent'}`}
               aria-label="Navigate to settings"
               onClick={closeMenu}
             >
@@ -145,7 +143,7 @@ export function Dropdown(props) {
             {/* Theme toggle */}
             <button
               onClick={toggleTheme}
-              className="flex justify-start px-5 py-3 items-center gap-3 uppercase text-base font-medium text-gray-200 hover:text-white hover:bg-slate-800/30 transition-all duration-200 border-l-2 border-transparent"
+              className="flex items-center justify-start gap-3 border-l-2 border-transparent px-5 py-3 text-base font-medium text-gray-200 uppercase transition-all duration-200 hover:bg-slate-800/30 hover:text-white"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
               <span className="text-lg">

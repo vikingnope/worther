@@ -12,16 +12,14 @@ function NavigationLink({ text, path, currentLocation }) {
   return (
     <Link
       to={path}
-      className={`relative flex uppercase items-center gap-2 text-lg font-medium py-2 px-3 transition-all duration-300 ease-in-out mr-3 group 
-        ${active ? 'text-cyan-300' : 'text-gray-300 hover:text-white'}`}
+      className={`group relative mr-3 flex items-center gap-2 px-3 py-2 text-lg font-medium uppercase transition-all duration-300 ease-in-out ${active ? 'text-cyan-300' : 'text-gray-300 hover:text-white'}`}
       aria-label={`Navigate to ${text}`}
     >
       <span className="transition-all duration-300">{NAV_ICONS[text] ?? null}</span>
       <span>{text}</span>
       {/* Animated underline effect */}
       <span
-        className={`absolute bottom-0 left-0 w-full h-0.5 transform origin-left transition-all duration-300
-        ${active ? 'bg-cyan-300 scale-x-100' : 'bg-cyan-500 scale-x-0 group-hover:scale-x-100'}`}
+        className={`absolute bottom-0 left-0 h-0.5 w-full origin-left transform transition-all duration-300 ${active ? 'scale-x-100 bg-cyan-300' : 'scale-x-0 bg-cyan-500 group-hover:scale-x-100'}`}
       ></span>
     </Link>
   );
@@ -75,12 +73,12 @@ export function Header() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-1'
+            ? 'bg-slate-900/95 py-1 shadow-lg backdrop-blur-md'
             : 'bg-gradient-to-b from-slate-900/90 to-slate-900/70 py-2'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
             {/* Logo section */}
             <div className="flex-shrink-0">
               <button
@@ -88,16 +86,16 @@ export function Header() {
                 onKeyDown={e => {
                   if (e.key === 'Enter') handleClick(e);
                 }}
-                className="bg-transparent border-0 cursor-pointer flex items-center"
+                className="flex cursor-pointer items-center border-0 bg-transparent"
                 aria-label="Navigate to home page"
               >
                 <img
                   draggable="false"
                   src={Logo}
-                  className="transition-all duration-300 ease-in-out h-[50px] w-[50px] hover:brightness-110 hover:filter hover:drop-shadow-[0_0_3px_rgba(34,211,238,0.5)]"
+                  className="h-[50px] w-[50px] transition-all duration-300 ease-in-out hover:brightness-110 hover:drop-shadow-[0_0_3px_rgba(34,211,238,0.5)] hover:filter"
                   alt="logo"
                 />
-                <span className="hidden sm:block ml-3 text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text animate-text">
+                <span className="animate-text ml-3 hidden bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-xl font-bold text-transparent sm:block">
                   Worther
                 </span>
               </button>
@@ -106,7 +104,7 @@ export function Header() {
             {/* Navigation */}
             <nav className="flex items-center">
               {/* Desktop navigation - visible on lg screens and up */}
-              <div className="hidden lg:flex items-center space-x-1">
+              <div className="hidden items-center space-x-1 lg:flex">
                 {NAV_ITEMS.map((item, index) => (
                   <NavigationLink
                     key={index}
@@ -119,7 +117,7 @@ export function Header() {
                 {/* Theme toggle button */}
                 <button
                   onClick={toggleTheme}
-                  className="relative flex items-center py-2 px-3 text-lg transition-all duration-300 mr-2 text-gray-300 hover:text-white cursor-pointer"
+                  className="relative mr-2 flex cursor-pointer items-center px-3 py-2 text-lg text-gray-300 transition-all duration-300 hover:text-white"
                   aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
                 >
                   <span className="transition-all duration-300 hover:rotate-12">
@@ -129,7 +127,7 @@ export function Header() {
 
                 <Link
                   to="/settings"
-                  className={`relative flex items-center py-2 px-3 text-lg transition-all duration-300 ml-1 ${
+                  className={`relative ml-1 flex items-center px-3 py-2 text-lg transition-all duration-300 ${
                     location === '/settings' ? 'text-cyan-300' : 'text-gray-300 hover:text-white'
                   }`}
                   aria-label="Navigate to settings"
@@ -139,8 +137,7 @@ export function Header() {
                   </span>
                   {/* Animated underline effect */}
                   <span
-                    className={`absolute bottom-0 left-0 w-full h-0.5 transform origin-left transition-all duration-300
-                    ${location === '/settings' ? 'bg-cyan-300 scale-x-100' : 'bg-cyan-500 scale-x-0 group-hover:scale-x-100'}`}
+                    className={`absolute bottom-0 left-0 h-0.5 w-full origin-left transform transition-all duration-300 ${location === '/settings' ? 'scale-x-100 bg-cyan-300' : 'scale-x-0 bg-cyan-500 group-hover:scale-x-100'}`}
                   ></span>
                 </Link>
               </div>

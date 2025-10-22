@@ -187,10 +187,10 @@ export default function Changelog() {
         key={version}
         data-version={version}
         onClick={() => scrollToVersion(version)}
-        className={`flex items-center px-3 py-1.5 rounded-lg transition-all will-change-transform duration-400 ease-in-out whitespace-nowrap ${
+        className={`flex items-center rounded-lg px-3 py-1.5 whitespace-nowrap transition-all duration-400 ease-in-out will-change-transform ${
           activeVersion === version
-            ? 'bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 border-b-2 border-cyan-400 shadow-sm shadow-cyan-900/10 scale-[1.02]'
-            : 'hover:bg-gray-800/40 hover:scale-[1.01]'
+            ? 'scale-[1.02] border-b-2 border-cyan-400 bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 shadow-sm shadow-cyan-900/10'
+            : 'hover:scale-[1.01] hover:bg-gray-800/40'
         }`}
       >
         <span
@@ -200,7 +200,7 @@ export default function Changelog() {
         >
           {version}
         </span>
-        <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${getTypeBadge(type)}`}>
+        <span className={`ml-1.5 rounded-full px-1.5 py-0.5 text-xs ${getTypeBadge(type)}`}>
           {type}
         </span>
       </button>
@@ -213,10 +213,10 @@ export default function Changelog() {
       <li key={version}>
         <button
           onClick={() => scrollToVersion(version)}
-          className={`text-left w-full py-2 px-3 rounded-lg transition-all will-change-transform duration-500 ease-in-out ${
+          className={`w-full rounded-lg px-3 py-2 text-left transition-all duration-500 ease-in-out will-change-transform ${
             activeVersion === version
-              ? 'bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 border-l-2 border-cyan-400 pl-2.5 shadow-sm shadow-cyan-900/10 scale-[1.01]'
-              : 'hover:bg-gray-800/40 hover:translate-x-0.5'
+              ? 'scale-[1.01] border-l-2 border-cyan-400 bg-gradient-to-r from-cyan-900/40 to-cyan-800/20 pl-2.5 shadow-sm shadow-cyan-900/10'
+              : 'hover:translate-x-0.5 hover:bg-gray-800/40'
           }`}
         >
           <div className="flex items-center">
@@ -227,7 +227,7 @@ export default function Changelog() {
             >
               {version}
             </span>
-            <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${getTypeBadge(type)}`}>
+            <span className={`ml-2 rounded-full px-1.5 py-0.5 text-xs ${getTypeBadge(type)}`}>
               {type}
             </span>
           </div>
@@ -278,30 +278,30 @@ export default function Changelog() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black text-white">
       <Header />
-      <main className="flex-grow py-8 px-4 md:px-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-cyan-400 leading-relaxed">
+      <main className="flex-grow px-4 py-8 md:px-12">
+        <h1 className="mb-6 text-center text-4xl leading-relaxed font-bold text-cyan-400 md:text-5xl">
           Changelog
         </h1>
-        <p className="text-center mb-6 text-blue-300">
+        <p className="mb-6 text-center text-blue-300">
           Current Version: <span className="font-semibold">{packageJson.version}</span>
         </p>
 
         {/* Horizontal version selector - visible on all screens up to xl breakpoint */}
-        <div className="flex overflow-x-auto py-2 px-1 mb-6 xl:hidden" ref={horizontalScrollRef}>
+        <div className="mb-6 flex overflow-x-auto px-1 py-2 xl:hidden" ref={horizontalScrollRef}>
           <div className="flex space-x-2">{horizontalVersionButtons}</div>
         </div>
 
         <div className="flex xl:gap-0">
           {/* Main Changelog Content with Version History on the left side */}
-          <div className="flex-1 max-w-4xl mx-auto">
-            <div className="bg-black/30 p-6 rounded-xl border border-gray-800 markdown-body relative">
+          <div className="mx-auto max-w-4xl flex-1">
+            <div className="markdown-body relative rounded-xl border border-gray-800 bg-black/30 p-6">
               {/* Version History sidebar positioned absolutely to be exactly to the left of the content - only on xl screens */}
-              <div className="hidden xl:block absolute -left-[210px] top-0 w-[200px]">
-                <div className="sticky top-6 bg-black/30 p-4 rounded-xl border border-gray-800">
-                  <h2 className="text-lg font-bold mb-3 text-cyan-400">Version History</h2>
-                  <div className="max-h-[calc(100vh-200px)] overflow-y-auto pr-2 changelog-sidebar">
+              <div className="absolute top-0 -left-[210px] hidden w-[200px] xl:block">
+                <div className="sticky top-6 rounded-xl border border-gray-800 bg-black/30 p-4">
+                  <h2 className="mb-3 text-lg font-bold text-cyan-400">Version History</h2>
+                  <div className="changelog-sidebar max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
                     <ul className="space-y-1.5">{sidebarVersionButtons}</ul>
                   </div>
                 </div>
@@ -309,7 +309,7 @@ export default function Changelog() {
 
               <div
                 ref={changelogContentRef}
-                className="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 pb-4 changelog-scroll"
+                className="changelog-scroll max-h-[calc(100vh-300px)] overflow-y-auto pr-2 pb-4"
                 aria-label="Changelog content"
                 onScroll={() => {
                   // Reset manual scroll flag if user scrolls manually after a longer period
@@ -330,7 +330,7 @@ export default function Changelog() {
                           components={{
                             h1: ({ node, children, ...props }) => (
                               <h1
-                                className="text-3xl font-bold my-6 pb-3 border-b border-gray-700 text-blue-400 leading-relaxed"
+                                className="my-6 border-b border-gray-700 pb-3 text-3xl leading-relaxed font-bold text-blue-400"
                                 {...props}
                               >
                                 {children || 'Heading'}
@@ -338,7 +338,7 @@ export default function Changelog() {
                             ),
                             h2: ({ node, children, ...props }) => (
                               <h2
-                                className="text-2xl font-bold mt-6 mb-4 text-blue-300 leading-relaxed"
+                                className="mt-6 mb-4 text-2xl leading-relaxed font-bold text-blue-300"
                                 {...props}
                               >
                                 {children || 'Heading'}
@@ -370,7 +370,7 @@ export default function Changelog() {
 
                               return (
                                 <h3
-                                  className={`text-xl font-semibold mt-5 mb-3 ${categoryClass}`}
+                                  className={`mt-5 mb-3 text-xl font-semibold ${categoryClass}`}
                                   {...props}
                                 >
                                   {iconEmoji}
@@ -379,18 +379,18 @@ export default function Changelog() {
                               );
                             },
                             p: ({ node, ...props }) => (
-                              <p className="my-3 text-gray-200 leading-relaxed" {...props} />
+                              <p className="my-3 leading-relaxed text-gray-200" {...props} />
                             ),
                             ul: ({ node, ...props }) => (
-                              <ul className="list-disc pl-6 my-3 space-y-2" {...props} />
+                              <ul className="my-3 list-disc space-y-2 pl-6" {...props} />
                             ),
                             li: ({ node, ...props }) => (
-                              <li className="text-gray-300 pb-1" {...props} />
+                              <li className="pb-1 text-gray-300" {...props} />
                             ),
                             a: ({ node, href, children, ...props }) => (
                               <a
                                 href={href}
-                                className="text-blue-400 hover:text-blue-300 underline"
+                                className="text-blue-400 underline hover:text-blue-300"
                                 {...props}
                               >
                                 {children || href || 'Link'}
@@ -398,13 +398,13 @@ export default function Changelog() {
                             ),
                             code: ({ node, ...props }) => (
                               <code
-                                className="bg-gray-800 px-1 py-0.5 rounded text-sm text-cyan-300"
+                                className="rounded bg-gray-800 px-1 py-0.5 text-sm text-cyan-300"
                                 {...props}
                               />
                             ),
                             blockquote: ({ node, ...props }) => (
                               <blockquote
-                                className="border-l-4 border-gray-600 pl-4 italic text-gray-400 my-3"
+                                className="my-3 border-l-4 border-gray-600 pl-4 text-gray-400 italic"
                                 {...props}
                               />
                             ),
@@ -435,16 +435,16 @@ export default function Changelog() {
                         data-version={version}
                         className="py-2"
                       >
-                        <div className="flex flex-wrap items-center gap-3 mt-6 mb-4">
+                        <div className="mt-6 mb-4 flex flex-wrap items-center gap-3">
                           <h2
-                            className={`text-2xl font-bold leading-relaxed will-change-colors transition-colors duration-700 ease-in-out ${
+                            className={`will-change-colors text-2xl leading-relaxed font-bold transition-colors duration-700 ease-in-out ${
                               activeVersion === version ? 'text-cyan-300' : 'text-blue-300'
                             }`}
                           >
                             {version}
                           </h2>
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeBadge(type)}`}
+                            className={`rounded-full px-3 py-1 text-sm font-medium ${getTypeBadge(type)}`}
                           >
                             {type}
                           </span>
@@ -481,7 +481,7 @@ export default function Changelog() {
 
                               return (
                                 <h3
-                                  className={`text-xl font-semibold mt-5 mb-3 ${categoryClass}`}
+                                  className={`mt-5 mb-3 text-xl font-semibold ${categoryClass}`}
                                   {...props}
                                 >
                                   {iconEmoji}
@@ -490,18 +490,18 @@ export default function Changelog() {
                               );
                             },
                             p: ({ node, ...props }) => (
-                              <p className="my-3 text-gray-200 leading-relaxed" {...props} />
+                              <p className="my-3 leading-relaxed text-gray-200" {...props} />
                             ),
                             ul: ({ node, ...props }) => (
-                              <ul className="list-disc pl-6 my-3 space-y-2" {...props} />
+                              <ul className="my-3 list-disc space-y-2 pl-6" {...props} />
                             ),
                             li: ({ node, ...props }) => (
-                              <li className="text-gray-300 pb-1" {...props} />
+                              <li className="pb-1 text-gray-300" {...props} />
                             ),
                             a: ({ node, href, children, ...props }) => (
                               <a
                                 href={href}
-                                className="text-blue-400 hover:text-blue-300 underline"
+                                className="text-blue-400 underline hover:text-blue-300"
                                 {...props}
                               >
                                 {children || href || 'Link'}
@@ -509,13 +509,13 @@ export default function Changelog() {
                             ),
                             code: ({ node, ...props }) => (
                               <code
-                                className="bg-gray-800 px-1 py-0.5 rounded text-sm text-cyan-300"
+                                className="rounded bg-gray-800 px-1 py-0.5 text-sm text-cyan-300"
                                 {...props}
                               />
                             ),
                             blockquote: ({ node, ...props }) => (
                               <blockquote
-                                className="border-l-4 border-gray-600 pl-4 italic text-gray-400 my-3"
+                                className="my-3 border-l-4 border-gray-600 pl-4 text-gray-400 italic"
                                 {...props}
                               />
                             ),

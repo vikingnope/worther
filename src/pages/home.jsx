@@ -13,7 +13,7 @@ const SITE_MAP = [
     text: 'Map',
     path: '/map',
     icon: (
-      <FaMapMarkedAlt className="text-4xl mb-3 text-blue-400 group-hover:text-cyan-300 transition-colors duration-300" />
+      <FaMapMarkedAlt className="mb-3 text-4xl text-blue-400 transition-colors duration-300 group-hover:text-cyan-300" />
     ),
     description: 'Interactive weather maps with various layers',
   },
@@ -21,7 +21,7 @@ const SITE_MAP = [
     text: 'Weather',
     path: '/weather',
     icon: (
-      <FaCloudSunRain className="text-4xl mb-3 text-yellow-400 group-hover:text-cyan-300 transition-colors duration-300" />
+      <FaCloudSunRain className="mb-3 text-4xl text-yellow-400 transition-colors duration-300 group-hover:text-cyan-300" />
     ),
     description: 'Detailed weather forecasts and conditions',
   },
@@ -29,7 +29,7 @@ const SITE_MAP = [
     text: 'Recommendations',
     path: '/recommendations',
     icon: (
-      <FaListUl className="text-4xl mb-3 text-green-400 group-hover:text-cyan-300 transition-colors duration-300" />
+      <FaListUl className="mb-3 text-4xl text-green-400 transition-colors duration-300 group-hover:text-cyan-300" />
     ),
     description: 'Weather-based beach recommendations',
   },
@@ -37,7 +37,7 @@ const SITE_MAP = [
     text: 'About',
     path: '/about',
     icon: (
-      <FaInfoCircle className="text-4xl mb-3 text-purple-400 group-hover:text-cyan-300 transition-colors duration-300" />
+      <FaInfoCircle className="mb-3 text-4xl text-purple-400 transition-colors duration-300 group-hover:text-cyan-300" />
     ),
     description: 'Learn more about Worther',
   },
@@ -67,8 +67,8 @@ const FEATURES = [
 ];
 
 const FeatureCard = ({ title, color, description }) => (
-  <div className="bg-black/40 p-5 rounded-lg backdrop-blur-sm border border-gray-800/50 hover:border-gray-700/50 transition-colors duration-300">
-    <h3 className={`font-bold text-lg ${color} mb-2`}>{title}</h3>
+  <div className="rounded-lg border border-gray-800/50 bg-black/40 p-5 backdrop-blur-sm transition-colors duration-300 hover:border-gray-700/50">
+    <h3 className={`text-lg font-bold ${color} mb-2`}>{title}</h3>
     <p className="text-gray-300">{description}</p>
   </div>
 );
@@ -121,26 +121,26 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black text-white">
       <Header />
-      <main className="grow flex flex-col items-center justify-start pt-8 md:pt-12 px-4 md:px-6">
+      <main className="flex grow flex-col items-center justify-start px-4 pt-8 md:px-6 md:pt-12">
         {/* Hero section */}
-        <section className="text-center mb-10 md:mb-14">
-          <h1 className="uppercase font-extrabold md:text-8xl text-5xl bg-clip-text text-transparent bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 animate-text tracking-tight">
+        <section className="mb-10 text-center md:mb-14">
+          <h1 className="animate-text bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 bg-clip-text text-5xl font-extrabold tracking-tight text-transparent uppercase md:text-8xl">
             Worther
           </h1>
-          <p className="uppercase md:text-4xl text-xl mt-3 md:mt-5 text-sky-400 font-light">
+          <p className="mt-3 text-xl font-light text-sky-400 uppercase md:mt-5 md:text-4xl">
             Getting weather closer to you
           </p>
-          <p className="text-gray-300 mt-2 italic">{currentDate}</p>
+          <p className="mt-2 text-gray-300 italic">{currentDate}</p>
         </section>
 
         {/* Location Loading Indicator */}
         {locationStatus === 'loading' && (
-          <section className="w-full max-w-md mb-10">
-            <div className="bg-gradient-to-r from-blue-900/80 via-blue-950/80 to-blue-900/80 rounded-xl shadow-lg p-5 border border-blue-900/50 backdrop-blur-sm">
-              <div className="flex items-center gap-3 mb-2">
-                <BiCurrentLocation className="text-2xl text-blue-400 animate-pulse" />
+          <section className="mb-10 w-full max-w-md">
+            <div className="rounded-xl border border-blue-900/50 bg-gradient-to-r from-blue-900/80 via-blue-950/80 to-blue-900/80 p-5 shadow-lg backdrop-blur-sm">
+              <div className="mb-2 flex items-center gap-3">
+                <BiCurrentLocation className="animate-pulse text-2xl text-blue-400" />
                 <h2 className="text-xl font-bold text-blue-300">Detecting Your Location...</h2>
               </div>
               <div
@@ -148,9 +148,9 @@ export default function Home() {
                 role="status"
                 aria-live="polite"
               >
-                <div className="w-10 h-10 border-t-2 border-b-2 border-blue-400 rounded-full animate-spin"></div>
+                <div className="h-10 w-10 animate-spin rounded-full border-t-2 border-b-2 border-blue-400"></div>
               </div>
-              <p className="text-gray-300 text-center">
+              <p className="text-center text-gray-300">
                 Please wait while we determine your location for local weather information
               </p>
             </div>
@@ -159,9 +159,9 @@ export default function Home() {
 
         {/* Location Status Message */}
         {(locationStatus === 'denied' || locationStatus === 'unavailable') && (
-          <section className="w-full max-w-md mb-10">
-            <div className="bg-gradient-to-r from-red-900/80 via-red-950/80 to-red-900/80 rounded-xl shadow-lg p-5 border border-red-900/50 backdrop-blur-sm">
-              <div className="flex items-center gap-3 mb-2">
+          <section className="mb-10 w-full max-w-md">
+            <div className="rounded-xl border border-red-900/50 bg-gradient-to-r from-red-900/80 via-red-950/80 to-red-900/80 p-5 shadow-lg backdrop-blur-sm">
+              <div className="mb-2 flex items-center gap-3">
                 <MdLocationOff className="text-2xl text-red-400" />
                 <h2 className="text-xl font-bold text-red-300">
                   {locationStatus === 'denied'
@@ -176,7 +176,7 @@ export default function Home() {
               </p>
               <Link
                 to="/weather"
-                className="w-full mt-3 py-2 flex justify-center bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 transition-all rounded-md font-medium cursor-pointer shadow-md"
+                className="mt-3 flex w-full cursor-pointer justify-center rounded-md bg-gradient-to-r from-blue-700 to-blue-600 py-2 font-medium shadow-md transition-all hover:from-blue-600 hover:to-blue-500"
               >
                 Go to Weather Search
               </Link>
@@ -186,16 +186,16 @@ export default function Home() {
 
         {/* Current Weather Widget */}
         {userPos.latitude && userPos.longitude && (
-          <section className="w-full max-w-md mb-10 transform hover:scale-[1.02] transition-all duration-300">
-            <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.5)] p-5 border border-blue-900/50 backdrop-blur-sm">
-              <h2 className="text-xl font-bold mb-3 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
+          <section className="mb-10 w-full max-w-md transform transition-all duration-300 hover:scale-[1.02]">
+            <div className="rounded-xl border border-blue-900/50 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 p-5 shadow-[0_8px_30px_rgb(0,0,0,0.5)] backdrop-blur-sm">
+              <h2 className="mb-3 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-center text-xl font-bold text-transparent">
                 Your Current Weather
               </h2>
-              <div className="bg-black/40 rounded-lg p-4 backdrop-blur-sm">
+              <div className="rounded-lg bg-black/40 p-4 backdrop-blur-sm">
                 <WeatherPopupContent userPos={userPos} />
                 <button
                   onClick={handleViewWeatherDetails}
-                  className="w-full mt-3 py-2.5 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 transition-all rounded-md font-medium cursor-pointer shadow-md"
+                  className="mt-3 w-full cursor-pointer rounded-md bg-gradient-to-r from-blue-700 to-blue-600 py-2.5 font-medium shadow-md transition-all hover:from-blue-600 hover:to-blue-500"
                 >
                   View Full Forecast
                 </button>
@@ -205,17 +205,17 @@ export default function Home() {
         )}
 
         {/* Navigation Cards */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full max-w-6xl mb-12">
+        <section className="mb-12 grid w-full max-w-6xl grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
           {SITE_MAP.map(item => (
             <Link
               key={item.path}
               to={item.path}
-              className="group flex flex-col items-center justify-center p-6 bg-gradient-to-br from-slate-900 to-gray-900 rounded-xl border border-gray-800 shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_30px_rgba(0,128,255,0.2)] transition-all duration-300 hover:-translate-y-1 text-center"
+              className="group flex flex-col items-center justify-center rounded-xl border border-gray-800 bg-gradient-to-br from-slate-900 to-gray-900 p-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,128,255,0.2)]"
               aria-label={`Navigate to ${item.text}`}
             >
               {item.icon}
-              <span className="font-bold text-2xl mb-2">{item.text}</span>
-              <p className="text-sm text-gray-400 group-hover:text-gray-200 transition-colors duration-300">
+              <span className="mb-2 text-2xl font-bold">{item.text}</span>
+              <p className="text-sm text-gray-400 transition-colors duration-300 group-hover:text-gray-200">
                 {item.description}
               </p>
             </Link>
@@ -223,13 +223,13 @@ export default function Home() {
         </section>
 
         {/* App Features */}
-        <section className="w-full max-w-4xl mb-14 relative">
-          <div className="absolute inset-0 bg-blue-600/10 blur-3xl rounded-full"></div>
-          <div className="relative bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 rounded-xl p-7 border border-blue-900/30 shadow-lg backdrop-blur-sm">
-            <h2 className="text-2xl font-bold mb-5 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">
+        <section className="relative mb-14 w-full max-w-4xl">
+          <div className="absolute inset-0 rounded-full bg-blue-600/10 blur-3xl"></div>
+          <div className="relative rounded-xl border border-blue-900/30 bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 p-7 shadow-lg backdrop-blur-sm">
+            <h2 className="mb-5 bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-center text-2xl font-bold text-transparent">
               Why Use Worther?
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               {FEATURES.map((feature, index) => (
                 <FeatureCard
                   key={index}

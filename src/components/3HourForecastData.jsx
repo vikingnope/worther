@@ -122,31 +122,31 @@ export function ThreeHourForecastData() {
       : null;
 
   return (
-    <div className="text-white overflow-hidden flex flex-col min-h-screen bg-gradient-to-b from-black via-blue-950 to-black">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black text-white">
       <Header />
-      <div className="text-center text-white grow flex flex-col px-4 md:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center relative my-8">
+      <div className="flex grow flex-col px-4 text-center text-white md:px-6 lg:px-8">
+        <div className="relative my-8 flex flex-col sm:flex-row sm:items-center sm:justify-center">
           <section className="mb-6">
             <button
-              className="flex items-center text-blue-400 hover:text-blue-300 transition-colors duration-300 font-medium cursor-pointer group mb-4 sm:mb-0 sm:absolute sm:left-4 self-start mx-4 sm:mx-0"
+              className="group mx-4 mb-4 flex cursor-pointer items-center self-start font-medium text-blue-400 transition-colors duration-300 hover:text-blue-300 sm:absolute sm:left-4 sm:mx-0 sm:mb-0"
               onClick={handleNavigateBack}
               aria-label="Go back to the weather page"
             >
-              <FaArrowLeft className="h-5 w-5 mr-2 transform transition-transform duration-300 translate-x-1 group-hover:translate-x-0" />
+              <FaArrowLeft className="mr-2 h-5 w-5 translate-x-1 transform transition-transform duration-300 group-hover:translate-x-0" />
               Back to Weather
             </button>
           </section>
-          <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 lg:text-4xl animate-text tracking-tight">
+          <p className="animate-text bg-gradient-to-r from-green-500 via-cyan-500 to-blue-500 bg-clip-text text-3xl font-bold tracking-tight text-transparent lg:text-4xl">
             {location.name ? `3 Hour Forecast - ${location.name}` : 'Loading...'}
           </p>
         </div>
         {weather.length > 0 ? (
           Object.entries(groupedWeatherByDay).map(([day, dayWeather]) => (
             <div key={day} className="mb-6">
-              <h2 className="text-3xl font-bold py-3 rounded-t-lg bg-gradient-to-r from-gray-900 to-slate-900 border-b border-blue-900 text-blue-400">
+              <h2 className="rounded-t-lg border-b border-blue-900 bg-gradient-to-r from-gray-900 to-slate-900 py-3 text-3xl font-bold text-blue-400">
                 {day}
               </h2>
-              <div className="grid grid-cols-1 gap-2 md:gap-3 mt-2">
+              <div className="mt-2 grid grid-cols-1 gap-2 md:gap-3">
                 {dayWeather.map(weather => {
                   const hourConversion = Math.round(
                     (weather.timeNormalHour * 3600 +
@@ -159,10 +159,10 @@ export function ThreeHourForecastData() {
                       aria-label={`Weather forecast for ${day} at ${hourConversion > 23 ? String(hourConversion - 24).padStart(2, '0') : hourConversion < 0 ? hourConversion + 24 : String(hourConversion).padStart(2, '0')}:${weather.timeNormalMinutes}, ${weather.description}`}
                       key={weather.index}
                       onClick={e => handleSubmit(e, weather.index)}
-                      className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 hover:border-cyan-700 shadow-md hover:shadow-cyan-900/30 transition-all duration-300 hover:-translate-y-1 rounded-lg lg:grid lg:grid-cols-7 lg:gap-2 lg:items-center flex flex-col text-white p-3 md:p-4 cursor-pointer"
+                      className="flex cursor-pointer flex-col rounded-lg border border-gray-700 bg-gradient-to-br from-gray-900 to-gray-800 p-3 text-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-cyan-700 hover:shadow-cyan-900/30 md:p-4 lg:grid lg:grid-cols-7 lg:items-center lg:gap-2"
                     >
-                      <div className="lg:justify-self-center mx-auto">
-                        <div className="h-[85px] flex items-center justify-center">
+                      <div className="mx-auto lg:justify-self-center">
+                        <div className="flex h-[85px] items-center justify-center">
                           <WeatherIcons
                             weatherId={weather.weatherId}
                             windSpeed={weather.windSpeed}
@@ -174,34 +174,34 @@ export function ThreeHourForecastData() {
                           />
                         </div>
                       </div>
-                      <div className="font-bold text-xl mx-auto lg:justify-self-center text-cyan-300">
+                      <div className="mx-auto text-xl font-bold text-cyan-300 lg:justify-self-center">
                         {hourConversion > 23
                           ? String(hourConversion - 24).padStart(2, '0')
                           : hourConversion < 0
                             ? hourConversion + 24
                             : String(hourConversion).padStart(2, '0')}
                         :{weather.timeNormalMinutes}
-                        <div className="text-base mt-1">
+                        <div className="mt-1 text-base">
                           (<TimeZoneShow timeZone={location.timeZone} />)
                         </div>
                       </div>
-                      <div className="font-bold text-2xl mx-auto lg:justify-self-center mt-3 lg:mt-0 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
+                      <div className="mx-auto mt-3 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-2xl font-bold text-transparent lg:mt-0 lg:justify-self-center">
                         {weather.description.toUpperCase()}
                       </div>
-                      <div className="text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0">
+                      <div className="mx-auto mt-3 text-xl lg:mt-0 lg:justify-self-center">
                         Temp:{' '}
                         <span className="font-semibold text-yellow-400">
                           {Math.round(weather.temperature)}°C
                         </span>
                       </div>
-                      <div className="text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0">
+                      <div className="mx-auto mt-3 text-xl lg:mt-0 lg:justify-self-center">
                         Wind Speed:{' '}
                         <span className="font-semibold text-green-400">
                           {weather.windSpeed} m/s
                         </span>{' '}
                         ({<WindForce windSpeed={weather.windSpeed} />})
                         <div className="flex items-center lg:mt-1 lg:pl-2">
-                          <div className="h-8 w-8 rounded-full bg-gray-700/70 flex items-center justify-center mr-2 wind-arrow-container">
+                          <div className="wind-arrow-container mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-gray-700/70">
                             <WindArrow degrees={weather.windDegrees} />
                           </div>
                           <span>
@@ -210,13 +210,13 @@ export function ThreeHourForecastData() {
                           </span>
                         </div>
                       </div>
-                      <div className="text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0">
+                      <div className="mx-auto mt-3 text-xl lg:mt-0 lg:justify-self-center">
                         Precipitation:{' '}
                         <span className="font-semibold text-blue-400">
                           {Math.round(weather.precipitation)}%
                         </span>
                       </div>
-                      <div className="text-xl mx-auto lg:justify-self-center mt-3 lg:mt-0 mb-3 lg:mb-0">
+                      <div className="mx-auto mt-3 mb-3 text-xl lg:mt-0 lg:mb-0 lg:justify-self-center">
                         Visibility:{' '}
                         <span className="font-semibold">
                           {weather.visibility >= 1000
@@ -233,11 +233,11 @@ export function ThreeHourForecastData() {
           ))
         ) : (
           <div className="flex flex-grow items-center justify-center">
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-xl border border-gray-700 shadow-lg">
-              <div className="animate-pulse flex flex-col items-center">
-                <div className="h-12 w-12 rounded-full bg-blue-700 mb-4"></div>
-                <div className="h-6 w-48 bg-gray-700 rounded mb-3"></div>
-                <div className="h-4 w-32 bg-gray-700 rounded"></div>
+            <div className="rounded-xl border border-gray-700 bg-gradient-to-br from-gray-900 to-gray-800 p-8 shadow-lg">
+              <div className="flex animate-pulse flex-col items-center">
+                <div className="mb-4 h-12 w-12 rounded-full bg-blue-700"></div>
+                <div className="mb-3 h-6 w-48 rounded bg-gray-700"></div>
+                <div className="h-4 w-32 rounded bg-gray-700"></div>
                 <p className="mt-4 text-gray-400">Loading forecast data...</p>
               </div>
             </div>
