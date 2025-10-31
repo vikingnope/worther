@@ -50,6 +50,7 @@
 - Bump `eslint-plugin-import` to v2.32.0
 - Bump `prettier` to v3.6.2
 - Bump dev dependency `@vitejs/plugin-react` from 5.0.2 to 5.0.3
+- Bump dev dependency `@vitejs/plugin-react` from 5.0.2 to 5.0.3
 
 ---
 
