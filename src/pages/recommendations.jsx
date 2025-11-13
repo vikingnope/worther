@@ -9,13 +9,12 @@ import { TiWarningOutline } from 'react-icons/ti';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { usePapaParse } from 'react-papaparse';
 
-import { Footer } from '../components/utils/footer';
-import { Header } from '../components/utils/header';
-import { CustomZoomControl, CustomAttributionControl } from '../components/utils/mapElements';
-import { WindDirection } from '../components/utils/weatherVariables';
-import { useDeviceDetect } from '../hooks/useDeviceDetect';
-import beaches from '../resources/beaches.csv';
-
+import { WindDirection } from '@components/weather/helpers/weatherHelpers';
+import { useDeviceDetect } from '@hooks/useDeviceDetect';
+import beaches from '@resources/beaches.csv';
+import { Footer } from '@utils/footer';
+import { Header } from '@utils/header';
+import { CustomZoomControl, CustomAttributionControl } from '@utils/mapElements';
 // Map configuration constants
 const MAP_CENTER = [35.940125, 14.374125];
 const DESKTOP_ZOOM = 11;
@@ -219,12 +218,12 @@ export default function Recommendations() {
   }, []);
 
   // Add this function to handle map clicks
-  const handleMapClick = useCallback(() => {
+  function handleMapClick() {
     if (selectedBeachNum) {
       setSelectedBeachNum(null);
       setFocusLocation(null);
     }
-  }, [selectedBeachNum]);
+  }
 
   // Function to reset map view
   const resetMapView = () => {
@@ -417,10 +416,10 @@ export default function Recommendations() {
     return 'Strong Breeze'; // Beaufort 6+
   };
 
-  // Helper function to scroll to map section, memoized to prevent rerender
-  const scrollToMap = useCallback(() => {
+  // Helper function to scroll to map section
+  function scrollToMap() {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+  }
 
   // Handle button visibility with animation transitions
   useEffect(() => {
@@ -459,7 +458,7 @@ export default function Recommendations() {
           }}
         >
           <Popup className="custom-popup">
-            <div className="font-bold text-lg border-b pb-1 mb-1">{beach.name}</div>
+            <div className="mb-1 border-b pb-1 text-lg font-bold">{beach.name}</div>
             <div
               className={`font-medium ${suitability[index] === 'Recommended' ? 'text-green-600' : 'text-red-600'}`}
             >
@@ -472,10 +471,10 @@ export default function Recommendations() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen text-white overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black">
+    <div className="flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-black via-blue-950 to-black text-white">
       <Header />
-      <div className="text-center flex flex-col grow">
-        <h1 className="md:text-6xl text-4xl font-bold mt-5 mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">
+      <div className="flex grow flex-col text-center">
+        <h1 className="mt-5 mb-6 bg-gradient-to-r from-yellow-300 to-yellow-500 bg-clip-text text-4xl font-bold text-transparent md:text-6xl">
           Beach Recommendations
         </h1>
 
@@ -499,36 +498,36 @@ export default function Recommendations() {
             refreshData={refreshData}
           />
         ) : loading ? (
-          <div className="flex-grow flex flex-col items-center justify-center p-4">
-            <div className="bg-gradient-to-br from-slate-900 to-gray-900 p-8 rounded-xl border border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-sm max-w-md">
-              <div className="animate-pulse flex flex-col items-center">
-                <div className="h-14 w-14 rounded-full bg-blue-700/70 mb-5 animate-spin"></div>
-                <div className="h-7 w-64 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md mb-4"></div>
-                <div className="h-5 w-48 bg-gradient-to-r from-gray-800 to-gray-700 rounded-md"></div>
-                <p className="mt-5 text-gray-400 font-medium">Loading beach and weather data...</p>
+          <div className="flex flex-grow flex-col items-center justify-center p-4">
+            <div className="max-w-md rounded-xl border border-blue-900/50 bg-gradient-to-br from-slate-900 to-gray-900 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.3)] backdrop-blur-sm">
+              <div className="flex animate-pulse flex-col items-center">
+                <div className="mb-5 h-14 w-14 animate-spin rounded-full bg-blue-700/70"></div>
+                <div className="mb-4 h-7 w-64 rounded-md bg-gradient-to-r from-gray-800 to-gray-700"></div>
+                <div className="h-5 w-48 rounded-md bg-gradient-to-r from-gray-800 to-gray-700"></div>
+                <p className="mt-5 font-medium text-gray-400">Loading beach and weather data...</p>
               </div>
             </div>
           </div>
         ) : (
           <>
-            <p className="text-gray-300 max-w-3xl mx-auto mb-8 px-4">
+            <p className="mx-auto mb-8 max-w-3xl px-4 text-gray-300">
               Based on current wind conditions, we recommend the following beaches for swimming and
               water activities
             </p>
 
             {/* Wind information panel */}
-            <div className="bg-gray-800/60 backdrop-blur-sm rounded-xl mx-auto px-6 py-4 mb-6 flex flex-wrap justify-center gap-8 max-w-4xl shadow-lg">
+            <div className="mx-auto mb-6 flex max-w-4xl flex-wrap justify-center gap-8 rounded-xl bg-gray-800/60 px-6 py-4 shadow-lg backdrop-blur-sm">
               <div className="flex flex-col items-center">
-                <span className="text-gray-400 text-sm">Wind Speed</span>
+                <span className="text-sm text-gray-400">Wind Speed</span>
                 <span className="text-2xl font-bold text-white">
                   {wind.speed?.toFixed(1) || '...'} m/s
                 </span>
-                <span className="text-yellow-400 font-medium">
+                <span className="font-medium text-yellow-400">
                   {getWindDescription(wind.speed)}
                 </span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-gray-400 text-sm">Direction</span>
+                <span className="text-sm text-gray-400">Direction</span>
                 <span className="text-2xl font-bold text-white">
                   {wind.degrees !== undefined ? (
                     <WindDirection windDegrees={wind.degrees} />
@@ -536,26 +535,26 @@ export default function Recommendations() {
                     '...'
                   )}
                 </span>
-                <span className="text-yellow-400 font-medium">
+                <span className="font-medium text-yellow-400">
                   {wind.degrees?.toFixed(0) || '...'}°
                 </span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-gray-400 text-sm">Status</span>
+                <span className="text-sm text-gray-400">Status</span>
                 <span
                   className={`text-2xl font-bold ${wind.speed >= 8 ? 'text-red-500' : 'text-green-500'}`}
                 >
                   {wind.speed >= 8 ? 'Warning' : 'Safe'}
                 </span>
-                <span className="text-yellow-400 font-medium">Conditions</span>
+                <span className="font-medium text-yellow-400">Conditions</span>
               </div>
             </div>
 
             {/* Warning display */}
             {wind.speed >= 8 && (
-              <div className="mx-auto px-4 mb-6 max-w-3xl">
-                <div className="bg-gradient-to-r from-red-900/70 to-orange-800/70 backdrop-blur-sm border border-red-700 text-white p-4 rounded-lg shadow-lg flex items-center">
-                  <TiWarningOutline className="h-10 w-10 mr-3 text-red-300 flex-shrink-0" />
+              <div className="mx-auto mb-6 max-w-3xl px-4">
+                <div className="flex items-center rounded-lg border border-red-700 bg-gradient-to-r from-red-900/70 to-orange-800/70 p-4 text-white shadow-lg backdrop-blur-sm">
+                  <TiWarningOutline className="mr-3 h-10 w-10 flex-shrink-0 text-red-300" />
                   <p className="text-xl font-medium">
                     Warning: Since wind is Force 5 or greater it is not recommended to swim!
                   </p>
@@ -564,9 +563,9 @@ export default function Recommendations() {
             )}
 
             {/* Map display with improved styling */}
-            <section ref={mapSectionRef} className="flex justify-center mb-10 px-4 w-full">
+            <section ref={mapSectionRef} className="mb-10 flex w-full justify-center px-4">
               <div
-                className="rounded-xl overflow-hidden shadow-2xl border border-gray-700 w-full max-w-7xl mx-auto"
+                className="mx-auto w-full max-w-7xl overflow-hidden rounded-xl border border-gray-700 shadow-2xl"
                 style={{ minHeight: '300px' }}
               >
                 <MapContainer
@@ -580,8 +579,8 @@ export default function Recommendations() {
                   ref={mapRef}
                 >
                   <ZoomController isDesktop={isDesktop} />
-                  <CustomZoomControl mapType="light" />
-                  <CustomAttributionControl mapType="light" />
+                  <CustomZoomControl theme="light" />
+                  <CustomAttributionControl theme="light" />
                   <MapFocuser
                     focusLocation={focusLocation}
                     resetFocus={resetFocus}
@@ -607,9 +606,7 @@ export default function Recommendations() {
             <div className="mx-auto mb-6 h-10">
               <button
                 onClick={resetMapView}
-                className={`bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg shadow-md flex items-center cursor-pointer
-                             hover:scale-105 active:scale-95 transition-all duration-300 absolute left-1/2 transform -translate-x-1/2 
-                             ${buttonVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+                className={`absolute left-1/2 flex -translate-x-1/2 transform cursor-pointer items-center rounded-lg bg-blue-700 px-4 py-2 shadow-md transition-all duration-300 hover:scale-105 hover:bg-blue-600 active:scale-95 ${buttonVisible ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'}`}
               >
                 <FaArrowLeft className="mr-2" />
                 Reset Map View
@@ -618,8 +615,8 @@ export default function Recommendations() {
 
             {/* Beach list with improved cards */}
             <section className="px-4 pb-12">
-              <h2 className="text-2xl font-bold mb-6 text-yellow-400">Beach Conditions</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
+              <h2 className="mb-6 text-2xl font-bold text-yellow-400">Beach Conditions</h2>
+              <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.map((beach, index) => (
                   <div
                     key={index}
@@ -639,23 +636,21 @@ export default function Recommendations() {
                     role="button"
                     tabIndex={0}
                     aria-label={`View ${beach.name} on map - ${suitability[index]}`}
-                    className={`rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:transform hover:scale-105 
-                        ${
-                          suitability[index] === 'Recommended'
-                            ? 'bg-gradient-to-br from-green-900/40 to-emerald-800/40 border border-green-700/50'
-                            : 'bg-gradient-to-br from-red-900/40 to-rose-800/40 border border-red-700/50'
-                        }
-                        cursor-pointer relative group ${selectedBeachNum === beach.num ? 'ring-2 ring-yellow-400 ring-opacity-70' : ''}`}
+                    className={`overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:transform ${
+                      suitability[index] === 'Recommended'
+                        ? 'border border-green-700/50 bg-gradient-to-br from-green-900/40 to-emerald-800/40'
+                        : 'border border-red-700/50 bg-gradient-to-br from-red-900/40 to-rose-800/40'
+                    } group relative cursor-pointer ${selectedBeachNum === beach.num ? 'ring-opacity-70 ring-2 ring-yellow-400' : ''}`}
                   >
                     <div className="p-4">
-                      <div className="flex items-center mb-2">
+                      <div className="mb-2 flex items-center">
                         <div
-                          className={`w-3 h-3 rounded-full mr-2 ${suitability[index] === 'Recommended' ? 'bg-green-500' : 'bg-red-500'}`}
+                          className={`mr-2 h-3 w-3 rounded-full ${suitability[index] === 'Recommended' ? 'bg-green-500' : 'bg-red-500'}`}
                         ></div>
-                        <h3 className="font-bold text-lg truncate">{beach.name}</h3>
+                        <h3 className="truncate text-lg font-bold">{beach.name}</h3>
                       </div>
                       <div
-                        className={`mt-2 py-1 px-3 inline-block rounded-full text-sm font-medium ${
+                        className={`mt-2 inline-block rounded-full px-3 py-1 text-sm font-medium ${
                           suitability[index] === 'Recommended'
                             ? 'bg-green-800/60 text-green-200'
                             : 'bg-red-800/60 text-red-200'
@@ -665,8 +660,8 @@ export default function Recommendations() {
                       </div>
 
                       {/* Hover overlay */}
-                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="bg-white/20 backdrop-blur-sm p-2 rounded-full">
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <div className="rounded-full bg-white/20 p-2 backdrop-blur-sm">
                           <FaRegEye className="h-6 w-6" />
                         </div>
                       </div>
@@ -742,7 +737,7 @@ function WindDirectionControl({ windDegrees }) {
   if (!container || windDegrees === undefined) return null;
 
   return createPortal(
-    <div className="h-14 w-14 flex items-center justify-center bg-gray-700/90 rounded-full border border-gray-600">
+    <div className="flex h-14 w-14 items-center justify-center rounded-full border border-gray-600 bg-gray-700/90">
       <div
         style={{
           transform: `rotate(${(windDegrees + 180) % 360}deg)`,
@@ -758,19 +753,19 @@ function WindDirectionControl({ windDegrees }) {
 
 // Error display component
 const ErrorDisplay = ({ message, details, refreshData }) => (
-  <div className="text-white flex flex-col items-center justify-center px-4 py-12 max-w-3xl mx-auto">
-    <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] p-8 text-center border border-blue-900/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
+  <div className="mx-auto flex max-w-3xl flex-col items-center justify-center px-4 py-12 text-white">
+    <div className="rounded-xl border border-blue-900/30 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 p-8 text-center shadow-[0_8px_30px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_40px_rgba(0,0,0,0.4)]">
       <div className="mb-8">
-        <TiWarningOutline size={60} className="mx-auto text-red-400 mb-4" />
-        <p className="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-amber-300">
+        <TiWarningOutline size={60} className="mx-auto mb-4 text-red-400" />
+        <p className="mb-2 bg-gradient-to-r from-red-400 to-amber-300 bg-clip-text text-3xl font-bold text-transparent">
           {message}
         </p>
-        {details && <p className="text-xl text-gray-300 mt-2">{details}</p>}
-        <p className="text-gray-400 mt-3">Unable to retrieve beach recommendation data</p>
+        {details && <p className="mt-2 text-xl text-gray-300">{details}</p>}
+        <p className="mt-3 text-gray-400">Unable to retrieve beach recommendation data</p>
       </div>
       <button
         onClick={refreshData}
-        className="inline-block px-6 py-3 bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 font-medium cursor-pointer"
+        className="inline-block cursor-pointer rounded-lg bg-gradient-to-r from-blue-700 to-blue-600 px-6 py-3 font-medium shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:from-blue-600 hover:to-blue-500 hover:shadow-lg"
       >
         Refresh Data
       </button>

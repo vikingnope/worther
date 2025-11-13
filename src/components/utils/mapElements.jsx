@@ -1,23 +1,23 @@
-import { useEffect, useState, useCallback, useMemo, memo } from 'react';
+import { Activity, useEffect, useState } from 'react';
 import { BsSliders } from 'react-icons/bs';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoClose, IoSearch, IoLayers } from 'react-icons/io5';
-import { MdOutlineLightMode, MdDarkMode } from 'react-icons/md';
+import { MdDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { PiSunHorizonBold } from 'react-icons/pi';
 import { TbTemperature, TbWind, TbCloud, TbCloudRain, TbSatellite } from 'react-icons/tb';
 import { useMap } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 
-import { useDeviceDetect } from '../../hooks/useDeviceDetect';
+import useSettingsStore from '@stores/settingsStore';
 
 /**
  * CustomZoomControl - A reusable component to style the Leaflet zoom controls
  *
  * @param {Object} props - Component props
- * @param {string} [props.mapType='light'] - The map theme ('light' or 'dark')
+ * @param {string} [props.theme='light'] - The map theme ('light' or 'dark')
  * @returns {null} - This component doesn't render anything visible, just applies styling
  */
-export const CustomZoomControl = ({ mapType = 'light' }) => {
+export const CustomZoomControl = ({ theme = 'light' }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
       // Apply styles to the container
       zoomContainer.style.border = 'none';
       zoomContainer.style.boxShadow =
-        mapType === 'light' ? '0 2px 10px rgba(0, 0, 0, 0.1)' : '0 2px 10px rgba(0, 0, 0, 0.4)';
+        theme === 'light' ? '0 2px 10px rgba(0, 0, 0, 0.1)' : '0 2px 10px rgba(0, 0, 0, 0.4)';
       zoomContainer.style.borderRadius = '8px';
       zoomContainer.style.overflow = 'hidden';
 
@@ -46,7 +46,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
 
         // Hover effect
         button.onmouseover = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             button.style.backgroundColor = '#f0f0f0';
           } else {
             button.style.backgroundColor = '#444';
@@ -55,7 +55,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
 
         // Reset on mouseout
         button.onmouseout = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             button.style.backgroundColor = '#fff';
           } else {
             button.style.backgroundColor = '#333';
@@ -64,7 +64,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
       });
 
       // Apply theme-specific styles
-      if (mapType === 'light') {
+      if (theme === 'light') {
         // Light mode styling
         zoomInButton.style.color = '#333';
         zoomInButton.style.backgroundColor = '#fff';
@@ -78,7 +78,7 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
         zoomOutButton.style.backgroundColor = '#333';
       }
     }
-  }, [mapType, map]);
+  }, [theme, map]);
 
   return null; // This component doesn't render anything, just applies styling
 };
@@ -87,10 +87,10 @@ export const CustomZoomControl = ({ mapType = 'light' }) => {
  * CustomAttributionControl - A reusable component to style the Leaflet attribution control
  *
  * @param {Object} props - Component props
- * @param {string} [props.mapType='light'] - The map theme ('light' or 'dark')
+ * @param {string} [props.theme='light'] - The map theme ('light' or 'dark')
  * @returns {null} - This component doesn't render anything visible, just applies styling
  */
-export const CustomAttributionControl = ({ mapType = 'light' }) => {
+export const CustomAttributionControl = ({ theme = 'light' }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
       attributionElement.style.fontSize = '11px';
       attributionElement.style.lineHeight = '1.2';
       attributionElement.style.boxShadow =
-        mapType === 'light' ? '0 1px 5px rgba(0, 0, 0, 0.1)' : '0 1px 5px rgba(0, 0, 0, 0.4)';
+        theme === 'light' ? '0 1px 5px rgba(0, 0, 0, 0.1)' : '0 1px 5px rgba(0, 0, 0, 0.4)';
       attributionElement.style.whiteSpace = 'nowrap';
       attributionElement.style.overflow = 'hidden';
       attributionElement.style.textOverflow = 'ellipsis';
@@ -132,7 +132,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
         link.style.fontWeight = '500';
         link.style.transition = 'color 0.2s ease';
 
-        if (mapType === 'light') {
+        if (theme === 'light') {
           link.style.color = '#0078A8';
         } else {
           link.style.color = '#6BB0FF';
@@ -140,7 +140,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
 
         // Add hover effect
         link.onmouseover = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             link.style.color = '#005580';
           } else {
             link.style.color = '#99CCFF';
@@ -148,7 +148,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
         };
 
         link.onmouseout = () => {
-          if (mapType === 'light') {
+          if (theme === 'light') {
             link.style.color = '#0078A8';
           } else {
             link.style.color = '#6BB0FF';
@@ -157,7 +157,7 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
       });
 
       // Apply theme-specific styles
-      if (mapType === 'light') {
+      if (theme === 'light') {
         // Light mode
         attributionElement.style.color = '#333';
         attributionElement.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
@@ -167,169 +167,80 @@ export const CustomAttributionControl = ({ mapType = 'light' }) => {
         attributionElement.style.backgroundColor = 'rgba(40, 40, 40, 0.9)';
       }
     }
-  }, [mapType, map]);
+  }, [theme, map]);
 
   return null; // This component doesn't render anything, just applies styling
 };
 
 /**
- * MapMode - A component that provides a toggle button to switch between light and dark map modes
- *
- * @param {Object} props - Component props
- * @param {string} props.mode - The current map mode ('light' or 'dark')
- * @returns {JSX.Element} - The map mode toggle button
- */
-export const MapMode = ({ mode }) => {
-  const navigate = useNavigate();
-  const isDesktop = useDeviceDetect();
-
-  const handleModeToggle = e => {
-    e.preventDefault();
-    navigate(mode === 'light' ? '/map/dark' : '/map/light');
-  };
-
-  return (
-    <div className={`z-50 absolute ${isDesktop ? 'bottom-12 right-8' : 'bottom-16 right-4'}`}>
-      <button
-        onClick={handleModeToggle}
-        className={`
-                    flex items-center justify-center
-                    ${isDesktop ? 'h-12 w-12' : 'h-10 w-10'} 
-                    rounded-full shadow-lg 
-                    transition-all duration-300
-                    ${
-                      mode === 'light'
-                        ? 'bg-neutral-800 text-white hover:bg-neutral-700'
-                        : 'bg-white text-gray-800 hover:bg-gray-100'
-                    }
-                    overflow-hidden
-                    before:content-[''] 
-                    before:absolute 
-                    before:inset-0 
-                    before:rounded-full 
-                    before:opacity-0
-                    before:transition-opacity
-                    before:duration-300
-                    cursor-pointer
-                    ${
-                      mode === 'light'
-                        ? 'before:bg-gradient-to-tr before:from-blue-700 before:to-purple-700 hover:before:opacity-20'
-                        : 'before:bg-gradient-to-tr before:from-yellow-400 before:to-orange-500 hover:before:opacity-20'
-                    }
-                `}
-        title={`Switch to ${mode === 'light' ? 'Dark' : 'Light'} Mode`}
-        aria-label={`Switch to ${mode === 'light' ? 'Dark' : 'Light'} Mode`}
-      >
-        {mode === 'light' ? (
-          <MdDarkMode className="relative z-10" size={isDesktop ? 24 : 20} />
-        ) : (
-          <MdOutlineLightMode className="relative z-10" size={isDesktop ? 24 : 20} />
-        )}
-
-        {/* Subtle glow effect */}
-        <span
-          className={`
-                    absolute inset-0 rounded-full opacity-0 transition-opacity duration-300
-                    ${
-                      mode === 'light'
-                        ? 'bg-blue-500 hover:opacity-10'
-                        : 'bg-yellow-400 hover:opacity-10'
-                    } filter blur-md
-                `}
-        ></span>
-      </button>
-    </div>
-  );
-};
-
-/**
  * OptionsMethod component handles the expanded menu content
  */
-const OptionsMethod = memo(props => {
+function OptionsMethod(props) {
   const [city, setCity] = useState('');
-  const [dayNightMode, setDayNightMode] = useState(props.mode === 'dark');
   const navigate = useNavigate();
 
+  // Get theme and setTheme from settings store instead of using local state
+  const { theme, setTheme } = useSettingsStore();
+
   // Prevent map interaction when interacting with menu controls
-  const preventMapInteraction = useCallback(event => {
+  function preventMapInteraction(event) {
     event.preventDefault();
     event.stopPropagation();
-  }, []);
+  }
 
   // Only stop propagation but allow default behavior (for slider dragging)
-  const stopPropagationOnly = useCallback(event => {
+  function stopPropagationOnly(event) {
     event.stopPropagation();
-  }, []);
+  }
 
-  const handleSubmit = useCallback(
-    e => {
-      e.preventDefault();
-      if (city?.trim()) {
-        navigate('/weather/' + city.trim());
-      }
-    },
-    [navigate, city]
-  );
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (city?.trim()) {
+      navigate('/weather/' + city.trim());
+    }
+  }
 
-  const handleDayNightToggle = useCallback(() => {
-    setDayNightMode(prev => {
-      const newValue = !prev;
-      navigate(newValue ? '/map/dark' : '/map/light');
-      return newValue;
-    });
-  }, [navigate]);
+  function handleDayNightToggle() {
+    // Toggle theme using settings store instead of navigation
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }
 
-  const getLayerButtonClass = useCallback(
-    isActive => {
-      const baseClasses =
-        'flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200';
+  function getLayerButtonClass(isActive) {
+    const baseClasses =
+      'flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200 border';
 
-      if (props.mode === 'dark') {
-        return isActive
-          ? `${baseClasses} bg-blue-600 text-white shadow-md border border-blue-700`
-          : `${baseClasses} bg-neutral-700 text-gray-200 hover:bg-neutral-600 border border-neutral-600`;
-      } else {
-        return isActive
-          ? `${baseClasses} bg-blue-500 text-white shadow-md`
-          : `${baseClasses} bg-gray-100 text-gray-700 hover:bg-gray-200`;
-      }
-    },
-    [props.mode]
-  );
+    if (props.mode === 'dark') {
+      return isActive
+        ? `${baseClasses} bg-blue-600 text-white shadow-md border-blue-700`
+        : `${baseClasses} bg-neutral-700 text-gray-200 hover:bg-neutral-600 border-neutral-600`;
+    } else {
+      return isActive
+        ? `${baseClasses} bg-blue-500 text-white shadow-md border-blue-500`
+        : `${baseClasses} bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300`;
+    }
+  }
 
-  const inputClassName = useMemo(
-    () =>
-      props.mode === 'dark'
-        ? 'w-full bg-neutral-800 border-b border-neutral-500 focus:border-blue-500 text-white p-2 pl-9 outline-none rounded-t-lg transition-all duration-200'
-        : 'w-full bg-white border-b border-gray-300 focus:border-blue-500 text-black p-2 pl-9 outline-none rounded-t-lg transition-all duration-200',
-    [props.mode]
-  );
+  const inputClassName =
+    props.mode === 'dark'
+      ? 'w-full bg-neutral-800 border-b border-neutral-500 focus:border-blue-500 text-white p-2 pl-9 outline-none rounded-t-lg transition-all duration-200'
+      : 'w-full bg-white border-b border-gray-300 focus:border-blue-500 text-black p-2 pl-9 outline-none rounded-t-lg transition-all duration-200';
 
   const inputContainerClass = 'relative mb-4';
 
-  const rangeClassName = useMemo(
-    () =>
-      props.mode === 'dark'
-        ? 'w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-neutral-700 to-blue-600 accent-blue-500'
-        : 'w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-gray-300 to-blue-500 accent-blue-500',
-    [props.mode]
-  );
+  const rangeClassName =
+    props.mode === 'dark'
+      ? 'w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-neutral-700 to-blue-600 accent-blue-500'
+      : 'w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-gray-300 to-blue-500 accent-blue-500';
 
-  const rangeContainerClass = useMemo(
-    () =>
-      props.mode === 'dark'
-        ? 'mb-5 p-4 bg-neutral-800 rounded-lg border border-neutral-700'
-        : 'mb-5 p-4 bg-gray-100 rounded-lg',
-    [props.mode]
-  );
+  const rangeContainerClass =
+    props.mode === 'dark'
+      ? 'mb-5 p-4 bg-neutral-800 rounded-lg border border-neutral-700'
+      : 'mb-5 p-4 bg-gray-100 rounded-lg';
 
-  const sectionTitleClass = useMemo(
-    () =>
-      props.mode === 'dark'
-        ? 'text-sm font-medium text-gray-300 mb-2'
-        : 'text-sm font-medium text-gray-700 mb-2',
-    [props.mode]
-  );
+  const sectionTitleClass =
+    props.mode === 'dark'
+      ? 'text-sm font-medium text-gray-300 mb-2'
+      : 'text-sm font-medium text-gray-700 mb-2';
 
   const layerButtonsContainerClass = 'grid grid-cols-2 gap-2';
 
@@ -341,7 +252,7 @@ const OptionsMethod = memo(props => {
       onTouchMove={preventMapInteraction}
     >
       {/* Menu header with close button */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h2
           className={`text-lg font-semibold ${props.mode === 'dark' ? 'text-white' : 'text-gray-800'}`}
         >
@@ -349,7 +260,7 @@ const OptionsMethod = memo(props => {
         </h2>
         <button
           onClick={props.onClose}
-          className={`p-1 rounded-full transition-colors ${
+          className={`rounded-full p-1 transition-colors ${
             props.mode === 'dark'
               ? 'bg-neutral-700 text-white hover:bg-neutral-600'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -363,7 +274,7 @@ const OptionsMethod = memo(props => {
       {/* City search form */}
       <form onSubmit={handleSubmit}>
         <div className={inputContainerClass}>
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <div className="absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400">
             <IoSearch size="18" />
           </div>
           <input
@@ -379,7 +290,7 @@ const OptionsMethod = memo(props => {
 
       {/* Layer opacity control */}
       <div className={rangeContainerClass}>
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2 flex items-center justify-between">
           <label htmlFor="opacitySlider" className={sectionTitleClass}>
             <div className="flex items-center gap-1">
               <BsSliders />
@@ -389,8 +300,8 @@ const OptionsMethod = memo(props => {
           <span
             className={
               props.mode === 'dark'
-                ? 'text-white font-medium text-sm'
-                : 'text-gray-700 font-medium text-sm'
+                ? 'text-sm font-medium text-white'
+                : 'text-sm font-medium text-gray-700'
             }
           >
             {Math.round(props.layerOpacity * 100)}%
@@ -415,7 +326,7 @@ const OptionsMethod = memo(props => {
       {/* Weather layer toggles */}
       <div>
         <label htmlFor="mapLayersSection" className={sectionTitleClass}>
-          <div className="flex items-center gap-1 mb-2">
+          <div className="mb-2 flex items-center gap-1">
             <IoLayers />
             <span>Map Layers</span>
           </div>
@@ -485,7 +396,7 @@ const OptionsMethod = memo(props => {
       {/* Day/Night mode toggle */}
       <div className="mt-4">
         <label htmlFor="dayNightToggle" className={sectionTitleClass}>
-          <div className="flex items-center gap-1 mb-2">
+          <div className="mb-2 flex items-center gap-1">
             <PiSunHorizonBold />
             <span>Day/Night Mode</span>
           </div>
@@ -493,22 +404,17 @@ const OptionsMethod = memo(props => {
         <button
           id="dayNightToggle"
           onClick={handleDayNightToggle}
-          className={`
-                    flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200
-                    ${dayNightMode ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
-                `}
+          className={`flex w-full items-center justify-center gap-2 rounded-lg p-2 text-sm font-medium transition-all duration-200 ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'} `}
           aria-label="Toggle day/night mode"
-          aria-pressed={dayNightMode}
+          aria-pressed={theme === 'dark'}
         >
-          {dayNightMode ? <MdDarkMode size="18" /> : <MdOutlineLightMode size="18" />}
-          <span>{dayNightMode ? 'Night' : 'Day'} Mode</span>
+          {theme === 'dark' ? <MdDarkMode size="18" /> : <MdOutlineLightMode size="18" />}
+          <span>{theme === 'dark' ? 'Night' : 'Day'} Mode</span>
         </button>
       </div>
     </div>
   );
-});
-
-OptionsMethod.displayName = 'OptionsMethod';
+}
 
 /**
  * MenuBar - A component that provides a menu for controlling map layers and options
@@ -533,34 +439,34 @@ OptionsMethod.displayName = 'OptionsMethod';
  * @param {Function} props.onLayerOpacityChange - Callback for changing layer opacity
  * @returns {JSX.Element} - The menu bar component
  */
-export const MenuBar = props => {
+export function MenuBar(props) {
   const [toggle, setToggle] = useState(false);
 
-  const menuButtonClass = useMemo(() => {
+  const menuButtonClass = (() => {
     const baseClasses =
       'absolute flex items-center py-2 px-3 rounded-r-lg top-24 z-40 transition-all duration-300';
 
     return props.mode === 'dark'
       ? `${baseClasses} bg-neutral-800 text-white border-y-2 border-r-2 border-neutral-600 shadow-lg hover:bg-neutral-700`
       : `${baseClasses} bg-white text-gray-800 border-y-2 border-r-2 border-gray-300 shadow-lg hover:bg-gray-100`;
-  }, [props.mode]);
+  })();
 
-  const optionsContainerClass = useMemo(() => {
+  const optionsContainerClass = (() => {
     const baseClasses =
       'absolute mt-24 z-40 w-72 p-4 rounded-lg shadow-lg transition-all duration-300';
 
     return props.mode === 'dark'
       ? `${baseClasses} bg-neutral-800 border border-neutral-600 text-white ml-3`
       : `${baseClasses} bg-white border border-gray-300 text-gray-800 ml-3`;
-  }, [props.mode]);
+  })();
 
-  const handleToggle = useCallback(() => {
+  function handleToggle() {
     setToggle(prev => !prev);
-  }, []);
+  }
 
   return (
     <div>
-      {!toggle && (
+      <Activity mode={!toggle ? 'visible' : 'hidden'}>
         <button
           onClick={handleToggle}
           className={menuButtonClass}
@@ -570,9 +476,9 @@ export const MenuBar = props => {
           <IoIosArrowBack size="20" className="mr-1" />
           <span className="font-medium">Menu</span>
         </button>
-      )}
+      </Activity>
 
-      {toggle && (
+      <Activity mode={toggle ? 'visible' : 'hidden'}>
         <OptionsMethod
           mode={props.mode}
           showWindDir={props.showWindDir}
@@ -595,7 +501,7 @@ export const MenuBar = props => {
           className={optionsContainerClass}
           aria-expanded="true"
         />
-      )}
+      </Activity>
     </div>
   );
-};
+}

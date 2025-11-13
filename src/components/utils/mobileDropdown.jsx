@@ -1,32 +1,43 @@
-import { useState, useEffect, useRef, memo } from 'react';
-import { MdArrowLeft, MdOutlineSegment } from 'react-icons/md';
+import { Activity, useState, useEffect, useRef } from 'react';
+import { MdClose } from 'react-icons/md';
+import { RiMenu4Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 
-import { NAV_ITEMS, NAV_ICONS } from '../../constants/headerConstants.jsx';
+import { NAV_ITEMS, NAV_ICONS } from '@constants/headerConstants.jsx';
+import useSettingsStore from '@stores/settingsStore';
 
-const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
-  const active = currentLocation === path ? 'text-cyan-300' : 'text-gray-200';
+function Navigations({ text, path, currentLocation, onNavigate }) {
+  const active = currentLocation === path;
 
   return (
     <Link
       to={path}
-      className={`h-14 flex justify-center px-3 items-center gap-2 uppercase text-2xl bg-black/40 backdrop-blur-sm my-auto ${active} hover:text-cyan-300 transition-colors duration-200 border-b border-cyan-900/30`}
+      className={`flex items-center justify-start gap-3 px-5 py-3 text-base font-medium uppercase ${
+        active
+          ? 'bg-slate-800/50 text-cyan-300'
+          : 'text-gray-200 hover:bg-slate-800/30 hover:text-white'
+      } border-l-2 transition-all duration-200 ${active ? 'border-cyan-300' : 'border-transparent'}`}
       aria-label={`Navigate to ${text}`}
       onClick={onNavigate}
     >
-      {NAV_ICONS[text] ?? null}
+      <span className="text-lg">{NAV_ICONS[text] ?? null}</span>
       {text}
     </Link>
   );
-});
+}
 
-Navigations.displayName = 'Navigations';
-
-export const Dropdown = memo(props => {
+export function Dropdown(props) {
   const [opened, setOpened] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [activityMode, setActivityMode] = useState('hidden');
   const [animating, setAnimating] = useState(false);
   const dropdownRef = useRef(null);
+
+  const { theme, setTheme } = useSettingsStore();
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+    closeMenu();
+  };
 
   useEffect(() => {
     const handleClickOutside = event => {
@@ -41,41 +52,33 @@ export const Dropdown = memo(props => {
     };
   }, [dropdownRef]);
 
-  // Handle animation states when opened state changes
+  // Handle activity mode and animation states
   useEffect(() => {
     if (opened) {
-      setVisible(true);
-      // Small delay to ensure DOM update before animation starts
+      // Opening: Show immediately with animating=false, then animate in
+      setActivityMode('visible');
+      setAnimating(false); // Ensure we start from the non-animated state
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setAnimating(true);
         });
       });
     } else {
+      // Closing: Animate out first, then hide after animation completes
       setAnimating(false);
-    }
-  }, [opened]);
-
-  // Handle visibility after animation completes
-  useEffect(() => {
-    if (!animating && visible) {
       const timer = setTimeout(() => {
-        setVisible(false);
-      }, 300); // Match duration with the CSS transition
+        setActivityMode('hidden');
+      }, 300); // Match with CSS transition duration
       return () => clearTimeout(timer);
     }
-  }, [animating, visible]);
+  }, [opened]);
 
   const openMenu = () => {
     setOpened(true);
   };
 
   const closeMenu = () => {
-    setAnimating(false);
-    // Actual closing is handled by the effect above
-    setTimeout(() => {
-      setOpened(false);
-    }, 50);
+    setOpened(false);
   };
 
   const toggleMenu = () => {
@@ -87,28 +90,32 @@ export const Dropdown = memo(props => {
   };
 
   return (
-    <nav ref={dropdownRef}>
-      <div className="mr-1">
-        <button
-          onClick={toggleMenu}
-          className="flex mt-0.5 text-gray-200 hover:text-cyan-300 transition-colors duration-200 cursor-pointer"
-          aria-label={opened ? 'Close navigation menu' : 'Open navigation menu'}
-        >
-          <MdOutlineSegment size="42" />
-          <div
-            className={`mt-1 -ml-2 transition-transform duration-300 ease-in-out ${opened ? '-rotate-90' : 'rotate-0'}`}
-          >
-            <MdArrowLeft size="35" />
-          </div>
-        </button>
-      </div>
+    <div ref={dropdownRef} className="relative">
+      <button
+        onClick={toggleMenu}
+        className="flex items-center justify-center overflow-hidden rounded-full p-2 text-gray-200 transition-colors duration-200 hover:bg-slate-800/50 hover:text-cyan-300"
+        aria-label={opened ? 'Close navigation menu' : 'Open navigation menu'}
+      >
+        <div className="relative h-7 w-7">
+          <MdClose
+            size="28"
+            className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+              opened ? 'scale-100 rotate-0 opacity-100' : 'scale-50 rotate-90 opacity-0'
+            }`}
+          />
+          <RiMenu4Line
+            size="28"
+            className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+              opened ? 'scale-50 -rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100'
+            }`}
+          />
+        </div>
+      </button>
 
-      {(opened || visible) && (
-        <nav className={'absolute right-1 z-50 mt-1.5'}>
+      <Activity mode={activityMode}>
+        <nav className="absolute right-0 z-50 mt-2 min-w-[220px]">
           <div
-            className={`flex flex-col rounded-lg bg-black/40 backdrop-blur-md shadow-lg overflow-hidden divide-y divide-cyan-900/30
-                            transition-all duration-300 ease-in-out origin-top
-                            ${animating ? 'opacity-100 transform translate-y-0 scale-100' : 'opacity-0 transform -translate-y-2 scale-95'}`}
+            className={`flex origin-top flex-col overflow-hidden rounded-lg bg-slate-900/95 shadow-lg backdrop-blur-md transition-all duration-300 ease-in-out ${animating ? 'translate-y-0 scale-100 transform opacity-100' : '-translate-y-2 scale-95 transform opacity-0'}`}
           >
             {NAV_ITEMS.map((item, index) => (
               <Navigations
@@ -119,11 +126,34 @@ export const Dropdown = memo(props => {
                 onNavigate={closeMenu}
               />
             ))}
+            {/* Settings navigation */}
+            <Link
+              to="/settings"
+              className={`flex items-center justify-start gap-3 px-5 py-3 text-base font-medium uppercase ${
+                props.location === '/settings'
+                  ? 'bg-slate-800/50 text-cyan-300'
+                  : 'text-gray-200 hover:bg-slate-800/30 hover:text-white'
+              } border-l-2 transition-all duration-200 ${props.location === '/settings' ? 'border-cyan-300' : 'border-transparent'}`}
+              aria-label="Navigate to settings"
+              onClick={closeMenu}
+            >
+              <span className="text-lg">{NAV_ICONS.Settings}</span>
+              Settings
+            </Link>
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-start gap-3 border-l-2 border-transparent px-5 py-3 text-base font-medium text-gray-200 uppercase transition-all duration-200 hover:bg-slate-800/30 hover:text-white"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              <span className="text-lg">
+                {theme === 'dark' ? NAV_ICONS.LightMode : NAV_ICONS.DarkMode}
+              </span>
+              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </button>
           </div>
         </nav>
-      )}
-    </nav>
+      </Activity>
+    </div>
   );
-});
-
-Dropdown.displayName = 'Dropdown Navigation';
+}

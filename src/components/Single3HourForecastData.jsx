@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { useEffect, useState, useMemo, memo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
+import { SunriseSunsetTimes } from '@components/weather/helpers/weatherHelpers';
+import { ShowWeather } from '@components/weather/WeatherDisplay';
 
-export const SingleThreeHourForecastData = memo(() => {
+export function SingleThreeHourForecastData() {
   const { index, lat, lon } = useParams();
   const numericIndex = parseInt(index, 10); // Convert index to a number
 
@@ -39,6 +40,7 @@ export const SingleThreeHourForecastData = memo(() => {
               pressure: weatherAPI.main.pressure,
               mainWeather: weatherAPI.weather[0].main,
               description: weatherAPI.weather[0].description,
+              weatherId: weatherAPI.weather[0].id,
               windSpeed: weatherAPI.wind.speed,
               windDegrees: weatherAPI.wind.deg,
               visibility: weatherAPI.visibility,
@@ -99,20 +101,18 @@ export const SingleThreeHourForecastData = memo(() => {
     ).toDateString();
   }, [weather.dayUNIX, location.timeZone]);
 
-  const currentTime = useMemo(() => {
+  const currentTime = (() => {
     const d = new Date();
     return {
       hour: d.getHours(),
       minute: d.getMinutes(),
     };
-  }, []);
+  })();
 
-  const localSunriseSunsetTimes = useMemo(() => {
-    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
-      return SunriseSunsetTimes(times);
-    }
-    return null;
-  }, [times]);
+  const localSunriseSunsetTimes =
+    times?.sunrise && times?.sunset && times?.timeZone !== undefined
+      ? SunriseSunsetTimes(times)
+      : null;
 
   return (
     <ShowWeather
@@ -124,6 +124,7 @@ export const SingleThreeHourForecastData = memo(() => {
       connectionError={connectionError}
       mainWeather={weather.mainWeather}
       description={weather.description}
+      weatherId={weather.weatherId}
       name={location.name}
       country={location.country}
       temperature={weather.temperature}
@@ -147,6 +148,4 @@ export const SingleThreeHourForecastData = memo(() => {
       loading={loading}
     />
   );
-});
-
-SingleThreeHourForecastData.displayName = 'SingleThreeHourForecastData';
+}

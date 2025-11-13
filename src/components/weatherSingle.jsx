@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { useState, useEffect, useMemo, useCallback, memo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import countryList from 'react-select-country-list';
 
-import { ShowWeather, SunriseSunsetTimes } from './utils/weatherVariables';
+import { SunriseSunsetTimes } from '@components/weather/helpers/weatherHelpers';
+import { ShowWeather } from '@components/weather/WeatherDisplay';
 
-export const GetSingleWeather = memo(() => {
+export function GetSingleWeather() {
   const { countryCode, city, latitude, longitude } = useParams(); // * Gets city from the url
 
   const history = useNavigate();
@@ -30,23 +31,15 @@ export const GetSingleWeather = memo(() => {
     }
   }, [countryCode]);
 
-  const handleSubmit3Hour = useCallback(
-    e => {
-      e.preventDefault();
+  function handleSubmit3Hour(e) {
+    e.preventDefault();
+    history('/3HourForecast/' + location.lat + '/' + location.lon);
+  }
 
-      history('/3HourForecast/' + location.lat + '/' + location.lon);
-    },
-    [history, location.lat, location.lon]
-  );
-
-  const handleSubmitDaily = useCallback(
-    e => {
-      e.preventDefault();
-
-      history('/dailyWeather/' + location.lat + '/' + location.lon);
-    },
-    [history, location.lat, location.lon]
-  );
+  function handleSubmitDaily(e) {
+    e.preventDefault();
+    history('/dailyWeather/' + location.lat + '/' + location.lon);
+  }
 
   useEffect(() => {
     document.title = location.name ? 'Worther - Weather - ' + location.name : 'Worther - Weather';
@@ -73,6 +66,7 @@ export const GetSingleWeather = memo(() => {
           pressure: response.data.main.pressure,
           mainWeather: response.data.weather[0].main,
           description: response.data.weather[0].description,
+          weatherId: response.data.weather[0].id,
           windSpeed: response.data.wind.speed,
           windDegrees: response.data.wind.deg,
           sunrise: response.data.sys.sunrise,
@@ -116,12 +110,10 @@ export const GetSingleWeather = memo(() => {
       });
   }, [city, countryCode, latitude, longitude]);
 
-  const localSunriseSunsetTimes = useMemo(() => {
-    if (times?.sunrise && times?.sunset && times?.timeZone !== undefined) {
-      return SunriseSunsetTimes(times);
-    }
-    return null;
-  }, [times]);
+  const localSunriseSunsetTimes =
+    times?.sunrise && times?.sunset && times?.timeZone !== undefined
+      ? SunriseSunsetTimes(times)
+      : null;
 
   return (
     <ShowWeather
@@ -129,6 +121,7 @@ export const GetSingleWeather = memo(() => {
       choice={'normal'}
       mainWeather={weather.mainWeather}
       description={weather.description}
+      weatherId={weather.weatherId}
       name={location.name}
       country={location.country}
       temperature={weather.temperature}
@@ -157,6 +150,4 @@ export const GetSingleWeather = memo(() => {
       countryName={countryName}
     />
   );
-});
-
-GetSingleWeather.displayName = 'GetSingleWeather';
+}
