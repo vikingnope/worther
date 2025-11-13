@@ -368,7 +368,7 @@ export default function Changelog() {
                                 iconEmoji = '🗑️ ';
                               } else if (text === 'Chore') {
                                 categoryClass = 'text-gray-400';
-                                iconEmoji = '🛠️ ';
+                                iconEmoji = '🧹 ';
                               }
 
                               return (
@@ -482,7 +482,7 @@ export default function Changelog() {
                                 iconEmoji = '🗑️ ';
                               } else if (text === 'Chore') {
                                 categoryClass = 'text-gray-400';
-                                iconEmoji = '🛠️ ';
+                                iconEmoji = '🧹 ';
                               }
 
                               return (
