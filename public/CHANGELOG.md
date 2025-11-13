@@ -33,6 +33,10 @@
 - Changed beach recommendations logic to not be hard coded
 - Changed time zone logic to not be hard coded
 
+### Chore
+
+- Moved weather constants to their own constants file
+
 ### Fixed
 
 - Title labeller not recognising '/'
