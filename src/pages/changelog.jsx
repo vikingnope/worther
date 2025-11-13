@@ -366,6 +366,9 @@ export default function Changelog() {
                               } else if (text === 'Removed') {
                                 categoryClass = 'text-red-400';
                                 iconEmoji = '🗑️ ';
+                              } else if (text === 'Chore') {
+                                categoryClass = 'text-gray-400';
+                                iconEmoji = '🛠️ ';
                               }
 
                               return (
