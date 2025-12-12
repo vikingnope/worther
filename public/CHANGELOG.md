@@ -42,8 +42,8 @@
 - Changed beach recommendations logic to not be hard coded
 - Changed time zone logic to not be hard coded
 - Bump `@emotion/styled` to v11.14.1
-- Bump `react` to v19.1.1
-- Bump `react-dom` to v19.1.1
+- Bump `react` to v19.1.4
+- Bump `react-dom` to v19.1.4
 - Bump `react-select` to v5.10.2
 - Bump `@eslint/js` to v9.35.0
 - Bump `@tailwindcss/vite` to v4.1.13
