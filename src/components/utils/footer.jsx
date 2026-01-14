@@ -28,12 +28,12 @@ export const Footer = memo(() => {
         </a>
         <div className="absolute right-5">
           <Link
-            to="/changelog"
+            to="/release-notes"
             className="font-medium text-gray-200 hover:text-cyan-300 flex gap-x-2 items-center transition-colors duration-200"
-            aria-label="View changelog"
+            aria-label="View release notes"
           >
             <IoDocumentTextSharp size="20" />
-            <span className="underline underline-offset-2">Changelog</span>
+            <span className="underline underline-offset-2">Release Notes</span>
           </Link>
         </div>
       </nav>

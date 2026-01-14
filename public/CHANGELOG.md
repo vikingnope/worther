@@ -1,13 +1,11 @@
-# Changelog
-
 ## 1.1.0 (Major)
 
 ### Added
 
-- Version history to changelog with auto-scroll functionality
+- Version history to release notes with auto-scroll functionality
 - ESLint & Prettier (Ignores `pnpm-lock.yaml`)
 - Workflow for milestone adder/checker
-- Workflow for dependabot to auto update changelog (adjusted PR title)
+- Workflow for dependabot to auto update release notes (adjusted PR title)
 - Trim to cities in weather submits
 - Option to run PR check workflow with command by repo owner
 - Day/night cycle layer
@@ -29,7 +27,7 @@
 - Enhanced auto-approver to not allow review again for nothing if already approved
 - Moved multiple workflows into one file for better workflow organisation
 - Convert issue templates to YAML from Markdown for better readability and configuration
-- Updated automatic changelog to wrap package versions in backticks
+- Updated automatic release notes to wrap package versions in backticks
 - Enhanced PR checker to resolve existing issues and automatically add a detailed PR comment with status
 - Changed beach recommendations logic to not be hard coded
 - Changed time zone logic to not be hard coded
@@ -83,7 +81,7 @@
 
 - Smoke icon
 - Dust icon
-- Automated changelog checker to ensure changelog updates in pull requests
+- Automated release notes checker to ensure release notes updates in pull requests
 - CodeRabbit config with auto review for bot PRs
 - Subdomains to main map layers (improved performance slightly)
 - Dynamic changing of background colour on map page
@@ -95,7 +93,7 @@
 - Daily Weather page to display averaged weather metrics (precipitation, humidity, wind) across all data points
 - Better error handling
 - Minor design changes
-- Changelog checker to check for bot PRs including removal of changelog labels for bot PRs
+- Release notes checker to check for bot PRs including removal of release notes labels for bot PRs
 - Automatic PR labeler to also do automatic PR title prefixing
 - Removed `react-device-detect` package and started using tailwind sizing instead to make pages more seamless when resizing between large displays and smaller displays
 - Changed Satellite Layer to be a Hybrid Satellite Layer
@@ -176,7 +174,7 @@
 
 ### Added
 
-- Changelog to website (can be found at bottom right of footer)
+- Release notes to website (can be found at bottom right of footer)
 
 ### Enhanced
 
