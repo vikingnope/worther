@@ -189,34 +189,18 @@ export const MapMode = ({ mode }) => {
   };
 
   return (
-    <div className={`z-50 absolute ${isDesktop ? 'bottom-12 right-8' : 'bottom-16 right-4'}`}>
+    <div className={`absolute z-50 ${isDesktop ? 'right-8 bottom-12' : 'right-4 bottom-16'}`}>
       <button
         onClick={handleModeToggle}
-        className={`
-                    flex items-center justify-center
-                    ${isDesktop ? 'h-12 w-12' : 'h-10 w-10'} 
-                    rounded-full shadow-lg 
-                    transition-all duration-300
-                    ${
-                      mode === 'light'
-                        ? 'bg-neutral-800 text-white hover:bg-neutral-700'
-                        : 'bg-white text-gray-800 hover:bg-gray-100'
-                    }
-                    overflow-hidden
-                    before:content-[''] 
-                    before:absolute 
-                    before:inset-0 
-                    before:rounded-full 
-                    before:opacity-0
-                    before:transition-opacity
-                    before:duration-300
-                    cursor-pointer
-                    ${
-                      mode === 'light'
-                        ? 'before:bg-gradient-to-tr before:from-blue-700 before:to-purple-700 hover:before:opacity-20'
-                        : 'before:bg-gradient-to-tr before:from-yellow-400 before:to-orange-500 hover:before:opacity-20'
-                    }
-                `}
+        className={`group flex items-center justify-center ${isDesktop ? 'h-12 w-12' : 'h-10 w-10'} rounded-full shadow-lg transition-all duration-300 ${
+          mode === 'light'
+            ? 'bg-neutral-800 text-white hover:bg-neutral-700'
+            : 'bg-white text-gray-800 hover:bg-gray-100'
+        } cursor-pointer overflow-hidden before:absolute before:inset-0 before:rounded-full before:opacity-0 before:transition-opacity before:duration-300 before:content-[''] ${
+          mode === 'light'
+            ? 'before:bg-gradient-to-tr before:from-blue-700 before:to-purple-700 hover:before:opacity-20'
+            : 'before:bg-gradient-to-tr before:from-yellow-400 before:to-orange-500 hover:before:opacity-20'
+        } `}
         title={`Switch to ${mode === 'light' ? 'Dark' : 'Light'} Mode`}
         aria-label={`Switch to ${mode === 'light' ? 'Dark' : 'Light'} Mode`}
       >
@@ -228,14 +212,11 @@ export const MapMode = ({ mode }) => {
 
         {/* Subtle glow effect */}
         <span
-          className={`
-                    absolute inset-0 rounded-full opacity-0 transition-opacity duration-300
-                    ${
-                      mode === 'light'
-                        ? 'bg-blue-500 hover:opacity-10'
-                        : 'bg-yellow-400 hover:opacity-10'
-                    } filter blur-md
-                `}
+          className={`absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 ${
+            mode === 'light'
+              ? 'bg-blue-500 group-hover:opacity-10'
+              : 'bg-yellow-400 group-hover:opacity-10'
+          } blur-md filter`}
         ></span>
       </button>
     </div>
@@ -341,7 +322,7 @@ const OptionsMethod = memo(props => {
       onTouchMove={preventMapInteraction}
     >
       {/* Menu header with close button */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h2
           className={`text-lg font-semibold ${props.mode === 'dark' ? 'text-white' : 'text-gray-800'}`}
         >
@@ -349,7 +330,7 @@ const OptionsMethod = memo(props => {
         </h2>
         <button
           onClick={props.onClose}
-          className={`p-1 rounded-full transition-colors ${
+          className={`rounded-full p-1 transition-colors ${
             props.mode === 'dark'
               ? 'bg-neutral-700 text-white hover:bg-neutral-600'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -363,7 +344,7 @@ const OptionsMethod = memo(props => {
       {/* City search form */}
       <form onSubmit={handleSubmit}>
         <div className={inputContainerClass}>
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <div className="absolute top-1/2 left-3 -translate-y-1/2 transform text-gray-400">
             <IoSearch size="18" />
           </div>
           <input
@@ -379,7 +360,7 @@ const OptionsMethod = memo(props => {
 
       {/* Layer opacity control */}
       <div className={rangeContainerClass}>
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2 flex items-center justify-between">
           <label htmlFor="opacitySlider" className={sectionTitleClass}>
             <div className="flex items-center gap-1">
               <BsSliders />
@@ -389,8 +370,8 @@ const OptionsMethod = memo(props => {
           <span
             className={
               props.mode === 'dark'
-                ? 'text-white font-medium text-sm'
-                : 'text-gray-700 font-medium text-sm'
+                ? 'text-sm font-medium text-white'
+                : 'text-sm font-medium text-gray-700'
             }
           >
             {Math.round(props.layerOpacity * 100)}%
@@ -415,7 +396,7 @@ const OptionsMethod = memo(props => {
       {/* Weather layer toggles */}
       <div>
         <label htmlFor="mapLayersSection" className={sectionTitleClass}>
-          <div className="flex items-center gap-1 mb-2">
+          <div className="mb-2 flex items-center gap-1">
             <IoLayers />
             <span>Map Layers</span>
           </div>
@@ -485,7 +466,7 @@ const OptionsMethod = memo(props => {
       {/* Day/Night mode toggle */}
       <div className="mt-4">
         <label htmlFor="dayNightToggle" className={sectionTitleClass}>
-          <div className="flex items-center gap-1 mb-2">
+          <div className="mb-2 flex items-center gap-1">
             <PiSunHorizonBold />
             <span>Day/Night Mode</span>
           </div>
@@ -493,10 +474,7 @@ const OptionsMethod = memo(props => {
         <button
           id="dayNightToggle"
           onClick={handleDayNightToggle}
-          className={`
-                    flex items-center justify-center gap-2 w-full p-2 rounded-lg font-medium text-sm transition-all duration-200
-                    ${dayNightMode ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'}
-                `}
+          className={`flex w-full items-center justify-center gap-2 rounded-lg p-2 text-sm font-medium transition-all duration-200 ${dayNightMode ? 'bg-blue-600 text-white' : 'bg-neutral-200 text-gray-800'} `}
           aria-label="Toggle day/night mode"
           aria-pressed={dayNightMode}
         >
