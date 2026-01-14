@@ -12,7 +12,7 @@ const NavigationLink = memo(({ text, path, currentLocation }) => {
   return (
     <Link
       to={path}
-      className={`flex uppercase items-center gap-2 text-2xl mt-2 hover:text-cyan-300 transition-all duration-200 ease-in-out mr-6 ${active}`}
+      className={`mt-2 mr-6 flex items-center gap-2 text-2xl uppercase transition-all duration-200 ease-in-out hover:text-cyan-300 ${active}`}
       aria-label={`Navigate to ${text}`}
     >
       {NAV_ICONS[text] ?? null}
@@ -49,20 +49,20 @@ export const Header = memo(() => {
   );
 
   return (
-    <header className="inset-x-0 top-0 bg-gradient-to-b from-slate-900 to-black h-min w-full shadow-md select-none z-10">
+    <header className="inset-x-0 top-0 z-10 h-min w-full bg-gradient-to-b from-slate-900 to-black shadow-md select-none">
       <section className="relative">
         <button
           onClick={handleClick}
           onKeyDown={e => {
             if (e.key === 'Enter') handleClick(e);
           }}
-          className="bg-transparent border-0 cursor-pointer"
+          className="cursor-pointer border-0 bg-transparent"
           aria-label="Navigate to home page"
         >
           <img
             draggable="false"
             src={Logo}
-            className="transition-all duration-200 ease-in-out ml-3.5 rounded shadow-md hover:shadow-lg hover:scale-105"
+            className="ml-3.5 rounded shadow-md transition-all duration-200 ease-in-out hover:scale-105 hover:shadow-lg"
             alt="logo"
             width="60"
             height="60"
@@ -70,7 +70,7 @@ export const Header = memo(() => {
         </button>
       </section>
 
-      <nav className="absolute right-0 top-2.5 flex">
+      <nav className="absolute top-2.5 right-0 flex">
         {/* Desktop navigation - visible on lg screens and up */}
         <div className="hidden lg:flex">
           {NAV_ITEMS.map((item, index) => (

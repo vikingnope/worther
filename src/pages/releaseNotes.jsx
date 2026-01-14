@@ -26,17 +26,17 @@ const ERROR_MESSAGE =
 /**
  * Validate version string format
  */
-const isValidVersion = (version) => VERSION_VALIDATION_REGEX.test(version);
+const isValidVersion = version => VERSION_VALIDATION_REGEX.test(version);
 
 /**
  * Extract versions from markdown content
  */
-const extractVersions = (markdown) => {
+const extractVersions = markdown => {
   if (!markdown || typeof markdown !== 'string') return [];
 
   const versionMatches = markdown.match(VERSION_REGEX) || [];
   return versionMatches
-    .map((match) => {
+    .map(match => {
       const result = match.match(/## (\d+\.\d+\.\d+) \(([^)]+)\)/);
       if (result && isValidVersion(result[1])) {
         return { version: result[1], type: result[2] };
@@ -49,12 +49,12 @@ const extractVersions = (markdown) => {
 /**
  * Get badge styling based on release type
  */
-const getTypeBadge = (type) => BADGE_STYLES[type] || BADGE_STYLES.Minor;
+const getTypeBadge = type => BADGE_STYLES[type] || BADGE_STYLES.Minor;
 
 /**
  * Get category configuration
  */
-const getCategoryConfig = (text) => CATEGORY_CONFIG[text] || DEFAULT_CATEGORY;
+const getCategoryConfig = text => CATEGORY_CONFIG[text] || DEFAULT_CATEGORY;
 
 /**
  * Shared markdown components
@@ -74,7 +74,9 @@ const baseMarkdownComponents = {
     </h2>
   ),
   h3: ({ children, ...props }) => {
-    const { class: categoryClass, emoji: iconEmoji } = getCategoryConfig(children?.toString() || '');
+    const { class: categoryClass, emoji: iconEmoji } = getCategoryConfig(
+      children?.toString() || ''
+    );
     return (
       <h3 className={`mt-5 mb-3 text-xl font-semibold ${categoryClass}`} {...props}>
         {iconEmoji}
@@ -82,9 +84,9 @@ const baseMarkdownComponents = {
       </h3>
     );
   },
-  p: (props) => <p className="my-3 leading-relaxed text-gray-200" {...props} />,
-  ul: (props) => <ul className="my-3 list-disc space-y-2 pl-6" {...props} />,
-  li: (props) => <li className="pb-1 text-gray-300" {...props} />,
+  p: props => <p className="my-3 leading-relaxed text-gray-200" {...props} />,
+  ul: props => <ul className="my-3 list-disc space-y-2 pl-6" {...props} />,
+  li: props => <li className="pb-1 text-gray-300" {...props} />,
   a: ({ href, children, ...props }) => (
     <a
       href={href}
@@ -96,14 +98,14 @@ const baseMarkdownComponents = {
       {children || href || 'Link'}
     </a>
   ),
-  code: (props) => (
+  code: props => (
     <code className="rounded bg-gray-800 px-1 py-0.5 text-sm text-cyan-300" {...props} />
   ),
-  blockquote: (props) => (
+  blockquote: props => (
     <blockquote className="my-3 border-l-4 border-gray-600 pl-4 text-gray-400 italic" {...props} />
   ),
-  strong: (props) => <strong className="font-bold text-white" {...props} />,
-  hr: (props) => <hr className="mt-10 mb-5 opacity-30" {...props} />,
+  strong: props => <strong className="font-bold text-white" {...props} />,
+  hr: props => <hr className="mt-10 mb-5 opacity-30" {...props} />,
 };
 
 // Version components skip h2 since it's manually rendered
@@ -166,13 +168,7 @@ const VersionSection = ({ version, type, section, isActive, onRef }) => {
   const versionId = `version-${version}`;
 
   return (
-    <div
-      key={versionId}
-      id={versionId}
-      ref={onRef}
-      data-version={version}
-      className="py-2"
-    >
+    <div key={versionId} id={versionId} ref={onRef} data-version={version} className="py-2">
       <div className="mt-2 mb-4 flex flex-wrap items-center gap-3">
         <h2
           className={`text-2xl leading-relaxed font-bold transition-colors duration-500 ${
@@ -211,14 +207,14 @@ export default function ReleaseNotes() {
 
     axios
       .get(CHANGELOG_PATH, { signal: controller?.signal })
-      .then((response) => {
+      .then(response => {
         if (typeof response.data === 'string' && !response.data.includes('<!doctype html>')) {
           setMarkdown(response.data);
         } else {
           setMarkdown(ERROR_MESSAGE);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         if (error.name !== 'CanceledError') {
           console.error('Error loading release notes:', error);
           setMarkdown(ERROR_MESSAGE);
@@ -236,7 +232,7 @@ export default function ReleaseNotes() {
   }, [versions, activeVersion]);
 
   // Scroll to version
-  const scrollToVersion = (version) => {
+  const scrollToVersion = version => {
     if (!isValidVersion(version)) return;
 
     const element = versionRefs.current[version];
@@ -283,8 +279,8 @@ export default function ReleaseNotes() {
     if (!contentRef.current || versions.length === 0) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries.find((entry) => entry.isIntersecting);
+      entries => {
+        const visibleEntry = entries.find(entry => entry.isIntersecting);
         if (visibleEntry) {
           const version = visibleEntry.target.dataset.version;
           if (version && isValidVersion(version)) {
@@ -299,7 +295,7 @@ export default function ReleaseNotes() {
       }
     );
 
-    Object.values(versionRefs.current).forEach((el) => el && observer.observe(el));
+    Object.values(versionRefs.current).forEach(el => el && observer.observe(el));
 
     return () => observer.disconnect();
   }, [versions]);
@@ -331,7 +327,7 @@ export default function ReleaseNotes() {
           type={match[2]}
           section={section}
           isActive={activeVersion === match[1]}
-          onRef={(el) => {
+          onRef={el => {
             if (el) versionRefs.current[match[1]] = el;
           }}
         />
@@ -391,7 +387,7 @@ export default function ReleaseNotes() {
               {/* Content */}
               <div
                 ref={contentRef}
-                className="release-notes-scroll max-h-[calc(100vh-300px)] overflow-y-auto pr-2 pb-4 scroll-smooth"
+                className="release-notes-scroll max-h-[calc(100vh-300px)] overflow-y-auto scroll-smooth pr-2 pb-4"
                 aria-label="Release notes content"
               >
                 <div>{renderSections()}</div>
