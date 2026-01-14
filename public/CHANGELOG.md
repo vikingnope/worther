@@ -55,23 +55,26 @@
 ### Dependencies
 
 - Added `babel-plugin-react-compiler` v1.0.0
-- Bump `tailwindcss` to v4.1.17
-- Bump `eslint` to v9.39.1
-- Bump `react-router-dom` to v7.9.6
-- Bump `vite` to v7.2.2
-- Bump `@vitejs/plugin-react` to v5.1.1
+- Bump `tailwindcss` to v4.1.18
+- Bump `eslint` to v9.39.2
+- Bump `react-router-dom` to v7.12.0
+- Bump `vite` to v7.3.1
+- Bump `@vitejs/plugin-react` to v5.1.2
 - Bump `eslint-config-prettier` to v10.1.8
 - Bump `axios` to v1.13.2
 - Bump `@emotion/styled` to v11.14.1
-- Bump `react` to v19.2.0
-- Bump `react-dom` to v19.2.0
+- Bump `react` to v19.2.3
+- Bump `react-dom` to v19.2.3
 - Bump `react-select` to v5.10.2
-- Bump `@eslint/js` to v9.39.1
-- Bump `@tailwindcss/vite` to v4.1.17
+- Bump `@eslint/js` to v9.39.2
+- Bump `@tailwindcss/vite` to v4.1.18
 - Bump `eslint-plugin-import` to v2.32.0
-- Bump `prettier` to v3.6.2
+- Bump `prettier` to v3.7.4
 - Bump `@joergdietrich/leaflet.terminator` to v1.3.0
 - Bump `eslint-plugin-react-hooks` to v7.0.1
+- Bump `@vercel/analytics` to v1.6.1
+- Bump `@vercel/speed-insights` to v1.3.1
+- Bump `prettier-plugin-tailwindcss` to v0.7.2
 
 ---
 
