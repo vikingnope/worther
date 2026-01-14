@@ -10,7 +10,7 @@ const Navigations = memo(({ text, path, currentLocation, onNavigate }) => {
   return (
     <Link
       to={path}
-      className={`h-14 flex justify-center px-3 items-center gap-2 uppercase text-2xl bg-black/40 backdrop-blur-sm my-auto ${active} hover:text-cyan-300 transition-colors duration-200 border-b border-cyan-900/30`}
+      className={`my-auto flex h-14 items-center justify-center gap-2 bg-black/40 px-3 text-2xl uppercase backdrop-blur-sm ${active} border-b border-cyan-900/30 transition-colors duration-200 hover:text-cyan-300`}
       aria-label={`Navigate to ${text}`}
       onClick={onNavigate}
     >
@@ -91,7 +91,7 @@ export const Dropdown = memo(props => {
       <div className="mr-1">
         <button
           onClick={toggleMenu}
-          className="flex mt-0.5 text-gray-200 hover:text-cyan-300 transition-colors duration-200 cursor-pointer"
+          className="mt-0.5 flex cursor-pointer text-gray-200 transition-colors duration-200 hover:text-cyan-300"
           aria-label={opened ? 'Close navigation menu' : 'Open navigation menu'}
         >
           <MdOutlineSegment size="42" />
@@ -106,9 +106,7 @@ export const Dropdown = memo(props => {
       {(opened || visible) && (
         <nav className={'absolute right-1 z-50 mt-1.5'}>
           <div
-            className={`flex flex-col rounded-lg bg-black/40 backdrop-blur-md shadow-lg overflow-hidden divide-y divide-cyan-900/30
-                            transition-all duration-300 ease-in-out origin-top
-                            ${animating ? 'opacity-100 transform translate-y-0 scale-100' : 'opacity-0 transform -translate-y-2 scale-95'}`}
+            className={`flex origin-top flex-col divide-y divide-cyan-900/30 overflow-hidden rounded-lg bg-black/40 shadow-lg backdrop-blur-md transition-all duration-300 ease-in-out ${animating ? 'translate-y-0 scale-100 transform opacity-100' : '-translate-y-2 scale-95 transform opacity-0'}`}
           >
             {NAV_ITEMS.map((item, index) => (
               <Navigations

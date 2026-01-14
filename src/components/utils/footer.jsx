@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 
 export const Footer = memo(() => {
   return (
-    <footer className="inset-x-0 bottom-0 bg-gradient-to-b from-black to-slate-900 h-12 w-full shadow-md">
-      <nav className="relative flex h-full gap-x-6 justify-center items-center">
+    <footer className="inset-x-0 bottom-0 h-12 w-full bg-gradient-to-b from-black to-slate-900 shadow-md">
+      <nav className="relative flex h-full items-center justify-center gap-x-6">
         <a
-          className="text-gray-200 hover:text-cyan-300 transform hover:scale-110 transition-all duration-200"
+          className="transform text-gray-200 transition-all duration-200 hover:scale-110 hover:text-cyan-300"
           href="https://discord.gg/n6xr3ZWM8J"
           target="_blank"
           rel="noreferrer"
@@ -18,7 +18,7 @@ export const Footer = memo(() => {
           <FaDiscord size="28" />
         </a>
         <a
-          className="text-gray-200 hover:text-cyan-300 transform hover:scale-110 transition-all duration-200"
+          className="transform text-gray-200 transition-all duration-200 hover:scale-110 hover:text-cyan-300"
           href="https://github.com/vikingnope/worther"
           target="_blank"
           rel="noreferrer"
@@ -28,12 +28,12 @@ export const Footer = memo(() => {
         </a>
         <div className="absolute right-5">
           <Link
-            to="/changelog"
-            className="font-medium text-gray-200 hover:text-cyan-300 flex gap-x-2 items-center transition-colors duration-200"
-            aria-label="View changelog"
+            to="/release-notes"
+            className="flex items-center gap-x-2 font-medium text-gray-200 transition-colors duration-200 hover:text-cyan-300"
+            aria-label="View release notes"
           >
             <IoDocumentTextSharp size="20" />
-            <span className="underline underline-offset-2">Changelog</span>
+            <span className="underline underline-offset-2">Release Notes</span>
           </Link>
         </div>
       </nav>
