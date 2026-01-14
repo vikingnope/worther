@@ -259,19 +259,23 @@ export default function ReleaseNotes() {
       `button[data-version="${escapedVersion}"]`
     );
 
-    if (button) {
-      setTimeout(() => {
-        const scrollbarWidth = horizontalScrollRef.current.clientWidth;
-        const buttonLeft = button.offsetLeft;
-        const buttonWidth = button.offsetWidth;
-        const scrollPosition = Math.max(0, buttonLeft - scrollbarWidth / 2 + buttonWidth / 2);
+    if (!button) return;
 
-        horizontalScrollRef.current.scrollTo({
-          left: scrollPosition,
-          behavior: 'smooth',
-        });
-      }, 100);
-    }
+    const timeoutId = setTimeout(() => {
+      if (!horizontalScrollRef.current) return;
+
+      const scrollbarWidth = horizontalScrollRef.current.clientWidth;
+      const buttonLeft = button.offsetLeft;
+      const buttonWidth = button.offsetWidth;
+      const scrollPosition = Math.max(0, buttonLeft - scrollbarWidth / 2 + buttonWidth / 2);
+
+      horizontalScrollRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth',
+      });
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
   }, [activeVersion]);
 
   // Track visible version with IntersectionObserver

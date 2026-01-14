@@ -192,7 +192,7 @@ export const MapMode = ({ mode }) => {
     <div className={`absolute z-50 ${isDesktop ? 'right-8 bottom-12' : 'right-4 bottom-16'}`}>
       <button
         onClick={handleModeToggle}
-        className={`flex items-center justify-center ${isDesktop ? 'h-12 w-12' : 'h-10 w-10'} rounded-full shadow-lg transition-all duration-300 ${
+        className={`group flex items-center justify-center ${isDesktop ? 'h-12 w-12' : 'h-10 w-10'} rounded-full shadow-lg transition-all duration-300 ${
           mode === 'light'
             ? 'bg-neutral-800 text-white hover:bg-neutral-700'
             : 'bg-white text-gray-800 hover:bg-gray-100'
@@ -213,7 +213,9 @@ export const MapMode = ({ mode }) => {
         {/* Subtle glow effect */}
         <span
           className={`absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 ${
-            mode === 'light' ? 'bg-blue-500 hover:opacity-10' : 'bg-yellow-400 hover:opacity-10'
+            mode === 'light'
+              ? 'bg-blue-500 group-hover:opacity-10'
+              : 'bg-yellow-400 group-hover:opacity-10'
           } blur-md filter`}
         ></span>
       </button>
