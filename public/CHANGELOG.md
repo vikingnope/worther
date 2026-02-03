@@ -75,6 +75,7 @@
 - Bump `@vercel/analytics` to v1.6.1
 - Bump `@vercel/speed-insights` to v1.3.1
 - Bump `prettier-plugin-tailwindcss` to v0.7.2
+- Bump dev dependency `@vitejs/plugin-react` from 5.1.2 to 5.1.3
 
 ---
 
