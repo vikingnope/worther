@@ -36,7 +36,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@vitejs/plugin-react": "5.1.2",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.32.0",

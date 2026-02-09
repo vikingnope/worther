@@ -75,6 +75,7 @@
 - Bump `@vercel/analytics` to v1.6.1
 - Bump `@vercel/speed-insights` to v1.3.1
 - Bump `prettier-plugin-tailwindcss` to v0.7.2
+- Bump dev dependency `eslint` from 9.39.2 to 10.0.0
 
 ---
 
